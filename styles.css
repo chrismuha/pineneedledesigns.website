@@ -1,0 +1,501 @@
+/* --- Pine Needle Designs Styles --- */
+:root {
+    --bg: #ffffff;
+    --muted: #f6f6f6;
+    --ink: #161616;
+    --ink-2: #3b3b3b;
+    --accent: #0f6c78;
+    --accent-2: #03535d;
+    --border: #e8e8e8;
+    --success: #0a7c4a;
+    --warning: #b86b00;
+    --error: #a0002b;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(10, 10, 10, .08);
+    --shadow-sm: 0 4px 14px rgba(10, 10, 10, .06);
+    --container: 1180px;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+img {
+    max-width: 100%;
+    display: block
+}
+
+.container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 18px
+}
+
+/* Announcement */
+.bar {
+    background: var(--ink);
+    color: #fff;
+    font-size: .9rem
+}
+
+.bar .container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px
+}
+
+.bar a {
+    color: #fff;
+    text-decoration: underline
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #fff;
+    border-bottom: 1px solid var(--border)
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 0
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: .06em
+}
+
+.brand .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent)
+}
+
+.nav-main {
+    display: flex;
+    align-items: center;
+    gap: 22px
+}
+
+.nav-main a {
+    font-weight: 500
+}
+
+.nav-aux {
+    display: flex;
+    align-items: center;
+    gap: 14px
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ink);
+    transition: .2s background, color, border
+}
+
+.btn:hover {
+    background: var(--ink);
+    color: #fff
+}
+
+.icon-btn {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    border-radius: 12px
+}
+
+.search {
+    position: relative;
+    flex: 1;
+    max-width: 380px
+}
+
+.search input {
+    width: 100%;
+    padding: 12px 44px 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    outline: none
+}
+
+.search .loupe {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: .6
+}
+
+/* Hero */
+.hero {
+    position: relative;
+    margin-top: 0
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 14px
+}
+
+.hero-card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-height: 420px;
+    box-shadow: var(--shadow)
+}
+
+.hero-card .copy {
+    position: absolute;
+    inset: auto 18px 18px 18px;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: saturate(140%) blur(6px);
+    padding: 18px;
+    border-radius: 14px;
+    max-width: 460px
+}
+
+.eyebrow {
+    font-size: .9rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent)
+}
+
+h1 {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    margin: .2rem 0 1rem;
+    font-size: 2.6rem;
+    line-height: 1.1
+}
+
+.cta {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px
+}
+
+.btn-accent {
+    border-color: var(--accent);
+    color: #fff;
+    background: var(--accent)
+}
+
+.btn-accent:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2)
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm)
+}
+
+/* Sections */
+section {
+    padding: 44px 0
+}
+
+.section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px
+}
+
+.section-head h2 {
+    font-size: 1.6rem;
+    margin: 0
+}
+
+.link {
+    color: var(--accent)
+}
+
+/* Product cards */
+.grid {
+    display: grid;
+    gap: 14px
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr)
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr)
+}
+
+.grid-6 {
+    grid-template-columns: repeat(6, 1fr)
+}
+
+.product {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column
+}
+
+.product .media {
+    aspect-ratio: 4/5;
+    background: linear-gradient(180deg, #ddd, #eee)
+}
+
+.product .body {
+    padding: 12px 12px 16px
+}
+
+.price {
+    font-weight: 600
+}
+
+.pill {
+    font-size: .8rem;
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 999px
+}
+
+/* Split tiles */
+.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px
+}
+
+.tile {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 300px;
+    box-shadow: var(--shadow)
+}
+
+.tile .copy {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    background: rgba(255, 255, 255, .92);
+    padding: 16px;
+    border-radius: 12px
+}
+
+/* Benefits */
+.benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px
+}
+
+.benefit {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    background: #fff;
+    box-shadow: var(--shadow-sm)
+}
+
+/* About block */
+.about {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 18px;
+    align-items: center
+}
+
+.about .card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: var(--shadow-sm)
+}
+
+/* Collections */
+.collections .card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff
+}
+
+.collections .media {
+    aspect-ratio: 4/3;
+    background: linear-gradient(180deg, #ddd, #f2f2f2)
+}
+
+.collections .body {
+    padding: 12px 14px
+}
+
+/* Social grid */
+.social {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px
+}
+
+.social img {
+    border-radius: 12px;
+    aspect-ratio: 1/1;
+    object-fit: cover
+}
+
+/* Newsletter callout */
+.callout {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(120deg, #cfe9ee, #eef8fa)
+}
+
+.callout .inner {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 20px;
+    align-items: center;
+    padding: 28px
+}
+
+.callout h3 {
+    margin: 0 0 6px
+}
+
+.field {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px
+}
+
+.field input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px
+}
+
+/* Footer */
+footer {
+    background: #0f1111;
+    color: #e6e6e6;
+    margin-top: 24px
+}
+
+footer a {
+    color: #e6e6e6
+}
+
+.foot {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 18px;
+    padding: 40px 18px
+}
+
+.subtle {
+    opacity: .7
+}
+
+.copyright {
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    padding: 14px 0;
+    font-size: .9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+/* Utilities */
+.hide-sm {
+    display: block
+}
+
+.show-sm {
+    display: none
+}
+
+@media (max-width:980px) {
+    .hero-grid {
+        grid-template-columns: 1fr
+    }
+
+    .split {
+        grid-template-columns: 1fr
+    }
+
+    .about {
+        grid-template-columns: 1fr
+    }
+
+    .benefits {
+        grid-template-columns: 1fr;
+        gap: 10px
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr)
+    }
+
+    .grid-6 {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    .social {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    .foot {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .hide-sm {
+        display: none
+    }
+
+    .show-sm {
+        display: inline-flex
+    }
+}

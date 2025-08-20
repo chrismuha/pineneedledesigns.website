@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pine Needle Designs - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Announcement -->
+    <div class="bar" role="region" aria-label="Announcement">
+        <div class="container">
+            <span>FREE SHIPPING on orders over $99</span>
+            <span class="badge">New drop live now</span>
+            <a href="#">Shop Now</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav" role="navigation" aria-label="Primary">
+            <div class="brand">
+                <span class="dot" aria-hidden="true"></span>
+                <a href="#" aria-label="Pine Needle Designs home">Pine Needle Designs</a>
+            </div>
+            <nav class="nav-main hide-sm">
+                <a href="#">Home</a>
+                <a href="#">Catalog</a>
+            </nav>
+            <div class="search hide-sm">
+                <input type="search" placeholder="What are you looking for?" aria-label="Search store" />
+                <span class="loupe" aria-hidden="true">🔎</span>
+            </div>
+            <div class="nav-aux">
+                <a class="icon-btn" href="#" aria-label="Wishlist">♡</a>
+                <a class="icon-btn" href="#" aria-label="Account">👤</a>
+                <a class="icon-btn" href="#" aria-label="Cart">🛒</a>
+                <button class="icon-btn show-sm" id="menuBtn" aria-expanded="false" aria-controls="mnav">☰</button>
+            </div>
+        </div>
+        <div id="mnav" class="container show-sm" style="display:none;padding-bottom:14px">
+            <div class="search" style="margin-bottom:10px">
+                <input type="search" placeholder="Search products…" aria-label="Search store (mobile)">
+                <span class="loupe" aria-hidden="true">🔎</span>
+            </div>
+            <nav class="nav-main" style="justify-content:space-around">
+                <a href="#">Home</a>
+                <a href="#">Catalog</a>
+                <a href="#">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <article class="hero-card" aria-label="Hero — Denim & Lace">
+                <img alt="Model wearing denim jacket with lace details"
+                    src="https://images.unsplash.com/photo-1562158070-4a9b2a26c2b7?q=80&w=1800&auto=format&fit=crop" />
+                <div class="copy">
+                    <div class="eyebrow">New Drop</div>
+                    <h1>Denim &amp; Lace — yes please ✨</h1>
+                    <p>Limited-run upcycled pieces crafted to stand out.</p>
+                    <div class="cta">
+                        <a class="btn btn-accent" href="#">Shop now</a>
+                        <a class="btn" href="#">See lookbook</a>
+                    </div>
+                </div>
+            </article>
+            <article class="hero-card" aria-label="New Arrivals">
+                <img alt="Flat lay of apparel and accessories"
+                    src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop" />
+                <div class="copy">
+                    <div class="eyebrow">Fresh Picks</div>
+                    <h2 style="margin:.2rem 0 1rem">New arrivals</h2>
+                    <p>Must-haves just in. Find your next statement piece.</p>
+                    <div class="cta">
+                        <a class="btn btn-accent" href="#">Take me there</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- New In -->
+    <section>
+        <div class="container">
+            <div class="section-head">
+                <h2>New In</h2>
+                <a class="link" href="#">Shop all</a>
+            </div>
+            <div class="grid grid-4">
+                <!-- Product cards -->
+                <article class="product">
+                    <img class="media" alt="Upcycled denim hoodie"
+                        src="https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=1200&auto=format&fit=crop" />
+                    <div class="body">
+                        <div class="pill">One-of-a-kind</div>
+                        <h3>Core Acid Wash Zip Hoodie</h3>
+                        <div class="price">$98.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Statement jeans"
+                        src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop" />
+                    <div class="body">
+                        <div class="pill">Limited</div>
+                        <h3>Adirondack Chic Bottoms</h3>
+                        <div class="price">$128.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Beaded vest"
+                        src="https://images.unsplash.com/photo-1603251579431-cb2f95c6a8e4?q=80&w=1200&auto=format&fit=crop" />
+                    <div class="body">
+                        <div class="pill">New</div>
+                        <h3>Embellished Vest</h3>
+                        <div class="price">$142.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Bridal jacket"
+                        src="https://images.unsplash.com/photo-1520974657536-2f9b46e5c3e3?q=80&w=1200&auto=format&fit=crop" />
+                    <div class="body">
+                        <div class="pill">Bridal</div>
+                        <h3>Detachable-Train Jacket</h3>
+                        <div class="price">$220.00</div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Tiles -->
+    <section>
+        <div class="container split">
+            <div class="tile">
+                <img alt="Selection of bottoms"
+                    src="https://images.unsplash.com/photo-1626899798511-86a92c971083?q=80&w=1400&auto=format&fit=crop">
+                <div class="copy">
+                    <h3>Explore Bottoms</h3>
+                    <a class="btn btn-accent" href="#">Shop now</a>
+                </div>
+            </div>
+            <div class="tile">
+                <img alt="Selection of tops"
+                    src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1400&auto=format&fit=crop">
+                <div class="copy">
+                    <h3>Explore Tops</h3>
+                    <a class="btn btn-accent" href="#">Shop now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section>
+        <div class="container">
+            <div class="section-head">
+                <h2>Best Sellers</h2>
+                <a class="link" href="#">Show all</a>
+            </div>
+            <div class="grid grid-4">
+                <article class="product">
+                    <img class="media" alt="Statement tote"
+                        src="https://images.unsplash.com/photo-1613858142214-9f5e602bc4a8?q=80&w=1200&auto=format&fit=crop">
+                    <div class="body">
+                        <h3>Statement Tote</h3>
+                        <div class="price">$76.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Beaded bracelet"
+                        src="https://images.unsplash.com/photo-1505685296765-3a2736de412f?q=80&w=1200&auto=format&fit=crop">
+                    <div class="body">
+                        <h3>Hand-beaded Bracelet</h3>
+                        <div class="price">$24.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Denim skirt"
+                        src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200&auto=format&fit=crop">
+                    <div class="body">
+                        <h3>Denim Skirt</h3>
+                        <div class="price">$88.00</div>
+                    </div>
+                </article>
+                <article class="product">
+                    <img class="media" alt="Textured jacket"
+                        src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1200&auto=format&fit=crop">
+                    <div class="body">
+                        <h3>Textured Jacket</h3>
+                        <div class="price">$169.00</div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section>
+        <div class="container about">
+            <div class="card">
+                <h2>One-of-a-kind designs</h2>
+                <p>From purses and bracelets to denim jackets with detachable trains, every piece is designed to make a
+                    statement.
+                    The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the USA and made
+                    for all sizes.</p>
+                <a class="btn" href="#">About Us</a>
+            </div>
+            <img alt="Studio scene"
+                src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1600&auto=format&fit=crop"
+                style="border-radius:18px;box-shadow:var(--shadow)">
+        </div>
+    </section>
+
+    <!-- Collections -->
+    <section class="collections">
+        <div class="container">
+            <div class="section-head">
+                <h2>Collections</h2>
+                <a class="link" href="#">Explore all</a>
+            </div>
+            <div class="grid grid-6">
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>Bridal Jackets</h3>
+                        <div class="subtle">12 items</div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>Tops</h3>
+                        <div class="subtle">19 items</div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>Bottoms</h3>
+                        <div class="subtle">9 items</div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>Accessories</h3>
+                        <div class="subtle">24 items</div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>Outerwear</h3>
+                        <div class="subtle">7 items</div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="media"></div>
+                    <div class="body">
+                        <h3>One-offs</h3>
+                        <div class="subtle">5 items</div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social -->
+    <section>
+        <div class="container">
+            <div class="section-head">
+                <h2>@pineneedledesigns</h2>
+                <a class="link" href="#">Follow us</a>
+            </div>
+            <div class="social">
+                <img alt="Social post 1"
+                    src="https://images.unsplash.com/photo-1547332183-1e79d9d0a9d4?q=80&w=800&auto=format&fit=crop">
+                <img alt="Social post 2"
+                    src="https://images.unsplash.com/photo-1572743376-364b64d5d02a?q=80&w=800&auto=format&fit=crop">
+                <img alt="Social post 3"
+                    src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?q=80&w=800&auto=format&fit=crop">
+                <img alt="Social post 4"
+                    src="https://images.unsplash.com/photo-1490480172218-908e59a213a8?q=80&w=800&auto=format&fit=crop">
+                <img alt="Social post 5"
+                    src="https://images.unsplash.com/photo-1519744792095-2f2205e87b6f?q=80&w=800&auto=format&fit=crop">
+                <img alt="Social post 6"
+                    src="https://images.unsplash.com/photo-1503342217505-b0a15cf70489?q=80&w=800&auto=format&fit=crop">
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section>
+        <div class="container benefits">
+            <div class="benefit">
+                <h3>Free Shipping</h3>
+                <p class="subtle">Most orders arrive in 3–5 days.</p>
+            </div>
+            <div class="benefit">
+                <h3>Rewards Club</h3>
+                <p class="subtle">Get perks every time you shop.</p>
+            </div>
+            <div class="benefit">
+                <h3>Shop Now, Pay Later</h3>
+                <p class="subtle">Flexible installments available.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="container callout">
+        <div class="inner">
+            <div>
+                <h3>Sign up &amp; save 10%</h3>
+                <p class="subtle">Join the newsletter for early access to drops and special offers.</p>
+                <form class="field" onsubmit="event.preventDefault(); alert('Thanks for subscribing! (demo)')">
+                    <input type="email" required placeholder="Your email">
+                    <button class="btn btn-accent" type="submit">Get offer</button>
+                </form>
+            </div>
+            <img alt="Newsletter art"
+                src="https://images.unsplash.com/photo-1542377285-1c5715d2cd75?q=80&w=1200&auto=format&fit=crop"
+                style="border-radius:14px;box-shadow:var(--shadow)">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container foot">
+            <div>
+                <div class="brand"><span class="dot"></span><strong>Pine Needle Designs</strong></div>
+                <p class="subtle">Refashioned clothing &amp; accessories with a boho-meets-chic point of view.</p>
+            </div>
+            <div>
+                <h4>Help</h4>
+                <ul>
+                    <li><a href="#">Search</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Get updates</h4>
+                <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
+                    <input type="email" required placeholder="Your email">
+                    <button class="btn btn-accent" type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="container copyright">
+            <span>© <span id="y"></span> Pine Needle Designs — Demo</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
