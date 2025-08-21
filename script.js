@@ -18,15 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const isHidden =
       (mnav.style.display && mnav.style.display === "none") ||
       window.getComputedStyle(mnav).display === "none";
+
     menuBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
 
     menuBtn.addEventListener("click", () => {
       const expanded = menuBtn.getAttribute("aria-expanded") === "true";
-      if (expanded) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
+      if (expanded) closeMenu();
+      else openMenu();
     });
 
     document.addEventListener("click", (e) => {
@@ -40,89 +38,115 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Escape") closeMenu();
     });
 
-    const mq = window.matchMedia("(min-width: 981px)");
+    const mqMenu = window.matchMedia("(min-width: 981px)");
     const handleDesktop = (ev) => {
-      if (ev.matches) {
-        closeMenu();
-      }
+      if (ev.matches) closeMenu();
     };
-    mq.addEventListener ? mq.addEventListener("change", handleDesktop) : mq.addListener(handleDesktop);
+    if (mqMenu.addEventListener) mqMenu.addEventListener("change", handleDesktop);
+    else mqMenu.addListener(handleDesktop);
   }
 
   const yearEl = document.getElementById("y");
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
-});
 
-(function () {
-  const mq = window.matchMedia('(max-width: 768px)');
+  const mqFooter = window.matchMedia("(max-width: 768px)");
 
-  function initToggle(btn) {
-    const id = btn.getAttribute('data-target');
+  function needsToggle(panel, thresholdPx = 140) {
+    if (!panel) return false;
+    const prev = panel.getAttribute("data-collapsed");
+    panel.setAttribute("data-collapsed", "false");
+    const tall = panel.scrollHeight > thresholdPx;
+    panel.setAttribute("data-collapsed", prev == null ? "true" : prev);
+    return tall;
+  }
+
+  function initGenericToggle(btn) {
+    const id = btn.getAttribute("data-target");
     const panel = document.getElementById(id);
     if (!panel) return;
 
+    function setState(expanded) {
+      btn.setAttribute("aria-expanded", String(expanded));
+      panel.setAttribute("data-collapsed", expanded ? "false" : "true");
+      if (!btn.classList.contains("icon-plusminus")) {
+        btn.textContent = expanded ? "Read less" : "Read more";
+      }
+      btn.setAttribute("aria-label", expanded ? "Collapse section" : "Expand section");
+    }
+
+
     function evaluate() {
-      if (!mq.matches) {
-        panel.setAttribute('data-collapsed', 'false');
-        btn.setAttribute('aria-expanded', 'true');
-        btn.style.display = 'none';
+      if (!mqFooter.matches) {
+        setState(true);
+        btn.style.display = "none";
         return;
       }
-      const prev = panel.getAttribute('data-collapsed');
-      panel.setAttribute('data-collapsed', 'false');
-      const needsToggle = panel.scrollHeight > 140;
-      panel.setAttribute('data-collapsed', prev);
-
-      btn.style.display = needsToggle ? '' : 'none';
-      if (needsToggle && (prev === null || prev === 'true')) {
-        btn.textContent = 'Read more';
-        btn.setAttribute('aria-expanded', 'false');
-        panel.setAttribute('data-collapsed', 'true');
+      const showBtn = needsToggle(panel, 140);
+      if (!showBtn) {
+        setState(true);
+        btn.style.display = "none";
+      } else {
+        setState(false);
+        btn.style.display = "";
       }
     }
 
-    btn.addEventListener('click', () => {
-      const isCollapsed = panel.getAttribute('data-collapsed') !== 'false';
-      panel.setAttribute('data-collapsed', isCollapsed ? 'false' : 'true');
-      btn.textContent = isCollapsed ? 'Read less' : 'Read more';
-      btn.setAttribute('aria-expanded', String(isCollapsed ? true : false));
+    btn.addEventListener("click", () => {
+      const expanded = btn.getAttribute("aria-expanded") === "true";
+      setState(!expanded);
     });
 
     evaluate();
-    window.addEventListener('resize', evaluate);
+    const onChange = () => evaluate();
+    if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
+    else mqFooter.addListener(onChange);
+    window.addEventListener("resize", onChange);
   }
 
-  document.querySelectorAll('.foot-toggle').forEach(initToggle);
-})();
+  document
+    .querySelectorAll(".foot-toggle:not(.icon-plusminus)")
+    .forEach(initGenericToggle);
 
-(function () {
-  const btn = document.querySelector('#foot-section-1 .foot-toggle');
-  const panel = document.getElementById(btn?.dataset.target || '');
+  (function initSection1PlusMinus() {
+    const btn = document.querySelector(".foot-toggle.icon-plusminus");
+    if (!btn) return;
+    const targetId = btn.getAttribute("data-target") || "foot-about";
+    const panel = document.getElementById(targetId);
+    if (!panel) return;
 
-  if (!btn || !panel) return;
-
-  const mq = window.matchMedia('(max-width: 768px)');
-
-  function setState(expanded) {
-    btn.setAttribute('aria-expanded', String(expanded));
-    panel.setAttribute('data-collapsed', expanded ? 'false' : 'true');
-  }
-
-  function evaluate() {
-    if (!mq.matches) {
-      setState(true);
-    } else {
-      setState(false);
+    function setState(expanded) {
+      btn.setAttribute("aria-expanded", String(expanded));
+      btn.setAttribute("aria-label", expanded ? "Collapse section" : "Expand section");
+      panel.setAttribute("data-collapsed", expanded ? "false" : "true");
     }
-  }
 
-  btn.addEventListener('click', () => {
-    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-    setState(!isExpanded);
-  });
+    function evaluate() {
+      if (!mqFooter.matches) {
+        setState(true);
+        btn.style.display = "none";
+        return;
+      }
+      const showBtn = needsToggle(panel, 140);
+      if (!showBtn) {
+        setState(true);
+        btn.style.display = "none";
+      } else {
+        setState(false);
+        btn.style.display = "";
+      }
+    }
 
-  evaluate();
-  window.addEventListener('resize', evaluate);
-})();
+    btn.addEventListener("click", () => {
+      const expanded = btn.getAttribute("aria-expanded") === "true";
+      setState(!expanded);
+    });
+
+    evaluate();
+    const onChange = () => evaluate();
+    if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
+    else mqFooter.addListener(onChange);
+    window.addEventListener("resize", onChange);
+  })();
+});
