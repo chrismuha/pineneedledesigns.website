@@ -18,20 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const isHidden =
       (mnav.style.display && mnav.style.display === "none") ||
       window.getComputedStyle(mnav).display === "none";
-
     menuBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
 
     menuBtn.addEventListener("click", () => {
       const expanded = menuBtn.getAttribute("aria-expanded") === "true";
-      if (expanded) closeMenu();
-      else openMenu();
+      expanded ? closeMenu() : openMenu();
     });
 
     document.addEventListener("click", (e) => {
-      const target = e.target;
-      if (!mnav.contains(target) && !menuBtn.contains(target)) {
-        closeMenu();
-      }
+      const t = e.target;
+      if (!mnav.contains(t) && !menuBtn.contains(t)) closeMenu();
     });
 
     document.addEventListener("keydown", (e) => {
@@ -47,9 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const yearEl = document.getElementById("y");
-  if (yearEl) {
-    yearEl.textContent = new Date().getFullYear();
-  }
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   const mqFooter = window.matchMedia("(max-width: 768px)");
 
@@ -62,91 +56,70 @@ document.addEventListener("DOMContentLoaded", () => {
     return tall;
   }
 
-  function initGenericToggle(btn) {
-    const id = btn.getAttribute("data-target");
-    const panel = document.getElementById(id);
+  function resolvePanel(btn) {
+    let id = btn.getAttribute("data-target") || btn.getAttribute("aria-controls");
+    let panel = id ? document.getElementById(id) : null;
+    if (!panel) {
+      const scope = btn.closest("section") || document;
+      panel = scope.querySelector(".collapsible");
+      if (panel && panel.id) {
+        btn.setAttribute("data-target", panel.id);
+        btn.setAttribute("aria-controls", panel.id);
+      }
+    }
+    return panel;
+  }
+
+  function setState(btn, panel, expanded) {
+    btn.setAttribute("aria-expanded", String(expanded));
+    panel.setAttribute("data-collapsed", expanded ? "false" : "true");
+    if (!btn.classList.contains("icon-plusminus")) {
+      btn.textContent = expanded ? "Read less" : "Read more";
+    }
+  }
+
+  function evaluate(btn, panel) {
+    if (!mqFooter.matches) {
+      setState(btn, panel, true);
+      btn.style.display = "none";
+      return;
+    }
+    const show = needsToggle(panel, 140);
+    if (!show) {
+      setState(btn, panel, true);
+      btn.style.display = "none";
+    } else {
+      setState(btn, panel, false);
+      btn.style.display = "";
+    }
+  }
+
+  function initToggle(btn) {
+    const panel = resolvePanel(btn);
     if (!panel) return;
 
-    function setState(expanded) {
-      btn.setAttribute("aria-expanded", String(expanded));
-      panel.setAttribute("data-collapsed", expanded ? "false" : "true");
-      if (!btn.classList.contains("icon-plusminus")) {
-        btn.textContent = expanded ? "Read less" : "Read more";
-      }
-      btn.setAttribute("aria-label", expanded ? "Collapse section" : "Expand section");
-    }
-
-
-    function evaluate() {
-      if (!mqFooter.matches) {
-        setState(true);
-        btn.style.display = "none";
-        return;
-      }
-      const showBtn = needsToggle(panel, 140);
-      if (!showBtn) {
-        setState(true);
-        btn.style.display = "none";
-      } else {
-        setState(false);
-        btn.style.display = "";
-      }
+    if ((btn.tagName === "SPAN" || btn.getAttribute("role") === "button") && !btn.hasAttribute("tabindex")) {
+      btn.setAttribute("tabindex", "0");
     }
 
     btn.addEventListener("click", () => {
       const expanded = btn.getAttribute("aria-expanded") === "true";
-      setState(!expanded);
+      setState(btn, panel, !expanded);
     });
 
-    evaluate();
-    const onChange = () => evaluate();
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+
+    evaluate(btn, panel);
+    const onChange = () => evaluate(btn, panel);
     if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
     else mqFooter.addListener(onChange);
     window.addEventListener("resize", onChange);
   }
 
-  document
-    .querySelectorAll(".foot-toggle:not(.icon-plusminus)")
-    .forEach(initGenericToggle);
-
-  (function initSection1PlusMinus() {
-    const btn = document.querySelector(".foot-toggle.icon-plusminus");
-    if (!btn) return;
-    const targetId = btn.getAttribute("data-target") || "foot-about";
-    const panel = document.getElementById(targetId);
-    if (!panel) return;
-
-    function setState(expanded) {
-      btn.setAttribute("aria-expanded", String(expanded));
-      btn.setAttribute("aria-label", expanded ? "Collapse section" : "Expand section");
-      panel.setAttribute("data-collapsed", expanded ? "false" : "true");
-    }
-
-    function evaluate() {
-      if (!mqFooter.matches) {
-        setState(true);
-        btn.style.display = "none";
-        return;
-      }
-      const showBtn = needsToggle(panel, 140);
-      if (!showBtn) {
-        setState(true);
-        btn.style.display = "none";
-      } else {
-        setState(false);
-        btn.style.display = "";
-      }
-    }
-
-    btn.addEventListener("click", () => {
-      const expanded = btn.getAttribute("aria-expanded") === "true";
-      setState(!expanded);
-    });
-
-    evaluate();
-    const onChange = () => evaluate();
-    if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
-    else mqFooter.addListener(onChange);
-    window.addEventListener("resize", onChange);
-  })();
+  document.querySelectorAll(".foot-toggle").forEach(initToggle);
 });

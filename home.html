@@ -304,36 +304,20 @@
         </div>
     </section>
 
-    <!-- Newsletter -->
-    <section class="container callout">
-        <div class="inner">
-            <div>
-                <h3>Sign up & save 10%</h3>
-                <p class="subtle">Join the newsletter for early access to drops and special offers.</p>
-                <form class="field" onsubmit="event.preventDefault(); alert('Thanks for subscribing! (demo)')">
-                    <input type="email" required placeholder="Your email">
-                    <button class="btn btn-accent" type="submit">Get offer</button>
-                </form>
-            </div>
-            <img alt="Newsletter art" src="images/filename.jpg" style="border-radius:14px;box-shadow:var(--shadow)">
-        </div>
-    </section>
-
-    <!-- Footer -->
     <!-- Footer -->
     <footer>
         <!-- SECTION 1 (collapsible) -->
         <section id="foot-section-1">
             <div id="foot-about" class="container footer-grid collapsible" data-collapsed="true">
                 <div class="footer-left">
-                    <p class="subtle-2">OH BEAUTIFUL YOU.......AND ME TOO!</p>
+                    <p class="hare">OH BEAUTIFUL YOU.......AND ME TOO!</p>
                     <img src="images/4.png" alt="bunny">
                 </div>
 
                 <div class="footer-right">
                     <div class="footer-brand">
                         <h4 class="footer-brand__title">Pine Needle Designs</h4>
-                        <p class="footer-brand__tagline subtle">
+                        <p class="footer-brand__tagline">
                             Refashioned clothing & accessories with a boho-meets-chic point of view.
                         </p>
                     </div>
@@ -345,23 +329,16 @@
                         are unique and will give you Confidence, Compliments, and scream Country Couture.
                         <br> Designed and made in the USA
                     </p>
-
-                    <h4>Get updates</h4>
-                    <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
-                        <input type="email" required placeholder="Your email">
-                        <button class="btn btn-accent" type="submit">Subscribe</button>
-                    </form>
                 </div>
+            </div>
 
-
-                <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                    <button class="foot-toggle icon-plusminus" type="button" data-target="foot-about"
-                        aria-controls="foot-about" aria-expanded="false" aria-label="Expand section">
-                        <span class="sr-only">Expand section</span>
-                    </button>
-                </div>
+            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
+                <button class="foot-toggle icon-plusminus" type="button" data-target="foot-about"
+                    aria-controls="foot-about" aria-expanded="false" aria-label="Expand section">
+                    <span class="sr-only">Expand section</span>
+                </button>
+            </div>
         </section>
-
 
         <!-- SECTION 2 (collapsible) -->
         <section id="foot-section-2">
@@ -388,21 +365,41 @@
             </div>
 
             <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                <button class="foot-toggle" type="button" data-target="foot-links" aria-controls="foot-links"
-                    aria-expanded="false">
-                    Read more
+                <button class="foot-toggle icon-plusminus" type="button" data-target="foot-links"
+                    aria-controls="foot-links" aria-expanded="false" aria-label="Expand section">
+                    <span class="sr-only">Expand section</span>
                 </button>
             </div>
         </section>
 
+        <footer>
+            <!-- SECTION 3 (collapsible) -->
+            <section id="foot-section-3">
+                <div id="foot-social" class="container collapsible" data-collapsed="true" role="region"
+                    aria-label="copyright">
+                    <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
+                        <button class="foot-toggle icon-plusminus" type="button" data-target="foot-social"
+                            aria-controls="foot-social" aria-expanded="false" aria-label="Expand section">
+                            <span class="sr-only">Expand section</span>
+                        </button>
+                    </div>
 
-        <!-- Copyright -->
-        <div class="container copyright">
-            <span>© <span id="y"></span> Pine Needle Designs</span>
-        </div>
-    </footer>
+                    <h4>Get updates</h4>
+                    <p>Discover new drops, special offers, and all things Pine Needle Designs.</p>
 
-    <script src="script.js"></script>
+                    <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
+                        <input type="email" required placeholder="Your email">
+                        <button class="btn btn-accent" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Copyright bar (moved outside/below Section 3) -->
+            <div class="container copyright" role="contentinfo" style="text-align:center">
+                <span>© <span id="y"></span> Pine Needle Designs</span>
+            </div>
+        </footer>
+        <script src="script.js"></script>
 </body>
 
 </html>
