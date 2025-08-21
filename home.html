@@ -315,11 +315,28 @@
     </section>
 
     <!-- Footer -->
+    <!-- Footer -->
     <footer>
+        <!-- Bunny + quote on the left, subscribe form on the right -->
+        <div class="container footer-grid">
+            <div class="footer-left">
+                <p class="subtle-2">OH BEAUTIFUL YOU.......AND ME TOO!</p>
+                <img src="images/4.png" alt="bunny">
+            </div>
+            <div class="footer-right">
+                <h4>Get updates</h4>
+                <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
+                    <input type="email" required placeholder="Your email">
+                    <button class="btn btn-accent" type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Keep the rest of the footer OUT of that grid -->
         <div class="container foot">
             <div>
                 <div class="brand"><span class="dot"></span><strong>Pine Needle Designs</strong></div>
-                <p class="subtle">Refashioned clothing & accessories with a boho-meets-chic point of view.</p>
+                <p class="subtle">Refashioned clothing &amp; accessories with a boho-meets-chic point of view.</p>
             </div>
             <div>
                 <h4>Help</h4>
@@ -339,30 +356,8 @@
                     <li><a href="#">Careers</a></li>
                 </ul>
             </div>
-            <div>
-                <div class="container footer-grid"></div>
-                <!-- Left column -->
-                <div class="footer-left">
-                    <p class="subtle-2">OH BEAUTIFUL YOU.......AND ME TOO!</p>
-                    <img src="images/4.png" alt="bunny">
-                    <h4>Get updates</h4>
-                    <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
-                        <input type="email" required placeholder="Your email">
-                        <button class="btn btn-accent" type="submit">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Right column -->
-            <div class="footer-right">
-                <h4>Get updates</h4>
-                <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
-                    <input type="email" required placeholder="Your email">
-                    <button class="btn btn-accent" type="submit">Subscribe</button>
-                </form>
-            </div>
-
         </div>
+
         <div class="container copyright">
             <span>© <span id="y"></span> Pine Needle Designs</span>
         </div>

@@ -480,6 +480,31 @@ footer a {
     color: #e6e6e6
 }
 
+/* Bunny + quote row (two columns above main footer) */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 18px 0;
+}
+
+/* Left block (quote + bunny) */
+.footer-left {
+    text-align: left;
+}
+
+.footer-left img {
+    max-width: 90px;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Right block (subscribe form) */
+.footer-right {
+    text-align: right;
+}
+
 .foot {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -608,11 +633,17 @@ footer a {
 }
 
 @media (max-width: 600px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .footer-right {
-    text-align: center;
-  }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-right {
+        text-align: center;
+    }
+
+    .footer-left img {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
