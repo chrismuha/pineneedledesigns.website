@@ -534,7 +534,7 @@ footer .copyright {
 
 .special-footer-p {
     font-weight: 400;
-    font-family: "Segoe UI", Helvetica, Arial, 'Times New Roman', Times, serif, sans-serif, ;
+    font-family: "Segoe UI", Helvetica, Arial, 'Times New Roman', Times, serif, sans-serif;
     font-size: 12pt;
     margin: 0 0 12px;
 }
@@ -553,17 +553,68 @@ footer .copyright {
     text-align: left;
 }
 
-.footer-left img {
-    display: block;
-    margin-top: 10px;
-    transform: scale(0.75);
-    transform-origin: top left;
+#foot-section-1 .footer-left img {
+  width: 260px;
+  max-width: 100%;
+  height: auto;
+  margin: 10px auto 0;
+  transform: none;           /* stops the global scale(.75) */
+  transform-origin: center;
 }
 
 /* Right block (subscribe form) */
 .footer-right {
-    text-align: right;
+    text-align: center;
 }
+
+.footer-right .field {
+    justify-content: center;
+    /* centers the email form */
+}
+
+/* Stack and center brand + tagline */
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.footer-brand__title {
+    margin: 0;
+}
+
+.footer-brand__tagline {
+    margin: 0;
+}
+
+/* Stack Section 1 (bunny on top, brand + form below) */
+#foot-section-1 .footer-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 16px;
+}
+
+#foot-section-1 .footer-left,
+#foot-section-1 .footer-right {
+    text-align: center;
+}
+
+#foot-section-1 .footer-left img {
+    width: 260px;
+    max-width: 100%;
+    height: auto;
+    margin: 10px auto 0;
+    transform: none;
+    transform-origin: center;
+}
+
+#foot-section-1 .footer-right .field {
+    justify-content: center;
+}
+
 
 .foot {
     display: grid;
@@ -658,7 +709,6 @@ footer .copyright {
     }
 }
 
-/* Optional: collapsed teaser look on mobile */
 @media (max-width: 768px) {
     #foot-about[data-collapsed="true"] {
         max-height: 140px;
@@ -676,6 +726,13 @@ footer .copyright {
         background: linear-gradient(transparent, #0f1111);
     }
 }
+
+@media (max-width: 600px) {
+    #foot-section-1 .footer-left img {
+        width: 200px;
+    }
+}
+
 
 /* 
   .foot-media { margin: 6px 0 10px; }
@@ -757,15 +814,6 @@ footer .copyright {
 }
 
 /* footer */
-@media (max-width:768px) {
-    .foot {
-        display: grid;
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 6px;
-        text-align: center;
-    }
-
     .foot ul {
         list-style: none;
         padding: 0;
@@ -773,7 +821,7 @@ footer .copyright {
     }
 
     .foot li {
-        margin: 0.25 rem 0;
+        margin: 0.25rem 0;
     }
 
     .foot a {
@@ -785,15 +833,6 @@ footer .copyright {
     footer .foot p {
         text-align: center !important;
         margin: 0.25rem 0 !important;
-    }
-
-    footer .foot {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        gap: 0.5rem;
     }
 
     footer .foot ul {
@@ -828,7 +867,6 @@ footer .copyright {
     footer li::marker {
         content: "";
     }
-}
 
 @media (max-width: 600px) {
     .footer-grid {
