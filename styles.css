@@ -254,6 +254,12 @@ h1 {
     line-height: 1.1
 }
 
+.chic-header {
+    text-align: center;
+    font-size: 1.6rem;
+    margin: 0 0 12px;
+}
+
 .cta {
     display: flex;
     gap: 10px;
@@ -501,16 +507,22 @@ footer a {
 }
 
 .foot ul {
-  list-style: disc;
-  list-style-position: outside;
-  padding-left: 1.2rem;
-  margin: 0;
+    list-style: disc;
+    list-style-position: outside;
+    padding-left: 1.2rem;
+    margin: 0;
 }
 
 .foot li {
-  margin: 4px 0;
+    margin: 4px 0;
 }
 
+.special-footer-p {
+    font-weight: 400;
+    font-family: "Segoe UI", Helvetica, Arial, 'Times New Roman', Times, serif, sans-serif, ;
+    font-size: 12pt;
+    margin: 0 0 12px;
+}
 
 /* Bunny + quote row (two columns above main footer) */
 .footer-grid {
@@ -556,12 +568,12 @@ footer a {
 }
 
 .copyright {
-    border-top: 1px solid rgba(255, 255, 255, .08);
-    padding: 14px 0;
     font-size: .9rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid #fffffff7;
 }
 
 /* Utilities */
@@ -641,8 +653,74 @@ footer a {
 /* footer */
 @media (max-width:768px) {
     .foot {
+        display: grid;
         grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 6px;
         text-align: center;
+    }
+
+    .foot ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .foot li {
+        margin: 0.25 rem 0;
+    }
+
+    .foot a {
+        display: inline-block;
+    }
+
+    footer .foot li,
+    footer .foot a,
+    footer .foot p {
+        text-align: center !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    footer.foot {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 0.5rem;
+    }
+
+    footer .foot ul {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.25rem;
+    }
+
+    footer ul,
+    footer ol,
+    .foot ul,
+    .foot ol {
+        list-style: none !important;
+        list-style-type: none !important;
+        padding-left: 0 !important;
+        margin-left: 0;
+    }
+
+    .foot,
+    .foot ul,
+    .foot li,
+    .foot div {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    footer li::marker {
+        content: "";
     }
 }
 
@@ -652,14 +730,21 @@ footer a {
         text-align: center;
     }
 
-    .footer-right {
+    .footer-left {
         text-align: center;
+        /* center the quote text */
     }
 
     .footer-left img {
         margin-left: auto;
         margin-right: auto;
+        transform-origin: center;
     }
+
+    .footer-right {
+        text-align: center;
+    }
+
 }
 
 /* misc. */

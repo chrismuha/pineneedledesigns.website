@@ -54,3 +54,45 @@ document.addEventListener("DOMContentLoaded", () => {
     yearEl.textContent = new Date().getFullYear();
   }
 });
+
+(function () {
+  const mq = window.matchMedia('(max-width: 768px)');
+
+  function initToggle(btn) {
+    const id = btn.getAttribute('data-target');
+    const panel = document.getElementById(id);
+    if (!panel) return;
+
+    function evaluate() {
+      if (!mq.matches) {
+        panel.setAttribute('data-collapsed', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.style.display = 'none';
+        return;
+      }
+      const prev = panel.getAttribute('data-collapsed');
+      panel.setAttribute('data-collapsed', 'false');
+      const needsToggle = panel.scrollHeight > 140;
+      panel.setAttribute('data-collapsed', prev);
+
+      btn.style.display = needsToggle ? '' : 'none';
+      if (needsToggle && (prev === null || prev === 'true')) {
+        btn.textContent = 'Read more';
+        btn.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('data-collapsed', 'true');
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      const isCollapsed = panel.getAttribute('data-collapsed') !== 'false';
+      panel.setAttribute('data-collapsed', isCollapsed ? 'false' : 'true');
+      btn.textContent = isCollapsed ? 'Read less' : 'Read more';
+      btn.setAttribute('aria-expanded', String(isCollapsed ? true : false));
+    });
+
+    evaluate();
+    window.addEventListener('resize', evaluate);
+  }
+
+  document.querySelectorAll('.foot-toggle').forEach(initToggle);
+})();
