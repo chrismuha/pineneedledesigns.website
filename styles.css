@@ -457,6 +457,18 @@ footer .copyright {
     background-color: #0f1111 !important;
 }
 
+footer .foot-toggle-wrap {
+    margin: 2px 0 !important;
+    padding: 0 !important;
+}
+
+footer .foot-toggle {
+    padding: 4px !important;
+    line-height: 1;
+}
+
+footer > section { margin: 0; };
+
 #foot-section-1 {
     padding-top: 0;
     margin-top: 0;
@@ -592,8 +604,9 @@ footer .copyright {
 }
 
 /* Utilities */
-.collapsible[data-collapsed="true"] {
-    display: none;
+.collapsible[data-collapsed="true"],
+.collapsible[aria-hidden="true"] {
+    display: none !important;
 }
 
 .hide-sm {

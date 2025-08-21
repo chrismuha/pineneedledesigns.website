@@ -49,10 +49,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function needsToggle(panel, thresholdPx = 140) {
     if (!panel) return false;
-    const prev = panel.getAttribute("data-collapsed");
+    const prevCollapsed = panel.getAttribute("data-collapsed");
+    const prevAria = panel.getAttribute("aria-hidden");
+    const prevInlineDisplay = panel.style.display;
     panel.setAttribute("data-collapsed", "false");
+    panel.setAttribute("aria-hidden", "false");
+    if (getComputedStyle(panel).display === "none") {
+      panel.style.display = "block";
+    }
     const tall = panel.scrollHeight > thresholdPx;
-    panel.setAttribute("data-collapsed", prev == null ? "true" : prev);
+    if (prevCollapsed === null) panel.removeAttribute("data-collapsed");
+    else panel.setAttribute("data-collapsed", prevCollapsed);
+    if (prevAria === null) panel.removeAttribute("aria-hidden");
+    else panel.setAttribute("aria-hidden", prevAria);
+    panel.style.display = prevInlineDisplay;
     return tall;
   }
 
@@ -73,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function setState(btn, panel, expanded) {
     btn.setAttribute("aria-expanded", String(expanded));
     panel.setAttribute("data-collapsed", expanded ? "false" : "true");
+    panel.setAttribute("aria-hidden", expanded ? "false" : "true");
     if (!btn.classList.contains("icon-plusminus")) {
       btn.textContent = expanded ? "Read less" : "Read more";
     }
@@ -80,17 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function evaluate(btn, panel) {
     if (panel.dataset.force === "true") {
-      setState(btn, panel, false); // start collapsed
-      btn.style.display = "";      // show the +
+      setState(btn, panel, false);
+      btn.style.display = "";
       return;
     }
-
     if (!mqFooter.matches) {
       setState(btn, panel, true);
       btn.style.display = "none";
       return;
     }
-
     const show = needsToggle(panel, 140);
     if (!show) {
       setState(btn, panel, true);
@@ -104,30 +113,30 @@ document.addEventListener("DOMContentLoaded", () => {
   function initToggle(btn) {
     const panel = resolvePanel(btn);
     if (!panel) return;
-
     if (!panel.classList.contains("collapsible")) panel.classList.add("collapsible");
-
     if ((btn.tagName === "SPAN" || btn.getAttribute("role") === "button") && !btn.hasAttribute("tabindex")) {
       btn.setAttribute("tabindex", "0");
     }
-
     btn.addEventListener("click", () => {
       const expanded = btn.getAttribute("aria-expanded") === "true";
       setState(btn, panel, !expanded);
     });
-
     btn.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         btn.click();
       }
     });
-
     evaluate(btn, panel);
     const onChange = () => evaluate(btn, panel);
+    const debounce = (fn, d = 120) => {
+      let t;
+      return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), d); };
+    };
+    const debouncedOnChange = debounce(onChange, 120);
     if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
     else mqFooter.addListener(onChange);
-    window.addEventListener("resize", onChange);
+    window.addEventListener("resize", debouncedOnChange);
   }
 
   document.querySelectorAll(".foot-toggle").forEach(initToggle);
