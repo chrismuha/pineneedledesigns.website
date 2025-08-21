@@ -720,7 +720,7 @@ footer>section {
 
 /* Big + / − toggle button */
 .icon-plusminus {
-    color: #fff;
+    color: #fff !important;
     width: 56px;
     height: 56px;
     border: 1px solid var(--border);
