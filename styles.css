@@ -493,6 +493,25 @@ footer a {
     color: #e6e6e6
 }
 
+.footer-info {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.foot ul {
+  list-style: disc;
+  list-style-position: outside;
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.foot li {
+  margin: 4px 0;
+}
+
+
 /* Bunny + quote row (two columns above main footer) */
 .footer-grid {
     display: grid;
@@ -620,7 +639,7 @@ footer a {
 }
 
 /* footer */
-@media (max-width:450px) {
+@media (max-width:768px) {
     .foot {
         grid-template-columns: 1fr;
         text-align: center;
