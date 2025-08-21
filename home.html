@@ -305,10 +305,18 @@
     </section>
 
     <!-- Footer -->
-    <!-- Footer -->
     <footer>
         <!-- SECTION 1 (collapsible) -->
         <section id="foot-section-1">
+            <div class="container foot-toggle-wrap">
+                <p class="toggle-label" id="toggle-about-label">hello</p>
+                <button class="foot-toggle icon-plusminus" type="button" data-target="foot-about"
+                    aria-controls="foot-about" aria-expanded="false" aria-labelledby="toggle-about-label">
+                    <span class="sr-only">Expand section</span>
+                </button>
+            </div>
+
+            <!-- Collapsible panel -->
             <div id="foot-about" class="container footer-grid collapsible" data-collapsed="true" role="region"
                 aria-label="About Pine Needle Designs">
                 <div class="footer-left">
@@ -333,56 +341,51 @@
                     </p>
                 </div>
             </div>
-
-            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                <p class="toggle-label">hello</p>
-                <button class="foot-toggle icon-plusminus" type="button" data-target="foot-about"
-                    aria-controls="foot-about" aria-expanded="false" aria-label="Expand section">
-                    <span class="sr-only">Expand section</span>
-                </button>
-            </div>
         </section>
 
-        <!-- SECTION 2 (collapsible) -->
         <section id="foot-section-2">
-            <div id="foot-links" class="container foot-links collapsible" data-collapsed="true" role="region"
-                aria-label="Footer links">
-                <div class="foot-col">
-                    <h4>Help</h4>
-                    <ul>
-                        <li><a href="#">Search</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Refund Policy</a></li>
-                        <li><a href="#">Shipping Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="foot-col">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                <p class="toggle-label">hello</p>
+            <div class="container foot-toggle-wrap">
+                <p class="toggle-label" id="toggle-links-label">hello</p>
                 <button class="foot-toggle icon-plusminus" type="button" data-target="foot-links"
-                    aria-controls="foot-links" aria-expanded="false" aria-label="Expand section">
+                    aria-controls="foot-links" aria-expanded="false" aria-labelledby="toggle-links-label">
                     <span class="sr-only">Expand section</span>
                 </button>
             </div>
+
+            <!-- Collapsible panel -->
+            <div id="foot-links" class="container collapsible" data-collapsed="true" role="region"
+                aria-label="Footer links">
+                <div class="foot-links">
+                    <div class="foot-col">
+                        <h4>Help</h4>
+                        <ul>
+                            <li><a href="#">Search</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Refund Policy</a></li>
+                            <li><a href="#">Shipping Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div class="foot-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
+
 
         <!-- SECTION 3 (collapsible) -->
         <section id="foot-section-3">
-            <!-- Toggle stays visible -->
-            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                <p class="toggle-label">hello</p>
+            <!-- Toggle row BEFORE panel (already was) -->
+            <div class="container foot-toggle-wrap">
+                <p class="toggle-label" id="toggle-social-label">hello</p>
                 <button class="foot-toggle icon-plusminus" type="button" data-target="foot-social"
-                    aria-controls="foot-social" aria-expanded="false" aria-label="Expand section">
+                    aria-controls="foot-social" aria-expanded="false" aria-labelledby="toggle-social-label">
                     <span class="sr-only">Expand section</span>
                 </button>
             </div>
