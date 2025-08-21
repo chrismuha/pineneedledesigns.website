@@ -305,10 +305,12 @@
     </section>
 
     <!-- Footer -->
+    <!-- Footer -->
     <footer>
         <!-- SECTION 1 (collapsible) -->
         <section id="foot-section-1">
-            <div id="foot-about" class="container footer-grid collapsible" data-collapsed="true">
+            <div id="foot-about" class="container footer-grid collapsible" data-collapsed="true" role="region"
+                aria-label="About Pine Needle Designs">
                 <div class="footer-left">
                     <p class="hare">OH BEAUTIFUL YOU.......AND ME TOO!</p>
                     <img src="images/4.png" alt="bunny">
@@ -318,7 +320,7 @@
                     <div class="footer-brand">
                         <h4 class="footer-brand__title">Pine Needle Designs</h4>
                         <p class="footer-brand__tagline">
-                            Refashioned clothing & accessories with a boho-meets-chic point of view.
+                            Refashioned clothing &amp; accessories with a boho-meets-chic point of view.
                         </p>
                     </div>
 
@@ -372,34 +374,36 @@
             </div>
         </section>
 
-        <footer>
-            <!-- SECTION 3 (collapsible) -->
-            <section id="foot-section-3">
-                <div id="foot-social" class="container collapsible" data-collapsed="true" role="region"
-                    aria-label="copyright">
-                    <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
-                        <button class="foot-toggle icon-plusminus" type="button" data-target="foot-social"
-                            aria-controls="foot-social" aria-expanded="false" aria-label="Expand section">
-                            <span class="sr-only">Expand section</span>
-                        </button>
-                    </div>
-
-                    <h4>Get updates</h4>
-                    <p>Discover new drops, special offers, and all things Pine Needle Designs.</p>
-
-                    <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
-                        <input type="email" required placeholder="Your email">
-                        <button class="btn btn-accent" type="submit">Subscribe</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Copyright bar (moved outside/below Section 3) -->
-            <div class="container copyright" role="contentinfo" style="text-align:center">
-                <span>© <span id="y"></span> Pine Needle Designs</span>
+        <!-- SECTION 3 (collapsible) -->
+        <section id="foot-section-3">
+            <!-- Toggle stays visible -->
+            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
+                <button class="foot-toggle icon-plusminus" type="button" data-target="foot-social"
+                    aria-controls="foot-social" aria-expanded="false" aria-label="Expand section">
+                    <span class="sr-only">Expand section</span>
+                </button>
             </div>
-        </footer>
-        <script src="script.js"></script>
+
+            <!-- Collapsible panel (contains heading + form) -->
+            <div id="foot-social" class="container collapsible" data-collapsed="true" role="region"
+                aria-label="Get updates">
+                <h4>Get updates</h4>
+                <p>Discover new drops, special offers, and all things Pine Needle Designs.</p>
+
+                <form class="field" onsubmit="event.preventDefault(); alert('Thanks! (demo)')">
+                    <input type="email" required placeholder="Your email">
+                    <button class="btn btn-accent" type="submit">Subscribe</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Copyright bar -->
+        <div class="container copyright" role="contentinfo" style="text-align:center">
+            <span>© <span id="y"></span> Pine Needle Designs</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 
 </html>

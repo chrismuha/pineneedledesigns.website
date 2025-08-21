@@ -114,12 +114,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    evaluate(btn, panel);
-    const onChange = () => evaluate(btn, panel);
-    if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
-    else mqFooter.addListener(onChange);
-    window.addEventListener("resize", onChange);
-  }
+    function evaluate(btn, panel) {
+      if (panel.dataset.force === "true") {
+        setState(btn, panel, false); // collapsed
+        btn.style.display = "";      // show the +
+        return;
+      }
 
-  document.querySelectorAll(".foot-toggle").forEach(initToggle);
-});
+      if (!mqFooter.matches) {
+        setState(btn, panel, true);
+        btn.style.display = "none";
+        return;
+      }
+      const show = needsToggle(panel, 140);
+      if (!show) {
+        setState(btn, panel, true);
+        btn.style.display = "none";
+      } else {
+        setState(btn, panel, false);
+        btn.style.display = "";
+      }
+      }
+  
+    }
+  
+    document.querySelectorAll(".foot-toggle").forEach(initToggle);
+  });

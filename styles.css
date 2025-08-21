@@ -458,13 +458,13 @@ footer .copyright {
 }
 
 #foot-section-1 {
-  padding-top: 0;
-  margin-top: 0;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .footer-left p.hare {
-  margin: -16px 0 12px;
-  padding: 0px;
+    margin: -16px 0 12px;
+    padding: 0px;
 }
 
 .special-footer-p {
@@ -592,6 +592,10 @@ footer .copyright {
 }
 
 /* Utilities */
+.collapsible[data-collapsed="true"] {
+    display: none;
+}
+
 .hide-sm {
     display: block;
 }
