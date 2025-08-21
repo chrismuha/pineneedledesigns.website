@@ -363,27 +363,38 @@
         </section>
 
 
-        <!-- Link columns -->
-        <div class="container foot" role="navigation" aria-label="Footer links">
-            <div>
-                <h4>Help</h4>
-                <ul>
-                    <li><a href="#">Search</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Refund Policy</a></li>
-                    <li><a href="#">Shipping Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
+        <!-- SECTION 2 (collapsible) -->
+        <section id="foot-section-2">
+            <div id="foot-links" class="container foot-links collapsible" data-collapsed="true" role="region"
+                aria-label="Footer links">
+                <div class="foot-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="#">Search</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="foot-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Careers</a></li>
-                </ul>
+
+            <div class="container foot-toggle-wrap" style="text-align:center;margin-top:10px">
+                <button class="foot-toggle" type="button" data-target="foot-links" aria-controls="foot-links"
+                    aria-expanded="false">
+                    Read more
+                </button>
             </div>
-        </div>
+        </section>
+
 
         <!-- Copyright -->
         <div class="container copyright">

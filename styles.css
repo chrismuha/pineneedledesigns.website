@@ -554,12 +554,13 @@ footer .copyright {
 }
 
 #foot-section-1 .footer-left img {
-  width: 260px;
-  max-width: 100%;
-  height: auto;
-  margin: 10px auto 0;
-  transform: none;           /* stops the global scale(.75) */
-  transform-origin: center;
+    width: 260px;
+    max-width: 100%;
+    height: auto;
+    margin: 10px auto 0;
+    transform: none;
+    /* stops the global scale(.75) */
+    transform-origin: center;
 }
 
 /* Right block (subscribe form) */
@@ -590,7 +591,7 @@ footer .copyright {
     margin: 0;
 }
 
-/* Stack Section 1 (bunny on top, brand + form below) */
+/* start Section 1 (collapsible) */
 #foot-section-1 .footer-grid {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -614,6 +615,101 @@ footer .copyright {
 #foot-section-1 .footer-right .field {
     justify-content: center;
 }
+
+@media (min-width: 769px) {
+    .icon-plusminus {
+        display: none !important;
+    }
+
+    #foot-about {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #foot-about[data-collapsed="true"] {
+        max-height: 140px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #foot-about[data-collapsed="true"]::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 40px;
+        background: linear-gradient(transparent, #0f1111);
+    }
+}
+
+@media (max-width: 600px) {
+    #foot-section-1 .footer-left img {
+        width: 200px;
+    }
+}
+
+/* end Section 1 */
+
+/* start Section 2 (collapsible) */
+/* Keep Section 2 background black like the rest of the footer */
+footer #foot-links,
+footer .foot-toggle-wrap {
+    background: #0f1111;
+}
+
+/* Center the two columns on desktop; stack on mobile */
+#foot-section-2 .foot-links {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 24px 18px 0;
+    text-align: center;
+}
+
+#foot-section-2 .foot-links .foot-col h4 {
+    margin: 0 0 8px;
+}
+
+#foot-section-2 .foot-links .foot-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#foot-section-2 .foot-links .foot-col li {
+    margin: 4px 0;
+}
+
+@media (max-width:768px) {
+    #foot-section-2 .foot-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+    }
+
+    #foot-links[data-collapsed="true"] {
+        max-height: 140px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #foot-links[data-collapsed="true"]::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 40px;
+        background: linear-gradient(transparent, #0f1111);
+    }
+}
+
+/* end Section 2 */
+
+/* start Section 3 (collapsible) */
 
 
 .foot {
@@ -697,57 +793,6 @@ footer .copyright {
     border: 0;
 }
 
-/* Keep everything open & hide the button on desktop */
-@media (min-width: 769px) {
-    .icon-plusminus {
-        display: none !important;
-    }
-
-    #foot-about {
-        max-height: none !important;
-        overflow: visible !important;
-    }
-}
-
-@media (max-width: 768px) {
-    #foot-about[data-collapsed="true"] {
-        max-height: 140px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    #foot-about[data-collapsed="true"]::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 40px;
-        background: linear-gradient(transparent, #0f1111);
-    }
-}
-
-@media (max-width: 600px) {
-    #foot-section-1 .footer-left img {
-        width: 200px;
-    }
-}
-
-
-/* 
-  .foot-media { margin: 6px 0 10px; }
-  .foot-media img {
-    display: block;
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
-    margin-left: auto; margin-right: auto;
-  }
-*/
-
-
 /* mobile responsive styles */
 
 /* nav menu */
@@ -814,59 +859,59 @@ footer .copyright {
 }
 
 /* footer */
-    .foot ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+.foot ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-    .foot li {
-        margin: 0.25rem 0;
-    }
+.foot li {
+    margin: 0.25rem 0;
+}
 
-    .foot a {
-        display: inline-block;
-    }
+.foot a {
+    display: inline-block;
+}
 
-    footer .foot li,
-    footer .foot a,
-    footer .foot p {
-        text-align: center !important;
-        margin: 0.25rem 0 !important;
-    }
+footer .foot li,
+footer .foot a,
+footer .foot p {
+    text-align: center !important;
+    margin: 0.25rem 0 !important;
+}
 
-    footer .foot ul {
-        list-style: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0.25rem;
-    }
+footer .foot ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.25rem;
+}
 
-    footer ul,
-    footer ol,
-    .foot ul,
-    .foot ol {
-        list-style: none !important;
-        list-style-type: none !important;
-        padding-left: 0 !important;
-        margin-left: 0;
-    }
+footer ul,
+footer ol,
+.foot ul,
+.foot ol {
+    list-style: none !important;
+    list-style-type: none !important;
+    padding-left: 0 !important;
+    margin-left: 0;
+}
 
-    .foot,
-    .foot ul,
-    .foot li,
-    .foot div {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.foot,
+.foot ul,
+.foot li,
+.foot div {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    footer li::marker {
-        content: "";
-    }
+footer li::marker {
+    content: "";
+}
 
 @media (max-width: 600px) {
     .footer-grid {
