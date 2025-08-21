@@ -79,11 +79,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function evaluate(btn, panel) {
+    if (panel.dataset.force === "true") {
+      setState(btn, panel, false); // start collapsed
+      btn.style.display = "";      // show the +
+      return;
+    }
+
     if (!mqFooter.matches) {
       setState(btn, panel, true);
       btn.style.display = "none";
       return;
     }
+
     const show = needsToggle(panel, 140);
     if (!show) {
       setState(btn, panel, true);
@@ -97,6 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function initToggle(btn) {
     const panel = resolvePanel(btn);
     if (!panel) return;
+
+    if (!panel.classList.contains("collapsible")) panel.classList.add("collapsible");
 
     if ((btn.tagName === "SPAN" || btn.getAttribute("role") === "button") && !btn.hasAttribute("tabindex")) {
       btn.setAttribute("tabindex", "0");
@@ -114,29 +123,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    function evaluate(btn, panel) {
-      if (panel.dataset.force === "true") {
-        setState(btn, panel, false); // collapsed
-        btn.style.display = "";      // show the +
-        return;
-      }
+    evaluate(btn, panel);
+    const onChange = () => evaluate(btn, panel);
+    if (mqFooter.addEventListener) mqFooter.addEventListener("change", onChange);
+    else mqFooter.addListener(onChange);
+    window.addEventListener("resize", onChange);
+  }
 
-      if (!mqFooter.matches) {
-        setState(btn, panel, true);
-        btn.style.display = "none";
-        return;
-      }
-      const show = needsToggle(panel, 140);
-      if (!show) {
-        setState(btn, panel, true);
-        btn.style.display = "none";
-      } else {
-        setState(btn, panel, false);
-        btn.style.display = "";
-      }
-      }
-  
-    }
-  
-    document.querySelectorAll(".foot-toggle").forEach(initToggle);
-  });
+  document.querySelectorAll(".foot-toggle").forEach(initToggle);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      document.querySelectorAll(".foot-toggle").forEach((btn) => {
+        const panel = resolvePanel(btn);
+        if (panel) evaluate(btn, panel);
+      });
+    }).catch(() => { });
+  }
+});
