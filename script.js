@@ -96,3 +96,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll('.foot-toggle').forEach(initToggle);
 })();
+
+(function () {
+  const btn = document.querySelector('#foot-section-1 .foot-toggle');
+  const panel = document.getElementById(btn?.dataset.target || '');
+
+  if (!btn || !panel) return;
+
+  const mq = window.matchMedia('(max-width: 768px)');
+
+  function setState(expanded) {
+    btn.setAttribute('aria-expanded', String(expanded));
+    panel.setAttribute('data-collapsed', expanded ? 'false' : 'true');
+  }
+
+  function evaluate() {
+    if (!mq.matches) {
+      setState(true);
+    } else {
+      setState(false);
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+    setState(!isExpanded);
+  });
+
+  evaluate();
+  window.addEventListener('resize', evaluate);
+})();

@@ -585,6 +585,73 @@ footer a {
     display: none
 }
 
+/* Big + / − toggle button */
+.icon-plusminus {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 180ms ease;
+}
+.icon-plusminus:active { transform: scale(0.96); }
+
+/* Symbol via pseudo-element so we can animate cleanly */
+.icon-plusminus::before {
+  content: "+";
+  font-size: 34px;
+  line-height: 1;
+  transition: opacity 180ms ease, transform 180ms ease;
+  opacity: 0.95;
+}
+
+.icon-plusminus[aria-expanded="true"]::before {
+  content: "−";
+  transform: rotate(0deg) scale(1.02);
+}
+
+/* Keep everything open & hide the button on desktop */
+@media (min-width: 769px) {
+  #foot-section-1 .icon-plusminus { display: none !important; }
+  #foot-about { max-height: none !important; }
+}
+
+/* Optional: collapsed teaser look on mobile */
+@media (max-width: 768px) {
+  #foot-about[data-collapsed="true"] {
+    max-height: 140px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #foot-about[data-collapsed="true"]::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgba(15,17,17,0.92));
+  }
+}
+
+  /* 
+  .foot-media { margin: 6px 0 10px; }
+  .foot-media img {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-left: auto; margin-right: auto;
+  }
+*/
+
+
 /* mobile responsive styles */
 
 /* nav menu */
