@@ -1,4 +1,6 @@
-/* Global */
+/* =========================
+   Global
+========================= */
 :root {
     --bg: #ffffff;
     --muted: #f6f6f6;
@@ -28,6 +30,7 @@ body {
     color: var(--ink);
     font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
 a {
@@ -46,7 +49,9 @@ img {
     padding: 0 18px;
 }
 
-/* Announcement banner */
+/* =========================
+   Announcement banner
+========================= */
 .bar {
     background: var(--ink);
     color: #fff;
@@ -66,7 +71,9 @@ img {
     text-decoration: underline;
 }
 
-/* Header / nav */
+/* =========================
+   Header / nav
+========================= */
 header {
     background: #b6c40a;
     border-bottom: 0;
@@ -129,7 +136,6 @@ header {
 /* Main nav */
 .nav-main {
     grid-column: 1 / -1;
-    /* full width on row 2 */
     grid-row: 2;
     justify-content: center;
     gap: 42px;
@@ -155,7 +161,9 @@ header {
     background: #0f0f0f;
 }
 
-/* Hero */
+/* =========================
+   Hero
+========================= */
 .hero {
     position: relative;
     margin-top: 0;
@@ -234,7 +242,9 @@ h1 {
     box-shadow: var(--shadow-sm);
 }
 
-/* Sections */
+/* =========================
+   Sections
+========================= */
 section {
     padding: 44px 0;
 }
@@ -255,7 +265,9 @@ section {
     color: var(--accent);
 }
 
-/* Grids */
+/* =========================
+   Grids
+========================= */
 .grid {
     display: grid;
     gap: 14px;
@@ -431,7 +443,9 @@ body>section:nth-of-type(4) .grid.grid-4 {
     border-radius: 12px;
 }
 
-/* Footer */
+/* =========================
+   Footer
+========================= */
 footer {
     background: #0f1111;
     color: #e6e6e6;
@@ -449,7 +463,6 @@ footer .copyright {
     background: #0f1111;
 }
 
-/* Ensure black background even on nested containers */
 footer,
 footer #foot-about,
 footer .foot-toggle-wrap,
@@ -457,35 +470,55 @@ footer .copyright {
     background-color: #0f1111 !important;
 }
 
+/* Toggle row (label + +) centered with full-width dividers */
 footer .foot-toggle-wrap {
     position: relative;
     display: flex !important;
-    align-items: center;
+    align-items: center !important;
     justify-content: center !important;
     gap: 10px !important;
     text-align: initial !important;
 }
 
-footer .foot-toggle {
-    padding: 4px !important;
-    line-height: 1;
+footer .foot-toggle-wrap::before,
+footer .foot-toggle-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #FFFFFF;
+    pointer-events: none;
+}
+
+footer .foot-toggle-wrap::before {
+    top: 0;
+}
+
+footer .foot-toggle-wrap::after {
+    bottom: 0;
 }
 
 footer .toggle-label {
     display: inline-block;
     margin: 0 8px 0 0;
+    font-size: .95rem;
+    color: #fff;
 }
 
-.icon-plusminus {
-    display: inline-flex !important;
-    vertical-align: middle;
+footer .foot-toggle {
+    display: inline-block !important;
+    cursor: pointer;
+    padding: 4px 0;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    color: inherit;
 }
 
 footer>section {
     margin: 0;
 }
-
-;
 
 #foot-section-1 {
     padding-top: 0;
@@ -494,7 +527,7 @@ footer>section {
 
 .footer-left p.hare {
     margin: -16px 0 12px;
-    padding: 0px;
+    padding: 0;
 }
 
 .special-footer-p {
@@ -504,7 +537,7 @@ footer>section {
     margin: 0 0 12px;
 }
 
-/* Section 1 (bunny + brand + form) */
+/* Section 1 layout */
 .footer-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -547,9 +580,14 @@ footer>section {
 .footer-brand__tagline,
 .footer-brand__tagline p,
 .footer-brand__tagline a {
-    color: pink;
+    color: #FFFFFF !important;
 }
 
+.footer-brand__tagline a {
+    text-decoration-color: rgba(255, 255, 255, .6);
+}
+
+/* Force Section 1 single-column (as in your CSS) */
 #foot-section-1 .footer-grid {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -574,6 +612,7 @@ footer>section {
     justify-content: center;
 }
 
+/* Section 2 links */
 #foot-section-2 .foot-links {
     display: flex;
     justify-content: center;
@@ -596,13 +635,14 @@ footer>section {
     margin: 4px 0;
 }
 
-/* Misc footer */
+/* Subtle text */
 .subtle {
     opacity: .7;
     font-size: .9rem;
     font-weight: 100;
 }
 
+/* “Oh beautiful…” line */
 .hare,
 .hare p,
 .hare a {
@@ -611,6 +651,7 @@ footer>section {
     font-weight: 200;
 }
 
+/* Copyright bar with full-bleed line above */
 .copyright {
     color: lightgray;
     border-top: 1px solid lightgray;
@@ -618,7 +659,7 @@ footer>section {
     justify-content: center;
     text-align: center;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: .5rem;
     position: relative;
 }
 
@@ -633,7 +674,9 @@ footer>section {
     background: #FFFFFF;
 }
 
-/* Utilities */
+/* =========================
+   Utilities
+========================= */
 .collapsible[data-collapsed="true"],
 .collapsible[aria-hidden="true"] {
     display: none !important;
@@ -663,12 +706,6 @@ footer>section {
     color: #e6e6e6;
 }
 
-@media (min-width: 769px) {
-    .icon-plusminus {
-        display: inline-flex !important;
-    }
-}
-
 .icon-plusminus:active {
     transform: scale(0.96);
 }
@@ -678,7 +715,7 @@ footer>section {
     font-size: 34px;
     line-height: 1;
     transition: opacity 180ms ease, transform 180ms ease;
-    opacity: 0.95;
+    opacity: .95;
 }
 
 .icon-plusminus[aria-expanded="true"]::before {
@@ -698,89 +735,31 @@ footer>section {
     border: 0;
 }
 
-.collapsible[data-collapsed="true"] {
-    display: none !important;
+/* =========================
+   Responsive
+========================= */
+
+/* Desktop: keep + visible and center rows */
+@media (min-width: 769px) {
+    .icon-plusminus {
+        display: inline-flex !important;
+    }
+
+    footer .foot-toggle-wrap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+    }
+
+    footer .foot-toggle-wrap>* {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        flex: 0 0 auto !important;
+    }
 }
 
-footer .foot-toggle-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-align: initial !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    flex: 0 0 auto !important;
-    padding: 12px 0;
-    --divider-offset: 6px;
-    position: relative;
-}
-
-  footer .foot-toggle-wrap > * {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    flex: 0 0 auto !important;
-  }
-
-footer .toggle-label {
-    margin: 0;
-    padding: 0;
-    font-size: 0.95rem;
-    color: #FFFFFF;
-}
-
-footer .foot-toggle-wrap::before,
-footer .foot-toggle-wrap::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #FFFFFF;
-    pointer-events: none;
-}
-
-footer .foot-toggle-wrap::before {
-    top: var(--divider-offset);
-}
-
-footer .foot-toggle-wrap::after {
-    bottom: var(--divider-offset);
-}
-
-footer .foot-toggle {
-    display: inline-block !important;
-    cursor: pointer;
-    padding: 4px 0;
-    line-height: 1;
-    background: transparent;
-    border: 0;
-    color: inherit;
-}
-
-footer>section {
-    margin: 0;
-}
-
-#foot-social {
-    border-bottom: 1px solid #FFFFFF;
-    padding-bottom: 12px;
-}
-
-.footer-brand__tagline,
-.footer-brand__tagline p,
-.footer-brand__tagline a {
-    color: #FFFFFF !important;
-}
-
-.footer-brand__tagline a {
-    text-decoration-color: rgba(255, 255, 255, 0.6);
-}
-
-.footer-left p.hare {
-    margin: -16px 0 12px;
-    padding: 0;
-}
-
+/* Stack Help/Company vertically on desktop (per your earlier request) */
 @media (min-width: 981px) {
     #foot-links {
         display: grid;
@@ -793,243 +772,89 @@ footer>section {
     }
 }
 
-.collapsible[aria-hidden="true"] {
-    display: none !important;
-}
-
-@media (min-width: 769px) {
-    .icon-plusminus {
-        display: none !important;
+/* Nav tweaks */
+@media (max-width: 980px) {
+    .nav {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto auto;
+        row-gap: 10px;
     }
 
-    footer .collapsible {
-        max-height: none !important;
-        overflow: visible !important;
+    .search {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        order: 1;
+    }
+
+    .brand {
+        grid-column: 1 / -1;
+        justify-self: center;
+        order: 0;
+    }
+
+    .brand img {
+        width: 140px;
+    }
+
+    .nav-main {
+        grid-column: 1 / -1;
+        grid-row: auto;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        order: 2;
     }
 }
 
+/* Hero / layout small screens */
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .split {
+        grid-template-columns: 1fr;
+    }
+
+    .about {
+        grid-template-columns: 1fr;
+    }
+
+    .benefits {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+    #foot-section-1 .footer-left img {
+        width: 200px;
+    }
+}
+
+/* Social grid small */
 @media (max-width: 768px) {
-    footer .collapsible[data-collapsed="true"] {
-        max-height: 140px;
-        overflow: hidden;
-        position: relative;
+    .social {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    footer .collapsible[data-collapsed="true"]::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 40px;
-        background: linear-gradient(transparent, #0f1111);
+    .hide-sm {
+        display: none;
     }
 
-    /* Section 2 stack on mobile */
-    @media (max-width: 768px) {
-        #foot-section-2 .foot-links {
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-        }
+    .show-sm {
+        display: inline-flex;
     }
+}
 
-    /* Nav tweaks */
-    @media (max-width: 980px) {
-        .nav {
-            grid-template-columns: 1fr auto;
-            grid-template-rows: auto auto auto;
-            row-gap: 10px;
-        }
-
-        .search {
-            grid-column: 1 / -1;
-            justify-self: stretch;
-            order: 1;
-        }
-
-        .brand {
-            grid-column: 1 / -1;
-            justify-self: center;
-            order: 0;
-        }
-
-        .brand img {
-            width: 140px;
-        }
-
-        .nav-main {
-            grid-column: 1 / -1;
-            grid-row: auto;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 18px;
-            order: 2;
-        }
-    }
-
-    /* Hero / layout small screens */
-    @media (max-width: 600px) {
-        .hero-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .split {
-            grid-template-columns: 1fr;
-        }
-
-        .about {
-            grid-template-columns: 1fr;
-        }
-
-        .benefits {
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            line-height: 1.2;
-        }
-
-        #foot-section-1 .footer-left img {
-            width: 200px;
-        }
-    }
-
-    /* Social grid small */
-    @media (max-width: 768px) {
-        .social {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .hide-sm {
-            display: none;
-        }
-
-        .show-sm {
-            display: inline-flex;
-        }
-    }
-
-    /* Footer lists general centering (safe defaults) */
-    .foot ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .foot li {
-        margin: 0.25rem 0;
-    }
-
-    .foot a {
-        display: inline-block;
-    }
-
-    footer .foot li,
-    footer .foot a,
-    footer .foot p {
-        text-align: center !important;
-        margin: 0.25rem 0 !important;
-    }
-
-    footer .foot ul {
-        list-style: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 0.25rem;
-    }
-
-    footer ul,
-    footer ol,
-    .foot ul,
-    .foot ol {
-        list-style: none !important;
-        list-style-type: none !important;
-        padding-left: 0 !important;
-        margin-left: 0;
-    }
-
-    .foot,
-    .foot ul,
-    .foot li,
-    .foot div {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    footer li::marker {
-        content: "";
-    }
-
-    @media (max-width: 600px) {
-        .footer-grid {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-
-        .footer-left {
-            text-align: center;
-            /* center the quote text */
-        }
-
-        .footer-left img {
-            margin-left: auto;
-            margin-right: auto;
-            transform-origin: center;
-        }
-
-        .footer-right {
-            text-align: center;
-        }
-
-    }
-
-    /* misc. */
-    @media (max-width: 768px) {
-
-        /* grids */
-        /* Footer links */
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        /* New In and Best Sellers  */
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        /* Collections */
-        .grid-6 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        /* Collections grid special case on mobile */
-        body>section:nth-of-type(4) .grid.grid-3 {
-            grid-template-columns: 1fr;
-            /* stack cards full-width */
-        }
-
-        /* New In grid special case on mobile */
-        body>section:nth-of-type(4) .grid.grid-4 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .social {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .hide-sm {
-            display: none;
-        }
-
-        .show-sm {
-            display: inline-flex;
-        }
+/* Section 2 stack on mobile */
+@media (max-width: 768px) {
+    #foot-section-2 .foot-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
     }
 }
