@@ -303,22 +303,35 @@ section {
     color: var(--accent)
 }
 
-/* Product cards */
+/* Product Cards */
 .grid {
     display: grid;
     gap: 14px
 }
 
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr)
-}
-
+/* Footer links */
 .grid-3 {
     grid-template-columns: repeat(3, 1fr)
 }
 
+/* “New In” */
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr)
+}
+
+/* Collections */
 .grid-6 {
     grid-template-columns: repeat(6, 1fr)
+}
+
+/* New In */
+body>section:nth-of-type(3) .grid.grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Best Sellers */
+body>section:nth-of-type(4) .grid.grid-4 {
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .product {
@@ -495,9 +508,10 @@ footer a {
 }
 
 .footer-left img {
-    max-width: 90px;
     display: block;
     margin-top: 10px;
+    transform: scale(0.75);
+    transform-origin: top left;
 }
 
 /* Right block (subscribe form) */
@@ -541,6 +555,7 @@ footer a {
 }
 
 /* mobile responsive styles */
+
 /* nav menu */
 @media (max-width:980px) {
     .nav {
@@ -604,26 +619,6 @@ footer a {
     }
 }
 
-.grid-4 {
-    grid-template-columns: repeat(2, 1fr)
-}
-
-.grid-6 {
-    grid-template-columns: repeat(3, 1fr)
-}
-
-.social {
-    grid-template-columns: repeat(3, 1fr)
-}
-
-.hide-sm {
-    display: none
-}
-
-.show-sm {
-    display: inline-flex
-}
-
 /* footer */
 @media (max-width:450px) {
     .foot {
@@ -645,5 +640,48 @@ footer a {
     .footer-left img {
         margin-left: auto;
         margin-right: auto;
+    }
+}
+
+/* misc. */
+@media (max-width: 768px) {
+
+    /* grids */
+    /* Footer links */
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* New In and Best Sellers  */
+    .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Collections */
+    .grid-6 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Collections grid special case on mobile */
+    body>section:nth-of-type(4) .grid.grid-3 {
+        grid-template-columns: 1fr;
+        /* stack cards full-width */
+    }
+
+    /* New In grid special case on mobile */
+    body>section:nth-of-type(4) .grid.grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .social {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hide-sm {
+        display: none;
+    }
+
+    .show-sm {
+        display: inline-flex;
     }
 }

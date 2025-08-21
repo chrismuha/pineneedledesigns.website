@@ -24,23 +24,26 @@
         </div>
     </div>
 
-
     <!-- Header -->
     <header>
         <div class="container nav" role="navigation" aria-label="Primary">
             <div class="brand">
-                <img src="images/1.jpg" alt="Pine Needle Designs Logo" height="40">
+                <a href="/" aria-label="Pine Needle Designs home">
+                    <img src="images/1.jpg" alt="Pine Needle Designs Logo" height="40">
+                </a>
                 <span class="dot" aria-hidden="true"></span>
-                <a href="#" aria-label="Pine Needle Designs home"></a>
             </div>
-            <nav class="nav-main hide-sm">
+
+            <nav class="nav-main hide-sm" aria-label="Main">
                 <a href="#">Home</a>
                 <a href="https://pineneedledesigns.store">Catalog</a>
             </nav>
+
             <div class="search hide-sm">
                 <input type="search" placeholder="What are you looking for?" aria-label="Search store" />
                 <span class="loupe" aria-hidden="true">🔎</span>
             </div>
+
             <div class="nav-aux">
                 <a class="icon-btn" href="#" aria-label="Wishlist">♡</a>
                 <a class="icon-btn" href="#" aria-label="Account">👤</a>
@@ -48,12 +51,13 @@
                 <button class="icon-btn show-sm" id="menuBtn" aria-expanded="false" aria-controls="mnav">☰</button>
             </div>
         </div>
+
         <div id="mnav" class="container show-sm" style="display:none;padding-bottom:14px">
             <div class="search" style="margin-bottom:10px">
                 <input type="search" placeholder="Search products…" aria-label="Search store (mobile)">
                 <span class="loupe" aria-hidden="true">🔎</span>
             </div>
-            <nav class="nav-main" style="justify-content:space-around">
+            <nav class="nav-main" style="justify-content:space-around" aria-label="Mobile">
                 <a href="#">Home</a>
                 <a href="https://pineneedledesigns.store">Catalog</a>
             </nav>
@@ -75,6 +79,7 @@
                     </div>
                 </div>
             </article>
+
             <article class="hero-card" aria-label="New Arrivals">
                 <img alt="Flat lay of apparel and accessories" src="images/filename.jpg" />
                 <div class="copy">
@@ -202,7 +207,8 @@
                 <p>From purses and bracelets to denim jackets with detachable trains, every piece is designed to make a
                     statement.
                     The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the USA and made
-                    for all sizes.</p>
+                    for all sizes.
+                </p>
                 <a class="btn" href="#">About Us</a>
             </div>
             <img alt="Studio scene" src="images/filename.jpg" style="border-radius:18px;box-shadow:var(--shadow)">
@@ -303,7 +309,7 @@
     <section class="container callout">
         <div class="inner">
             <div>
-                <h3>Sign up & save 10%</h3>
+                <h3>Sign up &amp; save 10%</h3>
                 <p class="subtle">Join the newsletter for early access to drops and special offers.</p>
                 <form class="field" onsubmit="event.preventDefault(); alert('Thanks for subscribing! (demo)')">
                     <input type="email" required placeholder="Your email">
@@ -314,7 +320,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <!-- Footer -->
     <footer>
         <!-- Bunny + quote on the left, subscribe form on the right -->
