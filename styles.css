@@ -28,16 +28,11 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background: var(--bg);
+    background: lightgray;
     color: var(--ink);
     font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     overflow-x: hidden;
-}
-
-html,
-body {
-    background: lightgrey !important;
 }
 
 a {
@@ -112,12 +107,12 @@ header {
     background: transparent;
     border: 0;
     padding: 6px 0;
-    color: #1837d6;
+    color: var(--accent);
     font-size: 1.05rem;
 }
 
 .search input::placeholder {
-    color: #1837d6;
+    color: var(--accent);
     opacity: 1;
 }
 
@@ -128,7 +123,7 @@ header {
     transform: none;
     margin-left: 8px;
     opacity: 1;
-    color: #1837d6;
+    color: var(--accent);
 }
 
 /* Main nav */
@@ -161,13 +156,13 @@ header {
 
 /* Ensure the hamburger shows on desktop too so you have 4 icons */
 .nav-aux .show-sm {
-    display: inline-flex !important;
+    display: inline-flex;
 }
 
 .nav-main a {
     letter-spacing: .18em;
     font-weight: 600;
-    color: #0f0f0f;
+    color: var(--ink);
     text-transform: uppercase;
     position: relative;
     padding: 8px 2px;
@@ -181,7 +176,7 @@ header {
     right: 0;
     bottom: -6px;
     height: 3px;
-    background: #0f0f0f;
+    background: var(--ink);
 }
 
 /* =========================
@@ -258,7 +253,7 @@ h1 {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: green;
+    background: var(--success);
     border: 1px solid var(--border);
     padding: 8px 10px;
     border-radius: 999px;
@@ -479,18 +474,14 @@ footer a {
     color: #e6e6e6;
 }
 
+/* unify footer backgrounds, remove redundant !important */
 footer,
 footer .container,
 footer .footer-grid,
-footer .copyright {
-    background: #0f1111;
-}
-
-footer,
+footer .copyright,
 footer #foot-about,
-footer .foot-toggle-wrap,
-footer .copyright {
-    background-color: #0f1111 !important;
+footer .foot-toggle-wrap {
+    background: #0f1111;
 }
 
 footer .foot-toggle-wrap {
@@ -509,10 +500,6 @@ footer .foot-toggle-wrap::after {
     margin-left: -50vw;
     width: 100vw;
     top: 0;
-    bottom: 0;
-    height: 0;
-    bottom: 0;
-    height: 0;
     border-bottom: var(--divider-thickness) solid var(--divider-color);
     pointer-events: none;
 }
@@ -522,11 +509,11 @@ footer .foot-toggle-wrap::before {
 }
 
 footer .collapsible>*:first-child {
-    margin-top: 0 !important;
+    margin-top: 0;
 }
 
 footer .collapsible>*:last-child {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 
 footer .toggle-label {
@@ -547,8 +534,8 @@ footer .foot-toggle {
 }
 
 footer>section {
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0;
+    margin: 0;
 }
 
 #foot-section-1 {
@@ -611,7 +598,7 @@ footer>section {
 .footer-brand__tagline,
 .footer-brand__tagline p,
 .footer-brand__tagline a {
-    color: #FFFFFF !important;
+    color: #ffffff;
 }
 
 .footer-brand__tagline a {
@@ -700,7 +687,7 @@ footer>section {
 /* Copyright bar */
 .copyright {
     position: relative;
-    border-top: 0 !important;
+    border-top: 0;
     background: #0f1111;
 }
 
@@ -711,7 +698,6 @@ footer>section {
     margin-left: -50vw;
     width: 100vw;
     top: 0;
-    height: 0;
     border-top: var(--divider-thickness) solid var(--divider-color);
     pointer-events: none;
 }
@@ -734,7 +720,7 @@ footer>section {
 
 /* Big + / − toggle button */
 .icon-plusminus {
-    color: #fff !important;
+    color: #fff;
     width: 56px;
     height: 56px;
     border: 1px solid var(--border);
