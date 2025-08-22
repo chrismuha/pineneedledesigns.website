@@ -175,12 +175,40 @@ header {
 
 /* Image slider */
 .image-slider {
-    background: slategray;
-    width: 100%;
-    padding: 0;
-    height: auto;
-    aspect-ratio: 1.995 / 1;
     position: relative;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    right: 50%;
+    margin-right: -50vw;
+    background: slategray;
+    aspect-ratio: 1.995 / 1;
+}
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgb(41, 41, 41);
+    border: 2px solid #b03b2e;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.prev-btn {
+    left: 16px;
+}
+
+.next-btn {
+    right: 16px;
 }
 
 .image-slider img {
@@ -188,30 +216,6 @@ header {
     height: 100%;
     width: fit-content;
     margin: auto;
-}
-
-.slider-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    background: rgb(41, 41, 41);
-    width: 50px;
-    height: 50px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 1rem;
-    border-radius: 50%;
-    font-size: 2rem;
-}
-
-.prev-btn {
-    left: 0;
-}
-
-.next-btn {
-    right: 0;
 }
 
 /* Hero */
@@ -791,8 +795,6 @@ footer>section {
 }
 
 /* Mobile Responsiveness */
-
-/* Desktop: keep + visible and center rows */
 @media (min-width: 769px) {
     .icon-plusminus {
         display: inline-flex !important;
@@ -809,6 +811,14 @@ footer>section {
         margin-left: 0 !important;
         margin-right: 0 !important;
         flex: 0 0 auto !important;
+    }
+
+    @media (max-width: 600px) {
+        .slider-btn {
+            width: 56px;
+            height: 56px;
+            font-size: 2.2rem;
+        }
     }
 }
 

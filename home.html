@@ -30,7 +30,6 @@
                 <a href="/" aria-label="Pine Needle Designs home">
                     <img src="images/1.webp" alt="Pine Needle Designs Logo" height="40">
                 </a>
-                <span class="dot" aria-hidden="true"></span>
             </div>
 
             <nav class="nav-main" aria-label="Main">
@@ -59,11 +58,12 @@
     </header>
 
     <!-- Slider -->
-    <section class="image-slider">
-        <div class="prev-btn slider-btn">
-            << /div>
-                <div class="next-btn slider-btn">></div>
-                <img id="slider-img" src="images/1.webp" alt="">
+    <section class="image-slider" aria-label="Featured images">
+        <button class="slider-btn prev-btn" type="button" aria-label="Previous slide">‹</button>
+
+        <img id="slider-img" src="images/1.webp" alt="Featured product">
+
+        <button class="slider-btn next-btn" type="button" aria-label="Next slide">›</button>
     </section>
 
     <!-- Hero -->
