@@ -1,6 +1,4 @@
-/* =========================
-   Global
-========================= */
+/* Global */
 :root {
     --bg: #ffffff;
     --muted: #f6f6f6;
@@ -51,9 +49,7 @@ img {
     padding: 0 18px;
 }
 
-/* =========================
-   Announcement banner
-========================= */
+/* Announcement banner */
 .bar {
     background: var(--ink);
     color: #fff;
@@ -73,9 +69,7 @@ img {
     text-decoration: underline;
 }
 
-/* =========================
-   Header / nav
-========================= */
+/* Header / nav */
 header {
     background: #b6c40a;
     border-bottom: 0;
@@ -180,7 +174,6 @@ header {
 }
 
 /* Image slider */
-
 .image-slider {
     background: slategray;
     width: 100%;
@@ -189,12 +182,14 @@ header {
     aspect-ratio: 1.995 / 1;
     position: relative;
 }
+
 .image-slider img {
     object-fit: contain;
     height: 100%;
     width: fit-content;
     margin: auto;
 }
+
 .slider-btn {
     position: absolute;
     top: 50%;
@@ -210,16 +205,16 @@ header {
     border-radius: 50%;
     font-size: 2rem;
 }
+
 .prev-btn {
     left: 0;
 }
+
 .next-btn {
     right: 0;
 }
 
-/* =========================
-   Hero
-========================= */
+/* Hero */
 .hero {
     position: relative;
     margin-top: 0;
@@ -298,9 +293,7 @@ h1 {
     box-shadow: var(--shadow-sm);
 }
 
-/* =========================
-   Sections
-========================= */
+/* Sections */
 section {
     padding: 44px 0;
 }
@@ -321,9 +314,7 @@ section {
     color: var(--accent);
 }
 
-/* =========================
-   Grids
-========================= */
+/* Grids */
 .grid {
     display: grid;
     gap: 14px;
@@ -503,9 +494,7 @@ body>section:nth-of-type(4) .grid.grid-4 {
     border-radius: 12px;
 }
 
-/* =========================
-   Footer
-========================= */
+/* Footer */
 footer {
     background: #0f1111;
     color: #e6e6e6;
@@ -672,8 +661,7 @@ footer>section {
     justify-content: center;
 }
 
-/* -------- Section 2 (collapsible) -------- */
-/* Collapsible container (ID: foot-links) gets padding/centering only */
+/* Section 2 (collapsible) */
 #foot-links {
     padding: 24px 18px 0;
     text-align: center;
@@ -744,9 +732,7 @@ footer>section {
     pointer-events: none;
 }
 
-/* =========================
-   Utilities
-========================= */
+/* Utilities */
 .collapsible[data-collapsed="true"],
 .collapsible[aria-hidden="true"] {
     display: none !important;
@@ -804,9 +790,7 @@ footer>section {
     border: 0;
 }
 
-/* =========================
-   Responsive
-========================= */
+/* Mobile Responsiveness */
 
 /* Desktop: keep + visible and center rows */
 @media (min-width: 769px) {
