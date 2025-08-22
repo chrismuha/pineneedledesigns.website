@@ -91,4 +91,60 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const imgElement = document.getElementById("slider-img");
+  const prevBtn = document.querySelector(".prev-btn");
+  const nextBtn = document.querySelector(".next-btn");
+
+  if (imgElement && prevBtn && nextBtn) {
+    const images = [
+      "images/1.webp",
+      "images/3.webp",
+      "images/4.webp",
+      "images/5.webp",
+      "images/6.webp",
+      // add more image
+    ];
+
+    let currentIndex = 0;
+    let interval;
+
+    imgElement.style.transition = "opacity 0.5s ease-in-out";
+    imgElement.style.opacity = 1;
+
+    function showImage(index) {
+      imgElement.style.opacity = 0;
+      setTimeout(() => {
+        currentIndex = (index + images.length) % images.length;
+        imgElement.src = images[currentIndex];
+        imgElement.style.opacity = 1;
+      }, 500);
+    }
+
+    function nextImage() {
+      showImage(currentIndex + 1);
+      resetInterval();
+    }
+
+    function prevImage() {
+      showImage(currentIndex - 1);
+      resetInterval();
+    }
+
+    function startAutoSlide() {
+      interval = setInterval(() => {
+        nextImage();
+      }, 5000);
+    }
+
+    function resetInterval() {
+      clearInterval(interval);
+      startAutoSlide();
+    }
+
+    nextBtn.addEventListener("click", nextImage);
+    prevBtn.addEventListener("click", prevImage);
+
+    startAutoSlide();
+  }
 });
