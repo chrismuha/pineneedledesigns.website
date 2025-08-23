@@ -55,6 +55,7 @@ img {
     color: #fff;
     font-size: .9rem;
     overflow-x: auto;
+    padding: 0 8px;
 }
 
 .bar .container {
@@ -63,6 +64,8 @@ img {
     align-items: center;
     justify-content: center;
     padding: 10px 18px;
+    flex-wrap: wrap;
+    text-align: center;
 }
 
 .bar .container>* {
@@ -909,6 +912,29 @@ footer>section {
 
     .show-sm {
         display: inline-flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .bar .container {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 10px 12px;
+    }
+}
+
+/* Mobile tweaks for grids — keep repeat counts */
+@media (max-width: 768px) {
+    .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-6 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
