@@ -54,6 +54,7 @@ img {
     background: var(--ink);
     color: #fff;
     font-size: .9rem;
+    overflow-x: auto;
 }
 
 .bar .container {
@@ -64,9 +65,15 @@ img {
     padding: 10px 18px;
 }
 
+.bar .container>* {
+    white-space: nowrap;
+}
+
+
 .bar a {
     color: #fff;
     text-decoration: underline;
+    white-space: nowrap;
 }
 
 /* Header / nav */
@@ -176,13 +183,27 @@ header {
 /* Image slider */
 .image-slider {
     position: relative;
-    left: 50%;
+    aspect-ratio: 1.995 / 1;
     width: 100vw;
+    left: 50%;
     margin-left: -50vw;
     right: 50%;
     margin-right: -50vw;
     background: slategray;
-    aspect-ratio: 1.995 / 1;
+    overflow: hidden;
+}
+
+.image-slider img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: 0;
 }
 
 .slider-btn {
@@ -209,13 +230,6 @@ header {
 
 .next-btn {
     right: 16px;
-}
-
-.image-slider img {
-    object-fit: contain;
-    height: 100%;
-    width: fit-content;
-    margin: auto;
 }
 
 /* Hero */
@@ -295,6 +309,7 @@ h1 {
     padding: 8px 10px;
     border-radius: 999px;
     box-shadow: var(--shadow-sm);
+    white-space: nowrap;
 }
 
 /* Sections */
@@ -341,7 +356,7 @@ body>section:nth-of-type(3) .grid.grid-4 {
     grid-template-columns: repeat(3, 1fr);
 }
 
-body>section:nth-of-type(4) .grid.grid-4 {
+body>section:nth-of-type(5) .grid.grid-4 {
     grid-template-columns: repeat(2, 1fr);
 }
 
@@ -812,13 +827,13 @@ footer>section {
         margin-right: 0 !important;
         flex: 0 0 auto !important;
     }
+}
 
-    @media (max-width: 600px) {
-        .slider-btn {
-            width: 56px;
-            height: 56px;
-            font-size: 2.2rem;
-        }
+@media (max-width: 600px) {
+    .slider-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 2.2rem;
     }
 }
 
