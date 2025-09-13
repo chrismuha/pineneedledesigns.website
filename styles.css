@@ -336,33 +336,6 @@ section {
     color: var(--accent);
 }
 
-/* Grids */
-.grid {
-    display: grid;
-    gap: 14px;
-}
-
-.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.grid-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-
-/* “New In” and “Best Sellers” special cases */
-body>section:nth-of-type(3) .grid.grid-4 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-body>section:nth-of-type(5) .grid.grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-}
-
 /* Product cards */
 .product {
     border: 1px solid var(--border);
@@ -856,8 +829,10 @@ footer>section {
 
 /* Mobile Responsiveness */
 @media (min-width: 769px) {
+
     .icon-plusminus {
         display: inline-flex !important;
+
     }
 
     footer .foot-toggle-wrap {
@@ -875,19 +850,23 @@ footer>section {
 }
 
 @media (max-width: 600px) {
+
     .slider-btn {
         width: 56px;
         height: 56px;
         font-size: 2.2rem;
+
     }
 }
 
 /* Nav tweaks */
 @media (max-width: 980px) {
+
     .nav {
         grid-template-columns: 1fr auto;
         grid-template-rows: auto auto auto;
         row-gap: 10px;
+
     }
 
     .search {
@@ -915,8 +894,10 @@ footer>section {
 
 /* Hero / layout small screens */
 @media (max-width: 600px) {
+
     .hero-grid {
         grid-template-columns: 1fr;
+
     }
 
     .split {
@@ -944,8 +925,10 @@ footer>section {
 
 /* Social grid small */
 @media (max-width: 768px) {
+
     .social {
         grid-template-columns: repeat(2, 1fr);
+
     }
 
     .hide-sm {
@@ -958,33 +941,22 @@ footer>section {
 }
 
 @media (max-width: 480px) {
+
     .bar .container {
         justify-content: space-between;
         flex-wrap: wrap;
         padding: 10px 12px;
-    }
-}
 
-/* Mobile tweaks for grids — keep repeat counts */
-@media (max-width: 768px) {
-    .grid-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid-4 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid-6 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
 /* Section 2 stack on mobile (kept vertical; rule lives on inner wrapper already) */
 @media (max-width: 768px) {
+
     #foot-section-2 #foot-links .foot-links {
         flex-direction: column;
         align-items: center;
         gap: 12px;
+
     }
 }

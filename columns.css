@@ -1,0 +1,42 @@
+/* Base grid utility */
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+/* Standard column counts */
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* Special cases from your stylesheet */
+body > section:nth-of-type(3) .grid.grid-4 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body > section:nth-of-type(5) .grid.grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Responsive overrides */
+@media (max-width: 768px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
