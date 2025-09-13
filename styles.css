@@ -426,36 +426,6 @@ section {
     box-shadow: var(--shadow-sm);
 }
 
-/* Collections */
-.collections .card {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    background: #fff;
-}
-
-.collections .media {
-    aspect-ratio: 4 / 3;
-    background: linear-gradient(180deg, #ddd, #f2f2f2);
-}
-
-.collections .body {
-    padding: 12px 14px;
-}
-
-/* Social */
-.social {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
-}
-
-.social img {
-    border-radius: 12px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-}
-
 /* Newsletter */
 .newsletter {
     position: relative;
