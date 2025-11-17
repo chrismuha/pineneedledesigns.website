@@ -966,13 +966,8 @@ footer>section {
     }
 }
 
-/* Social grid small */
+/* Small-screen utility helpers */
 @media (max-width: 768px) {
-
-    .social {
-        grid-template-columns: repeat(2, 1fr);
-
-    }
 
     .hide-sm {
         display: none;
