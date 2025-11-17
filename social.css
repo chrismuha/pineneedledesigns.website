@@ -1,0 +1,33 @@
+/* Social */
+.social {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.social img {
+    max-width: 100%;
+    display: block;
+}
+
+.socialcontainer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 18px;
+}
+
+.socialsection-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.socialsection-head h2 {
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+.sociallink {
+    color: red;
+}

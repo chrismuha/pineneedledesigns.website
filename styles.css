@@ -459,6 +459,12 @@ section {
     box-shadow: var(--shadow-sm);
 }
 
+.subtle2 {
+    opacity: .7;
+    font-size: .95rem;
+    font-weight: 300;
+}
+
 /* About */
 .about {
     display: grid;
