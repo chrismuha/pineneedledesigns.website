@@ -305,13 +305,12 @@ header {
 }
 
 .hero-card .copy {
-    position: absolute;
-    inset: auto 18px 18px 18px;
+    margin-top: 18px;
     background: rgba(255, 255, 255, .92);
     backdrop-filter: saturate(140%) blur(6px);
     padding: 18px;
     border-radius: 14px;
-    max-width: 460px;
+    width: 100%;
 }
 
 .eyebrow {
@@ -436,9 +435,7 @@ section {
 }
 
 .tile .copy {
-    position: absolute;
-    left: 18px;
-    bottom: 18px;
+    margin-top: 18px;
     background: rgba(255, 255, 255, .92);
     padding: 16px;
     border-radius: 12px;
