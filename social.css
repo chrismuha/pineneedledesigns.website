@@ -18,6 +18,7 @@
 }
 
 .socialsection-head {
+    color: blueviolet;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -30,7 +31,7 @@
 }
 
 .sociallink {
-    color: red;
+    color: blue;
 }
 
 @media (max-width: 980px) {
