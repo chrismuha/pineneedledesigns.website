@@ -1103,6 +1103,11 @@ footer>section {
     .show-sm {
         display: inline-flex;
     }
+
+    /* Shrink highlighted collection placeholder headers by ~2pt on phones/tablets */
+    .highlighted-collection .body h3 {
+        font-size: calc(1.17em - 2pt);
+    }
 }
 
 @media (max-width: 480px) {
