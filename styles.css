@@ -391,6 +391,10 @@ section {
     color: var(--accent);
 }
 
+.highlighted-collection + .highlighted-collection {
+    margin-top: 44px;
+}
+
 /* Product cards */
 .product {
     border: 1px solid var(--border);
@@ -739,7 +743,7 @@ footer>section {
     font-weight: 200;
 }
 
-/* Copyright bar */
+/* Copyright Bar */
 .copyright {
     position: relative;
     border-top: 0;
