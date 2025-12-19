@@ -287,6 +287,26 @@ header {
 .hero {
     position: relative;
     margin-top: 0;
+    background: #fff;
+    padding: 40px 0 80px;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, .08);
+    border-radius: 34px 34px 0 0;
+}
+
+.hero-hurry {
+    text-align: center;
+    font-weight: 700;
+    color: #c41c1c;
+    letter-spacing: .05em;
+    margin: 0 0 24px;
+    text-transform: uppercase;
+}
+
+.hero-hurry--inline {
+    margin: 16px 0 0;
+    text-transform: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
 }
 
 .hero-grid {
@@ -328,7 +348,6 @@ header {
     width: 100%;
     height: auto;
     display: block;
-    margin-top: 16px;
     border-radius: 14px;
     box-shadow: var(--shadow-sm);
 }
