@@ -380,6 +380,13 @@ section {
     margin: 0;
 }
 
+.section-title {
+    font-size: 2rem;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 .link {
     color: var(--accent);
 }
