@@ -12,6 +12,14 @@
     background: #fff;
 }
 
+.collections .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
 .collections .media {
     aspect-ratio: 4 / 3;
     background: linear-gradient(180deg, #ddd, #f2f2f2);
