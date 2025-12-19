@@ -397,10 +397,41 @@ h1 {
     margin-top: 10px;
 }
 
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid transparent;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.btn:focus-visible {
+    outline: 3px solid rgba(15, 108, 120, 0.6);
+    outline-offset: 3px;
+}
+
 .btn-accent {
     border-color: var(--accent);
     color: #fff;
     background: var(--accent);
+}
+
+.about .btn {
+    background: linear-gradient(135deg, var(--accent), #0b5360);
+    border-color: #0b5360;
+    box-shadow: 0 12px 25px rgba(11, 83, 96, 0.5);
+    color: #fff;
+}
+
+.about .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(11, 83, 96, 0.55);
 }
 
 .btn-accent:hover {
