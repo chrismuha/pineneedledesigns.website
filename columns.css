@@ -20,6 +20,12 @@
     text-decoration: none;
 }
 
+.collections .card.disabled {
+    opacity: .55;
+    filter: grayscale(.5);
+    cursor: not-allowed;
+}
+
 .collections .media {
     aspect-ratio: 4 / 3;
     background: linear-gradient(180deg, #ddd, #f2f2f2);
