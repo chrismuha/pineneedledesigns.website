@@ -851,6 +851,32 @@ footer>section {
     border: 0;
 }
 
+/* Product Pages */
+.product-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.product-image {
+    display: flex;
+    gap: 12px;
+    height: 25%;
+    width: 25%;
+}
+
+.addtocart {
+    background-color: #0f6c78;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
 /* Mobile Responsiveness */
 @media (min-width: 769px) {
 
