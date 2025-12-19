@@ -316,6 +316,14 @@ header {
     width: 100%;
 }
 
+.hero-card__placeholder {
+    margin-top: 16px;
+    border-radius: 14px;
+    background: #e0e0e0;
+    height: 260px;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
+}
+
 .hero-bunny {
     width: 100%;
     height: auto;
