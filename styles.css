@@ -303,7 +303,7 @@ header {
 }
 
 .hero-hurry--inline {
-    margin: 16px 0 0;
+    margin: 0;
     text-transform: none;
     font-size: 0.95rem;
     letter-spacing: 0.08em;
