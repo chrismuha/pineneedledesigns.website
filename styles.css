@@ -878,6 +878,11 @@ footer>section {
     box-shadow: var(--shadow-sm);
 }
 
+.product-card .addtocart {
+    margin-top: auto;
+    align-self: stretch;
+}
+
 .product-card header {
     display: flex;
     flex-direction: column;
