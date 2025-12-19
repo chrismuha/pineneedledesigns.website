@@ -317,6 +317,7 @@ header {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
     gap: 14px;
+    align-items: stretch;
 }
 
 .hero-card {
@@ -325,6 +326,8 @@ header {
     overflow: hidden;
     min-height: 420px;
     box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
 }
 
 .hero-placeholder-inline {
@@ -346,6 +349,9 @@ header {
     padding: 18px;
     border-radius: 14px;
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .hero-card__placeholder {
@@ -529,7 +535,13 @@ section {
     display: grid;
     grid-template-columns: 1.1fr .9fr;
     gap: 18px;
-    align-items: center;
+    align-items: stretch;
+}
+
+.about .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .about .card {
