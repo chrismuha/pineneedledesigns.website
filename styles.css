@@ -773,50 +773,6 @@ footer>section {
     pointer-events: none;
 }
 
-/* Burgundy link box */
-.center-box {
-    border: 3px solid #800020;
-    /* Burgundy */
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    background-color: #fff;
-    max-width: 640px;
-    margin: 2rem auto;
-    /* centers the box under slider */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-}
-
-.center-box h2 {
-    margin-bottom: 1.25rem;
-    color: #800020;
-}
-
-.page-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.page-list li {
-    margin: .6rem 0;
-}
-
-.page-list a {
-    text-decoration: none;
-    color: #800020;
-    font-size: 1.1rem;
-    transition: color .2s ease;
-}
-
-.page-list a:hover,
-.page-list a:focus {
-    color: #b03060;
-    outline: none;
-}
-
-
-
 /* Utilities */
 .collapsible[data-collapsed="true"],
 .collapsible[aria-hidden="true"] {
