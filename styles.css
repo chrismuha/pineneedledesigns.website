@@ -295,6 +295,10 @@ header {
     gap: 14px;
 }
 
+.hero-card.hero-card--stacked {
+    grid-column: 2;
+}
+
 .hero-card {
     position: relative;
     border-radius: var(--radius);
@@ -310,6 +314,15 @@ header {
     padding: 18px;
     border-radius: 14px;
     width: 100%;
+}
+
+.hero-bunny {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 16px;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
 }
 
 .eyebrow {
