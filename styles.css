@@ -309,6 +309,10 @@ header {
     letter-spacing: 0.08em;
 }
 
+.hero-hurry--left {
+    text-align: left;
+}
+
 .hero-grid {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
