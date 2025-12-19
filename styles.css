@@ -137,15 +137,6 @@ header {
     grid-row: 1;
 }
 
-/* .brand img {
-    width: 180px;
-    height: auto;
-    display: block;
-    background: #fff;
-    padding: 6px;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, .08);
-} */
-
 /* Search */
 .search {
     grid-column: 1;
@@ -291,8 +282,6 @@ header {
 .next-btn {
     right: 16px;
 }
-
-
 
 /* Hero */
 .hero {
@@ -462,20 +451,20 @@ section {
     border-radius: 12px;
 }
 
-/* Benefits
+/* Benefits */
 .benefits {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
-} */
+}
 
-/* .benefit {
+.benefit {
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 16px;
     background: #fff;
     box-shadow: var(--shadow-sm);
-} */
+}
 
 .subtle2 {
     opacity: .7;
