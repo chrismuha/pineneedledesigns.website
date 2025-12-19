@@ -910,6 +910,20 @@ footer>section {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
+.product-images .placeholder {
+    min-height: 140px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f6f6f6, #e6e6e6);
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 /* Mobile Responsiveness */
 @media (min-width: 769px) {
 
