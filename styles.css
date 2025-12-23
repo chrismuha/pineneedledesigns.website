@@ -480,7 +480,7 @@ section {
 }
 
 .section-head h2 {
-    font-size: 1.6rem;
+    font-size: calc(1.6rem + max(0px, 600px - 100vw) * 0.0022222);
     margin: 0;
 }
 
