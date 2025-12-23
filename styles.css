@@ -549,18 +549,18 @@ section {
 
     .highlighted-collection .grid {
         grid-template-columns: 1fr;
-        max-width: 360px;
-        margin: 0 auto;
+        max-width: none;
+        margin: 0;
     }
 
     .highlighted-collection .product {
         width: 100%;
-        margin: 0 auto;
+        margin: 0;
     }
 
     .highlighted-collection .section-head {
-        max-width: 360px;
-        margin: 0 auto 18px;
+        max-width: none;
+        margin: 0 0 18px;
     }
 }
 
@@ -590,10 +590,15 @@ section {
 }
 
 .pill {
-    font-size: .8rem;
+    font-size: 10pt;
     border: 1px solid var(--border);
-    padding: 4px 8px;
     border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    width: clamp(160px, 20vw, 220px);
+    padding: 4px 14px;
+    box-sizing: border-box;
+    margin: 0 auto 8px;
 }
 
 /* Split tiles */
@@ -1269,6 +1274,16 @@ footer>section {
     /* Shrink highlighted collection placeholder headers by ~2pt on phones/tablets */
     .highlighted-collection .body h3 {
         font-size: calc(1.17em - 2pt);
+    }
+
+    /* Reduce placeholder item header text for all collections on small screens */
+    .grid .body h3 {
+        font-size: 10pt;
+    }
+
+    /* Keep pills narrower on phones so they stay inside the card */
+    .pill {
+        width: clamp(120px, 86%, 170px);
     }
 }
 
