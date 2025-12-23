@@ -125,7 +125,7 @@ img {
     }
 }
 
-/* Header / nav */
+/* Header / Nav */
 header {
     background: #b6c40a;
     border-bottom: 0;
@@ -167,7 +167,7 @@ header {
     color: var(--accent);
 }
 
-/* Main nav */
+/* Main Nav */
 .nav {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -185,7 +185,7 @@ header {
     gap: 12px;
 }
 
-/* Move main nav below the icons */
+/* Move Main Nav below the icons */
 .nav-main {
     display: flex;
     justify-content: center;
@@ -220,7 +220,7 @@ header {
     background: var(--ink);
 }
 
-/* Image slider */
+/* Image Slider */
 .image-slider {
     position: relative;
     width: 100vw;
@@ -252,7 +252,7 @@ header {
     object-fit: contain;
 }
 
-/* Two images slide */
+/* Two Images Slider */
 #slider-container.double img {
     object-fit: cover;
 }
