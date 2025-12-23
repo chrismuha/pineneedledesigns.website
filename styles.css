@@ -320,6 +320,12 @@ header {
     align-items: stretch;
 }
 
+@media (max-width: 900px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .hero-card {
     position: relative;
     border-radius: var(--radius);
@@ -919,6 +925,31 @@ footer>section {
     flex-direction: column;
     align-items: center;
     gap: 24px;
+}
+
+.products-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.product-actions {
+    width: 100%;
+    text-align: left;
+    margin: 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.back-link {
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0;
 }
 
 .product-grid {
