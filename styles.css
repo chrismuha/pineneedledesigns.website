@@ -65,7 +65,7 @@ img {
 .bar {
     background: var(--ink);
     color: #fff;
-    font-size: .9rem;
+    font-size: 10.8pt;
     overflow-x: auto;
     padding: 0 8px;
 }
@@ -149,7 +149,7 @@ header {
     border: 0;
     padding: 6px 0;
     color: var(--accent);
-    font-size: 1.05rem;
+    font-size: 12.6pt;
 }
 
 .search input::placeholder {
@@ -271,7 +271,7 @@ header {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 2rem;
+    font-size: 24pt;
     cursor: pointer;
 }
 
@@ -305,7 +305,7 @@ header {
 .hero-hurry--inline {
     margin: 0;
     text-transform: none;
-    font-size: 0.95rem;
+    font-size: 11.4pt;
     letter-spacing: 0.08em;
 }
 
@@ -387,7 +387,7 @@ header {
 }
 
 .eyebrow {
-    font-size: .9rem;
+    font-size: 10.8pt;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--accent);
@@ -397,13 +397,13 @@ h1 {
     font-family: "Playfair Display", serif;
     font-weight: 700;
     margin: .2rem 0 1rem;
-    font-size: 2.6rem;
+    font-size: 31.2pt;
     line-height: 1.1;
 }
 
 .chic-header {
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 19.2pt;
     margin: 0 0 12px;
 }
 
@@ -480,12 +480,12 @@ section {
 }
 
 .section-head h2 {
-    font-size: calc(1.6rem + max(0px, 600px - 100vw) * 0.0022222);
+    font-size: calc(19.2pt + max(0px, 600px - 100vw) * 0.0022222);
     margin: 0;
 }
 
 .section-title {
-    font-size: 2rem;
+    font-size: 24pt;
     margin: 0 0 12px;
     letter-spacing: 0.08em;
 }
@@ -639,7 +639,7 @@ section {
 
 .subtle2 {
     opacity: .7;
-    font-size: .95rem;
+    font-size: 11.4pt;
     font-weight: 300;
 }
 
@@ -754,7 +754,7 @@ footer .collapsible>*:last-child {
 footer .toggle-label {
     display: inline-block;
     margin: 0 8px 0 0;
-    font-size: .95rem;
+    font-size: 11.4pt;
     color: #fff;
 }
 
@@ -906,7 +906,7 @@ footer>section {
 .subtle {
     color: var(--ink-2);
     opacity: .85;
-    font-size: .9rem;
+    font-size: 10.8pt;
     font-weight: 300;
 }
 
@@ -915,7 +915,7 @@ footer>section {
 .hare p,
 .hare a {
     color: pink;
-    font-size: .9rem;
+    font-size: 10.8pt;
     font-weight: 200;
 }
 
@@ -1174,7 +1174,7 @@ footer>section {
         .slider-btn {
             width: 56px;
             height: 56px;
-            font-size: 2.2rem;
+            font-size: 26.4pt;
 
         }
     }
@@ -1250,7 +1250,7 @@ footer>section {
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 21.6pt;
             line-height: 1.2;
         }
 
@@ -1277,7 +1277,7 @@ footer>section {
 
         /* Reduce placeholder item header text for all collections on small screens */
         .grid .body h3 {
-            font-size: 10pt;
+            font-size: 10.8pt;
         }
 
         /* Keep pills narrower on phones so they stay inside the card */
