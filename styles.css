@@ -195,6 +195,15 @@ header {
     grid-row: 3;
 }
 
+.icon-btn {
+    font-size: 22pt;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+}
+
 /* Ensure the hamburger shows on desktop too so you have 4 icons */
 .nav-aux .show-sm {
     display: inline-flex;
@@ -207,6 +216,11 @@ header {
     text-transform: uppercase;
     position: relative;
     padding: 8px 2px;
+    font-size: 22pt;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-main a:hover::after,
