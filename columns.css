@@ -20,7 +20,8 @@
     text-decoration: none;
 }
 
-.collections .card.disabled {
+.collections .card.disabled,
+.card.disabled {
     opacity: .55;
     filter: grayscale(.5);
     cursor: not-allowed;

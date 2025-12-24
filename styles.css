@@ -1054,6 +1054,13 @@ footer>section {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.card.disabled .addtocart {
+    pointer-events: none;
+    background: #c0c6cf;
+    color: var(--ink-2);
+    border-color: transparent;
+}
+
 @media (max-width: 760px) {
     .product-grid {
         grid-template-columns: 1fr;
