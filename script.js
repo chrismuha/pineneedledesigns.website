@@ -99,8 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const slides = [
     ["images/1a.webp"],
     ["images/2.webp"],
-    ["images/3.webp"],
-    ["images/bunny.webp"]
+    ["images/3.JPG"],
   ];
 
   let currentIndex = 0;

@@ -386,6 +386,26 @@ header {
     object-fit: contain;
 }
 
+.hero-2 {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    max-height: clamp(240px, 36vw, 340px);
+    object-fit: contain;
+}
+
+.hero-3 {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    max-height: clamp(240px, 36vw, 340px);
+    object-fit: contain;
+}
+
 .eyebrow {
     font-size: 11pt;
     letter-spacing: .1em;
