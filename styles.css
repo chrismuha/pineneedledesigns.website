@@ -223,6 +223,16 @@ header {
     justify-content: center;
 }
 
+@media (max-width: 768px) {
+    .icon-btn {
+        font-size: 22pt;
+    }
+
+    .nav-main a {
+        font-size: 22pt;
+    }
+}
+
 .nav-main a:hover::after,
 .nav-main a.active::after {
     content: "";
