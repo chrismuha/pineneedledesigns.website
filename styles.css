@@ -259,7 +259,8 @@ header {
 
 .slider-btn {
     position: absolute;
-    top: 50%;
+    top: 40%;
+    left: 82%;
     transform: translateY(-50%);
     z-index: 2;
     background: rgb(41, 41, 41);
