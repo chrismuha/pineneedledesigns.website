@@ -1241,7 +1241,10 @@ footer>section {
 
     /* QR Code */
     .qr-link {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
         text-align: center;
         margin: 10px auto;
         padding: 0;
@@ -1252,7 +1255,7 @@ footer>section {
     .qr-link img {
         width: 250px;
         height: auto;
-        display: inline-block;
+        display: block;
     }
 
     /* Hero / layout small screens */
