@@ -639,7 +639,8 @@ section {
     border-radius: 999px;
     display: flex;
     justify-content: center;
-    width: clamp(160px, 20vw, 220px);
+    width: 100%;
+    max-width: clamp(160px, 20vw, 220px);
     padding: 4px 14px;
     box-sizing: border-box;
     margin: 0 auto 8px;
@@ -1337,7 +1338,8 @@ footer>section {
 
         /* Keep pills narrower on phones so they stay inside the card */
         .pill {
-            width: clamp(120px, 86%, 170px);
+            max-width: clamp(120px, 86%, 170px);
+            overflow-wrap: anywhere;
         }
     }
 
@@ -1365,4 +1367,8 @@ footer>section {
 
 .hero-card img {
     width: fit-content;
+}
+.hero-card .hero-images {
+    display: flex;
+    flex-wrap: wrap;
 }
