@@ -97,12 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.querySelector(".next-btn");
 
   const slides = [
-    ["images/1.webp"],
+    ["images/1a.webp"],
+    ["images/2.webp"],
     ["images/3.webp"],
-    ["images/4.webp"],
-    ["images/5.webp"],
-    ["images/6.webp"],
-    ["images/7.webp"]
+    ["images/bunny.webp"]
   ];
 
   let currentIndex = 0;
