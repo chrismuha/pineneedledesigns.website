@@ -100,6 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ["images/1a.webp"],
     ["images/2.webp"],
     ["images/3.JPG"],
+    ["images/4.webp"],
+    ["images/5.webp"]
   ];
 
   let currentIndex = 0;
