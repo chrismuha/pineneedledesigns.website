@@ -1158,6 +1158,12 @@ footer>section {
         display: block;
     }
 
+    @media (max-width: 760px) {
+        .image-frame {
+            height: auto;
+        }
+    }
+
     .product-images .placeholder {
         display: flex;
         align-items: center;
