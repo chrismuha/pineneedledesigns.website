@@ -204,7 +204,7 @@ header {
     padding: 0 8px;
 }
 
-/* Ensure the hamburger shows on desktop too so you have 4 icons */
+/* Ensure the hamburger shows on desktop */
 .nav-aux .show-sm {
     display: inline-flex;
 }
