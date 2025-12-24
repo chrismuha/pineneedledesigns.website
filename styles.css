@@ -555,9 +555,9 @@ section {
 }
 
 .product .media {
-    width: 100%;
+    width: auto;
     height: auto;
-    object-fit: contain;
+    object-fit: cover;
     background: linear-gradient(180deg, #ddd, #eee);
 }
 
