@@ -97,9 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.querySelector(".next-btn");
 
   const slides = [
-    ["images/1a.webp"],
-    ["images/2.webp"],
-    ["images/3.JPG"],
+    ["images/1a.webp", "images/2.webp", "images/3.JPG"],
     ["images/4.webp"],
     ["images/5.webp"]
   ];
@@ -108,26 +106,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let interval;
 
   function showSlide(index) {
-    sliderContainer.style.opacity = 0; // fade out
+    sliderContainer.style.opacity = 0;
+
     setTimeout(() => {
       currentIndex = (index + slides.length) % slides.length;
-      sliderContainer.innerHTML = ""; // clear previous slide
+      sliderContainer.innerHTML = "";
 
       const slide = slides[currentIndex];
 
-      // Add class based on number of images
-      sliderContainer.className = slide.length === 1 ? "single" : "double";
+      // Reset classes
+      sliderContainer.className = "";
+
+      if (slide.length === 1) sliderContainer.classList.add("single");
+      if (slide.length === 2) sliderContainer.classList.add("double");
+      if (slide.length === 3) sliderContainer.classList.add("triple");
 
       slide.forEach(src => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "slide-item";
+
         const img = document.createElement("img");
         img.src = src;
         img.alt = "Featured product";
-        sliderContainer.appendChild(img);
+
+        wrapper.appendChild(img);
+        sliderContainer.appendChild(wrapper);
       });
 
-      sliderContainer.style.opacity = 1; // fade in
+
+      sliderContainer.style.opacity = 1;
     }, 500);
   }
+
 
 
   function nextSlide() { showSlide(currentIndex + 1); resetInterval(); }
