@@ -255,6 +255,7 @@ header {
     align-items: center;
     justify-content: center;
     padding: 0;
+    --slider-control-gap: max(16px, calc(((100vw - min(100vw, var(--container))) / 2) + 24px));
 }
 
 #slider-container {
@@ -329,8 +330,7 @@ header {
 
 .slider-btn {
     position: absolute;
-    top: 40%;
-    left: 82%;
+    top: 42%;
     transform: translateY(-50%);
     z-index: 2;
     background: rgb(41, 41, 41);
@@ -347,11 +347,11 @@ header {
 }
 
 .prev-btn {
-    left: 16px;
+    left: var(--slider-control-gap);
 }
 
 .next-btn {
-    right: 16px;
+    right: var(--slider-control-gap);
 }
 
 /* Hero */
