@@ -959,6 +959,34 @@ footer .foot-toggle-wrap::before {
     content: none;
 }
 
+footer .footer-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+footer .footer-qr .qr-link {
+    width: min(320px, 90vw);
+    margin: 0 auto;
+    text-align: center;
+}
+
+footer .footer-qr .qr-link span {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 0.6rem;
+}
+
+footer .footer-qr .qr-link img {
+    display: block;
+    margin: 0 auto;
+}
+
 footer .collapsible>*:first-child {
     margin-top: 0;
 }
@@ -1473,20 +1501,6 @@ footer>section {
         display: block;
         margin: 0 auto;
     }
-
-.footer-qr {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
-}
-
-.footer-qr .qr-link {
-    margin: 0;
-    width: min(320px, 90vw);
-}
 
     /* Hero / layout small screens */
     @media (max-width: 600px) {
