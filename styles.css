@@ -338,6 +338,7 @@ header {
         align-self: center;
     }
 }
+
 @media (max-width: 768px) {
     .icon-btn {
         font-size: 22pt;
@@ -377,44 +378,44 @@ header {
 }
 
 #slider-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 
 .slide-item img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 #slider-container.single .slide-item {
-  width: 100%;
+    width: 100%;
 }
 
 #slider-container.double .slide-item {
-  width: 50%;
+    width: 50%;
 }
 
 #slider-container.triple .slide-item {
-  width: 33.3333%;
+    width: 33.3333%;
 }
 
 .slide-item {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 
@@ -434,8 +435,8 @@ header {
 
 #slider-container.double .slide-item:not(:last-child),
 #slider-container.triple .slide-item:not(:last-child) {
-  border-right: 4px solid #b03b2e;
-  box-sizing: border-box;
+    border-right: 4px solid #b03b2e;
+    box-sizing: border-box;
 }
 
 
@@ -1462,13 +1463,30 @@ footer>section {
         padding: 0;
         border: none;
         background: transparent;
+        width: min(320px, 90vw);
+        justify-content: center;
     }
 
     .qr-link img {
         width: 250px;
         height: auto;
         display: block;
+        margin: 0 auto;
     }
+
+.footer-qr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.footer-qr .qr-link {
+    margin: 0;
+    width: min(320px, 90vw);
+}
 
     /* Hero / layout small screens */
     @media (max-width: 600px) {
@@ -1502,12 +1520,12 @@ footer>section {
     }
 
     /* Small-screen utility helpers */
-@media (max-width: 768px) {
+    @media (max-width: 768px) {
 
-    .image-slider {
-        height: 58vh;
-        min-height: 280px;
-    }
+        .image-slider {
+            height: 58vh;
+            min-height: 280px;
+        }
 
 
         .hide-sm {
@@ -1560,6 +1578,7 @@ footer>section {
 .hero-card img {
     width: fit-content;
 }
+
 .hero-card .hero-images {
     display: flex;
     flex-wrap: wrap;
