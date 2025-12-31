@@ -104,69 +104,123 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevBtn = document.querySelector(".prev-btn");
   const nextBtn = document.querySelector(".next-btn");
 
-  const slides = [
-    ["images/1a.webp", "images/2b.PNG", "images/3.JPG"],
-    ["images/4.webp"],
-    ["images/5.webp"]
-  ];
+  if (sliderContainer && prevBtn && nextBtn) {
+    const slides = [
+      ["images/1a.webp", "images/2b.PNG", "images/3.JPG"],
+      ["images/4.webp"],
+      ["images/5.webp"]
+    ];
 
-  let currentIndex = 0;
-  let interval;
+    let currentIndex = 0;
+    let interval;
 
-  function showSlide(index) {
-    sliderContainer.style.opacity = 0;
+    function showSlide(index) {
+      sliderContainer.style.opacity = 0;
 
-    setTimeout(() => {
-      currentIndex = (index + slides.length) % slides.length;
-      sliderContainer.innerHTML = "";
+      setTimeout(() => {
+        currentIndex = (index + slides.length) % slides.length;
+        sliderContainer.innerHTML = "";
 
-      const slide = slides[currentIndex];
+        const slide = slides[currentIndex];
 
-      // Reset classes
-      sliderContainer.className = "";
+        // Reset classes
+        sliderContainer.className = "";
 
-      if (slide.length === 1) sliderContainer.classList.add("single");
-      if (slide.length === 2) sliderContainer.classList.add("double");
-      if (slide.length === 3) sliderContainer.classList.add("triple");
+        if (slide.length === 1) sliderContainer.classList.add("single");
+        if (slide.length === 2) sliderContainer.classList.add("double");
+        if (slide.length === 3) sliderContainer.classList.add("triple");
 
-      slide.forEach(src => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "slide-item";
+        slide.forEach(src => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "slide-item";
 
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = "Featured product";
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = "Featured product";
 
-        wrapper.appendChild(img);
-        sliderContainer.appendChild(wrapper);
-      });
-
-
-      sliderContainer.style.opacity = 1;
-    }, 500);
-  }
+          wrapper.appendChild(img);
+          sliderContainer.appendChild(wrapper);
+        });
 
 
+        sliderContainer.style.opacity = 1;
+      }, 500);
+    }
 
-  function nextSlide() { showSlide(currentIndex + 1); resetInterval(); }
-  function prevSlide() { showSlide(currentIndex - 1); resetInterval(); }
 
-  function startAutoSlide() {
-    interval = setInterval(() => nextSlide(), 5000);
-  }
 
-  function resetInterval() {
-    clearInterval(interval);
+    function nextSlide() { showSlide(currentIndex + 1); resetInterval(); }
+    function prevSlide() { showSlide(currentIndex - 1); resetInterval(); }
+
+    function startAutoSlide() {
+      interval = setInterval(() => nextSlide(), 5000);
+    }
+
+    function resetInterval() {
+      clearInterval(interval);
+      startAutoSlide();
+    }
+
+    // initial display
+    sliderContainer.style.transition = "opacity 0.5s ease-in-out";
+    sliderContainer.style.opacity = 1;
+    showSlide(currentIndex);
+
+    nextBtn.addEventListener("click", nextSlide);
+    prevBtn.addEventListener("click", prevSlide);
     startAutoSlide();
   }
 
-  // initial display
-  sliderContainer.style.transition = "opacity 0.5s ease-in-out";
-  sliderContainer.style.opacity = 1;
-  showSlide(currentIndex);
+  const collectionPages = [
+    "adirondack-bridal.html",
+    "boot-bands.html",
+    "bracelets.html",
+    "chic-jewelry.html",
+    "cuffs.html",
+    "earrings.html",
+    "hat-bands.html",
+    "jackets.html",
+    "jeans.html",
+    "necklaces.html",
+    "pooch-smooches.html",
+    "purses.html",
+    "shirts.html",
+    "shorts.html",
+    "upcycled-denim.html",
+    "vests.html"
+  ];
 
-  nextBtn.addEventListener("click", nextSlide);
-  prevBtn.addEventListener("click", prevSlide);
-  startAutoSlide();
+  const setupCollectionPagination = () => {
+    const actions = document.querySelector(".product-actions");
+    if (!actions) return;
+    const backLink = actions.querySelector(".back-link");
+    const nextLink = actions.querySelector(".btn-next");
+    if (!backLink || !nextLink) return;
+
+    const currentFile = window.location.pathname.split("/").pop() || "index.html";
+    const currentIndex = collectionPages.indexOf(currentFile);
+    if (currentIndex === -1) return;
+
+    const updateLink = (link, target, withDisabledAttr = false) => {
+      if (target) {
+        link.setAttribute("href", target);
+        link.classList.remove("disabled");
+        link.removeAttribute("aria-disabled");
+        link.removeAttribute("tabindex");
+        if (withDisabledAttr) link.removeAttribute("disabled");
+      } else {
+        link.removeAttribute("href");
+        link.classList.add("disabled");
+        link.setAttribute("aria-disabled", "true");
+        link.setAttribute("tabindex", "-1");
+        if (withDisabledAttr) link.setAttribute("disabled", "true");
+      }
+    };
+
+    updateLink(backLink, collectionPages[currentIndex - 1]);
+    updateLink(nextLink, collectionPages[currentIndex + 1], true);
+  };
+
+  setupCollectionPagination();
 
 });
