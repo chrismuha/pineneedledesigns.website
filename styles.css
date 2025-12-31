@@ -161,9 +161,9 @@ header {
 }
 
 .brand-logos img {
-    width: min(220px, 40vw);
-    height: auto;
-    object-fit: contain;
+    width: min(220px, 38vw);
+    height: 220px;
+    object-fit: cover;
     border-radius: 6px;
 }
 
