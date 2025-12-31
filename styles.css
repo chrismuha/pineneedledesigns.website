@@ -127,9 +127,9 @@ img {
 
 /* Header / Nav */
 header {
-    background: #b6c40a;
+    background: #fff;
     border-bottom: 0;
-    border-top: 3px solid #b03b2e;
+    /* border-top: 3px solid #b03b2e; */
 }
 
 .nav {
@@ -150,7 +150,7 @@ header {
 
 .brand-logos {
     display: flex;
-    gap: 12px;
+    gap: 6px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -166,6 +166,14 @@ header {
     object-fit: contain;
     border-radius: 6px;
 }
+
+/* .brand-divider {
+    width: 6px;
+    min-height: 160px;
+    background: #b03b2e;
+    border-radius: 8px;
+    align-self: center;
+} */
 
 /* Search */
 .search {
@@ -204,7 +212,9 @@ header {
     order: 3;
     flex-shrink: 0;
     justify-content: center;
-    width: 100%;
+    width: auto;
+    align-self: center;
+    margin: 0 auto;
 }
 
 .nav-main {
@@ -323,8 +333,9 @@ header {
 
     .nav-aux {
         order: 4;
-        width: 100%;
-        justify-content: flex-end;
+        width: auto;
+        justify-content: center;
+        align-self: center;
     }
 }
 @media (max-width: 768px) {
@@ -1420,8 +1431,9 @@ footer>section {
 
         .nav-aux {
             order: 4;
-            width: 100%;
+            width: auto;
             justify-content: center;
+            align-self: center;
         }
 
         .mobile-nav {
