@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const openMenu = () => {
     if (!menuBtn || !mnav) return;
     menuBtn.setAttribute("aria-expanded", "true");
-    mnav.style.display = "";
+    mnav.style.display = "flex";
   };
 
   if (menuBtn && mnav) {
