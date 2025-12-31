@@ -5,20 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeMenu = () => {
     if (!menuBtn || !mnav) return;
     menuBtn.setAttribute("aria-expanded", "false");
-    mnav.style.display = "none";
+    mnav.classList.remove("mobile-nav--open");
   };
 
   const openMenu = () => {
     if (!menuBtn || !mnav) return;
     menuBtn.setAttribute("aria-expanded", "true");
-    mnav.style.display = "flex";
+    mnav.classList.add("mobile-nav--open");
   };
 
   if (menuBtn && mnav) {
-    const isHidden =
-      (mnav.style.display && mnav.style.display === "none") ||
-      window.getComputedStyle(mnav).display === "none";
-    menuBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
+    closeMenu();
 
     menuBtn.addEventListener("click", () => {
       const expanded = menuBtn.getAttribute("aria-expanded") === "true";
@@ -40,6 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     if (mqMenu.addEventListener) mqMenu.addEventListener("change", handleDesktop);
     else mqMenu.addListener(handleDesktop);
+
+    const mqSmall = window.matchMedia("(max-width: 980px)");
+    const handleSmall = (ev) => {
+      if (ev.matches) closeMenu();
+    };
+    if (mqSmall.addEventListener) mqSmall.addEventListener("change", handleSmall);
+    else mqSmall.addListener(handleSmall);
+
+    mnav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
   }
 
   const yearEl = document.getElementById("y");
