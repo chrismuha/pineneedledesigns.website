@@ -360,6 +360,9 @@ header {
     justify-content: center;
     padding: 0;
     --slider-control-gap: max(16px, calc(((100vw - min(100vw, var(--container))) / 2) + 24px));
+
+    /* Allow more page content to show on smaller screens */
+    transition: height 240ms ease;
 }
 
 #slider-container {
@@ -1487,7 +1490,13 @@ footer>section {
     }
 
     /* Small-screen utility helpers */
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
+
+    .image-slider {
+        height: 58vh;
+        min-height: 280px;
+    }
+
 
         .hide-sm {
             display: none;

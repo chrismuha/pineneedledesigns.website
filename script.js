@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.querySelector(".next-btn");
 
   const slides = [
-    ["images/1a.webp", "images/2.webp", "images/3.JPG"],
+    ["images/1a.webp", "images/2b.PNG", "images/3.JPG"],
     ["images/4.webp"],
     ["images/5.webp"]
   ];
