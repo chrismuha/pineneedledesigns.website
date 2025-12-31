@@ -43,13 +43,20 @@
                 </div>
             </div>
 
-            <button id="menuBtn" class="nav-toggle" aria-controls="mnav" aria-expanded="false"
-                aria-label="Toggle navigation menu">
-                <span class="sr-only">Open navigation menu</span>
-                <span class="nav-toggle__bar" aria-hidden="true"></span>
-                <span class="nav-toggle__bar" aria-hidden="true"></span>
-                <span class="nav-toggle__bar" aria-hidden="true"></span>
-            </button>
+            <div class="nav-actions">
+                <button id="menuBtn" class="nav-toggle" aria-controls="mnav" aria-expanded="false"
+                    aria-label="Toggle navigation menu">
+                    <span class="sr-only">Open navigation menu</span>
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                </button>
+
+                <div class="nav-aux">
+                    <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+                    <a class="icon-btn" href="#" aria-label="Cart"><i class="bi bi-bag"></i></a>
+                </div>
+            </div>
 
             <nav class="nav-main" aria-label="Main">
                 <a href="/" class="active">Home</a>
@@ -70,11 +77,6 @@
                 <a href="upcycled-denim.html">Upcycled Denim</a>
                 <a href="vests.html">Vests</a>
             </nav>
-
-            <div class="nav-aux">
-                <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
-                <a class="icon-btn" href="#" aria-label="Cart"> <i class="bi bi-bag"></i></a>
-            </div>
 
             <nav id="mnav" class="mobile-nav" aria-label="Mobile menu">
                 <a href="/" class="active">Home</a>
