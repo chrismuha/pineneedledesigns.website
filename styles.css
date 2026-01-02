@@ -1335,13 +1335,13 @@ footer>section {
     background: #fff;
     color: var(--ink);
     border-color: var(--border);
-    box-shadow: var(--shadow-sm);
+    /* box-shadow: var(--shadow-sm); */
 }
 
 .product-actions .btn-browse:hover {
     background: #fff;
     color: var(--ink);
-    box-shadow: var(--shadow-sm);
+    /* box-shadow: var(--shadow-sm); */
     border-color: var(--border);
 }
 
