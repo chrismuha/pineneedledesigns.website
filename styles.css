@@ -1380,14 +1380,13 @@ footer>section {
 }
 
 .card.disabled .addtocart {
-    pointer-events: none;
+    pointer-events: default;
     background: #c0c6cf;
     color: var(--ink-2);
     border-color: transparent;
 }
 
-@media (max-width: 760px) {
-    .product-grid {
+.product-grid {
         grid-template-columns: 1fr;
     }
 
@@ -1498,6 +1497,8 @@ footer>section {
         text-transform: uppercase;
         letter-spacing: 0.08em;
     }
+
+@media (max-width: 760px) {
 
     /* Mobile Responsiveness */
     @media (min-width: 769px) {
