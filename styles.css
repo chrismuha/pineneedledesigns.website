@@ -285,6 +285,9 @@ header {
     box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
     width: 100%;
     order: 2;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .mobile-nav.mobile-nav--open {
@@ -298,6 +301,9 @@ header {
     text-transform: uppercase;
     padding: 10px 0;
     border-bottom: 1px solid rgba(0, 0, 0, .08);
+    width: 100%;
+    text-align: center;
+    display: block;
 }
 
 .mobile-nav a:last-child {
