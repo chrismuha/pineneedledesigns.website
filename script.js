@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["images/4.webp"],
       ["images/5.webp"]
     ];
+    const highPriorityImages = new Set(["images/2b.PNG"]);
 
     let currentIndex = 0;
     let interval;
@@ -136,6 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const img = document.createElement("img");
           img.src = src;
+          if (highPriorityImages.has(src)) {
+            img.setAttribute("loading", "eager");
+            img.setAttribute("decoding", "async");
+            img.setAttribute("fetchpriority", "high");
+          }
           img.alt = "Featured product";
 
           wrapper.appendChild(img);
