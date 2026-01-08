@@ -106,11 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (sliderContainer && prevBtn && nextBtn) {
     const slides = [
-      ["images/1a.webp", "images/2b.PNG", "images/3.JPG"],
+      ["images/1a.webp", "images/2b.webp", "images/3.webp"],
       ["images/4.webp"],
       ["images/5.webp"]
     ];
-    const highPriorityImages = new Set(["images/2b.PNG"]);
+    const highPriorityImages = new Set(["images/2b.webp"]);
 
     let currentIndex = 0;
     let interval;
