@@ -544,7 +544,7 @@ header {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
     gap: 14px;
-    align-items: stretch;
+    align-items: start;
 }
 
 @media (max-width: 900px) {
