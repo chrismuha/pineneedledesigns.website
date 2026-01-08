@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pine Needle Designs - Home</title>
+
+    <!-- PRELOAD nav logos early (must be in <head>) -->
+    <link rel="preload" as="image" href="./images/1a.webp" type="image/webp">
+    <link rel="preload" as="image" href="./images/4.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="columns.css">
@@ -19,12 +21,15 @@
 
 <body>
 
-    <!-- Announcement Banner
-    <div class="bar" role="region" aria-label="Announcement">
-        <div class="container">
-            <span>FREE SHIPPING on orders over $99</span>
-            <span class="badge">New drop live now</span> -->
+    <!-- Announcement Banner (commented out) -->
+    <!--
+  <div class="bar" role="region" aria-label="Announcement">
+    <div class="container">
+      <span>FREE SHIPPING on orders over $99</span>
+      <span class="badge">New drop live now</span>
     </div>
+  </div>
+  -->
 
     <!-- Header -->
     <header>
@@ -32,16 +37,18 @@
             <div class="brand">
                 <div class="brand-logos" role="presentation">
                     <a href="/" aria-label="Pine Needle Designs home">
-                        <img loading="eager" src="./images/1a.webp" alt="Pine Needle Designs Logo" width="250"
-                            height="250">
+                        <img src="./images/1a.webp" alt="Pine Needle Designs Logo" width="250" height="250"
+                            loading="eager" fetchpriority="high" decoding="async">
                     </a>
+
                     <span class="brand-divider" aria-hidden="true"></span>
+
                     <a href="/" aria-label="Pine Needle Designs secondary home logo">
-                        <img loading="eager" src="./images/4.webp" alt="Pine Needle Designs secondary logo" width="250"
-                            height="250">
+                        <img src="./images/4.webp" alt="Pine Needle Designs secondary logo" width="250" height="250"
+                            loading="eager" fetchpriority="high" decoding="async">
                     </a>
-                </div>
-            </div>
+                </div> <!-- .brand-logos -->
+            </div> <!-- .brand -->
 
             <div class="nav-actions">
                 <button id="menuBtn" class="nav-toggle" aria-controls="mnav" aria-expanded="false"
@@ -56,48 +63,48 @@
                     <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
                     <a class="icon-btn" href="#" aria-label="Cart"><i class="bi bi-bag"></i></a>
                 </div>
-            </div>
+            </div> <!-- .nav-actions -->
+        </div> <!-- .container.nav -->
 
-            <nav class="nav-main" aria-label="Main">
-                <a href="/" class="active">Home</a>
-                <a href="adirondack-bridal.html">Adirondack Bridal</a>
-                <a href="boot-bands.html">Boot Bands</a>
-                <a href="bracelets.html">Bracelets</a>
-                <a href="chic-jewelry.html">Chic Jewelry</a>
-                <a href="cuffs.html">Cuffs</a>
-                <a href="earrings.html">Earrings</a>
-                <a href="hat-bands.html">Hat Bands</a>
-                <a href="jackets.html">Jackets</a>
-                <a href="jeans.html">Jeans</a>
-                <a href="necklaces.html">Necklaces</a>
-                <a href="pooch-smooches.html">Pooch Smooches</a>
-                <a href="purses.html">Purses</a>
-                <a href="shirts.html">Shirts</a>
-                <a href="shorts.html">Shorts</a>
-                <a href="upcycled-denim.html">Upcycled Denim</a>
-                <a href="vests.html">Vests</a>
-            </nav>
+        <nav class="nav-main" aria-label="Main">
+            <a href="/" class="active">Home</a>
+            <a href="adirondack-bridal.html">Adirondack Bridal</a>
+            <a href="boot-bands.html">Boot Bands</a>
+            <a href="bracelets.html">Bracelets</a>
+            <a href="chic-jewelry.html">Chic Jewelry</a>
+            <a href="cuffs.html">Cuffs</a>
+            <a href="earrings.html">Earrings</a>
+            <a href="hat-bands.html">Hat Bands</a>
+            <a href="jackets.html">Jackets</a>
+            <a href="jeans.html">Jeans</a>
+            <a href="necklaces.html">Necklaces</a>
+            <a href="pooch-smooches.html">Pooch Smooches</a>
+            <a href="purses.html">Purses</a>
+            <a href="shirts.html">Shirts</a>
+            <a href="shorts.html">Shorts</a>
+            <a href="upcycled-denim.html">Upcycled Denim</a>
+            <a href="vests.html">Vests</a>
+        </nav>
 
-            <nav id="mnav" class="mobile-nav" aria-label="Mobile menu">
-                <a href="/" class="active">Home</a>
-                <a href="adirondack-bridal.html">Adirondack Bridal</a>
-                <a href="boot-bands.html">Boot Bands</a>
-                <a href="bracelets.html">Bracelets</a>
-                <a href="chic-jewelry.html">Chic Jewelry</a>
-                <a href="cuffs.html">Cuffs</a>
-                <a href="earrings.html">Earrings</a>
-                <a href="hat-bands.html">Hat Bands</a>
-                <a href="jackets.html">Jackets</a>
-                <a href="jeans.html">Jeans</a>
-                <a href="necklaces.html">Necklaces</a>
-                <a href="pooch-smooches.html">Pooch Smooches</a>
-                <a href="purses.html">Purses</a>
-                <a href="shirts.html">Shirts</a>
-                <a href="shorts.html">Shorts</a>
-                <a href="upcycled-denim.html">Upcycled Denim</a>
-                <a href="vests.html">Vests</a>
-            </nav>
-        </div>
+        <nav id="mnav" class="mobile-nav" aria-label="Mobile menu">
+            <a href="/" class="active">Home</a>
+            <a href="adirondack-bridal.html">Adirondack Bridal</a>
+            <a href="boot-bands.html">Boot Bands</a>
+            <a href="bracelets.html">Bracelets</a>
+            <a href="chic-jewelry.html">Chic Jewelry</a>
+            <a href="cuffs.html">Cuffs</a>
+            <a href="earrings.html">Earrings</a>
+            <a href="hat-bands.html">Hat Bands</a>
+            <a href="jackets.html">Jackets</a>
+            <a href="jeans.html">Jeans</a>
+            <a href="necklaces.html">Necklaces</a>
+            <a href="pooch-smooches.html">Pooch Smooches</a>
+            <a href="purses.html">Purses</a>
+            <a href="shirts.html">Shirts</a>
+            <a href="shorts.html">Shorts</a>
+            <a href="upcycled-denim.html">Upcycled Denim</a>
+            <a href="vests.html">Vests</a>
+        </nav>
     </header>
 
     <!-- Slider -->
@@ -122,8 +129,8 @@
                 <h2>Adirondack Bridal Collection</h2>
                 <a class="link" href="adirondack-bridal.html">Browse Collection</a>
             </div>
-            <div class="grid grid-4">
 
+            <div class="grid grid-4">
                 <article class="product card disabled">
                     <img loading="lazy" class="media" alt="Beaded bracelet"
                         src="images/comingsoon/adkbridalcomingsoon.webp">
@@ -157,7 +164,6 @@
                     </div>
                 </article>
 
-
                 <article class="product card disabled">
                     <img loading="lazy" class="media" alt="placeholder item 5"
                         src="images/comingsoon/adkbridalcomingsoon.webp">
@@ -166,6 +172,7 @@
                         <h3>Placeholder Item</h3>
                         <div class="price">$0.00</div>
                         <div class="description">Brief Description</div>
+                    </div>
                 </article>
 
                 <article class="product card disabled">
@@ -189,10 +196,8 @@
                         <div class="description">Brief Description</div>
                     </div>
                 </article>
-            </div>
-            </article>
-        </div>
-        </div>
+            </div> <!-- .grid.grid-4 -->
+        </div> <!-- .container.highlighted-collection -->
 
         <div class="container highlighted-collection">
             <div class="section-head">
@@ -266,8 +271,8 @@
                         <div class="description">Brief Description</div>
                     </div>
                 </article>
-            </div>
-        </div>
+            </div> <!-- .grid.grid-4 -->
+        </div> <!-- .container.highlighted-collection -->
     </section>
 
     <!-- Other Collections -->
@@ -426,8 +431,8 @@
                         <div class="subtle">0 items</div>
                     </div>
                 </article>
-            </div>
-        </div>
+            </div> <!-- .grid.grid-6 -->
+        </div> <!-- .container -->
     </section>
 
     <!-- Hero -->
@@ -492,8 +497,8 @@
                     </div>
                     <img loading="lazy" class="hero-3" alt="Coming Soon" src="images/comingsoon/comingsoon1.PNG" />
                     <p class="hero-hurry hero-hurry--inline" style="text-align: left;">Hurry before they sell out! You
-                        would not want to miss out on the chance at oppurtunities in life this dress could send to you.
-                        Get it now before it is to late, it may not return next season!</p>
+                        would not want to miss out on the chance at opportunities in life this dress could send to you.
+                        Get it now before it is too late; it may not return next season!</p>
                 </div>
             </article>
         </div>
@@ -525,10 +530,8 @@
             <div class="card">
                 <h2>One-of-a-kind designs</h2>
                 <p>From purses and bracelets to denim jackets with detachable trains, every piece is designed to make a
-                    statement.
-                    The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the USA and made
-                    for all sizes.
-                </p>
+                    statement. The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the
+                    USA and made for all sizes.</p>
                 <a class="btn" href="#">About Us</a>
             </div>
         </div>
@@ -597,16 +600,14 @@
                 <div class="footer-right">
                     <div class="footer-brand">
                         <h4 class="footer-brand__title">Pine Needle Designs</h4>
-                        <p class="footer-brand__tagline">
-                            Refashioned clothing & accessories with a boho-meets-chic point of view.
-                        </p>
+                        <p class="footer-brand__tagline">Refashioned clothing & accessories with a boho-meets-chic point of view.</p>
                     </div>
 
                     <p class="special-footer-p">
                         Pine Needle Designs is an exclusive collection of refashioned clothing and accessories
                         transforming the mundane to Artful Expression. AND Yes, all sizes! A little BOHO, a little
-                        Country, a lot of Chic. Could be hippy. (Peace) More upscale AND trendy for sure! My designs
-                        are unique and will give you Confidence, Compliments, and scream Country Couture.
+                        Country, a lot of Chic. Could be hippy. (Peace) More upscale AND trendy for sure! My designs are
+                        unique and will give you Confidence, Compliments, and scream Country Couture.
                         <br> Designed and made in the USA
                     </p>
                 </div>
