@@ -578,7 +578,6 @@ header {
     border-radius: 20px;
     height: 220px;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
-    margin-top: 8px;
 }
 
 .hero-placeholder-inline--tall {
@@ -598,11 +597,27 @@ header {
 }
 
 .hero-card__placeholder {
-    margin-top: 16px;
     border-radius: 14px;
     background: #e0e0e0;
     height: 260px;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
+}
+
+.hero-placeholder-stack {
+    margin-top: 16px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.hero-placeholder-stack .hero-placeholder-inline,
+.hero-placeholder-stack .hero-card__placeholder {
+    flex-shrink: 0;
 }
 
 .hero-bunny {
