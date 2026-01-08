@@ -235,13 +235,14 @@ header {
     border-radius: 50%;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 6px;
+    position: relative;
     padding: 8px;
     cursor: pointer;
     transition: background 180ms ease;
     order: 1;
     display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .nav-toggle:hover,
@@ -250,16 +251,34 @@ header {
 }
 
 .nav-toggle__bar {
-    display: block;
+    position: absolute;
+    left: 50%;
     width: 24px;
     height: 2px;
     background: var(--ink);
     border-radius: 999px;
     transition: transform 200ms ease, opacity 180ms ease;
+    transform-origin: center;
+}
+
+.nav-toggle__bar:nth-child(1) {
+    top: 14px;
+    transform: translateX(-50%);
+}
+
+.nav-toggle__bar:nth-child(2) {
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.nav-toggle__bar:nth-child(3) {
+    bottom: 14px;
+    transform: translateX(-50%);
 }
 
 .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) {
@@ -267,7 +286,9 @@ header {
 }
 
 .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .mobile-nav {
