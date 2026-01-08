@@ -258,15 +258,15 @@ header {
     transition: transform 200ms ease, opacity 180ms ease;
 }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) {
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) {
     transform: translateY(6px) rotate(45deg);
 }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) {
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) {
     opacity: 0;
 }
 
-.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(4) {
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) {
     transform: translateY(-6px) rotate(-45deg);
 }
 
