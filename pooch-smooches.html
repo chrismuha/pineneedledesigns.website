@@ -10,15 +10,97 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="columns.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="social.css">
     <link rel="preload" as="image" href="images/poochsmooches/Polaris-and-Luna_1.webp" type="image/webp">
     <link rel="preload" as="image" href="images/1b.webp" type="image/webp">
 </head>
 
 <body>
+    <header>
+        <div class="container nav" role="navigation" aria-label="Primary">
+            <div class="brand">
+                <div class="brand-logos" role="presentation">
+                    <a href="index.html" aria-label="Pine Needle Designs home">
+                        <img loading="eager" src="./images/1a.webp" alt="Pine Needle Designs Logo" width="250" height="250">
+                    </a>
+                    <span class="brand-divider" aria-hidden="true"></span>
+                    <a href="index.html" aria-label="Pine Needle Designs secondary home logo">
+                        <img loading="eager" src="./images/4.webp" alt="Pine Needle Designs secondary logo" width="250" height="250">
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button id="menuBtn" class="nav-toggle" aria-controls="mnav" aria-expanded="false"
+                    aria-label="Toggle navigation menu">
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                    <span class="nav-toggle__bar" aria-hidden="true"></span>
+                </button>
+
+                <div class="nav-aux">
+                    <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
+                    <a class="icon-btn" href="#" aria-label="Cart"><i class="bi bi-bag"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-main" aria-label="Main">
+            <a href="index.html" class="active">Home</a>
+            <a href="adirondack-bridal.html">Adirondack Bridal</a>
+            <a href="boot-bands.html">Boot Bands</a>
+            <a href="bracelets.html">Bracelets</a>
+            <a href="chic-jewelry.html">Chic Jewelry</a>
+            <a href="cuffs.html">Cuffs</a>
+            <a href="earrings.html">Earrings</a>
+            <a href="hat-bands.html">Hat Bands</a>
+            <a href="jackets.html">Jackets</a>
+            <a href="jeans.html">Jeans</a>
+            <a href="necklaces.html">Necklaces</a>
+            <a href="pooch-smooches.html">Pooch Smooches</a>
+            <a href="purses.html">Purses</a>
+            <a href="shirts.html">Shirts</a>
+            <a href="shorts.html">Shorts</a>
+            <a href="upcycled-denim.html">Upcycled Denim</a>
+            <a href="vests.html">Vests</a>
+        </nav>
+
+        <nav id="mnav" class="mobile-nav" aria-label="Mobile menu">
+            <a href="index.html" class="active">Home</a>
+            <a href="adirondack-bridal.html">Adirondack Bridal</a>
+            <a href="boot-bands.html">Boot Bands</a>
+            <a href="bracelets.html">Bracelets</a>
+            <a href="chic-jewelry.html">Chic Jewelry</a>
+            <a href="cuffs.html">Cuffs</a>
+            <a href="earrings.html">Earrings</a>
+            <a href="hat-bands.html">Hat Bands</a>
+            <a href="jackets.html">Jackets</a>
+            <a href="jeans.html">Jeans</a>
+            <a href="necklaces.html">Necklaces</a>
+            <a href="pooch-smooches.html">Pooch Smooches</a>
+            <a href="purses.html">Purses</a>
+            <a href="shirts.html">Shirts</a>
+            <a href="shorts.html">Shorts</a>
+            <a href="upcycled-denim.html">Upcycled Denim</a>
+            <a href="vests.html">Vests</a>
+        </nav>
+
+        <div class="shop-now-banner">
+            <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
+            <div class="booking-banner">
+                <h2 class="booking-banner__title">Bookings</h2>
+                <div class="booking-banner__actions">
+                    <a class="btn btn-accent" href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">First Fitting</a>
+                    <a class="btn btn-accent" href="https://calendar.app.google/EU8HAuemRhmr4zBY6">Brides</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <section class="products collection-products">
         <div class="products-header">
             <div class="product-actions">
