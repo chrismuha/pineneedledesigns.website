@@ -763,14 +763,14 @@ h1 {
     color: #8f8f8f;
     cursor: not-allowed;
     box-shadow: none;
-    pointer-events: none;
+    pointer-events: default;
 }
 
 .product-actions .back-link.disabled {
     background: #f0f0f0;
     color: #8f8f8f;
     cursor: not-allowed;
-    pointer-events: none;
+    pointer-events: default;
     box-shadow: none;
 }
 
@@ -948,6 +948,15 @@ section {
     font-weight: 600;
 }
 
+.product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink-2);
+}
+
 .description {
     margin: 1rem 0;
 }
@@ -1101,7 +1110,7 @@ footer .foot-toggle-wrap::after {
     width: 100vw;
     top: 0;
     border-bottom: var(--divider-thickness) solid var(--divider-color);
-    pointer-events: none;
+    pointer-events: default;
 }
 
 footer .foot-toggle-wrap::before {
@@ -1327,7 +1336,7 @@ footer>section {
     width: 100vw;
     top: 0;
     border-top: var(--divider-thickness) solid var(--divider-color);
-    pointer-events: none;
+    pointer-events: default;
 }
 
 /* Utilities */
@@ -1511,6 +1520,10 @@ footer>section {
         display: flex;
         flex-direction: column;
         gap: 6px;
+    }
+
+    .product-card header p {
+        margin: 0;
     }
 
     .product-images {
