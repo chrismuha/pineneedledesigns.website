@@ -828,6 +828,7 @@ section {
     background: #fff;
     box-shadow: var(--shadow-sm);
     text-align: center;
+    cursor: pointer;
 }
 
 .collection-link {
@@ -841,6 +842,22 @@ section {
     text-transform: uppercase;
     color: var(--ink);
     text-decoration: none;
+    cursor: pointer;
+}
+
+.collection-card h3,
+.collections .body h3,
+.highlighted-collection .body h3,
+.product-card h3,
+.product-card header h3,
+.card .body h3 {
+    cursor: default;
+}
+
+.collection-card:hover,
+.collection-card:hover .collection-link,
+.collection-card:hover .collection-link * {
+    cursor: pointer;
 }
 
 .section-head h2 {
@@ -1520,10 +1537,20 @@ footer>section {
         display: flex;
         flex-direction: column;
         gap: 6px;
+        cursor: default;
     }
 
     .product-card header p {
         margin: 0;
+    }
+
+    .product-card h3,
+    .product-card .product-meta,
+    .product-card .product-meta *,
+    .product-images,
+    .product-images .placeholder,
+    .image-frame {
+        cursor: default;
     }
 
     .product-images {
@@ -1594,6 +1621,7 @@ footer>section {
         color: var(--ink-2);
         text-transform: uppercase;
         letter-spacing: 0.08em;
+        cursor: default;
     }
 
 @media (max-width: 760px) {
