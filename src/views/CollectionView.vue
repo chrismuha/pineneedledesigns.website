@@ -14,13 +14,34 @@
       <article v-for="product in page.products" :key="product.title" class="product-card">
         <header>
           <h3>{{ product.title }}</h3>
-          <div class="product-meta">{{ product.meta }}</div>
+          <div class="product-meta">
+            <template v-if="Array.isArray(product.meta)">
+              <span v-for="(item, index) in product.meta" :key="index">{{ item }}</span>
+            </template>
+            <template v-else>
+              {{ product.meta }}
+            </template>
+          </div>
           <p>{{ product.description }}</p>
         </header>
         <div class="product-images">
-          <div v-for="image in product.images" :key="image" class="placeholder">
-            <img :src="image" :alt="product.title" loading="lazy" decoding="async" />
-          </div>
+          <template v-if="product.images && product.images.length">
+            <div v-for="image in product.images" :key="image" :class="product.imageWrapper || 'image-frame'">
+              <img
+                :src="image"
+                :alt="product.title"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <div
+              v-for="(placeholder, index) in product.imagePlaceholders || Array(product.imageCount || 2).fill('')"
+              :key="index"
+              :class="product.imageWrapper || 'placeholder'"
+            >{{ placeholder }}</div>
+          </template>
         </div>
         <button class="addtocart">Add to Cart</button>
       </article>
@@ -36,10 +57,14 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { collectionPages } from '../data/siteData'
 
+const props = defineProps({
+  slug: String,
+})
+
 const route = useRoute()
 
 const page = computed(() =>
-  collectionPages.find((item) => item.slug === route.params.slug)
+  collectionPages.find((item) => item.slug === props.slug)
 )
 
 const previousPath = computed(() => {

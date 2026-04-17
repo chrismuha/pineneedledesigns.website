@@ -9,9 +9,13 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { sitePages } from '../data/siteData'
 
-const route = useRoute()
-const page = computed(() => sitePages.find((item) => item.path === route.path) || sitePages[0])
+const props = defineProps({
+  slug: String,
+})
+
+const page = computed(() =>
+  sitePages.find((item) => item.slug === props.slug) || sitePages[0]
+)
 </script>

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import CollectionsView from '../views/CollectionsView.vue'
 import CollectionView from '../views/CollectionView.vue'
 import StaticPageView from '../views/StaticPageView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 import { collectionPages, sitePages } from '../data/siteData'
 
 const routes = [
@@ -22,17 +23,28 @@ const routes = [
     path: `/collections/${page.slug}`,
     name: `collection-${page.slug}`,
     component: CollectionView,
-    props: true,
+    props: { slug: page.slug },
     alias: [`/${page.slug}.html`],
   })),
   ...sitePages.map((page) => ({
     path: page.path,
     name: `page-${page.slug}`,
     component: StaticPageView,
-    props: true,
+    props: { slug: page.slug },
     alias: [`/${page.slug}.html`],
   })),
-  { path: '/:catchAll(.*)', redirect: '/' },
+  {
+    path: '/404.html',
+    name: 'NotFound',
+    component: NotFoundView,
+    meta: { hideLayout: true },
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'CatchAll',
+    component: NotFoundView,
+    meta: { hideLayout: true },
+  },
 ]
 
 const router = createRouter({

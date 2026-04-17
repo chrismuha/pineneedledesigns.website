@@ -8,7 +8,6 @@
       <div class="grid grid-4 collection-list">
         <article v-for="collection in collectionPages" :key="collection.slug" class="card collection-card">
           <router-link class="collection-link" :to="collection.path">
-            <img :src="collection.cardImage" loading="lazy" decoding="async" class="media" :alt="collection.title" />
             <div class="body">
               <h3>{{ collection.title }}</h3>
               <div class="subtle">{{ collection.count }} items</div>

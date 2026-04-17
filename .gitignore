@@ -37,3 +37,6 @@ coverage
 # Lock files
 yarn.lock
 package-lock.json
+
+# Ignore the legacy HTML folder
+legacy-html/
