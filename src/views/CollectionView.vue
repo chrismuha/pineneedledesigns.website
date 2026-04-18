@@ -43,7 +43,7 @@
             >{{ placeholder }}</div>
           </template>
         </div>
-        <button class="addtocart">Add to Cart</button>
+        <button class="addtocart" @click="addToCart(product)">Add to Cart</button>
       </article>
     </div>
   </section>
@@ -56,12 +56,14 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { collectionPages } from '../data/siteData'
+import { useCartStore } from '../stores/cart'
 
 const props = defineProps({
   slug: String,
 })
 
 const route = useRoute()
+const cartStore = useCartStore()
 
 const page = computed(() =>
   collectionPages.find((item) => item.slug === props.slug)
@@ -76,4 +78,8 @@ const nextPath = computed(() => {
   if (!page.value || !page.value.next) return '/collections'
   return `/collections/${page.value.next}`
 })
+
+const addToCart = (product) => {
+  cartStore.addItem(product)
+}
 </script>

@@ -29,7 +29,10 @@
 
         <div class="nav-aux">
           <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
-          <a class="icon-btn" href="#" aria-label="Cart"><i class="bi bi-bag"></i></a>
+          <button class="icon-btn" @click="$emit('toggle-cart')" aria-label="Cart">
+            <i class="bi bi-bag"></i>
+            <span v-if="cartStore.totalItems > 0" class="cart-count">{{ cartStore.totalItems }}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -59,9 +62,11 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { navLinks } from '../data/siteData'
+import { useCartStore } from '../stores/cart'
 
 const menuOpen = ref(false)
 const route = useRoute()
+const cartStore = useCartStore()
 
 const closeMenu = () => {
   menuOpen.value = false
@@ -99,3 +104,22 @@ watch(
   }
 )
 </script>
+
+<style scoped>
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.icon-btn {
+  position: relative;
+}
+</style>
