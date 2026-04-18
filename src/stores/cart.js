@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
+const API_BASE = 'http://localhost:4000/api'
+
 export const useCartStore = defineStore('cart', () => {
   const items = ref([])
   const isOpen = ref(false)
+  const isLoading = ref(false)
 
   const totalItems = computed(() => {
     return items.value.reduce((total, item) => total + item.quantity, 0)
@@ -13,35 +16,101 @@ export const useCartStore = defineStore('cart', () => {
     return items.value.reduce((total, item) => total + (item.price * item.quantity), 0)
   })
 
-  const addItem = (product) => {
-    const existingItem = items.value.find(item => item.id === product.id)
-    if (existingItem) {
-      existingItem.quantity++
-    } else {
-      items.value.push({ ...product, quantity: 1 })
-    }
-    isOpen.value = true // Auto open cart when item is added
-  }
-
-  const removeItem = (productId) => {
-    const index = items.value.findIndex(item => item.id === productId)
-    if (index > -1) {
-      items.value.splice(index, 1)
-    }
-  }
-
-  const updateQuantity = (productId, quantity) => {
-    const item = items.value.find(item => item.id === productId)
-    if (item) {
-      item.quantity = quantity
-      if (item.quantity <= 0) {
-        removeItem(productId)
+  const fetchCart = async () => {
+    try {
+      isLoading.value = true
+      const response = await fetch(`${API_BASE}/cart`, {
+        credentials: 'include'
+      })
+      if (response.ok) {
+        items.value = await response.json()
       }
+    } catch (error) {
+      console.error('Failed to fetch cart:', error)
+    } finally {
+      isLoading.value = false
     }
   }
 
-  const clearCart = () => {
-    items.value = []
+  const addItem = async (product) => {
+    try {
+      isLoading.value = true
+      const response = await fetch(`${API_BASE}/cart`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ product })
+      })
+
+      if (response.ok) {
+        items.value = await response.json()
+        isOpen.value = true // Auto open cart when item is added
+      }
+    } catch (error) {
+      console.error('Failed to add item:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const removeItem = async (productId) => {
+    try {
+      isLoading.value = true
+      const response = await fetch(`${API_BASE}/cart/${productId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (response.ok) {
+        items.value = await response.json()
+      }
+    } catch (error) {
+      console.error('Failed to remove item:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const updateQuantity = async (productId, quantity) => {
+    try {
+      isLoading.value = true
+      const response = await fetch(`${API_BASE}/cart/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ quantity })
+      })
+
+      if (response.ok) {
+        items.value = await response.json()
+      }
+    } catch (error) {
+      console.error('Failed to update quantity:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const clearCart = async () => {
+    try {
+      isLoading.value = true
+      const response = await fetch(`${API_BASE}/cart`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (response.ok) {
+        items.value = await response.json()
+      }
+    } catch (error) {
+      console.error('Failed to clear cart:', error)
+    } finally {
+      isLoading.value = false
+    }
   }
 
   const toggleOpen = () => {
@@ -52,11 +121,16 @@ export const useCartStore = defineStore('cart', () => {
     isOpen.value = false
   }
 
+  // Initialize cart on store creation
+  fetchCart()
+
   return {
     items,
     isOpen,
+    isLoading,
     totalItems,
     totalPrice,
+    fetchCart,
     addItem,
     removeItem,
     updateQuantity,

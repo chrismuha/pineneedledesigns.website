@@ -5,7 +5,10 @@
         <h2>Your Cart</h2>
         <button class="close-btn" @click="cartStore.close">&times;</button>
       </div>
-      <div v-if="cartStore.items.length === 0" class="empty-cart">
+      <div v-if="cartStore.isLoading" class="loading">
+        <p>Loading cart...</p>
+      </div>
+      <div v-else-if="cartStore.items.length === 0" class="empty-cart">
         <p>Your cart is empty.</p>
         <router-link to="/collections" class="btn" @click="cartStore.close">Browse Collections</router-link>
       </div>
@@ -42,16 +45,16 @@ import { useCartStore } from '../stores/cart'
 
 const cartStore = useCartStore()
 
-const updateQuantity = (id, quantity) => {
-  cartStore.updateQuantity(id, quantity)
+const updateQuantity = async (id, quantity) => {
+  await cartStore.updateQuantity(id, quantity)
 }
 
-const removeItem = (id) => {
-  cartStore.removeItem(id)
+const removeItem = async (id) => {
+  await cartStore.removeItem(id)
 }
 
-const clearCart = () => {
-  cartStore.clearCart()
+const clearCart = async () => {
+  await cartStore.clearCart()
 }
 </script>
 
@@ -97,6 +100,12 @@ const clearCart = () => {
 .empty-cart {
   padding: 20px;
   text-align: center;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
 }
 
 .cart-items {

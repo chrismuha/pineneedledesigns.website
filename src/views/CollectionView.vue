@@ -79,7 +79,7 @@ const nextPath = computed(() => {
   return `/collections/${page.value.next}`
 })
 
-const addToCart = (product) => {
-  cartStore.addItem(product)
+const addToCart = async (product) => {
+  await cartStore.addItem(product)
 }
 </script>
