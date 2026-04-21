@@ -149,8 +149,8 @@ app.post('/api/checkout', async (req, res) => {
           }
         ],
         applicationContext: {
-          returnUrl: "http://localhost:5173/",
-          cancelUrl: "http://localhost:3000/cancel"
+          returnUrl: "http://localhost:5173/order-success",
+          cancelUrl: "http://localhost:5173/cancel"
         },
       },
     })
