@@ -40,3 +40,6 @@ package-lock.json
 
 # Ignore the legacy HTML folder
 legacy-html/
+
+#Ignore dot env
+.env

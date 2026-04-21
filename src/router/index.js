@@ -5,6 +5,7 @@ import CollectionView from '../views/CollectionView.vue'
 import StaticPageView from '../views/StaticPageView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 import { collectionPages, sitePages } from '../data/siteData'
+import OrderSuccessView from '../views/OrderSuccessView.vue'
 
 const routes = [
   {
@@ -33,6 +34,11 @@ const routes = [
     props: { slug: page.slug },
     alias: [`/${page.slug}.html`],
   })),
+  {
+    path: '/order-success',
+    name: 'OrderSuccess',
+    component: OrderSuccessView
+  },
   {
     path: '/404.html',
     name: 'NotFound',

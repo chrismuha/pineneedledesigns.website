@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-const API_BASE = 'http://localhost:4000/api'
+const API_BASE = 'http://localhost:3001/api'
 
 export const useCartStore = defineStore('cart', () => {
   const items = ref([])
@@ -122,7 +122,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   // Initialize cart on store creation
-  fetchCart()
+  fetchCart();
 
   return {
     items,
@@ -136,6 +136,7 @@ export const useCartStore = defineStore('cart', () => {
     updateQuantity,
     clearCart,
     toggleOpen,
-    close
+    close, 
+    API_BASE
   }
 })

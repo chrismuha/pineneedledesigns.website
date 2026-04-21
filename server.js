@@ -1,8 +1,23 @@
+import * as dotenv from 'dotenv'
+dotenv.config();
+
 import express from 'express';
 import session from 'express-session';
+import * as paypal from '@paypal/paypal-server-sdk'
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const client = new paypal.Client({
+  environment: paypal.Environment.Sandbox,
+  clientCredentialsAuthCredentials: {
+    oAuthClientId: process.env.PAYPAL_CLIENT_ID,
+    oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET
+  }
+})
+const orders = new paypal.OrdersController(client)
+
 
 // Middleware - CORS configuration
 app.use((req, res, next) => {
@@ -95,6 +110,76 @@ app.delete('/api/cart', (req, res) => {
   res.json([]);
 });
 
+// Checkout
+
+app.post('/api/checkout', async (req, res) => {
+  try {
+    const cart = req.session.cart
+    const total = cart.reduce((sum, item) => {
+      return sum + item.price * item.quantity;
+    }, 0);
+
+    const order = await orders.createOrder({
+      prefer: 'return=representation',
+      body: {
+        intent: paypal.CheckoutPaymentIntent.Capture,
+        purchaseUnits: [
+          {
+            amount: {
+              currencyCode: "USD",
+              value: total.toString(),
+              breakdown: {
+                itemTotal: {
+                  currencyCode: "USD",
+                  value: total.toString(),
+                }
+              }
+            },
+            items: cart.map((item) => {
+              return {
+                name: item.title,
+                quantity: item.quantity.toString(),
+                unitAmount: {
+                  currencyCode: "USD",
+                  value: item.price.toString()
+                },
+                description: item.description,
+              }
+            })
+          }
+        ],
+        applicationContext: {
+          returnUrl: "http://localhost:5173/",
+          cancelUrl: "http://localhost:3000/cancel"
+        },
+      },
+    })
+
+    const orderBody = JSON.parse(order.body);
+    const link = orderBody.links.find(link => link.rel === 'approve').href;
+
+    res.json({ url: link });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating PayPal order");
+  }
+});
+
+
+app.get('/api/checkout/capture-order/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const request = new orders.captureOrder({ id: token })
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

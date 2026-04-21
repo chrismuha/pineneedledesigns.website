@@ -19,6 +19,7 @@ const route = useRoute()
 const hideLayout = computed(() => route.meta.hideLayout)
 const cartStore = useCartStore()
 
+
 const toggleCart = () => {
   cartStore.toggleOpen()
 }

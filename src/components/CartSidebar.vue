@@ -33,7 +33,7 @@
           <p>Total Items: {{ cartStore.totalItems }}</p>
           <p>Total Price: ${{ cartStore.totalPrice }}</p>
           <button @click="clearCart" class="btn">Clear Cart</button>
-          <button class="btn btn-primary">Checkout</button>
+          <button @click="checkout" class="btn btn-primary">Checkout</button>
         </div>
       </div>
     </div>
@@ -55,6 +55,20 @@ const removeItem = async (id) => {
 
 const clearCart = async () => {
   await cartStore.clearCart()
+}
+
+const checkout = async () => {
+  const request = await fetch(`${cartStore.API_BASE}/checkout`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  const data = await request.json();
+
+  window.location.href = data.url
 }
 </script>
 
