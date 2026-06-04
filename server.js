@@ -3,17 +3,27 @@ dotenv.config();
 
 import express from 'express';
 import session from 'express-session';
+import nodemailer from 'nodemailer'
 import * as paypal from '@paypal/paypal-server-sdk'
 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const orderMap = new Map();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
 
 const client = new paypal.Client({
   environment: paypal.Environment.Sandbox,
   clientCredentialsAuthCredentials: {
-    oAuthClientId: process.env.PAYPAL_CLIENT_ID,
-    oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET
+    oAuthClientId: process.env.SANDOX_PAYPAL_CLIENT_ID,
+    oAuthClientSecret: process.env.SANDBOX_PAYPAL_CLIENT_SECRET
   }
 })
 const orders = new paypal.OrdersController(client)
@@ -155,8 +165,12 @@ app.post('/api/checkout', async (req, res) => {
       },
     })
 
+
+
     const orderBody = JSON.parse(order.body);
     const link = orderBody.links.find(link => link.rel === 'approve').href;
+
+    orderMap.set(orderBody.id, orderBody.purchase_units[0].items)
 
     res.json({ url: link });
 
@@ -171,15 +185,40 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
   try {
     const { token } = req.params;
 
-    const request = new orders.captureOrder({ id: token })
+    const request = await orders.captureOrder({ id: token })
 
     res.json({ success: true });
+
+    const order = JSON.parse(request.body);
+    const items = orderMap.get(order.id);
+
+    if (!items) return;
+
+    let itemsList = ``;
+    let total = 0;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      itemsList += `${item.quantity} x ${item.name}: ${item.quantity} x ${item.unit_amount.value} = ${Number(item.quantity) * Number(item.unit_amount.value)}<br>`;
+      total += Number(item.quantity) * Number(item.unit_amount.value);
+    }
+
+    const options = {
+      from: '"Pin Needle Designs" <onpinesandneedles@gmail.com>',
+      to: "onpinesandneedles@gmail.com",
+      subject: `Order #${order.id}`,
+      html: `Item Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
+      text: `Item Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
+    }
+
+    await transporter.sendMail(options);
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false });
   }
 });
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
