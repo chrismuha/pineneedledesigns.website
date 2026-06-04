@@ -213,8 +213,11 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 
     await transporter.sendMail(options);
 
+    orderMap.delete(order.id);
+
   } catch (err) {
     console.error(err);
+    orderMap.delete(order.id);
     res.status(500).json({ success: false });
   }
 });
