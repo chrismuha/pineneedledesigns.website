@@ -58,7 +58,7 @@ const clearCart = async () => {
 }
 
 const checkout = async () => {
-  const request = await fetch(`${cartStore.API_BASE}/checkout`, {
+  const request = await fetch(`/api/checkout`, {
     method: 'POST',
     credentials: 'include',
     headers: {
