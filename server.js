@@ -20,15 +20,14 @@ const transporter = nodemailer.createTransport({
 });
 
 const client = new paypal.Client({
-  environment: paypal.Environment.Sandbox,
+  environment: paypal.Environment.Production,
   clientCredentialsAuthCredentials: {
-    oAuthClientId: process.env.SANDOX_PAYPAL_CLIENT_ID,
-    oAuthClientSecret: process.env.SANDBOX_PAYPAL_CLIENT_SECRET
+    oAuthClientId: process.env.PAYPAL_CLIENT_ID,
+    oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET
   }
 })
+
 const orders = new paypal.OrdersController(client)
-
-
 // Middleware - CORS configuration
 app.use((req, res, next) => {
   const origin = req.get('origin');
