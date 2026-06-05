@@ -4,12 +4,18 @@ dotenv.config();
 import express from 'express';
 import session from 'express-session';
 import nodemailer from 'nodemailer'
+import path from 'path'
+import { fileURLToPath } from 'url';
 import * as paypal from '@paypal/paypal-server-sdk'
 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const orderMap = new Map();
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -29,21 +35,37 @@ const client = new paypal.Client({
 
 const orders = new paypal.OrdersController(client)
 // Middleware - CORS configuration
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3001',
+  'http://127.0.0.1:5173',
+  'https://pineneedledesigns.store',
+  'https://www.pineneedledesigns.store'
+];
+
 app.use((req, res, next) => {
   const origin = req.get('origin');
-  if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+
+  if (!origin || allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin || '*');
     res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+    res.header(
+      'Access-Control-Allow-Methods',
+      'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
+    );
     res.header('Access-Control-Allow-Headers', 'Content-Type');
   }
+
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
+
   next();
 });
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'docs')));
 
 // Session configuration
 app.use(session({
@@ -55,7 +77,6 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
-
 // Cart API Routes
 app.get('/api/cart', (req, res) => {
   if (!req.session.cart) {
@@ -63,6 +84,8 @@ app.get('/api/cart', (req, res) => {
   }
   res.json(req.session.cart);
 });
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.post('/api/cart', (req, res) => {
   const { product } = req.body;
@@ -158,8 +181,8 @@ app.post('/api/checkout', async (req, res) => {
           }
         ],
         applicationContext: {
-          returnUrl: "http://localhost:5173/order-success",
-          cancelUrl: "http://localhost:5173/cancel"
+          returnUrl: "https://pineneedledesigns.store/order-success",
+          cancelUrl: "https://pineneedledesigns.store/cancel"
         },
       },
     })
@@ -224,6 +247,10 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'docs', 'index.html'));
 });
 
 const server = app.listen(PORT, () => {

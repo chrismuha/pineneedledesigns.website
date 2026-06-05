@@ -12,7 +12,7 @@ const token = params.get("token");
 const isLoading = shallowRef(true)
 const status = shallowRef('')
 
-fetch(`${cartStore.API_BASE}/checkout/capture-order/${token}`)
+fetch(`/api/checkout/capture-order/${token}`)
 .then(async () => {
     await cartStore.clearCart();
 

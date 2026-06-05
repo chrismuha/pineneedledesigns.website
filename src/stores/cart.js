@@ -19,7 +19,7 @@ export const useCartStore = defineStore('cart', () => {
   const fetchCart = async () => {
     try {
       isLoading.value = true
-      const response = await fetch(`${API_BASE}/cart`, {
+      const response = await fetch(`/api/cart`, {
         credentials: 'include'
       })
       if (response.ok) {
@@ -35,7 +35,7 @@ export const useCartStore = defineStore('cart', () => {
   const addItem = async (product) => {
     try {
       isLoading.value = true
-      const response = await fetch(`${API_BASE}/cart`, {
+      const response = await fetch(`/api/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const useCartStore = defineStore('cart', () => {
   const removeItem = async (productId) => {
     try {
       isLoading.value = true
-      const response = await fetch(`${API_BASE}/cart/${productId}`, {
+      const response = await fetch(`/api/cart/${productId}`, {
         method: 'DELETE',
         credentials: 'include'
       })
@@ -76,7 +76,7 @@ export const useCartStore = defineStore('cart', () => {
   const updateQuantity = async (productId, quantity) => {
     try {
       isLoading.value = true
-      const response = await fetch(`${API_BASE}/cart/${productId}`, {
+      const response = await fetch(`/api/cart/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export const useCartStore = defineStore('cart', () => {
   const clearCart = async () => {
     try {
       isLoading.value = true
-      const response = await fetch(`${API_BASE}/cart`, {
+      const response = await fetch(`/api/cart`, {
         method: 'DELETE',
         credentials: 'include'
       })
