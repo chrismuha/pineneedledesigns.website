@@ -46,16 +46,6 @@
       <router-link v-for="link in navLinks" :key="link.path" :to="link.path" @click="closeMenu" active-class="active">{{ link.label }}</router-link>
     </nav>
 
-    <div class="shop-now-banner">
-      <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
-      <div class="booking-banner">
-        <h2 class="booking-banner__title">Bookings</h2>
-        <div class="booking-banner__actions">
-          <a class="btn btn-accent" href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">First Fitting</a>
-          <a class="btn btn-accent" href="https://calendar.app.google/EU8HAuemRhmr4zBY6">Brides</a>
-        </div>
-      </div>
-    </div>
   </header>
 </template>
 

@@ -177,8 +177,8 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 14px 0;
+    gap: 8px;
+    padding: 8px 0;
 }
 
 .brand {
@@ -200,10 +200,25 @@ header {
 }
 
 .brand-logos img {
-    width: min(220px, 38vw);
-    height: 220px;
+    width: min(150px, 28vw);
+    height: 150px;
     object-fit: cover;
     border-radius: 6px;
+}
+
+@media (max-width: 640px) {
+    .nav {
+        padding: 6px 0;
+    }
+
+    .brand-logos {
+        gap: 4px;
+    }
+
+    .brand-logos img {
+        width: min(112px, 36vw);
+        height: 112px;
+    }
 }
 
 /* .brand-divider {
@@ -455,42 +470,6 @@ header {
     background: var(--ink);
 }
 
-.shop-now-banner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    padding: 16px 18px 22px;
-    background: var(--white);
-}
-
-.booking-banner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-}
-
-.booking-banner__title {
-    margin: 0;
-    font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 21pt;
-    line-height: 1.1;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-
-.booking-banner__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-}
-
 /* Image Slider */
 .image-slider {
     position: relative;
@@ -739,24 +718,30 @@ header {
 }
 
 .hero-2 {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     height: auto;
+    align-self: flex-start;
     display: block;
     border-radius: 14px;
     box-shadow: var(--shadow-sm);
     max-height: clamp(240px, 36vw, 340px);
     object-fit: contain;
+    object-position: left center;
 }
 
 .hero-3 {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     height: auto;
+    align-self: flex-start;
     display: block;
     margin-top: 18px;
     border-radius: 14px;
     box-shadow: var(--shadow-sm);
     max-height: clamp(240px, 36vw, 340px);
     object-fit: contain;
+    object-position: left center;
 }
 
 .eyebrow {
@@ -1166,6 +1151,90 @@ footer {
 
 footer a {
     color: var(--soft-ink);
+}
+
+footer .footer-actions {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 950;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 124px;
+    padding: 8px;
+    border: 1px solid var(--black-08);
+    border-radius: 22px;
+    background: var(--white-92);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(12px);
+}
+
+footer .footer-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 2px 10px var(--black-08);
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    transition: transform 180ms ease, color 180ms ease;
+}
+
+footer .footer-actions i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13pt;
+    line-height: 1;
+}
+
+footer .footer-actions a:hover,
+footer .footer-actions a:focus-visible {
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+footer .footer-actions a:focus-visible {
+    outline: 3px solid var(--brand-red-45);
+    outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+    footer .footer-actions {
+        top: 12px;
+        right: 10px;
+        width: 52px;
+        border-radius: 999px;
+    }
+
+    footer .footer-actions a {
+        width: 42px;
+        height: 42px;
+        min-height: 42px;
+        padding: 0;
+    }
+
+    footer .footer-actions span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
 }
 
 /* unify footer backgrounds */

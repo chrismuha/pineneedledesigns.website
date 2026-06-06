@@ -1,7 +1,5 @@
 <template>
   <div class="home-page">
-    <ImageSlider />
-
     <section v-if="homeSections.length" id="about">
       <div class="container">
         <h2 class="section-title">Highlighted Collections</h2>
@@ -122,8 +120,10 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
-            <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />
-            <p class="hero-hurry hero-hurry--inline" style="text-align:left;">Hurry before they sell out! You would not want to miss out on the chance at opportunities in life this dress could send to you. Get it now before it is too late; it may not return next season!</p>
+            <div class="hero-images hero-images--with-caption">
+              <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />
+              <p class="hero-hurry hero-hurry--inline" style="text-align:left;">Hurry before they sell out! You would not want to miss out on the chance at opportunities in life this dress could send to you. Get it now before it is too late; it may not return next season!</p>
+            </div>
           </div>
         </article>
       </div>
@@ -157,6 +157,8 @@
         </div>
       </div>
     </section>
+
+    <ImageSlider />
   </div>
 </template>
 

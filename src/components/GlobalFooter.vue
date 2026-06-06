@@ -1,5 +1,20 @@
 <template>
   <footer>
+    <div class="footer-actions" aria-label="Shop and booking links">
+      <a href="https://pineneedledesigns.store">
+        <i class="bi bi-shop" aria-hidden="true"></i>
+        <span>Shop</span>
+      </a>
+      <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">
+        <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+        <span>First Fitting</span>
+      </a>
+      <a href="https://calendar.app.google/EU8HAuemRhmr4zBY6">
+        <i class="bi bi-gem" aria-hidden="true"></i>
+        <span>Brides</span>
+      </a>
+    </div>
+
     <section id="foot-section-1" class="footer-section">
       <div class="container foot-toggle-wrap">
         <p class="toggle-label" id="toggle-about-label">OH BEAUTIFUL YOU.......AND ME TOO!</p>
