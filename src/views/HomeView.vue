@@ -2,7 +2,7 @@
   <div class="home-page">
     <ImageSlider />
 
-    <section id="about">
+    <section v-if="homeSections.length" id="about">
       <div class="container">
         <h2 class="section-title">Highlighted Collections</h2>
       </div>
@@ -13,7 +13,7 @@
           <router-link class="link" :to="section.path">Browse Collection</router-link>
         </div>
 
-        <div class="grid grid-4">
+        <div v-if="section.cards.length" class="grid grid-4">
           <article v-for="card in section.cards" :key="card.alt + card.pill" class="product card disabled">
             <router-link :to="section.path">
               <img loading="lazy" decoding="async" class="media" :alt="card.alt" :src="card.image" />
@@ -27,6 +27,7 @@
             </div>
           </article>
         </div>
+        <p v-else class="subtle">Coming Soon</p>
       </div>
     </section>
 
@@ -34,7 +35,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Other Collection</h2>
-          <a class="link" href="#">Browse Collection</a>
+          <router-link class="link" to="/collections">Browse Collection</router-link>
         </div>
 
         <div class="grid grid-6">

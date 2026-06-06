@@ -19,6 +19,7 @@ const routes = [
     name: 'Collections',
     component: CollectionsView,
     alias: ['/collections.html'],
+    meta: { scrollTarget: '.collections .section-head' },
   },
   ...collectionPages.map((page) => ({
     path: `/collections/${page.slug}`,
@@ -26,6 +27,7 @@ const routes = [
     component: CollectionView,
     props: { slug: page.slug },
     alias: [`/${page.slug}.html`],
+    meta: { scrollTarget: '.products-header' },
   })),
   ...sitePages.map((page) => ({
     path: page.path,
@@ -56,6 +58,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to) {
+    if (to.meta.scrollTarget) {
+      return { el: to.meta.scrollTarget, top: 0, left: 0, behavior: 'instant' }
+    }
+    return { top: 0, left: 0, behavior: 'instant' }
+  },
 })
 
 export default router

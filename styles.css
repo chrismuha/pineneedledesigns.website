@@ -332,12 +332,32 @@ header {
 }
 
 .icon-btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    width: auto;
+    height: auto;
+    border-radius: 0;
     font-size: 22pt;
     line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px;
+    padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.icon-btn:hover {
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.icon-btn:focus-visible {
+    outline: 3px solid rgba(176, 59, 46, 0.45);
+    outline-offset: 3px;
 }
 
 .nav-main a {
@@ -400,11 +420,6 @@ header {
     gap: 18px;
     padding: 16px 18px 22px;
     background: #fff;
-}
-
-.shop-now-banner .btn {
-    min-width: min(260px, 100%);
-    text-align: center;
 }
 
 .booking-banner {

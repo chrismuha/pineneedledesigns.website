@@ -10,7 +10,7 @@
       <p>{{ page.description }}</p>
     </div>
 
-    <div class="product-grid">
+    <div v-if="page.products.length" class="product-grid">
       <article v-for="product in page.products" :key="product.title" class="product-card">
         <header>
           <h3>{{ product.title }}</h3>
@@ -46,6 +46,7 @@
         <button class="addtocart" @click="addToCart(product)">Add to Cart</button>
       </article>
     </div>
+    <p v-else class="subtle">Coming Soon</p>
   </section>
   <section v-else class="not-found">
     <p>Collection not found.</p>

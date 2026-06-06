@@ -27,6 +27,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/adkbridalcomingsoon.webp',
     description: 'Hand-cut denim, luxe trims, and mountain-ready detailing designed for the bold bride who loves heritage craft and unexpected glamour.',
     products: [
+      /*
       {
         id: 1,
         title: 'Prairie Glass Jacket',
@@ -36,6 +37,8 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
         imageCount: 2,
       },
+      */
+      /*
       {
         id: 2,
         title: 'Snow Drift Coat',
@@ -45,6 +48,8 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
         imageCount: 1,
       },
+      */
+      /*
       {
         id: 3,
         title: 'Frosted Veil Duster',
@@ -54,6 +59,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
         imageCount: 1,
       },
+      */
     ],
   },
   {
@@ -64,6 +70,7 @@ export const collectionPages = [
     cardImage: '/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp',
     description: 'Studded detail for every boot.',
     products: [
+      /*
       {
         id: 4,
         title: 'Embellished Band',
@@ -73,6 +80,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['bootband1a', 'bootband1b'],
       },
+      */
+      /*
       {
         id: 5,
         title: 'Fringe Band',
@@ -82,6 +91,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['bootband2'],
       },
+      */
     ],
   },
   {
@@ -92,6 +102,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Handwoven metals for texture.',
     products: [
+      /*
       {
         id: 6,
         title: 'Woven Chain',
@@ -101,6 +112,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['bracelet1a', 'bracelet1b'],
       },
+      */
+      /*
       {
         id: 7,
         title: 'Gem Cuff',
@@ -110,6 +123,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['bracelet2'],
       },
+      */
     ],
   },
   {
@@ -120,6 +134,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Mixed metals with delicate stones.',
     products: [
+      /*
       {
         id: 8,
         title: 'Statement Collar',
@@ -129,6 +144,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['jewel1a', 'jewel1b'],
       },
+      */
+      /*
       {
         id: 9,
         title: 'Bold Stack',
@@ -138,6 +155,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['jewel2'],
       },
+      */
     ],
   },
   {
@@ -148,6 +166,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Bold silhouette with tactile finish.',
     products: [
+      /*
       {
         id: 14,
         title: 'Artisan Cuff 1',
@@ -157,6 +176,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['cuff1a', 'cuff1b'],
       },
+      */
+      /*
       {
         id: 15,
         title: 'Artisan Cuff 2',
@@ -166,6 +187,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['cuff2'],
       },
+      */
     ],
   },
   {
@@ -209,6 +231,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Feather accents with beaded thread.',
     products: [
+      /*
       {
         id: 16,
         title: 'Feathered Band',
@@ -218,6 +241,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['hatband1a', 'hatband1b'],
       },
+      */
+      /*
       {
         id: 17,
         title: 'Velvet Band',
@@ -227,6 +252,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['hatband2'],
       },
+      */
     ],
   },
   {
@@ -265,6 +291,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Sculpted fit with vintage wash.',
     products: [
+      /*
       {
         id: 18,
         title: 'High-Rise Jean',
@@ -274,6 +301,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['jean1a', 'jean1b'],
       },
+      */
+      /*
       {
         id: 19,
         title: 'Wide-Leg Jean',
@@ -283,6 +312,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['jean2'],
       },
+      */
     ],
   },
   {
@@ -293,6 +323,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Mix of chains and charms.',
     products: [
+      /*
       {
         id: 20,
         title: 'Layered Charm',
@@ -302,6 +333,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['necklace1a', 'necklace1b'],
       },
+      */
+      /*
       {
         id: 21,
         title: 'Signature Lariat',
@@ -311,6 +344,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['necklace2'],
       },
+      */
     ],
   },
   {
@@ -358,6 +392,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Structured shape with mixed leather.',
     products: [
+      /*
       {
         id: 25,
         title: 'Saddle Satchel',
@@ -367,6 +402,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['purse1a', 'purse1b'],
       },
+      */
+      /*
       {
         id: 26,
         title: 'Mini Crossbody',
@@ -376,6 +413,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['purse2'],
       },
+      */
     ],
   },
   {
@@ -386,6 +424,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Fluid drape and soft sheen.',
     products: [
+      /*
       {
         id: 27,
         title: 'Silk Camp Shirt',
@@ -395,6 +434,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['shirt1a', 'shirt1b'],
       },
+      */
+      /*
       {
         id: 28,
         title: 'Graphic Button-Up',
@@ -404,6 +445,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['shirt2'],
       },
+      */
     ],
   },
   {
@@ -414,6 +456,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'A-line shape with luxe hardware.',
     products: [
+      /*
       {
         id: 29,
         title: 'Tailored Short',
@@ -423,6 +466,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['short1a', 'shorts1b'],
       },
+      */
+      /*
       {
         id: 30,
         title: 'Cargo Short',
@@ -432,6 +477,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['short2a'],
       },
+      */
     ],
   },
   {
@@ -442,6 +488,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'One-of-a-kind patchwork silhouette.',
     products: [
+      /*
       {
         id: 31,
         title: 'Revived Denim Jacket',
@@ -451,6 +498,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['denim1a', 'denim1b'],
       },
+      */
+      /*
       {
         id: 32,
         title: 'Denim Mini',
@@ -460,6 +509,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['denim2'],
       },
+      */
     ],
   },
   {
@@ -470,6 +520,7 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Edgy layers with artisanal trim.',
     products: [
+      /*
       {
         id: 33,
         title: 'Woven Leather Vest',
@@ -479,6 +530,8 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['vest1a', 'vest1b'],
       },
+      */
+      /*
       {
         id: 34,
         title: 'Quilted Vest',
@@ -488,6 +541,7 @@ export const collectionPages = [
         imageWrapper: 'placeholder',
         imagePlaceholders: ['vest2'],
       },
+      */
     ],
   },
 ]
@@ -503,6 +557,7 @@ export const homeSections = [
     title: 'Adirondack Bridal Collection',
     path: '/collections/adirondack-bridal',
     cards: [
+      /*
       {
         pill: 'Beaded Bracelet',
         title: 'Placeholder Item',
@@ -512,6 +567,8 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Beaded bracelet',
       },
+      */
+      /*
       {
         pill: 'Denim Skirt',
         title: 'Placeholder Item',
@@ -521,6 +578,8 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Denim skirt',
       },
+      */
+      /*
       {
         pill: 'Moonlit Bloom',
         title: 'Placeholder Item',
@@ -530,6 +589,8 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Moonlit Bloom',
       },
+      */
+      /*
       {
         pill: 'Prairie Whispers',
         title: 'Placeholder Item',
@@ -539,6 +600,8 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Prairie Whispers',
       },
+      */
+      /*
       {
         pill: 'Statement Tote',
         title: 'Placeholder Item',
@@ -548,6 +611,8 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Statement tote',
       },
+      */
+      /*
       {
         pill: 'Textured Jacket',
         title: 'Placeholder Item',
@@ -557,6 +622,7 @@ export const homeSections = [
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
         alt: 'Textured jacket',
       },
+      */
     ],
   },
   {
@@ -564,6 +630,7 @@ export const homeSections = [
     title: 'The Pooch Smooches Collection',
     path: '/collections/pooch-smooches',
     cards: [
+      /*
       {
         pill: 'Bandanas',
         title: 'Placeholder Item',
@@ -573,6 +640,8 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Bandana',
       },
+      */
+      /*
       {
         pill: 'Head Bands',
         title: 'Placeholder Item',
@@ -582,6 +651,8 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Head Bands',
       },
+      */
+      /*
       {
         pill: 'Beaded Vest',
         title: 'Placeholder Item',
@@ -591,6 +662,8 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Beaded Vest',
       },
+      */
+      /*
       {
         pill: 'Placeholder Item Card',
         title: 'Placeholder Item',
@@ -600,6 +673,8 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Bridal Jacket',
       },
+      */
+      /*
       {
         pill: 'Placeholder Item Card',
         title: 'Placeholder Item',
@@ -609,6 +684,8 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Statement Jacket',
       },
+      */
+      /*
       {
         pill: 'Placeholder Item Card',
         title: 'Placeholder Item',
@@ -618,6 +695,7 @@ export const homeSections = [
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
         alt: 'Statement Jeans',
       },
+      */
     ],
   },
 ]
