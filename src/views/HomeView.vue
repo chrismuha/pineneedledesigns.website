@@ -75,9 +75,9 @@
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
             </div>
             <div class="hero-placeholder-stack">
-              <div class="hero-placeholder-inline hero-placeholder-inline--tall"></div>
-              <div class="hero-card__placeholder" aria-hidden="true"></div>
-              <div class="hero-card__placeholder" aria-hidden="true"></div>
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
             </div>
           </div>
         </article>
@@ -93,8 +93,8 @@
             <img loading="lazy" decoding="async" class="hero-bunny" alt="I Hare You" src="/images/bunny.webp" />
             <p class="hero-hurry hero-hurry--inline">Hurry before they sell out!</p>
             <div class="hero-placeholder-stack">
-              <div class="hero-placeholder-inline hero-placeholder-inline--tall"></div>
-              <div class="hero-placeholder-inline hero-placeholder-inline--tall"></div>
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
             </div>
           </div>
         </article>

@@ -67,7 +67,14 @@
               v-for="(placeholder, index) in product.imagePlaceholders || Array(product.imageCount || 2).fill('')"
               :key="index"
               :class="product.imageWrapper || 'placeholder'"
-            >{{ placeholder }}</div>
+            >
+              <img
+                src="/images/bunny.webp"
+                :alt="`${product.title} placeholder image`"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </template>
         </div>
         <button v-if="canAddToCart(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>

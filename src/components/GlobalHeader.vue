@@ -14,6 +14,10 @@
       </div>
 
       <div class="nav-actions">
+        <router-link class="icon-btn" to="/" aria-label="Home">
+          <i class="bi bi-house"></i>
+        </router-link>
+
         <button
           id="menuBtn"
           class="nav-toggle"
@@ -120,7 +124,7 @@ watch(
 
 .nav-actions {
   display: grid;
-  grid-template-columns: repeat(2, 42px);
+  grid-template-columns: repeat(3, 42px);
   gap: 6px;
   align-items: center;
   justify-content: center;
