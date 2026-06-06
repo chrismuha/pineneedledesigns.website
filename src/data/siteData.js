@@ -128,7 +128,7 @@ export const collectionPages = [
     title: 'Earrings',
     path: '/collections/earrings',
     count: 1,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/ear-rings/ear-rings-1a.webp',
     description: 'Description of Earring 1',
     products: [
       {
@@ -174,7 +174,7 @@ export const collectionPages = [
     title: 'Jackets',
     path: '/collections/jackets',
     count: 2,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/one-offs/jackets/ruby-lee/ruby-lee-1a.webp',
     description: "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
     products: [
       {
@@ -288,7 +288,7 @@ export const collectionPages = [
     title: 'Shirts',
     path: '/collections/shirts',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.png',
     description: 'Blinged out shirts and sweatshirts made to stand out.',
     products: [
       {

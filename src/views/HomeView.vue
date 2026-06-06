@@ -8,7 +8,7 @@
       <div v-for="section in homeSections" :key="section.id" class="container highlighted-collection">
         <div class="section-head">
           <h2>{{ section.title }}</h2>
-          <router-link class="link" :to="section.path">Browse Collection</router-link>
+          <router-link class="link" :to="section.path">Browse All Collections</router-link>
         </div>
 
         <div v-if="section.cards.length" class="grid grid-4">
@@ -32,8 +32,8 @@
     <section class="collections">
       <div class="container">
         <div class="section-head">
-          <h2>Other Collection</h2>
-          <router-link class="link" to="/collections">Browse Collection</router-link>
+          <h2>Other Collections</h2>
+          <router-link class="link" to="/collections">Browse All Collections</router-link>
         </div>
 
         <div class="grid grid-6">
@@ -122,7 +122,7 @@
             </div>
             <div class="hero-images hero-images--with-caption">
               <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />
-              <p class="hero-hurry hero-hurry--inline" style="text-align:left;">Hurry before they sell out! You would not want to miss out on the chance at opportunities in life this dress could send to you. Get it now before it is too late; it may not return next season!</p>
+              <p class="hero-hurry hero-hurry--inline">Hurry before they sell out! You would not want to miss out on the chance at opportunities in life this dress could send to you. Get it now before it is too late; it may not return next season!</p>
             </div>
           </div>
         </article>
