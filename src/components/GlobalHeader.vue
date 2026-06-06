@@ -119,11 +119,19 @@ watch(
   text-align: center;
 }
 
+.nav-actions {
+  gap: 6px;
+}
+
+.nav-aux {
+  gap: 6px;
+}
+
 .icon-btn {
   position: relative;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
 }
 
 .icon-btn .bi {
@@ -132,20 +140,20 @@ watch(
 }
 
 .nav-toggle {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
 }
 
 .nav-toggle__bar {
-  width: 23px;
+  width: 21px;
 }
 
 .nav-toggle__bar:nth-child(1) {
-  top: 12px;
+  top: 10px;
 }
 
 .nav-toggle__bar:nth-child(3) {
-  bottom: 12px;
+  bottom: 10px;
 }
 </style>
