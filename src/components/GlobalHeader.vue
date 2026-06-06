@@ -121,5 +121,13 @@ watch(
 
 .icon-btn {
   position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.icon-btn .bi {
+  display: block;
+  line-height: 1;
 }
 </style>
