@@ -10,6 +10,7 @@ export const navLinks = [
   { label: 'Jackets', path: '/collections/jackets' },
   { label: 'Jeans', path: '/collections/jeans' },
   { label: 'Necklaces', path: '/collections/necklaces' },
+  { label: 'One-Offs', path: '/collections/one-offs' },
   { label: 'Pooch Smooches', path: '/collections/pooch-smooches' },
   { label: 'Purses', path: '/collections/purses' },
   { label: 'Shirts', path: '/collections/shirts' },
@@ -382,6 +383,38 @@ export const collectionPages = [
         images: ['/images/poochsmooches/Polaris-and-Luna_1.webp'],
         imageWrapper: 'image-frame',
       },
+    ],
+  },
+  {
+    slug: 'one-offs',
+    title: 'One-Offs',
+    path: '/collections/one-offs',
+    count: 2,
+    cardImage: '/images/comingsoon/comingsoon2.webp',
+    description: 'Limited one-of-a-kind pieces and spontaneous studio finds.',
+    products: [
+      /*
+      {
+        id: 35,
+        title: 'One-Off Piece 1',
+        price: 999,
+        meta: ['Price: $999', 'Size: TBD'],
+        description: 'A unique studio piece with details to be announced soon.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['oneoff1a', 'oneoff1b'],
+      },
+      */
+      /*
+      {
+        id: 36,
+        title: 'One-Off Piece 2',
+        price: 999,
+        meta: ['Price: $999', 'Size: TBD'],
+        description: 'A second one-of-a-kind design coming soon.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['oneoff2'],
+      },
+      */
     ],
   },
   {
@@ -766,4 +799,3 @@ export const sitePages = [
     content: `<p>Use of this site is subject to our standard terms and conditions.</p>`,
   },
 ]
-
