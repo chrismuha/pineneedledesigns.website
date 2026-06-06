@@ -94,13 +94,13 @@ app.post('/api/cart', (req, res) => {
     req.session.cart = [];
   }
 
-  // Check if product already exists
-  const existingItem = req.session.cart.find(item => item.id === product.id);
+  const productCartItemId = product.cartItemId || String(product.id);
+  const existingItem = req.session.cart.find(item => (item.cartItemId || String(item.id)) === productCartItemId);
 
   if (existingItem) {
     existingItem.quantity += 1;
   } else {
-    req.session.cart.push({ ...product, quantity: 1 });
+    req.session.cart.push({ ...product, cartItemId: productCartItemId, quantity: 1 });
   }
 
   res.json(req.session.cart);
@@ -114,12 +114,12 @@ app.put('/api/cart/:id', (req, res) => {
     req.session.cart = [];
   }
 
-  const item = req.session.cart.find(item => item.id === parseInt(id));
+  const item = req.session.cart.find(item => (item.cartItemId || String(item.id)) === id);
 
   if (item) {
     item.quantity = quantity;
     if (item.quantity <= 0) {
-      req.session.cart = req.session.cart.filter(item => item.id !== parseInt(id));
+      req.session.cart = req.session.cart.filter(item => (item.cartItemId || String(item.id)) !== id);
     }
   }
 
@@ -133,7 +133,7 @@ app.delete('/api/cart/:id', (req, res) => {
     req.session.cart = [];
   }
 
-  req.session.cart = req.session.cart.filter(item => item.id !== parseInt(id));
+  req.session.cart = req.session.cart.filter(item => (item.cartItemId || String(item.id)) !== id);
   res.json(req.session.cart);
 });
 
@@ -147,6 +147,12 @@ app.delete('/api/cart', (req, res) => {
 app.post('/api/checkout', async (req, res) => {
   try {
     const cart = req.session.cart
+    const itemDescription = (item) => {
+      const selectedOptions = item.selectedOptions
+        ? Object.entries(item.selectedOptions).map(([name, value]) => `${name}: ${value}`).join(', ')
+        : '';
+      return [item.description, selectedOptions].filter(Boolean).join(' | ');
+    };
     const total = cart.reduce((sum, item) => {
       return sum + item.price * item.quantity;
     }, 0);
@@ -175,7 +181,7 @@ app.post('/api/checkout', async (req, res) => {
                   currencyCode: "USD",
                   value: item.price.toString()
                 },
-                description: item.description,
+                description: itemDescription(item),
               }
             })
           }

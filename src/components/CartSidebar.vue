@@ -13,17 +13,18 @@
         <router-link to="/collections" class="btn" @click="cartStore.close">Browse Collections</router-link>
       </div>
       <div v-else class="cart-items">
-        <div v-for="item in cartStore.items" :key="item.id" class="cart-item">
+        <div v-for="item in cartStore.items" :key="item.cartItemId || item.id" class="cart-item">
           <div class="item-details">
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
+            <p v-for="(value, name) in item.selectedOptions" :key="name">{{ name }}: {{ value }}</p>
             <p>Price: ${{ item.price }}</p>
           </div>
           <div class="item-controls">
-            <button @click="updateQuantity(item.id, item.quantity - 1)">-</button>
+            <button @click="updateQuantity(item.cartItemId || item.id, item.quantity - 1)">-</button>
             <span>{{ item.quantity }}</span>
-            <button @click="updateQuantity(item.id, item.quantity + 1)">+</button>
-            <button @click="removeItem(item.id)" class="remove">Remove</button>
+            <button @click="updateQuantity(item.cartItemId || item.id, item.quantity + 1)">+</button>
+            <button @click="removeItem(item.cartItemId || item.id)" class="remove">Remove</button>
           </div>
           <div class="item-total">
             ${{ item.price * item.quantity }}

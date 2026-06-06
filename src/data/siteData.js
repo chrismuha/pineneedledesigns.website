@@ -204,6 +204,26 @@ export const collectionPages = [
         images: ['/images/jackets/jacket2a.webp'],
         imageWrapper: 'image-frame',
       },
+      {
+        id: 37,
+        title: 'Ruby Lee',
+        price: 264,
+        meta: ['Price: $264'],
+        description: 'She is an upcycled Jean jacket. Ruby Lee loves her gold brooches and bright ribbon trims mixed with red and clear beaded dangles of crystals. She has flowers of red burgundy and cream roses all appliquéd on her back. And a matching burgundy mesh peplum of mermaid sequins at the waist. Cuffs are turned up and pockets are removed for more embellishments. A lower long narrow pocket was added with a butterfly brooch. Keeping with her rustic nature, the denim is very soft but her bougie attitude shows off ivory fringe and multiple laces. A red plaid buck brings it all together. Definitely Adirondack Chic! Where she lives.',
+        options: [
+          {
+            name: 'Size',
+            values: ['Medium', 'Large'],
+            placeholder: 'Select size',
+          },
+        ],
+        images: [
+          '/images/one-offs/jackets/ruby-lee/ruby-lee-1a.webp',
+          '/images/one-offs/jackets/ruby-lee/ruby-lee-1b.webp',
+        ],
+        videos: ['/videos/one-offs/jackets/ruby-lee.webm'],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {
@@ -277,17 +297,63 @@ export const collectionPages = [
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Limited one-of-a-kind pieces and spontaneous studio finds.',
     products: [
-      /*
       {
-        id: 35,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
+        id: 38,
+        title: "Wende's Choice Blinged Out Sweatshirt",
+        price: 58,
+        meta: ['Price: $58', 'Shown in Sand', 'Available in White'],
+        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged out sweatshirt in the color Sand. Also comes in white.",
+        options: [
+          {
+            name: 'Size',
+            values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
+            placeholder: 'Select size',
+          },
+        ],
+        images: [
+          '/images/one-offs/shirts/wende-choice/wende-choice_1a.png',
+          '/images/one-offs/shirts/wende-choice/wende-choice_1b.webp',
+        ],
+        videos: ['/videos/one-offs/shirts/wende-choice/wende-choice.webm'],
+        imageWrapper: 'image-frame',
       },
-      */
+      {
+        id: 39,
+        title: 'Blinged Out T-Shirt',
+        price: 38,
+        meta: ['Price: $38', 'Shown in Sand', 'Available in White'],
+        description: 'Turquoise Chick is blinged out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
+        options: [
+          {
+            name: 'Size',
+            values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
+            placeholder: 'Select size',
+          },
+        ],
+        images: [
+          '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1a.webp',
+          '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1b.webp',
+        ],
+        videos: ['/videos/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt.webm'],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 40,
+        title: "Don't Burst My Bubble T-Shirt",
+        price: 38,
+        meta: ['Price: $38', 'Shown in Sand', 'Available in Pink or White'],
+        description: "A Cowgirl with Attitude. Of course she's all blinged out!",
+        options: [
+          {
+            name: 'Size',
+            values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
+            placeholder: 'Select size',
+          },
+        ],
+        images: ['/images/one-offs/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webp'],
+        videos: ['/videos/one-offs/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webm'],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {

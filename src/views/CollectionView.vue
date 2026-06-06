@@ -24,16 +24,40 @@
           </div>
           <p>{{ product.description }}</p>
         </header>
+        <div v-if="product.options && product.options.length" class="product-options">
+          <ProductOptionSelect
+            v-for="option in product.options"
+            :key="`${product.id}-${option.name}`"
+            v-model="selectedOptions[optionKey(product, option)]"
+            :label="option.name"
+            :options="option.values"
+            :placeholder="option.placeholder"
+          />
+        </div>
         <div class="product-images">
-          <template v-if="product.images && product.images.length">
-            <div v-for="image in product.images" :key="image" :class="product.imageWrapper || 'image-frame'">
-              <img
-                :src="image"
-                :alt="product.title"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+          <template v-if="hasMedia(product)">
+            <template v-if="product.images && product.images.length">
+              <div v-for="image in product.images" :key="image" :class="product.imageWrapper || 'image-frame'">
+                <img
+                  :src="image"
+                  :alt="product.title"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </template>
+            <template v-if="product.videos && product.videos.length">
+              <div v-for="video in product.videos" :key="video" :class="product.imageWrapper || 'image-frame'">
+                <video
+                  :src="video"
+                  :aria-label="product.title"
+                  controls
+                  muted
+                  playsinline
+                  preload="metadata"
+                ></video>
+              </div>
+            </template>
           </template>
           <template v-else>
             <div
@@ -43,7 +67,9 @@
             >{{ placeholder }}</div>
           </template>
         </div>
-        <button class="addtocart" @click="addToCart(product)">Add to Cart</button>
+        <button v-if="canAddToCart(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>
+        <button v-else-if="Number.isFinite(product.price)" class="addtocart" disabled>Select Options</button>
+        <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
     </div>
     <p v-else class="subtle">Coming Soon</p>
@@ -54,8 +80,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import ProductOptionSelect from '../components/ProductOptionSelect.vue'
 import { collectionPages } from '../data/siteData'
 import { useCartStore } from '../stores/cart'
 
@@ -65,6 +92,7 @@ const props = defineProps({
 
 const route = useRoute()
 const cartStore = useCartStore()
+const selectedOptions = ref({})
 
 const page = computed(() =>
   collectionPages.find((item) => item.slug === props.slug)
@@ -80,7 +108,36 @@ const nextPath = computed(() => {
   return `/collections/${page.value.next}`
 })
 
+const optionKey = (product, option) => `${product.id}-${option.name}`
+const productSelections = (product) => {
+  if (!product.options || !product.options.length) return {}
+
+  return product.options.reduce((options, option) => {
+    options[option.name] = selectedOptions.value[optionKey(product, option)] || ''
+    return options
+  }, {})
+}
+
+const hasRequiredOptions = (product) => {
+  if (!product.options || !product.options.length) return true
+  return product.options.every((option) => Boolean(selectedOptions.value[optionKey(product, option)]))
+}
+
+const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
+const hasMedia = (product) =>
+  Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
+
 const addToCart = async (product) => {
-  await cartStore.addItem(product)
+  const selectedProduct = {
+    ...product,
+    selectedOptions: productSelections(product),
+  }
+
+  selectedProduct.cartItemId = [
+    product.id,
+    ...Object.entries(selectedProduct.selectedOptions).map(([name, value]) => `${name}:${value}`),
+  ].join('|')
+
+  await cartStore.addItem(selectedProduct)
 }
 </script>
