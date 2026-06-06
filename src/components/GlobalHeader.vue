@@ -130,4 +130,22 @@ watch(
   display: block;
   line-height: 1;
 }
+
+.nav-toggle {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.nav-toggle__bar {
+  width: 23px;
+}
+
+.nav-toggle__bar:nth-child(1) {
+  top: 12px;
+}
+
+.nav-toggle__bar:nth-child(3) {
+  bottom: 12px;
+}
 </style>
