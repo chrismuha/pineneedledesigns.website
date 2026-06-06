@@ -16,13 +16,16 @@
           <h3>{{ product.title }}</h3>
           <div class="product-meta">
             <template v-if="Array.isArray(product.meta)">
-              <span v-for="(item, index) in product.meta" :key="index">{{ item }}</span>
+              <div v-for="(item, index) in product.meta" :key="index">{{ item }}</div>
             </template>
             <template v-else>
               {{ product.meta }}
             </template>
           </div>
-          <p>{{ product.description }}</p>
+          <div class="product-description">
+            <h4>Description</h4>
+            <p>{{ product.description }}</p>
+          </div>
         </header>
         <div v-if="product.options && product.options.length" class="product-options">
           <ProductOptionSelect

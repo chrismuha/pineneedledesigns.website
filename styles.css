@@ -1568,6 +1568,18 @@ footer>section {
         margin: 0;
     }
 
+    .product-description {
+        display: grid;
+        gap: 6px;
+    }
+
+    .product-description h4 {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.3;
+        color: var(--ink);
+    }
+
     .product-options {
         display: grid;
         gap: 10px;
