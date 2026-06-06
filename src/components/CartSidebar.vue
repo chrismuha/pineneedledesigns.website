@@ -80,7 +80,7 @@ const checkout = async () => {
   right: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--black-50);
   z-index: 1000;
   display: flex;
   justify-content: flex-end;
@@ -90,8 +90,8 @@ const checkout = async () => {
   width: 400px;
   max-width: 90vw;
   height: 100%;
-  background: white;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  background: var(--white);
+  box-shadow: -2px 0 5px var(--black-10);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -102,13 +102,13 @@ const checkout = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--line);
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 18pt;
   cursor: pointer;
 }
 
@@ -120,7 +120,7 @@ const checkout = async () => {
 .loading {
   padding: 20px;
   text-align: center;
-  color: #666;
+  color: var(--cart-muted);
 }
 
 .cart-items {
@@ -132,7 +132,7 @@ const checkout = async () => {
 .cart-item {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd;
+  border: 1px solid var(--line);
   padding: 10px;
   margin-bottom: 10px;
 }
@@ -156,20 +156,20 @@ const checkout = async () => {
 .cart-summary {
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--line);
   text-align: center;
 }
 
 .btn {
   padding: 10px 20px;
-  background: #007bff;
-  color: white;
+  background: var(--checkout-blue);
+  color: var(--white);
   border: none;
   cursor: pointer;
   margin: 5px;
 }
 
 .btn-primary {
-  background: #28a745;
+  background: var(--checkout-green);
 }
 </style>

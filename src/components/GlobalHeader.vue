@@ -28,7 +28,6 @@
         </button>
 
         <div class="nav-aux">
-          <a class="icon-btn" href="#" aria-label="Wishlist"><i class="bi bi-heart"></i></a>
           <button class="icon-btn" @click="$emit('toggle-cart')" aria-label="Cart">
             <i class="bi bi-bag"></i>
             <span v-if="cartStore.totalItems > 0" class="cart-count">{{ cartStore.totalItems }}</span>
@@ -110,11 +109,11 @@ watch(
   position: absolute;
   top: -8px;
   right: -8px;
-  background: red;
-  color: white;
+  background: var(--error);
+  color: var(--white);
   border-radius: 50%;
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 9pt;
   min-width: 18px;
   text-align: center;
 }

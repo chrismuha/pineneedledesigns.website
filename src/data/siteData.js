@@ -301,7 +301,7 @@ export const collectionPages = [
         id: 38,
         title: "Wende's Choice Blinged Out Sweatshirt",
         price: 58,
-        meta: ['Price: $58', 'Shown in Sand', 'Available in White'],
+        meta: ['Price: $58', 'Shown in Sand, Available in White.'],
         description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged out sweatshirt in the color Sand. Also comes in white.",
         options: [
           {
@@ -326,7 +326,7 @@ export const collectionPages = [
         id: 39,
         title: 'Blinged Out T-Shirt',
         price: 38,
-        meta: ['Price: $38', 'Shown in Sand', 'Available in White'],
+        meta: ['Price: $38', 'Shown in Sand, Available in White.'],
         description: 'Turquoise Chick is blinged out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
         options: [
           {
@@ -351,7 +351,7 @@ export const collectionPages = [
         id: 40,
         title: "Don't Burst My Bubble T-Shirt",
         price: 38,
-        meta: ['Price: $38', 'Shown in Sand', 'Available in Pink or White'],
+        meta: ['Price: $38', 'Shown in Sand, Available in Pink or White.'],
         description: "A Cowgirl with Attitude. Of course she's all blinged out!",
         options: [
           {
