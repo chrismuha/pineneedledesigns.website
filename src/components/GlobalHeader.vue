@@ -1,18 +1,6 @@
 <template>
   <header>
     <div class="container nav" role="navigation" aria-label="Primary">
-      <div class="brand">
-        <div class="brand-logos" role="presentation">
-          <router-link to="/" aria-label="Pine Needle Designs home">
-            <img src="/images/1a.webp" alt="Pine Needle Designs Logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
-          </router-link>
-          <span class="brand-divider" aria-hidden="true"></span>
-          <router-link to="/" aria-label="Pine Needle Designs secondary home logo">
-            <img src="/images/4.webp" alt="Pine Needle Designs secondary logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
-          </router-link>
-        </div>
-      </div>
-
       <div class="nav-actions">
         <router-link class="icon-btn" to="/" aria-label="Home">
           <i class="bi bi-house"></i>
@@ -31,11 +19,21 @@
           <span class="nav-toggle__bar" aria-hidden="true"></span>
         </button>
 
-        <div class="nav-aux">
-          <button class="icon-btn" @click="$emit('toggle-cart')" aria-label="Cart">
-            <i class="bi bi-bag"></i>
-            <span v-if="cartStore.totalItems > 0" class="cart-count">{{ cartStore.totalItems }}</span>
-          </button>
+        <button class="icon-btn" @click="$emit('toggle-cart')" aria-label="Cart">
+          <i class="bi bi-bag"></i>
+          <span v-if="cartStore.totalItems > 0" class="cart-count">{{ cartStore.totalItems }}</span>
+        </button>
+      </div>
+
+      <div class="brand">
+        <div class="brand-logos" role="presentation">
+          <router-link to="/" aria-label="Pine Needle Designs home">
+            <img src="/images/1a.webp" alt="Pine Needle Designs Logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
+          </router-link>
+          <span class="brand-divider" aria-hidden="true"></span>
+          <router-link to="/" aria-label="Pine Needle Designs secondary home logo">
+            <img src="/images/4.webp" alt="Pine Needle Designs secondary logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
+          </router-link>
         </div>
       </div>
     </div>
@@ -79,6 +77,10 @@ const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
 }
 
+const handleEscape = (event) => {
+  if (event.key === 'Escape') closeMenu()
+}
+
 const handleDocumentClick = (event) => {
   const target = event.target
   const menu = document.getElementById('mnav')
@@ -91,13 +93,12 @@ const handleDocumentClick = (event) => {
 
 onMounted(() => {
   document.addEventListener('click', handleDocumentClick)
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMenu()
-  })
+  document.addEventListener('keydown', handleEscape)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleDocumentClick)
+  document.removeEventListener('keydown', handleEscape)
 })
 
 watch(
@@ -123,20 +124,21 @@ watch(
 }
 
 .nav-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 42px);
-  gap: 6px;
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 960;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-  justify-items: center;
-}
-
-.nav-aux {
-  display: inline-flex;
-  gap: 6px;
-  order: 0;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: 8px;
+  border: 1px solid var(--black-08);
+  border-radius: 999px;
+  background: var(--white-92);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
 }
 
 .icon-btn {
@@ -144,6 +146,9 @@ watch(
   width: 42px;
   height: 42px;
   flex: 0 0 42px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 2px 10px var(--black-08);
 }
 
 .icon-btn .bi {
@@ -158,6 +163,8 @@ watch(
   height: 42px;
   flex: 0 0 42px;
   order: 0;
+  background: var(--white);
+  box-shadow: 0 2px 10px var(--black-08);
 }
 
 .nav-toggle__bar {
@@ -170,5 +177,12 @@ watch(
 
 .nav-toggle__bar:nth-child(3) {
   bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .nav-actions {
+    top: 12px;
+    left: 10px;
+  }
 }
 </style>
