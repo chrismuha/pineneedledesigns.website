@@ -86,6 +86,7 @@ app.get('/api/cart', (req, res) => {
 });
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/videos', express.static(path.join(__dirname, 'videos')));
 
 app.post('/api/cart', (req, res) => {
   const { product } = req.body;

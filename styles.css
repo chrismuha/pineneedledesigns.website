@@ -982,10 +982,10 @@ section {
 }
 
 .product-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 14px;
-    font-size: 0.95rem;
+    display: grid;
+    gap: 6px;
+    font-size: 1rem;
+    line-height: 1.45;
     font-weight: 600;
     color: var(--ink-2);
 }
@@ -1563,6 +1563,8 @@ footer>section {
     }
 
     .product-card header p {
+        font-size: 1rem;
+        line-height: 1.55;
         margin: 0;
     }
 
@@ -1574,6 +1576,8 @@ footer>section {
     .product-option {
         display: grid;
         gap: 6px;
+        font-size: 1rem;
+        line-height: 1.35;
         font-weight: 600;
         color: var(--ink);
     }

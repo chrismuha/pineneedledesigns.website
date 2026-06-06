@@ -309,6 +309,11 @@ export const collectionPages = [
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
             placeholder: 'Select size',
           },
+          {
+            name: 'Color',
+            values: ['Sand', 'White'],
+            placeholder: 'Select color',
+          },
         ],
         images: [
           '/images/one-offs/shirts/wende-choice/wende-choice_1a.png',
@@ -329,6 +334,11 @@ export const collectionPages = [
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
             placeholder: 'Select size',
           },
+          {
+            name: 'Color',
+            values: ['Sand', 'White'],
+            placeholder: 'Select color',
+          },
         ],
         images: [
           '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1a.webp',
@@ -348,6 +358,11 @@ export const collectionPages = [
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
             placeholder: 'Select size',
+          },
+          {
+            name: 'Color',
+            values: ['Sand', 'Pink', 'White'],
+            placeholder: 'Select color',
           },
         ],
         images: ['/images/one-offs/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webp'],
