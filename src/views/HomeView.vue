@@ -70,12 +70,12 @@
             <div class="eyebrow">New Drop</div>
             <h1>Denim & Lace yes please ✨</h1>
             <p>Limited-run upcycled pieces crafted to stand out.</p>
-            <p class="hero-hurry hero-hurry--inline hero-hurry--left">Hurry before they sell out!</p>
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
             </div>
             <div class="hero-placeholder-stack">
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <p class="hero-hurry hero-hurry--inline hero-hurry--left">Hurry before they sell out!</p>
               <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
               <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
             </div>
@@ -91,7 +91,7 @@
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
             <img loading="lazy" decoding="async" class="hero-bunny" alt="I Hare You" src="/images/bunny.webp" />
-            <p class="hero-hurry hero-hurry--inline">Hurry before they sell out!</p>
+            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">Hurry before they sell out!</p>
             <div class="hero-placeholder-stack">
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />

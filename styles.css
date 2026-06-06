@@ -636,6 +636,10 @@ header {
     text-align: left;
 }
 
+.hero-hurry--bunny {
+    text-align: left;
+}
+
 .hero-grid {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
@@ -1963,7 +1967,7 @@ footer>section {
 
 .hero-card .hero-images--with-caption {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: nowrap;
     gap: 14px;
     margin-top: 18px;
@@ -1971,5 +1975,5 @@ footer>section {
 
 .hero-images--with-caption .hero-hurry {
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
