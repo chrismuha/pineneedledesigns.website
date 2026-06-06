@@ -1602,8 +1602,8 @@ footer>section {
     }
 
     .product-card header p {
-        font-size: 12pt;
-        line-height: 1.55;
+        font-size: 14pt;
+        line-height: 1.6;
         margin: 0;
     }
 
@@ -1614,7 +1614,7 @@ footer>section {
 
     .product-description h4 {
         margin: 0;
-        font-size: 12pt;
+        font-size: 16pt;
         line-height: 1.3;
         color: var(--ink);
     }

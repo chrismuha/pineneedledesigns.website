@@ -120,34 +120,39 @@ watch(
 
 .nav-actions {
   display: grid;
-  grid-template-columns: repeat(3, 38px);
+  grid-template-columns: repeat(2, 42px);
   gap: 6px;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.nav-aux {
+  display: inline-flex;
+  gap: 6px;
+  order: 0;
   align-items: center;
   justify-content: center;
 }
 
-.nav-aux {
-  display: contents;
-  gap: 6px;
-  order: 0;
-}
-
 .icon-btn {
   position: relative;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
 }
 
 .icon-btn .bi {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
 .nav-toggle {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   order: 0;
 }
 

@@ -9,7 +9,6 @@ const collectionNavLinks = [
   { label: 'Jackets', path: '/collections/jackets', slug: 'jackets' },
   { label: 'Jeans', path: '/collections/jeans', slug: 'jeans' },
   { label: 'Necklaces', path: '/collections/necklaces', slug: 'necklaces' },
-  { label: 'One-Offs', path: '/collections/one-offs', slug: 'one-offs' },
   { label: 'Pooch Smooches', path: '/collections/pooch-smooches', slug: 'pooch-smooches' },
   { label: 'Purses', path: '/collections/purses', slug: 'purses' },
   { label: 'Shirts', path: '/collections/shirts', slug: 'shirts' },
@@ -290,12 +289,12 @@ export const collectionPages = [
     ],
   },
   {
-    slug: 'one-offs',
-    title: 'One-Offs',
-    path: '/collections/one-offs',
+    slug: 'shirts',
+    title: 'Shirts',
+    path: '/collections/shirts',
     count: 0,
     cardImage: '/images/comingsoon/comingsoon2.webp',
-    description: 'Limited one-of-a-kind pieces and spontaneous studio finds.',
+    description: 'Blinged out shirts and sweatshirts made to stand out.',
     products: [
       {
         id: 38,
@@ -382,27 +381,6 @@ export const collectionPages = [
       /*
       {
         id: 25,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
-  },
-  {
-    slug: 'shirts',
-    title: 'Shirts',
-    path: '/collections/shirts',
-    count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
-    description: 'Fluid drape and soft sheen.',
-    products: [
-      /*
-      {
-        id: 27,
         title: 'Placeholder Item',
         price: 'TBD',
         meta: ['Price: TBD', 'Size: TBD'],
