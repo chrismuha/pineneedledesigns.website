@@ -120,11 +120,17 @@ watch(
 }
 
 .nav-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 38px);
   gap: 6px;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-aux {
+  display: contents;
   gap: 6px;
+  order: 0;
 }
 
 .icon-btn {
@@ -143,6 +149,7 @@ watch(
   width: 38px;
   height: 38px;
   flex: 0 0 38px;
+  order: 0;
 }
 
 .nav-toggle__bar {
