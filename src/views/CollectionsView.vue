@@ -6,7 +6,7 @@
       </div>
 
       <div class="grid grid-4 collection-list">
-        <article v-for="collection in collectionPages" :key="collection.slug" class="card collection-card">
+        <article v-for="collection in visibleCollectionPages" :key="collection.slug" class="card collection-card">
           <router-link class="collection-link" :to="collection.path">
             <div class="body">
               <h3>{{ collection.title }}</h3>
@@ -20,5 +20,5 @@
 </template>
 
 <script setup>
-import { collectionPages } from '../data/siteData'
+import { visibleCollectionPages } from '../data/siteData'
 </script>
