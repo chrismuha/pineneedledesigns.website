@@ -134,7 +134,7 @@ const hasRequiredOptions = (product) => {
 const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
-const defaultPlaceholderImage = '/images/comingsoonz.webp'
+const defaultPlaceholderImage = '/images/comingsoon/comingsoon1.webp'
 const placeholderImageFor = (product, index) =>
   product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
 

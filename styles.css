@@ -1775,6 +1775,13 @@ footer>section {
 }
 
 /* Product Pages */
+.products {
+    padding-top: 24px;
+    padding-left: clamp(18px, 4vw, 32px);
+    padding-right: clamp(18px, 4vw, 32px);
+    padding-bottom: 140px;
+}
+
 .product-page {
     display: flex;
     flex-direction: column;
@@ -2139,6 +2146,36 @@ footer>section {
 
         .split {
             grid-template-columns: 1fr;
+        }
+
+        .shop-split {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .shop-split .tile {
+            min-height: 250px;
+            border-radius: 14px;
+        }
+
+        .shop-split .placeholder-image {
+            min-height: 150px;
+        }
+
+        .shop-split .tile .copy {
+            padding: 12px 8px;
+        }
+
+        .shop-split .tile .copy h3 {
+            font-size: clamp(14pt, 5vw, 18pt);
+            line-height: 1.1;
+        }
+
+        .shop-split .tile .copy .btn {
+            width: 100%;
+            max-width: 150px;
+            padding: 10px 12px;
+            font-size: 10pt;
         }
 
         .about {

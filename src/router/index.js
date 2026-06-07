@@ -26,7 +26,7 @@ const routes = [
     component: CollectionView,
     props: { slug: page.slug },
     alias: [`/${page.slug}.html`],
-    meta: { scrollTarget: '.products-header' },
+    meta: { scrollTarget: '.products-header', scrollOffset: 190 },
   })),
   ...sitePages.map((page) => ({
     path: page.path,
@@ -59,7 +59,12 @@ const router = createRouter({
   routes,
   scrollBehavior(to) {
     if (to.meta.scrollTarget) {
-      return { el: to.meta.scrollTarget, top: 0, left: 0, behavior: 'instant' }
+      return {
+        el: to.meta.scrollTarget,
+        top: to.meta.scrollOffset || 0,
+        left: 0,
+        behavior: 'instant',
+      }
     }
     return { top: 0, left: 0, behavior: 'instant' }
   },

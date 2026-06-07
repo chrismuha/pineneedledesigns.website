@@ -166,13 +166,13 @@ import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
 
 const homePlaceholderImages = {
-  denimFeature: '/images/comingsoonz.webp',
-  denimFirstCard: '/images/comingsoonz.webp',
-  denimSecondCard: '/images/comingsoonz.webp',
-  newArrivalsFeature: '/images/comingsoonz.webp',
-  newArrivalsFirstCard: '/images/comingsoonz.webp',
-  newArrivalsSecondCard: '/images/comingsoonz.webp',
-  bottomsTile: '/images/comingsoonz.webp',
-  topsTile: '/images/comingsoonz.webp',
+  denimFeature: '/images/comingsoon/comingsoon1.webp',
+  denimFirstCard: '/images/comingsoon/comingsoon2.webp',
+  denimSecondCard: '/images/comingsoon/comingsoon1.webp',
+  newArrivalsFeature: '/images/comingsoon/comingsoon2.webp',
+  newArrivalsFirstCard: '/images/comingsoon/comingsoon1.webp',
+  newArrivalsSecondCard: '/images/comingsoon/comingsoon2.webp',
+  bottomsTile: '/images/comingsoon/comingsoon1.webp',
+  topsTile: '/images/comingsoon/comingsoon2.webp',
 }
 </script>
