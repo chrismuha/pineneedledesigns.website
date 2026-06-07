@@ -129,7 +129,7 @@
     </section>
 
     <section>
-      <div class="container split">
+      <div class="container split shop-split">
         <div class="tile">
           <img loading="lazy" class="bunny-image" alt="Selection of bottoms" src="/images/bunny.webp" />
           <div class="copy">

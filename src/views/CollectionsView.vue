@@ -10,6 +10,7 @@
         <div class="grid grid-4 collection-list">
           <article v-for="collection in group.collections" :key="collection.slug" class="card collection-card">
             <router-link class="collection-link" :to="collection.path">
+              <img class="collection-card__image" :src="collection.cardImage" :alt="collection.title" loading="lazy" decoding="async" />
               <div class="body">
                 <h4>{{ collection.title }}</h4>
                 <div class="subtle">{{ collection.count }} items</div>

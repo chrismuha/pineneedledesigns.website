@@ -101,6 +101,15 @@ img {
     object-position: left center;
 }
 
+.hero-placeholder-stack .bunny-image,
+.product-images .placeholder .bunny-image,
+.footer-left .bunny-image,
+.shop-split .bunny-image {
+    margin-left: 0;
+    margin-right: auto;
+    object-position: left center;
+}
+
 .container {
     max-width: var(--container);
     margin: 0 auto;
@@ -912,31 +921,61 @@ section {
 
 .collection-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
 }
 
 .collection-card {
-    padding: 24px;
-    border-radius: 16px;
+    padding: 0;
+    border-radius: 0;
     background: var(--white);
     box-shadow: var(--shadow-sm);
     text-align: center;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .collection-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
+    display: block;
     width: 100%;
-    height: 100%;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: var(--white);
     text-decoration: none;
     cursor: pointer;
+}
+
+.collection-card__image {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1.18;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(1.05);
+    transition: transform 220ms ease;
+}
+
+.collection-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--black-08), var(--black-50));
+}
+
+.collection-link .body {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    text-shadow: 0 2px 12px var(--black-50);
 }
 
 .collection-card h3,
@@ -952,6 +991,10 @@ section {
 .collection-card:hover .collection-link,
 .collection-card:hover .collection-link * {
     cursor: pointer;
+}
+
+.collection-card:hover .collection-card__image {
+    transform: scale(1.03);
 }
 
 .collection-group {
@@ -1035,6 +1078,70 @@ section {
 
 .product .body {
     padding: 12px 12px 16px;
+}
+
+.collections:not(.collections-catalog) .grid-6 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+}
+
+.collections:not(.collections-catalog) .card {
+    position: relative;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: var(--shadow-sm);
+}
+
+.collections:not(.collections-catalog) .card-link,
+.collections:not(.collections-catalog) .card>div {
+    position: relative;
+    display: block;
+    width: 100%;
+    color: var(--white);
+    text-align: center;
+}
+
+.collections:not(.collections-catalog) .media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1.18;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 220ms ease;
+}
+
+.collections:not(.collections-catalog) .card-link::after,
+.collections:not(.collections-catalog) .card>div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--black-08), var(--black-50));
+}
+
+.collections:not(.collections-catalog) .card:hover .media {
+    transform: scale(1.03);
+}
+
+.collections:not(.collections-catalog) .body {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    text-shadow: 0 2px 12px var(--black-50);
+}
+
+.collections:not(.collections-catalog) .body h3,
+.collections:not(.collections-catalog) .subtle {
+    color: var(--white);
 }
 
 .highlighted-collection {
@@ -1140,6 +1247,15 @@ section {
     overflow: hidden;
     min-height: 300px;
     box-shadow: var(--shadow);
+}
+
+.shop-split .tile {
+    background: var(--white);
+}
+
+.shop-split .bunny-image {
+    min-height: clamp(220px, 22vw, 320px);
+    object-fit: contain;
 }
 
 .tile .copy {
@@ -1899,7 +2015,7 @@ footer>section {
     .product-images .placeholder {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         aspect-ratio: 4 / 5;
         height: clamp(320px, 45vw, 420px);
         cursor: default;
@@ -2081,7 +2197,7 @@ footer>section {
         }
 
         .hero-placeholder-stack {
-            align-items: center;
+            align-items: flex-start;
         }
 
         .hero-placeholder-stack .hero-placeholder-inline,
@@ -2107,8 +2223,8 @@ footer>section {
         }
 
         .collections-catalog>.container {
-            padding-left: 76px;
-            padding-right: 76px;
+            padding-left: 8px;
+            padding-right: 8px;
         }
 
         .collections-page-header h1 {
@@ -2121,11 +2237,34 @@ footer>section {
         }
 
         .collection-list {
-            grid-template-columns: minmax(0, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
         }
 
         .collection-card {
-            padding: 22px 12px;
+            padding: 0;
+        }
+
+        .collection-link .body {
+            padding: 10px;
+        }
+
+        .collection-group h4 {
+            font-size: clamp(13pt, 4.6vw, 18pt);
+            line-height: 1.08;
+        }
+
+        .collection-link .subtle {
+            color: var(--white);
+        }
+
+        .collections:not(.collections-catalog) .grid-6 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .collections:not(.collections-catalog) .body {
+            padding: 10px;
         }
 
         .hide-sm {
