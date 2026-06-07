@@ -164,15 +164,16 @@
 <script setup>
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
+import comingSoonZ from '../../images/comingsoonz.webp'
 
 const homePlaceholderImages = {
-  denimFeature: '/images/comingsoonz.webp',
-  denimFirstCard: '/images/comingsoonz.webp',
-  denimSecondCard: '/images/comingsoonz.webp',
-  newArrivalsFeature: '/images/comingsoonz.webp',
-  newArrivalsFirstCard: '/images/comingsoonz.webp',
-  newArrivalsSecondCard: '/images/comingsoonz.webp',
-  bottomsTile: '/images/comingsoonz.webp',
-  topsTile: '/images/comingsoonz.webp',
+  denimFeature: comingSoonZ,
+  denimFirstCard: comingSoonZ,
+  denimSecondCard: comingSoonZ,
+  newArrivalsFeature: comingSoonZ,
+  newArrivalsFirstCard: comingSoonZ,
+  newArrivalsSecondCard: comingSoonZ,
+  bottomsTile: comingSoonZ,
+  topsTile: comingSoonZ,
 }
 </script>
