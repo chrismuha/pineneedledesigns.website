@@ -71,10 +71,10 @@
               <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
             </div>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimFeature" />
               <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              <img loading="lazy" decoding="async" class="hero-card__placeholder bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
-              <img loading="lazy" decoding="async" class="hero-card__placeholder bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimFirstCard" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimSecondCard" />
             </div>
           </div>
         </article>
@@ -87,11 +87,11 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
-            <img loading="lazy" decoding="async" class="hero-bunny bunny-image" alt="I Hare You" src="/images/bunny.webp" />
+            <img loading="lazy" decoding="async" class="hero-bunny placeholder-image" alt="I Hare You" :src="homePlaceholderImages.newArrivalsFeature" />
             <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.newArrivalsFirstCard" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.newArrivalsSecondCard" />
             </div>
           </div>
         </article>
@@ -131,14 +131,14 @@
     <section>
       <div class="container split shop-split">
         <div class="tile">
-          <img loading="lazy" class="bunny-image" alt="Selection of bottoms" src="/images/bunny.webp" />
+          <img loading="lazy" class="placeholder-image" alt="Selection of bottoms" :src="homePlaceholderImages.bottomsTile" />
           <div class="copy">
             <h3>Explore Bottoms</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
         <div class="tile">
-          <img loading="lazy" class="bunny-image" alt="Selection of tops" src="/images/bunny.webp" />
+          <img loading="lazy" class="placeholder-image" alt="Selection of tops" :src="homePlaceholderImages.topsTile" />
           <div class="copy">
             <h3>Explore Tops</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
@@ -164,4 +164,15 @@
 <script setup>
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
+
+const homePlaceholderImages = {
+  denimFeature: '/images/comingsoonz.webp',
+  denimFirstCard: '/images/comingsoonz.webp',
+  denimSecondCard: '/images/comingsoonz.webp',
+  newArrivalsFeature: '/images/comingsoonz.webp',
+  newArrivalsFirstCard: '/images/comingsoonz.webp',
+  newArrivalsSecondCard: '/images/comingsoonz.webp',
+  bottomsTile: '/images/comingsoonz.webp',
+  topsTile: '/images/comingsoonz.webp',
+}
 </script>

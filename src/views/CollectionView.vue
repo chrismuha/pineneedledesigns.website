@@ -68,8 +68,8 @@
               :class="product.imageWrapper || 'placeholder'"
             >
               <img
-                class="bunny-image"
-                src="/images/bunny.webp"
+                class="placeholder-image"
+                :src="placeholderImageFor(product, index)"
                 :alt="`${product.title} placeholder image`"
                 loading="lazy"
                 decoding="async"
@@ -136,6 +136,9 @@ const hasRequiredOptions = (product) => {
 const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
+const defaultPlaceholderImage = '/images/comingsoonz.webp'
+const placeholderImageFor = (product, index) =>
+  product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
 
 const addToCart = async (product) => {
   const selectedProduct = {

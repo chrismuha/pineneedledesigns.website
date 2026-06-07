@@ -94,6 +94,7 @@ img {
     display: block;
 }
 
+.placeholder-image,
 .bunny-image {
     align-self: flex-start;
     margin-left: 0;
@@ -101,10 +102,10 @@ img {
     object-position: left center;
 }
 
-.hero-placeholder-stack .bunny-image,
-.product-images .placeholder .bunny-image,
+.hero-placeholder-stack .placeholder-image,
+.product-images .placeholder .placeholder-image,
 .footer-left .bunny-image,
-.shop-split .bunny-image {
+.shop-split .placeholder-image {
     margin-left: 0;
     margin-right: auto;
     object-position: left center;
@@ -1253,7 +1254,7 @@ section {
     background: var(--white);
 }
 
-.shop-split .bunny-image {
+.shop-split .placeholder-image {
     min-height: clamp(220px, 22vw, 320px);
     object-fit: contain;
 }
