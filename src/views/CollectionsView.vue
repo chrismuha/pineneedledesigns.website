@@ -1,5 +1,5 @@
 <template>
-  <section class="collections">
+  <section class="collections collections-catalog">
     <div class="container">
       <div class="section-head collections-page-header">
         <h1>Browse All Collections</h1>

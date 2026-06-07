@@ -199,15 +199,8 @@ export const collectionPages = [
         id: 37,
         title: 'Ruby Lee',
         price: 264,
-        meta: ['Price: $264'],
+        meta: ['Price: $264', 'Size: M/L'],
         description: 'She is an upcycled Jean jacket. Ruby Lee loves her gold brooches and bright ribbon trims mixed with red and clear beaded dangles of crystals. She has flowers of red burgundy and cream roses all appliquéd on her back. And a matching burgundy mesh peplum of mermaid sequins at the waist. Cuffs are turned up and pockets are removed for more embellishments. A lower long narrow pocket was added with a butterfly brooch. Keeping with her rustic nature, the denim is very soft but her bougie attitude shows off ivory fringe and multiple laces. A red plaid buck brings it all together. Definitely Adirondack Chic! Where she lives.',
-        options: [
-          {
-            name: 'Size',
-            values: ['Medium', 'Large'],
-            placeholder: 'Select size',
-          },
-        ],
         images: [
           '/images/one-offs/jackets/ruby-lee/ruby-lee-1a.webp',
           '/images/one-offs/jackets/ruby-lee/ruby-lee-1b.webp',
@@ -288,7 +281,7 @@ export const collectionPages = [
     title: 'Shirts',
     path: '/collections/shirts',
     count: 0,
-    cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.png',
+    cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
     description: 'Blinged out shirts and sweatshirts made to stand out.',
     products: [
       {
@@ -310,7 +303,7 @@ export const collectionPages = [
           },
         ],
         images: [
-          '/images/one-offs/shirts/wende-choice/wende-choice_1a.png',
+          '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
           '/images/one-offs/shirts/wende-choice/wende-choice_1b.webp',
         ],
         videos: ['/videos/one-offs/shirts/wende-choice/wende-choice.webm'],
