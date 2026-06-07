@@ -19,7 +19,6 @@ const routes = [
     name: 'Collections',
     component: CollectionsView,
     alias: ['/collections.html'],
-    meta: { scrollTarget: '.collections .section-head' },
   },
   ...collectionPages.map((page) => ({
     path: `/collections/${page.slug}`,

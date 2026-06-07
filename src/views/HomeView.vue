@@ -33,7 +33,6 @@
       <div class="container">
         <div class="section-head">
           <h2>Other Collections</h2>
-          <router-link class="link" to="/collections">Browse All Collections</router-link>
         </div>
 
         <div class="grid grid-6">
@@ -80,7 +79,7 @@
           </div>
         </article>
 
-        <article class="hero-card" aria-label="New Arrivals">
+        <article class="hero-card hero-card--new-arrivals" aria-label="New Arrivals">
           <div class="copy">
             <div class="eyebrow">Fresh Picks</div>
             <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>

@@ -717,6 +717,18 @@ header {
     object-fit: contain;
 }
 
+.hero-card--new-arrivals .hero-bunny {
+    max-height: clamp(210px, 30vw, 300px);
+}
+
+.hero-card--new-arrivals .hero-placeholder-stack {
+    gap: 12px;
+}
+
+.hero-card--new-arrivals .hero-placeholder-inline--tall {
+    height: 230px;
+}
+
 .hero-2 {
     width: auto;
     max-width: 100%;
@@ -788,13 +800,6 @@ h1 {
 .btn:focus-visible {
     outline: 3px solid var(--accent-60);
     outline-offset: 3px;
-}
-
-.btn-browse {
-    border-color: var(--border);
-    color: var(--ink);
-    background: var(--white);
-    box-shadow: var(--shadow-sm);
 }
 
 .btn-accent {
@@ -1237,7 +1242,7 @@ footer .footer-actions {
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
-    width: 124px;
+    width: 158px;
     padding: 8px;
     border: 1px solid var(--black-08);
     border-radius: 22px;
@@ -1253,7 +1258,7 @@ footer .footer-actions a {
     gap: 6px;
     width: 100%;
     min-height: 42px;
-    padding: 8px 10px;
+    padding: 8px 14px;
     border: 0;
     border-radius: 999px;
     background: var(--white);
@@ -1289,8 +1294,8 @@ footer .footer-actions a:focus-visible {
 @media (max-width: 640px) {
     footer .footer-actions {
         top: 12px;
-        right: 10px;
-        width: 82px;
+        right: 14px;
+        width: 126px;
         border-radius: 22px;
     }
 
@@ -1300,18 +1305,19 @@ footer .footer-actions a:focus-visible {
         width: 100%;
         height: auto;
         min-height: 54px;
-        padding: 6px 4px;
+        padding: 6px 10px;
     }
 
     footer .footer-actions span {
         display: block;
         max-width: 100%;
-        overflow-wrap: anywhere;
+        overflow: hidden;
+        text-overflow: ellipsis;
         color: currentColor;
         font-size: 7pt;
         line-height: 1;
         text-align: center;
-        white-space: normal;
+        white-space: nowrap;
     }
 }
 
@@ -1664,16 +1670,8 @@ footer>section {
     /* box-shadow: var(--shadow-sm); */
 }
 
-.product-actions .btn-browse:hover {
-    background: var(--white);
-    color: var(--ink);
-    /* box-shadow: var(--shadow-sm); */
-    border-color: var(--border);
-}
-
 .product-actions .back-link:focus-visible,
-.product-actions .btn-next:focus-visible,
-.product-actions .btn-browse:focus-visible {
+.product-actions .btn-next:focus-visible {
     outline: none;
     box-shadow: var(--shadow-sm);
 }
@@ -2094,10 +2092,6 @@ footer>section {
         .collections-catalog>.container {
             padding-left: 76px;
             padding-right: 76px;
-        }
-
-        .collections:not(.collections-catalog) .section-head .link {
-            display: none;
         }
 
         .collections-page-header h1 {
