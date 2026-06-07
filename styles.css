@@ -862,6 +862,10 @@ section {
     padding: 44px 0;
 }
 
+.collections:not(.collections-catalog) {
+    padding-top: 56px;
+}
+
 .section-head {
     display: flex;
     align-items: baseline;
@@ -1286,24 +1290,28 @@ footer .footer-actions a:focus-visible {
     footer .footer-actions {
         top: 12px;
         right: 10px;
-        width: 52px;
-        border-radius: 999px;
+        width: 82px;
+        border-radius: 22px;
     }
 
     footer .footer-actions a {
-        width: 42px;
-        height: 42px;
-        min-height: 42px;
-        padding: 0;
+        flex-direction: column;
+        gap: 3px;
+        width: 100%;
+        height: auto;
+        min-height: 54px;
+        padding: 6px 4px;
     }
 
     footer .footer-actions span {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
+        display: block;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        color: currentColor;
+        font-size: 7pt;
+        line-height: 1;
+        text-align: center;
+        white-space: normal;
     }
 }
 
@@ -1679,12 +1687,14 @@ footer>section {
     padding: 0;
 }
 
-.product-actions .back-link {
+.product-actions .back-link,
+.product-actions .btn-next {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 10px 24px;
+    min-width: 220px;
+    padding: 10px 30px;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--white);

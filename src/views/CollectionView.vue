@@ -4,7 +4,6 @@
       <div class="product-actions">
         <router-link class="back-link" :to="previousPath">← Previous Collection</router-link>
         <router-link class="btn btn-next" :to="nextPath">Next Collection →</router-link>
-        <router-link class="btn btn-browse" to="/collections">Browse All Collections</router-link>
       </div>
       <h2>{{ page.title }}</h2>
       <p>{{ page.description }}</p>

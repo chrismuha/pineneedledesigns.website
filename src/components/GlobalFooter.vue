@@ -11,7 +11,7 @@
       </router-link>
       <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
-        <span>First Fitting</span>
+        <span>Fitting</span>
       </a>
       <a href="https://calendar.app.google/EU8HAuemRhmr4zBY6">
         <i class="bi bi-gem" aria-hidden="true"></i>
