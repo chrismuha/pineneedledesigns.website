@@ -88,11 +88,11 @@
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
             <img loading="lazy" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
-            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             <div class="hero-placeholder-stack">
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
             </div>
+            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
           </div>
         </article>
 
@@ -166,13 +166,13 @@ import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
 
 const homePlaceholderImages = {
-  denimFeature: '/images/comingsoon/comingsoon1.webp',
-  denimFirstCard: '/images/comingsoon/comingsoon2.webp',
-  denimSecondCard: '/images/comingsoon/comingsoon1.webp',
-  newArrivalsFeature: '/images/comingsoon/comingsoon2.webp',
-  newArrivalsFirstCard: '/images/comingsoon/comingsoon1.webp',
-  newArrivalsSecondCard: '/images/comingsoon/comingsoon2.webp',
-  bottomsTile: '/images/comingsoon/comingsoon1.webp',
-  topsTile: '/images/comingsoon/comingsoon2.webp',
+  denimFeature: '/images/comingsoonz.webp',
+  denimFirstCard: '/images/comingsoonz.webp',
+  denimSecondCard: '/images/comingsoonz.webp',
+  newArrivalsFeature: '/images/comingsoonz.webp',
+  newArrivalsFirstCard: '/images/comingsoonz.webp',
+  newArrivalsSecondCard: '/images/comingsoonz.webp',
+  bottomsTile: '/images/comingsoonz.webp',
+  topsTile: '/images/comingsoonz.webp',
 }
 </script>

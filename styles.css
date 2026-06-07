@@ -1252,11 +1252,15 @@ section {
 
 .shop-split .tile {
     background: var(--white);
+    display: flex;
+    flex-direction: column;
 }
 
 .shop-split .placeholder-image {
-    min-height: clamp(220px, 22vw, 320px);
-    object-fit: contain;
+    width: 100%;
+    height: clamp(260px, 32vw, 420px);
+    min-height: 0;
+    object-fit: cover;
 }
 
 .tile .copy {
@@ -2159,7 +2163,8 @@ footer>section {
         }
 
         .shop-split .placeholder-image {
-            min-height: 150px;
+            height: clamp(220px, 54vw, 360px);
+            min-height: 0;
         }
 
         .shop-split .tile .copy {
