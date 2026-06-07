@@ -68,7 +68,7 @@
             <h1>Denim & Lace yes please ✨</h1>
             <p>Limited-run upcycled pieces crafted to stand out.</p>
             <div class="cta">
-              <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
+              <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
             </div>
             <div class="hero-placeholder-stack">
               <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
@@ -102,7 +102,7 @@
             <h2 style="margin:.2rem 0 1rem">Winter/Spring Favorites</h2>
             <p>Shop the pieces we can't stop thinking about this season.</p>
             <div class="cta">
-              <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
+              <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption hero-images--boots">
               <img loading="lazy" class="hero-2" alt="White Christmas Boots" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
@@ -117,7 +117,7 @@
             <h2 style="margin:.2rem 0 1rem">Summer/Fall Favorites</h2>
             <p>Winter may be here now but order ahead and get discounts when you purchase ahead for the next seasons.</p>
             <div class="cta">
-              <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
+              <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption">
               <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />

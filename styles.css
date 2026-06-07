@@ -2335,3 +2335,23 @@ footer>section {
     width: 100%;
     text-align: left;
 }
+
+@media (max-width: 768px) {
+    .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack,
+    .hero-card--new-arrivals .hero-placeholder-stack {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: end;
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack .hero-placeholder-inline,
+    .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack .hero-hurry {
+        grid-column: 1 / -1;
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack .hero-card__placeholder,
+    .hero-card--new-arrivals .hero-placeholder-stack .hero-placeholder-inline {
+        width: 100%;
+        height: clamp(150px, 44vw, 230px);
+    }
+}

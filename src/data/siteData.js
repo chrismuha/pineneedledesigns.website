@@ -4,6 +4,7 @@ const collectionNavLinks = [
   { label: 'Bracelets', path: '/collections/bracelets', slug: 'bracelets' },
   { label: 'Chic Jewelry', path: '/collections/chic-jewelry', slug: 'chic-jewelry' },
   { label: 'Cuffs', path: '/collections/cuffs', slug: 'cuffs' },
+  { label: 'Denim & Lace', path: '/collections/denim-and-lace', slug: 'denim-and-lace' },
   { label: 'Earrings', path: '/collections/earrings', slug: 'earrings' },
   { label: 'Hat Bands', path: '/collections/hat-bands', slug: 'hat-bands' },
   { label: 'Jackets', path: '/collections/jackets', slug: 'jackets' },
@@ -13,8 +14,10 @@ const collectionNavLinks = [
   { label: 'Purses', path: '/collections/purses', slug: 'purses' },
   { label: 'Shirts', path: '/collections/shirts', slug: 'shirts' },
   { label: 'Shorts', path: '/collections/shorts', slug: 'shorts' },
+  { label: 'Summer/Fall', path: '/collections/summer-fall', slug: 'summer-fall' },
   { label: 'Upcycled Denim', path: '/collections/upcycled-denim', slug: 'upcycled-denim' },
   { label: 'Vests', path: '/collections/vests', slug: 'vests' },
+  { label: 'Winter/Spring', path: '/collections/winter-spring', slug: 'winter-spring' },
 ]
 
 export const collectionPages = [
@@ -401,6 +404,34 @@ export const collectionPages = [
     ],
   },
   {
+    slug: 'denim-and-lace',
+    title: 'Denim & Lace',
+    path: '/collections/denim-and-lace',
+    count: 0,
+    cardImage: '/images/bunny.webp',
+    description: 'Limited-run upcycled pieces crafted to stand out.',
+    products: [
+      {
+        id: 34,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
+      {
+        id: 35,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
+    ],
+  },
+  {
     slug: 'upcycled-denim',
     title: 'Upcycled Denim',
     path: '/collections/upcycled-denim',
@@ -419,6 +450,34 @@ export const collectionPages = [
         imagePlaceholders: ['placeholder'],
       },
       */
+    ],
+  },
+  {
+    slug: 'summer-fall',
+    title: 'Summer/Fall',
+    path: '/collections/summer-fall',
+    count: 0,
+    cardImage: '/images/comingsoon/comingsoon1.webp',
+    description: 'Warm-weather statement pieces and early-order seasonal favorites.',
+    products: [
+      {
+        id: 50,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
+      {
+        id: 51,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
     ],
   },
   {
@@ -442,6 +501,34 @@ export const collectionPages = [
       */
     ],
   },
+  {
+    slug: 'winter-spring',
+    title: 'Winter/Spring',
+    path: '/collections/winter-spring',
+    count: 0,
+    cardImage: '/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp',
+    description: "Cold-weather favorites and spring pieces we can't stop thinking about.",
+    products: [
+      {
+        id: 52,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
+      {
+        id: 53,
+        title: 'Placeholder Item',
+        price: 'TBD',
+        meta: ['Price: TBD', 'Size: TBD'],
+        description: 'Placeholder description.',
+        imageWrapper: 'placeholder',
+        imagePlaceholders: ['placeholder'],
+      },
+    ],
+  },
 ]
 
 collectionPages.forEach((page) => {
@@ -450,7 +537,7 @@ collectionPages.forEach((page) => {
   page.next = null
 })
 
-export const visibleCollectionPages = collectionPages.filter((page) => page.count > 0)
+export const visibleCollectionPages = collectionPages.filter((page) => page.count > 0 && !page.hidden)
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
 
 visibleCollectionPages.forEach((page, index) => {
