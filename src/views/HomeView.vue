@@ -12,9 +12,9 @@
         </div>
 
         <div v-if="section.cards.length" class="grid grid-4">
-          <article v-for="card in section.cards" :key="card.alt + card.pill" class="product card disabled">
+          <article v-for="card in section.cards" :key="card.title + card.pill" class="product card disabled">
             <router-link :to="section.path">
-              <img loading="lazy" decoding="async" class="media" :alt="card.alt" :src="card.image" />
+              <img loading="lazy" decoding="async" class="media" :src="card.image" />
             </router-link>
             <div class="body">
               <div class="pill">{{ card.pill }}</div>
@@ -42,14 +42,14 @@
             :class="['card', { disabled: collection.count === 0 }]"
           >
             <router-link v-if="collection.count > 0" class="card-link" :to="collection.path">
-              <img loading="lazy" class="media" :alt="collection.title" :src="collection.cardImage" />
+              <img loading="lazy" class="media" :src="collection.cardImage" />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">{{ collection.count }} items</div>
               </div>
             </router-link>
             <div v-else>
-              <img loading="lazy" class="media" :alt="collection.title" :src="collection.cardImage" />
+              <img loading="lazy" class="media" :src="collection.cardImage" />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">0 items</div>
@@ -71,10 +71,10 @@
               <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
             </div>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimFeature" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
               <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimFirstCard" />
-              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.denimSecondCard" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
             </div>
           </div>
         </article>
@@ -87,11 +87,11 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
-            <img loading="lazy" decoding="async" class="hero-bunny placeholder-image" alt="I Hare You" :src="homePlaceholderImages.newArrivalsFeature" />
+            <img loading="lazy" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
             <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.newArrivalsFirstCard" />
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" alt="Placeholder product preview" :src="homePlaceholderImages.newArrivalsSecondCard" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
             </div>
           </div>
         </article>
@@ -105,7 +105,7 @@
               <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption hero-images--boots">
-              <img loading="lazy" class="hero-2" alt="White Christmas Boots" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
+              <img loading="lazy" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -120,7 +120,7 @@
               <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption">
-              <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />
+              <img loading="lazy" class="hero-3" src="/images/comingsoon/comingsoon1.webp" />
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -131,14 +131,14 @@
     <section>
       <div class="container split shop-split">
         <div class="tile">
-          <img loading="lazy" class="placeholder-image" alt="Selection of bottoms" :src="homePlaceholderImages.bottomsTile" />
+          <img loading="lazy" class="placeholder-image" :src="homePlaceholderImages.bottomsTile" />
           <div class="copy">
             <h3>Explore Bottoms</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
         <div class="tile">
-          <img loading="lazy" class="placeholder-image" alt="Selection of tops" :src="homePlaceholderImages.topsTile" />
+          <img loading="lazy" class="placeholder-image" :src="homePlaceholderImages.topsTile" />
           <div class="copy">
             <h3>Explore Tops</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>

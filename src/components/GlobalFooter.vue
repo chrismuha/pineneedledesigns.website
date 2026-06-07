@@ -44,7 +44,7 @@
       >
         <div class="footer-left">
           <p class="hare">OH BEAUTIFUL YOU.......AND ME TOO!</p>
-          <img loading="lazy" decoding="async" class="bunny-image" src="/images/bunny.webp" alt="bunny" />
+          <img loading="lazy" decoding="async" class="bunny-image" src="/images/bunny.webp" />
         </div>
 
         <div class="footer-right">
@@ -106,7 +106,7 @@
 
     <div class="container footer-qr">
       <a class="qr-link" href="https://pineneedledesigns.store" target="_blank">
-        <img loading="lazy" decoding="async" src="/images/1b.webp" alt="Studio scene" width="250" height="250" />
+        <img loading="lazy" decoding="async" src="/images/1b.webp" width="250" height="250" />
         <span>One-of-a-kind Designs</span>
       </a>
     </div>

@@ -4,7 +4,7 @@
 
     <div id="slider-container" :class="slideClass">
       <div v-for="src in currentSlide.images" :key="src" class="slide-item">
-        <img :src="src" :alt="currentSlide.alt" loading="lazy" decoding="async" />
+        <img :src="src" loading="lazy" decoding="async" />
       </div>
     </div>
 

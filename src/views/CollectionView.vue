@@ -42,7 +42,6 @@
               <div v-for="image in product.images" :key="image" :class="product.imageWrapper || 'image-frame'">
                 <img
                   :src="image"
-                  :alt="product.title"
                   loading="lazy"
                   decoding="async"
                 />
@@ -67,13 +66,12 @@
               :key="index"
               :class="product.imageWrapper || 'placeholder'"
             >
-              <img
-                class="placeholder-image"
-                :src="placeholderImageFor(product, index)"
-                :alt="`${product.title} placeholder image`"
-                loading="lazy"
-                decoding="async"
-              />
+                <img
+                  class="placeholder-image"
+                  :src="placeholderImageFor(product, index)"
+                  loading="lazy"
+                  decoding="async"
+                />
             </div>
           </template>
         </div>

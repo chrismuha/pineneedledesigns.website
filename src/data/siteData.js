@@ -578,7 +578,6 @@ const allHomeSections = [
         price: 'TBD',
         description: 'Brief Description',
         image: '/images/comingsoon/adkbridalcomingsoon.webp',
-        alt: 'Placeholder item',
       },
       */
     ],
@@ -596,7 +595,6 @@ const allHomeSections = [
         price: 'TBD',
         description: 'Brief Description',
         image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
-        alt: 'Placeholder item',
       },
       */
     ],
@@ -618,23 +616,18 @@ export const otherCollections = visibleCollectionPages.map((collection) => ({
 export const sliderSlides = [
   {
     images: ['/images/1a.webp'],
-    alt: 'Featured collection preview',
   },
   {
     images: ['/images/2b.webp'],
-    alt: 'Featured collection preview',
   },
   {
     images: ['/images/3.webp'],
-    alt: 'Featured collection preview',
   },
   {
     images: ['/images/4.webp'],
-    alt: 'Featured design highlight',
   },
   {
     images: ['/images/5.webp'],
-    alt: 'Featured product highlight',
   },
 ]
 

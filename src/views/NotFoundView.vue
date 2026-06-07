@@ -7,7 +7,6 @@
           loading="lazy"
           decoding="async"
           :src="logoSrc"
-          alt="Muha Computer Repair Logo Light"
           class="center logo"
         />
       </div>

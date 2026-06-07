@@ -28,11 +28,11 @@
       <div class="brand">
         <div class="brand-logos" role="presentation">
           <router-link to="/" aria-label="Pine Needle Designs home">
-            <img src="/images/1a.webp" alt="Pine Needle Designs Logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
+            <img src="/images/1a.webp" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
           </router-link>
           <span class="brand-divider" aria-hidden="true"></span>
           <router-link to="/" aria-label="Pine Needle Designs secondary home logo">
-            <img src="/images/4.webp" alt="Pine Needle Designs secondary logo" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
+            <img src="/images/4.webp" width="250" height="250" loading="eager" fetchpriority="high" decoding="async" />
           </router-link>
         </div>
       </div>
