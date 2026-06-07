@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp CNAME docs/CNAME && mkdir -p docs/videos && rsync -a --include='*/' --include='*.webm' --exclude='*' videos/ docs/videos/",
+    "build": "vite build && cp CNAME docs/CNAME && mkdir -p docs/images docs/videos && rsync -a images/ docs/images/ && rsync -a --include='*/' --include='*.webm' --exclude='*' videos/ docs/videos/",
     "preview": "vite preview",
     "server": "node server.js",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\""

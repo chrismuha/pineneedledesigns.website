@@ -744,6 +744,10 @@ header {
     max-height: clamp(210px, 30vw, 300px);
 }
 
+.hero-card--new-arrivals .cta {
+    margin-bottom: 18px;
+}
+
 .hero-card--new-arrivals .hero-placeholder-stack {
     gap: 12px;
 }
