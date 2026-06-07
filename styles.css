@@ -2050,10 +2050,48 @@ footer>section {
             width: min(100%, 720px);
         }
 
-        .hero-hurry--left,
-        .hero-hurry--bunny,
+        .hero-card .hero-images--boots {
+            width: fit-content;
+            max-width: 100%;
+            align-items: flex-start;
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .hero-images--boots .hero-2 {
+            align-self: flex-start;
+            object-position: left center;
+        }
+
         .hero-images--with-caption .hero-hurry {
+            text-align: left;
+        }
+
+        .hero-hurry--left,
+        .hero-hurry--bunny {
             text-align: center;
+        }
+
+        .collections>.container {
+            padding-left: 76px;
+            padding-right: 76px;
+        }
+
+        .collections-page-header h1 {
+            font-size: clamp(22pt, 8vw, 30pt);
+        }
+
+        .collection-group h3 {
+            font-size: clamp(13pt, 5vw, 16pt);
+            line-height: 1.15;
+        }
+
+        .collection-list {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .collection-card {
+            padding: 22px 12px;
         }
 
         .hide-sm {

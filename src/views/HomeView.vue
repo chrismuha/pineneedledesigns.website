@@ -105,7 +105,7 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
-            <div class="hero-images hero-images--with-caption">
+            <div class="hero-images hero-images--with-caption hero-images--boots">
               <img loading="lazy" class="hero-2" alt="White Christmas Boots" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
               <p class="hero-hurry hero-hurry--inline">Hurry before they sell out!</p>
             </div>

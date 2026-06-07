@@ -5,6 +5,10 @@
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
       </a>
+      <router-link to="/collections" aria-label="Browse all collections">
+        <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+        <span>Collections</span>
+      </router-link>
       <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>First Fitting</span>
