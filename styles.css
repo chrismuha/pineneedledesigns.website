@@ -94,6 +94,13 @@ img {
     display: block;
 }
 
+.bunny-image {
+    align-self: flex-start;
+    margin-left: 0;
+    margin-right: auto;
+    object-position: left center;
+}
+
 .container {
     max-width: var(--container);
     margin: 0 auto;
@@ -600,27 +607,33 @@ header {
 }
 
 .hero-hurry {
-    text-align: center;
+    width: fit-content;
+    max-width: 100%;
+    color: var(--brand-red);
+    background: var(--white);
+    border: 1px solid var(--brand-red-45);
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
     font-weight: 700;
-    color: var(--hurry-red);
-    letter-spacing: .05em;
-    margin: 0 0 24px;
-    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+    margin: 8px 0 18px;
+    padding: 7px 12px;
+    text-align: left;
 }
 
 .hero-hurry--inline {
     margin: 0;
     text-transform: none;
-    font-size: 11pt;
-    letter-spacing: 0.08em;
+    font-size: 10pt;
 }
 
 .hero-hurry--left {
-    text-align: center;
+    align-self: flex-start;
 }
 
 .hero-hurry--bunny {
-    text-align: center;
+    align-self: flex-start;
 }
 
 .hero-grid {
@@ -1292,20 +1305,29 @@ footer .footer-actions a:focus-visible {
 }
 
 @media (max-width: 640px) {
+    main {
+        padding-bottom: 96px;
+    }
+
     footer .footer-actions {
-        top: 12px;
-        right: 14px;
-        width: 126px;
-        border-radius: 22px;
+        top: auto;
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        left: 12px;
+        width: auto;
+        flex-direction: row;
+        justify-content: center;
+        border-radius: 999px;
     }
 
     footer .footer-actions a {
         flex-direction: column;
         gap: 3px;
-        width: 100%;
+        flex: 1 1 0;
+        min-width: 0;
         height: auto;
-        min-height: 54px;
-        padding: 6px 10px;
+        min-height: 52px;
+        padding: 6px 4px;
     }
 
     footer .footer-actions span {
@@ -2082,11 +2104,6 @@ footer>section {
 
         .hero-images--with-caption .hero-hurry {
             text-align: left;
-        }
-
-        .hero-hurry--left,
-        .hero-hurry--bunny {
-            text-align: center;
         }
 
         .collections-catalog>.container {

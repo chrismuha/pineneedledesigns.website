@@ -71,10 +71,10 @@
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop Now</a>
             </div>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
-              <p class="hero-hurry hero-hurry--inline hero-hurry--left">Hurry before they sell out!</p>
-              <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
-              <img loading="lazy" decoding="async" class="hero-card__placeholder" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+              <img loading="lazy" decoding="async" class="hero-card__placeholder bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-card__placeholder bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
             </div>
           </div>
         </article>
@@ -87,11 +87,11 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
             </div>
-            <img loading="lazy" decoding="async" class="hero-bunny" alt="I Hare You" src="/images/bunny.webp" />
-            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">Hurry before they sell out!</p>
+            <img loading="lazy" decoding="async" class="hero-bunny bunny-image" alt="I Hare You" src="/images/bunny.webp" />
+            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
+              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall bunny-image" alt="Placeholder product preview" src="/images/bunny.webp" />
             </div>
           </div>
         </article>
@@ -106,7 +106,7 @@
             </div>
             <div class="hero-images hero-images--with-caption hero-images--boots">
               <img loading="lazy" class="hero-2" alt="White Christmas Boots" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
-              <p class="hero-hurry hero-hurry--inline">Hurry before they sell out!</p>
+              <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
         </article>
@@ -121,7 +121,7 @@
             </div>
             <div class="hero-images hero-images--with-caption">
               <img loading="lazy" class="hero-3" alt="Coming Soon" src="/images/comingsoon/comingsoon1.webp" />
-              <p class="hero-hurry hero-hurry--inline">Hurry before they sell out! You would not want to miss out on the chance at opportunities in life this dress could send to you. Get it now before it is too late; it may not return next season!</p>
+              <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
         </article>
@@ -131,14 +131,14 @@
     <section>
       <div class="container split">
         <div class="tile">
-          <img loading="lazy" alt="Selection of bottoms" src="/images/bunny.webp" />
+          <img loading="lazy" class="bunny-image" alt="Selection of bottoms" src="/images/bunny.webp" />
           <div class="copy">
             <h3>Explore Bottoms</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
         <div class="tile">
-          <img loading="lazy" alt="Selection of tops" src="/images/bunny.webp" />
+          <img loading="lazy" class="bunny-image" alt="Selection of tops" src="/images/bunny.webp" />
           <div class="copy">
             <h3>Explore Tops</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>

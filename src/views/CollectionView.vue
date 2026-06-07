@@ -68,6 +68,7 @@
               :class="product.imageWrapper || 'placeholder'"
             >
               <img
+                class="bunny-image"
                 src="/images/bunny.webp"
                 :alt="`${product.title} placeholder image`"
                 loading="lazy"

@@ -44,7 +44,7 @@
       >
         <div class="footer-left">
           <p class="hare">OH BEAUTIFUL YOU.......AND ME TOO!</p>
-          <img loading="lazy" decoding="async" src="/images/bunny.webp" alt="bunny" />
+          <img loading="lazy" decoding="async" class="bunny-image" src="/images/bunny.webp" alt="bunny" />
         </div>
 
         <div class="footer-right">
