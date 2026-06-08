@@ -5,12 +5,18 @@
         <h1>Browse All Collections</h1>
       </div>
 
-      <section v-for="group in collectionGroups" :key="group.title" class="collection-group">
+      <section v-for="(group, groupIndex) in collectionGroups" :key="group.title" class="collection-group">
         <h3>{{ group.title }}</h3>
         <div class="grid grid-4 collection-list">
-          <article v-for="collection in group.collections" :key="collection.slug" class="card collection-card">
+          <article v-for="(collection, collectionIndex) in group.collections" :key="collection.slug" class="card collection-card">
             <router-link class="collection-link" :to="collection.path">
-              <img class="collection-card__image" :src="collection.cardImage" loading="lazy" decoding="async" />
+              <img
+                class="collection-card__image"
+                :src="collection.cardImage"
+                :loading="collectionImageLoading(groupIndex, collectionIndex)"
+                :fetchpriority="collectionImagePriority(groupIndex, collectionIndex)"
+                decoding="async"
+              />
               <div class="body">
                 <h4>{{ collection.title }}</h4>
                 <div class="subtle">{{ collection.count }} items</div>
@@ -54,4 +60,10 @@ const collectionGroups = [
     collections: visibleCollectionPages.filter((collection) => !groupedSlugs.has(collection.slug)),
   },
 ].filter((group) => group.collections.length > 0)
+
+const collectionImageLoading = (groupIndex, collectionIndex) =>
+  groupIndex === 0 && collectionIndex < 4 ? 'eager' : 'lazy'
+
+const collectionImagePriority = (groupIndex, collectionIndex) =>
+  groupIndex === 0 && collectionIndex === 0 ? 'high' : 'auto'
 </script>

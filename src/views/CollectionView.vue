@@ -10,7 +10,7 @@
     </div>
 
     <div v-if="page.products.length" class="product-grid">
-      <article v-for="product in page.products" :key="product.title" class="product-card">
+      <article v-for="(product, productIndex) in page.products" :key="product.title" class="product-card">
         <header>
           <h3>{{ product.title }}</h3>
           <div class="product-meta">
@@ -52,7 +52,8 @@
                 <img
                   class="placeholder-image"
                   :src="placeholderImageFor(product, index)"
-                  loading="lazy"
+                  :loading="placeholderImageLoading(productIndex, index)"
+                  :fetchpriority="placeholderImagePriority(productIndex, index)"
                   decoding="async"
                 />
             </div>
@@ -133,6 +134,10 @@ const productMedia = (product) => [
 const defaultPlaceholderImage = '/images/comingsoon/comingsoon1.webp'
 const placeholderImageFor = (product, index) =>
   product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
+const placeholderImageLoading = (productIndex, imageIndex) =>
+  productIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'
+const placeholderImagePriority = (productIndex, imageIndex) =>
+  productIndex === 0 && imageIndex === 0 ? 'high' : 'auto'
 
 const addToCart = async (product) => {
   const selectedProduct = {

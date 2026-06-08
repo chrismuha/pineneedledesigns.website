@@ -12,9 +12,15 @@
         </div>
 
         <div v-if="section.cards.length" class="grid grid-4">
-          <article v-for="card in section.cards" :key="card.title + card.pill" class="product card disabled">
+          <article v-for="(card, cardIndex) in section.cards" :key="card.title + card.pill" class="product card disabled">
             <router-link :to="section.path">
-              <img loading="lazy" decoding="async" class="media" :src="card.image" />
+              <img
+                :loading="featuredImageLoading(cardIndex)"
+                :fetchpriority="featuredImagePriority(cardIndex)"
+                decoding="async"
+                class="media"
+                :src="card.image"
+              />
             </router-link>
             <div class="body">
               <div class="pill">{{ card.pill }}</div>
@@ -37,19 +43,29 @@
 
         <div class="grid grid-6">
           <article
-            v-for="collection in otherCollections"
+            v-for="(collection, collectionIndex) in otherCollections"
             :key="collection.slug"
             :class="['card', { disabled: collection.count === 0 }]"
           >
             <router-link v-if="collection.count > 0" class="card-link" :to="collection.path">
-              <img loading="lazy" decoding="async" class="media" :src="collection.cardImage" />
+              <img
+                :loading="collectionImageLoading(collectionIndex)"
+                decoding="async"
+                class="media"
+                :src="collection.cardImage"
+              />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">{{ collection.count }} items</div>
               </div>
             </router-link>
             <div v-else>
-              <img loading="lazy" decoding="async" class="media" :src="collection.cardImage" />
+              <img
+                :loading="collectionImageLoading(collectionIndex)"
+                decoding="async"
+                class="media"
+                :src="collection.cardImage"
+              />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">0 items</div>
@@ -105,7 +121,7 @@
               <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption hero-images--boots">
-              <img loading="lazy" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
+              <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -120,7 +136,7 @@
               <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption">
-              <img loading="lazy" class="hero-3" src="/images/comingsoon/comingsoon1.webp" />
+              <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon1.webp" />
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -131,14 +147,14 @@
     <section>
       <div class="container split shop-split">
         <div class="tile">
-          <img loading="lazy" class="placeholder-image" :src="homePlaceholderImages.bottomsTile" />
+          <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.bottomsTile" />
           <div class="copy">
             <h3>Explore Bottoms</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
         <div class="tile">
-          <img loading="lazy" class="placeholder-image" :src="homePlaceholderImages.topsTile" />
+          <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.topsTile" />
           <div class="copy">
             <h3>Explore Tops</h3>
             <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
@@ -176,4 +192,8 @@ const homePlaceholderImages = {
   bottomsTile: comingSoonZ,
   topsTile: comingSoonZ,
 }
+
+const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
+const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
+const collectionImageLoading = (index) => (index < 2 ? 'eager' : 'lazy')
 </script>

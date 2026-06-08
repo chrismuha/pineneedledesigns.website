@@ -413,7 +413,7 @@ export const collectionPages = [
     products: [
       {
         id: 34,
-        title: 'The Crwned Haire Vest',
+        title: 'The Crowned Haire Vest',
         price: 77,
         meta: ['Price: $77', 'Size: M/L'],
         description: 'This bunny is picture perfect with her resting in the woods of the Adirondacks wearing her crown of gold and rhinestones. 2 gold flower brooches popping out. Chain of gold leaves and rainbow crystals shine down on her. Rust embroidery travel around the denim vest. Lace and pearls outline the hem and neck. 2 front pockets are trimmed in either pearls and lace or stamped ink trees and a chain of leaves and crystals. One of a kind Country Chic or Whimsical Fairy.',

@@ -4,7 +4,8 @@
       <div class="page-header-design" id="rectangle1"></div>
       <div id="rectangle2">
         <img
-          loading="lazy"
+          loading="eager"
+          fetchpriority="high"
           decoding="async"
           :src="logoSrc"
           class="center logo"
