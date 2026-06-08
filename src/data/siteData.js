@@ -408,7 +408,7 @@ export const collectionPages = [
     title: 'Denim & Lace',
     path: '/collections/denim-and-lace',
     count: 0,
-    cardImage: '/images/whimsical-fairy/whim1.jpg',
+    cardImage: '/images/whimsical-fairy/whim1.webp',
     description: 'Limited-run upcycled pieces crafted to stand out.',
     products: [
       {
@@ -418,12 +418,12 @@ export const collectionPages = [
         meta: ['Price: $77', 'Size: M/L'],
         description: 'This bunny is picture perfect with her resting in the woods of the Adirondacks wearing her crown of gold and rhinestones. 2 gold flower brooches popping out. Chain of gold leaves and rainbow crystals shine down on her. Rust embroidery travel around the denim vest. Lace and pearls outline the hem and neck. 2 front pockets are trimmed in either pearls and lace or stamped ink trees and a chain of leaves and crystals. One of a kind Country Chic or Whimsical Fairy.',
         images: [
-          '/images/whimsical-fairy/whim1.jpg',
-          '/images/whimsical-fairy/whim2.jpg',
-          '/images/whimsical-fairy/whim3.jpg',
-          '/images/whimsical-fairy/whim4.jpg',
-          '/images/whimsical-fairy/whim5.jpg',
-          '/images/whimsical-fairy/whim6.jpg',
+          '/images/whimsical-fairy/whim1.webp',
+          '/images/whimsical-fairy/whim2.webp',
+          '/images/whimsical-fairy/whim3.webp',
+          '/images/whimsical-fairy/whim4.webp',
+          '/images/whimsical-fairy/whim5.webp',
+          '/images/whimsical-fairy/whim6.webp',
         ],
         videos: ['/videos/whimsical-fairy/whim.webm'],
         imageWrapper: 'image-frame',
