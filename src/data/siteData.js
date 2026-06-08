@@ -413,14 +413,20 @@ export const collectionPages = [
     products: [
       {
         id: 34,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
+        title: 'Whimsical Fairy',
+        price: 77,
+        meta: ['Price: $77', 'Size: TBD'],
+        description: 'This bunny is picture perfect with her resting in the woods of the Adirondacks wearing her crown of gold and rhinestones. 2 gold flower brooches popping out. Chain of gold leaves and rainbow crystals shine down on her. Rust embroidery travel around the denim vest. Lace and pearls outline the hem and neck. 2 front pockets are trimmed in either pearls and lace or stamped ink trees and a chain of leaves and crystals. One of a kind Country Chic or Whimsical.',
+        images: [
+          '/images/whimsical-fairy/whim1.webp',
+          '/images/whimsical-fairy/whim2.webp',
+          '/images/whimsical-fairy/whim3.webp',
+          '/images/whimsical-fairy/whim4.webp',
+          '/images/whimsical-fairy/whim5.webp',
+          '/images/whimsical-fairy/whim6.webp',
+        ],
+        videos: ['/videos/whimsical-fairy/whim.webm'],
         imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon1.webp',
       },
       {
         id: 35,

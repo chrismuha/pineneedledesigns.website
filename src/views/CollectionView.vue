@@ -38,27 +38,10 @@
         </div>
         <div class="product-images">
           <template v-if="hasMedia(product)">
-            <template v-if="product.images && product.images.length">
-              <div v-for="image in product.images" :key="image" :class="product.imageWrapper || 'image-frame'">
-                <img
-                  :src="image"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </template>
-            <template v-if="product.videos && product.videos.length">
-              <div v-for="video in product.videos" :key="video" :class="product.imageWrapper || 'image-frame'">
-                <video
-                  :src="video"
-                  :aria-label="product.title"
-                  controls
-                  muted
-                  playsinline
-                  preload="metadata"
-                ></video>
-              </div>
-            </template>
+            <MediaSlider
+              :media="productMedia(product)"
+              :label="`${product.title} media gallery`"
+            />
           </template>
           <template v-else>
             <div
@@ -90,6 +73,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import MediaSlider from '../components/MediaSlider.vue'
 import ProductOptionSelect from '../components/ProductOptionSelect.vue'
 import { collectionPages } from '../data/siteData'
 import { useCartStore } from '../stores/cart'
@@ -134,6 +118,18 @@ const hasRequiredOptions = (product) => {
 const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
+const productMedia = (product) => [
+  ...(product.images || []).map((src) => ({
+    src,
+    type: 'image',
+    alt: product.title,
+  })),
+  ...(product.videos || []).map((src) => ({
+    src,
+    type: 'video',
+    alt: product.title,
+  })),
+]
 const defaultPlaceholderImage = '/images/comingsoon/comingsoon1.webp'
 const placeholderImageFor = (product, index) =>
   product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
