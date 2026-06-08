@@ -26,7 +26,7 @@
           :aria-hidden="index !== currentIndex"
         >
           <video
-            v-if="item.type === 'video'"
+            v-if="item.type === 'video' && shouldLoad(index)"
             class="media-slider__media"
             :src="item.src"
             :poster="item.poster"
@@ -34,17 +34,22 @@
             controls
             muted
             playsinline
-            preload="metadata"
+            :preload="index === currentIndex ? 'metadata' : 'none'"
           ></video>
           <img
-            v-else
+            v-else-if="shouldLoad(index)"
             class="media-slider__media"
             :src="item.src"
             :alt="item.alt || ''"
-            loading="lazy"
+            :loading="index === currentIndex ? 'eager' : 'lazy'"
             decoding="async"
             draggable="false"
           />
+          <div
+            v-else
+            class="media-slider__placeholder"
+            aria-hidden="true"
+          ></div>
         </div>
       </div>
     </div>
@@ -85,7 +90,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   media: {
@@ -102,6 +107,7 @@ const currentIndex = ref(0)
 const dragStartX = ref(0)
 const dragOffsetX = ref(0)
 const isDragging = ref(false)
+const loadedIndexes = ref(new Set([0]))
 
 const imageExtensions = ['avif', 'gif', 'jpeg', 'jpg', 'png', 'webp']
 const videoExtensions = ['mp4', 'mov', 'ogg', 'webm']
@@ -149,6 +155,26 @@ const mediaTypeLabel = computed(() => 'media item')
 const trackStyle = computed(() => ({
   transform: `translateX(calc(-${currentIndex.value * 100}% + ${dragOffsetX.value}px))`,
 }))
+
+const queueNearbyMedia = (index) => {
+  if (!mediaCount.value) return
+
+  const nextIndexes = new Set(loadedIndexes.value)
+  nextIndexes.add(index)
+  nextIndexes.add((index + 1) % mediaCount.value)
+  nextIndexes.add((index - 1 + mediaCount.value) % mediaCount.value)
+  loadedIndexes.value = nextIndexes
+}
+
+const shouldLoad = (index) => loadedIndexes.value.has(index)
+
+watch(
+  currentIndex,
+  (index) => {
+    queueNearbyMedia(index)
+  },
+  { immediate: true }
+)
 
 const goTo = (index) => {
   if (!mediaCount.value) return
@@ -242,6 +268,11 @@ const cancelDrag = () => {
   height: 100%;
   object-fit: contain;
   user-select: none;
+}
+
+.media-slider__placeholder {
+  width: 100%;
+  height: 100%;
 }
 
 .media-slider__button {

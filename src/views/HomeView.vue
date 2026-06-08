@@ -42,14 +42,14 @@
             :class="['card', { disabled: collection.count === 0 }]"
           >
             <router-link v-if="collection.count > 0" class="card-link" :to="collection.path">
-              <img loading="lazy" class="media" :src="collection.cardImage" />
+              <img loading="lazy" decoding="async" class="media" :src="collection.cardImage" />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">{{ collection.count }} items</div>
               </div>
             </router-link>
             <div v-else>
-              <img loading="lazy" class="media" :src="collection.cardImage" />
+              <img loading="lazy" decoding="async" class="media" :src="collection.cardImage" />
               <div class="body">
                 <h3>{{ collection.title }}</h3>
                 <div class="subtle">0 items</div>
