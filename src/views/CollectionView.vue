@@ -131,7 +131,7 @@ const productMedia = (product) => [
     alt: product.title,
   })),
 ]
-const defaultPlaceholderImage = '/images/comingsoon/comingsoon1.webp'
+const defaultPlaceholderImage = '/images/comingsoon/comingsoon015.webp'
 const placeholderImageFor = (product, index) =>
   product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
 const placeholderImageLoading = (productIndex, imageIndex) =>

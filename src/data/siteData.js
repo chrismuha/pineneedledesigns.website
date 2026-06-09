@@ -68,7 +68,7 @@ export const collectionPages = [
     title: 'Bracelets',
     path: '/collections/bracelets',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon1.webp',
     description: 'Handwoven metals for texture.',
     products: [
       /*
@@ -110,7 +110,7 @@ export const collectionPages = [
     title: 'Cuffs',
     path: '/collections/cuffs',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon001.webp',
     description: 'Bold silhouette with tactile finish.',
     products: [
       /*
@@ -156,7 +156,7 @@ export const collectionPages = [
     title: 'Hat Bands',
     path: '/collections/hat-bands',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon002.webp',
     description: 'Feather accents with beaded thread.',
     products: [
       /*
@@ -221,7 +221,7 @@ export const collectionPages = [
     title: 'Jeans',
     path: '/collections/jeans',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon003.webp',
     description: 'Sculpted fit with vintage wash.',
     products: [
       /*
@@ -242,7 +242,7 @@ export const collectionPages = [
     title: 'Necklaces',
     path: '/collections/necklaces',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon004.webp',
     description: 'Mix of chains and charms.',
     products: [
       /*
@@ -366,7 +366,7 @@ export const collectionPages = [
     title: 'Purses',
     path: '/collections/purses',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon005.webp',
     description: 'Structured shape with mixed leather.',
     products: [
       /*
@@ -387,7 +387,7 @@ export const collectionPages = [
     title: 'Shorts',
     path: '/collections/shorts',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon006.webp',
     description: 'A-line shape with luxe hardware.',
     products: [
       /*
@@ -438,7 +438,7 @@ export const collectionPages = [
     title: 'Upcycled Denim',
     path: '/collections/upcycled-denim',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon007.webp',
     description: 'One-of-a-kind patchwork silhouette.',
     products: [
       /*
@@ -459,7 +459,7 @@ export const collectionPages = [
     title: 'Summer/Fall',
     path: '/collections/summer-fall',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon008.webp',
     description: 'Warm-weather statement pieces and early-order seasonal favorites.',
     products: [
       {
@@ -471,7 +471,7 @@ export const collectionPages = [
         description: 'Placeholder description.',
         imageWrapper: 'image-frame',
         imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon1.webp',
+        placeholderImage: '/images/comingsoon/comingsoon009.webp',
       },
       {
         id: 51,
@@ -482,7 +482,7 @@ export const collectionPages = [
         description: 'Placeholder description.',
         imageWrapper: 'image-frame',
         imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon2.webp',
+        placeholderImage: '/images/comingsoon/comingsoon010.webp',
       },
     ],
   },
@@ -491,7 +491,7 @@ export const collectionPages = [
     title: 'Vests',
     path: '/collections/vests',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon011.webp',
     description: 'Edgy layers with artisanal trim.',
     products: [
       /*
@@ -512,7 +512,7 @@ export const collectionPages = [
     title: 'Winter/Spring',
     path: '/collections/winter-spring',
     count: 0,
-    cardImage: '/images/comingsoon/comingsoon2.webp',
+    cardImage: '/images/comingsoon/comingsoon012.webp',
     description: "Cold-weather favorites and spring pieces we can't stop thinking about.",
     products: [
       {
@@ -524,7 +524,7 @@ export const collectionPages = [
         description: 'Placeholder description.',
         imageWrapper: 'image-frame',
         imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon1.webp',
+        placeholderImage: '/images/comingsoon/comingsoon013.webp',
       },
       {
         id: 53,
@@ -535,7 +535,7 @@ export const collectionPages = [
         description: 'Placeholder description.',
         imageWrapper: 'image-frame',
         imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon2.webp',
+        placeholderImage: '/images/comingsoon/comingsoon014.webp',
       },
     ],
   },
@@ -575,7 +575,7 @@ const allHomeSections = [
         meta: 'Price: TBD • Size: TBD',
         price: 'TBD',
         description: 'Brief Description',
-        image: '/images/comingsoon/adkbridalcomingsoon.webp',
+        image: '/images/comingsoon/comingsoon025.webp',
       },
       */
     ],

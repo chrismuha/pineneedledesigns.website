@@ -136,7 +136,7 @@
               <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption">
-              <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon1.webp" />
+              <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon016.webp" />
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -180,17 +180,24 @@
 <script setup>
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
-import comingSoonZ from '../../images/comingsoonz.webp'
+import comingSoon017 from '../../images/comingsoon/comingsoon017.webp'
+import comingSoon018 from '../../images/comingsoon/comingsoon018.webp'
+import comingSoon019 from '../../images/comingsoon/comingsoon019.webp'
+import comingSoon020 from '../../images/comingsoon/comingsoon020.webp'
+import comingSoon021 from '../../images/comingsoon/comingsoon021.webp'
+import comingSoon022 from '../../images/comingsoon/comingsoon022.webp'
+import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
+import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
 
 const homePlaceholderImages = {
-  denimFeature: comingSoonZ,
-  denimFirstCard: comingSoonZ,
-  denimSecondCard: comingSoonZ,
-  newArrivalsFeature: comingSoonZ,
-  newArrivalsFirstCard: comingSoonZ,
-  newArrivalsSecondCard: comingSoonZ,
-  bottomsTile: comingSoonZ,
-  topsTile: comingSoonZ,
+  denimFeature: comingSoon017,
+  denimFirstCard: comingSoon018,
+  denimSecondCard: comingSoon019,
+  newArrivalsFeature: comingSoon020,
+  newArrivalsFirstCard: comingSoon021,
+  newArrivalsSecondCard: comingSoon022,
+  bottomsTile: comingSoon023,
+  topsTile: comingSoon024,
 }
 
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
