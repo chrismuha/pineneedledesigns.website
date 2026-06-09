@@ -315,11 +315,11 @@ export const collectionPages = [
     path: '/collections/shirts',
     count: 0,
     cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
-    description: 'Blinged Out shirts and sweatshirts made to stand out.',
+    description: 'Blinged Out T-Shirts and Sweatshirts made to stand out.',
     products: [
       {
         id: 38,
-        title: 'On a Bad Day there’s Always Lipstick Blinged Out sweatshirt',
+        title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
         price: 58,
         meta: ['Price: $58', 'Shown in Sand, Available in White.'],
         description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt in the color Sand. Also comes in white.",
