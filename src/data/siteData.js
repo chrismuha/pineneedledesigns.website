@@ -433,6 +433,22 @@ export const collectionPages = [
         videos: ['/videos/whimsical-fairy/whim.webm'],
         imageWrapper: 'image-frame',
       },
+      {
+        id: 41,
+        title: 'Bracelet Brandi',
+        price: 29,
+        meta: ['Price: $29', 'Size: 7 to 7.5"'],
+        description: 'Brandi is a bracelet with a denim band. She is trimmed in lace flowers and has an ivory floral brooch with 3 large pearls and scattered rhinestones. Attached is bridal leaf lace with a triple circle and tiny rhinestones.',
+        images: [
+          '/images/denimlace/brandybracelet/brandybracelet1.webp',
+          '/images/denimlace/brandybracelet/brandybracelet2.webp',
+          '/images/denimlace/brandybracelet/brandybracelet3.webp',
+          '/images/denimlace/brandybracelet/brandybracelet4.webp',
+          '/images/denimlace/brandybracelet/brandybracelet5.webp',
+        ],
+        videos: ['/videos/denimlace/brandybracelet/braceletbrandy.webm'],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {
