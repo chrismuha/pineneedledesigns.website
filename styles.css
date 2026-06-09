@@ -755,9 +755,10 @@ header {
 }
 
 .hero-card--new-arrivals .hero-placeholder-inline--tall {
-    height: 230px;
+    height: clamp(210px, 30vw, 300px);
     margin-left: auto;
     margin-right: auto;
+    object-fit: cover;
     object-position: center center;
 }
 
@@ -1289,7 +1290,7 @@ section {
     min-height: 0;
     margin-left: auto;
     margin-right: auto;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center center;
 }
 
