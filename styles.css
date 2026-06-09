@@ -99,6 +99,7 @@ img {
     align-self: flex-start;
     margin-left: 0;
     margin-right: auto;
+    object-fit: contain;
     object-position: left center;
 }
 
@@ -684,7 +685,7 @@ header {
     border-radius: 20px;
     height: 220px;
     box-shadow: inset 0 0 0 1px var(--black-04);
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
 }
 
@@ -709,7 +710,7 @@ header {
     background: var(--white);
     height: 260px;
     box-shadow: inset 0 0 0 1px var(--black-04);
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
 }
 
@@ -961,6 +962,12 @@ section {
     object-position: center;
     filter: saturate(1.05);
     transition: transform 220ms ease;
+}
+
+.coming-soon-image {
+    object-fit: contain !important;
+    object-position: center;
+    background: var(--white);
 }
 
 .collection-link::after {
@@ -1270,7 +1277,7 @@ section {
     width: 100%;
     height: clamp(260px, 32vw, 420px);
     min-height: 0;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .tile .copy {
@@ -2046,7 +2053,7 @@ footer>section {
     .product-images .placeholder img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
 @media (max-width: 760px) {

@@ -477,6 +477,24 @@ export const collectionPages = [
         videos: ['/videos/denimlace/brandybracelet/braceletbrandy.webm'],
         imageWrapper: 'image-frame',
       },
+      {
+        id: 62,
+        title: 'Adeline Bracelet',
+        price: 32,
+        meta: ['Price: $32', 'Size: 7-8"', 'Stretches to 8"'],
+        description: 'Adeline is a country chic bracelet. Denim, lace, pink chiffon, and a matching rose colored cameo. Trimmed in gold boucle ribbon and a string of pearls. Fastens in the back with a pearl flower and centered rhinestone. Closure is a corded elastic. Adeline stretches to 8".',
+        images: [
+          '/images/denimlace/adelinebracelet/adeline-bracelet-1.webp',
+          '/images/denimlace/adelinebracelet/adeline-bracelet-2.webp',
+          '/images/denimlace/adelinebracelet/adeline-bracelet-3.webp',
+          '/images/denimlace/adelinebracelet/adeline-bracelet-4.webp',
+        ],
+        videos: [
+          '/videos/denimlace/adelinebracelet/adeline-bracelet-01.webm',
+          '/videos/denimlace/adelinebracelet/adeline-bracelet-02.webm',
+        ],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {
@@ -516,6 +534,18 @@ export const collectionPages = [
         ],
         imageWrapper: 'image-frame',
       },
+      {
+        id: 56,
+        title: 'Cowhide Leather Checkered Wallet Wristlet',
+        price: 69,
+        meta: ['Price: $69', 'Size: Orchid', 'Upcycled by j.Gypsie', 'Made in the USA'],
+        description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
+        images: [
+          '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
+          '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet2.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {
@@ -537,18 +567,6 @@ export const collectionPages = [
           '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style1.webp',
           '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style2.webp',
           '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style3.webp',
-        ],
-        imageWrapper: 'image-frame',
-      },
-      {
-        id: 56,
-        title: 'Cowhide Leather Checkered Wallet Wristlet',
-        price: 69,
-        meta: ['Price: $69', 'Size: Orchid', 'Upcycled by j.Gypsie', 'Made in the USA'],
-        description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
-        images: [
-          '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
-          '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet2.webp',
         ],
         imageWrapper: 'image-frame',
       },

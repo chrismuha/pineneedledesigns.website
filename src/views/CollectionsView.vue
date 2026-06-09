@@ -11,7 +11,7 @@
           <article v-for="(collection, collectionIndex) in group.collections" :key="collection.slug" class="card collection-card">
             <router-link class="collection-link" :to="collection.path">
               <img
-                class="collection-card__image"
+                :class="['collection-card__image', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
                 :loading="collectionImageLoading(groupIndex, collectionIndex)"
                 :fetchpriority="collectionImagePriority(groupIndex, collectionIndex)"
@@ -66,4 +66,6 @@ const collectionImageLoading = (groupIndex, collectionIndex) =>
 
 const collectionImagePriority = (groupIndex, collectionIndex) =>
   groupIndex === 0 && collectionIndex === 0 ? 'high' : 'auto'
+
+const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
 </script>

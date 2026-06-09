@@ -51,7 +51,7 @@
               <img
                 :loading="collectionImageLoading(collectionIndex)"
                 decoding="async"
-                class="media"
+                :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
               />
               <div class="body">
@@ -63,7 +63,7 @@
               <img
                 :loading="collectionImageLoading(collectionIndex)"
                 decoding="async"
-                class="media"
+                :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
               />
               <div class="body">
@@ -203,4 +203,5 @@ const homePlaceholderImages = {
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
 const collectionImageLoading = (index) => (index < 2 ? 'eager' : 'lazy')
+const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
 </script>
