@@ -538,7 +538,7 @@ export const collectionPages = [
         id: 56,
         title: 'Cowhide Leather Checkered Wallet Wristlet',
         price: 69,
-        meta: ['Price: $69', 'Size: Orchid', 'Upcycled by j.Gypsie', 'Made in the USA'],
+        meta: ['Price: $69', 'Color: Orchid', 'Size: 3.5" x 5"', 'Upcycled by j.Gypsie', 'Made in the USA'],
         description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
         images: [
           '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
