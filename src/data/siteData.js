@@ -428,17 +428,6 @@ export const collectionPages = [
         videos: ['/videos/whimsical-fairy/whim.webm'],
         imageWrapper: 'image-frame',
       },
-      {
-        id: 35,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon2.webp',
-      },
     ],
   },
   {
