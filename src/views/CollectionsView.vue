@@ -35,7 +35,7 @@ import { visibleCollectionPages } from '../data/siteData'
 const categoryOrder = [
   {
     title: 'Clothing Collections',
-    slugs: ['jackets', 'shirts', 'vests', 'jeans', 'shorts', 'upcycled-denim'],
+    slugs: ['jackets', 'shirts', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
   },
   {
     title: 'Jewelry & Accessories',
@@ -43,7 +43,7 @@ const categoryOrder = [
   },
   {
     title: 'Specialty Collections',
-    slugs: ['adirondack-bridal', 'pooch-smooches', 'chic-jewelry'],
+    slugs: ['adirondack-bridal', 'adirondack-chic', 'pooch-smooches', 'chic-jewelry'],
   },
 ]
 

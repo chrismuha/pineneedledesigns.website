@@ -1221,6 +1221,13 @@ section {
     color: var(--ink-2);
 }
 
+.product-maker {
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
 .description {
     margin: 1rem 0;
 }

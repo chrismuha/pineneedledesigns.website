@@ -1,5 +1,6 @@
 const collectionNavLinks = [
   { label: 'Adirondack Bridal', path: '/collections/adirondack-bridal', slug: 'adirondack-bridal' },
+  { label: 'Adirondack Chic', path: '/collections/adirondack-chic', slug: 'adirondack-chic' },
   { label: 'Boot Bands', path: '/collections/boot-bands', slug: 'boot-bands' },
   { label: 'Bracelets', path: '/collections/bracelets', slug: 'bracelets' },
   { label: 'Chic Jewelry', path: '/collections/chic-jewelry', slug: 'chic-jewelry' },
@@ -15,6 +16,8 @@ const collectionNavLinks = [
   { label: 'Shirts', path: '/collections/shirts', slug: 'shirts' },
   { label: 'Shorts', path: '/collections/shorts', slug: 'shorts' },
   { label: 'Summer/Fall', path: '/collections/summer-fall', slug: 'summer-fall' },
+  { label: 'Upcycled Collaboration', path: '/collections/upcycled-collaboration', slug: 'upcycled-collaboration' },
+  { label: 'Upcycled Logo', path: '/collections/upcycled-logo', slug: 'upcycled-logo' },
   { label: 'Upcycled Denim', path: '/collections/upcycled-denim', slug: 'upcycled-denim' },
   { label: 'Vests', path: '/collections/vests', slug: 'vests' },
   { label: 'Winter/Spring', path: '/collections/winter-spring', slug: 'winter-spring' },
@@ -40,6 +43,30 @@ export const collectionPages = [
         imageCount: 1,
       },
       */
+    ],
+  },
+  {
+    slug: 'adirondack-chic',
+    title: 'Adirondack Chic',
+    path: '/collections/adirondack-chic',
+    count: 0,
+    showWhenEmpty: true,
+    cardImage: '/images/adirondack-chic/adirondack-chic-1.webp',
+    description: 'Country-chic Adirondack style with rustic textures, bold details, and handcrafted attitude.',
+    products: [
+      {
+        id: 58,
+        title: 'Turquoise and White Leather Speedy Bag',
+        price: 230,
+        meta: ['Price: $230', 'Size: Small', 'Size: Large (SOLD)'],
+        description: 'Great for us turquoise gals! Adirondack Chic.',
+        images: [
+          '/images/adirondack-chic/adirondack-chic-1.webp',
+          '/images/adirondack-chic/adirondack-chic-2.webp',
+          '/images/comingsoon/comingsoon027.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
     ],
   },
   {
@@ -452,6 +479,118 @@ export const collectionPages = [
     ],
   },
   {
+    slug: 'upcycled-collaboration',
+    title: 'Upcycled Collaboration',
+    path: '/collections/upcycled-collaboration',
+    count: 1,
+    cardImage: '/images/comingsoon/comingsoon034.webp',
+    description: 'Collaborative upcycled pieces with country-chic materials and handcrafted details.',
+    products: [
+      {
+        id: 55,
+        title: 'Adirondack Chic Leather and Cowhide Overnight Duffel Bag',
+        price: 160,
+        meta: ['Price: $160'],
+        maker: 'Made by jGypsie',
+        description: 'A definite for traveling and weekend stays.',
+        images: [
+          '/images/comingsoon/comingsoon034.webp',
+          '/images/comingsoon/comingsoon035.webp',
+          '/images/comingsoon/comingsoon033.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 61,
+        title: 'Leather Fanny Pack with Fringe',
+        price: 99,
+        meta: ['Price: $99'],
+        description: 'Upcycled leather and made by jGypsie in the USA. Convenient back zipper pocket. Great for a day at the rodeo or horse show! You decide.',
+        images: [
+          '/images/comingsoon/comingsoon018.webp',
+          '/images/comingsoon/comingsoon019.webp',
+          '/images/comingsoon/comingsoon017.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+    ],
+  },
+  {
+    slug: 'upcycled-logo',
+    title: 'Upcycled Logo',
+    path: '/collections/upcycled-logo',
+    count: 1,
+    cardImage: '/images/comingsoon/comingsoon026.webp',
+    description: 'Upcycled finds reimagined as one-of-a-kind accessories and statement pieces.',
+    products: [
+      {
+        id: 54,
+        title: 'Upcycled LOGO Barrette',
+        price: 49,
+        meta: ['Price: $49', 'Lv leather French style', 'Hair clip brown', 'Made by jGypsie'],
+        description: 'Lv leather French style. Hair clip brown. Made by jGypsie.',
+        images: [
+          '/images/comingsoon/comingsoon026.webp',
+          '/images/comingsoon/comingsoon030.webp',
+          '/images/comingsoon/comingsoon031.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 56,
+        title: 'Cowhide Leather Checkered Wallet Wristlet',
+        price: 69,
+        meta: ['Price: $69', 'Size: Orchid', 'Upcycled by j.Gypsie', 'Made in the USA'],
+        description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
+        images: [
+          '/images/comingsoon/comingsoon034.webp',
+          '/images/comingsoon/comingsoon035.webp',
+          '/images/comingsoon/comingsoon033.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 57,
+        title: 'Upcycled LV Canvas Pack',
+        price: 79,
+        meta: ['Price: $79', 'Made by jGypsie Designs'],
+        description: 'Perfect for walking with a stroller or dog leash. Made by jGypsie Designs. Fanny pack sling pack bum pack.',
+        images: [
+          '/images/comingsoon/comingsoon032.webp',
+          '/images/comingsoon/comingsoon028.webp',
+          '/images/comingsoon/comingsoon029.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 59,
+        title: 'Upcycled LV Tooled Wristlet or Makeup Bag',
+        price: 88,
+        meta: ['Price: $88'],
+        description: 'All recycled leather and hand tooled for that Adirondack Charm! Great for country Western and North country girls alike!',
+        images: [
+          '/images/comingsoon/comingsoon024.webp',
+          '/images/comingsoon/comingsoon025.webp',
+          '/images/comingsoon/comingsoon023.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 60,
+        title: 'The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag',
+        price: 160,
+        meta: ['Price: $160', 'Color: Rustic Charm and Feminine'],
+        description: 'One of a kind. Nicely concealed back zipper pocket. Love that leather fringe.',
+        images: [
+          '/images/comingsoon/comingsoon022.webp',
+          '/images/comingsoon/comingsoon021.webp',
+          '/images/comingsoon/comingsoon020.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+    ],
+  },
+  {
     slug: 'upcycled-denim',
     title: 'Upcycled Denim',
     path: '/collections/upcycled-denim',
@@ -565,7 +704,7 @@ collectionPages.forEach((page) => {
   page.next = null
 })
 
-export const visibleCollectionPages = collectionPages.filter((page) => page.count > 0 && !page.hidden)
+export const visibleCollectionPages = collectionPages.filter((page) => (page.count > 0 || page.showWhenEmpty) && !page.hidden)
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
 
 visibleCollectionPages.forEach((page, index) => {

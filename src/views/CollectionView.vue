@@ -20,6 +20,7 @@
             <template v-else>
               {{ product.meta }}
             </template>
+            <div v-if="product.maker" class="product-maker">{{ product.maker }}</div>
           </div>
           <div class="product-description">
             <h4>Description</h4>
