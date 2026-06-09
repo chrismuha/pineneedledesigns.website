@@ -344,9 +344,9 @@ export const collectionPages = [
       },
       {
         id: 39,
-        title: 'Blinged Out T-Shirt',
+        title: 'Turquoise Chic Blinged Out T Shirt',
         price: 38,
-        meta: ['Price: $38', 'Shown in Sand, Available in White.'],
+        meta: ['Price: $38', 'Available in White, Sand, Natural, Peach, Grey, and Pink.'],
         description: 'Turquoise Chick is blinged out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
         options: [
           {
@@ -356,7 +356,7 @@ export const collectionPages = [
           },
           {
             name: 'Color',
-            values: ['Sand', 'White'],
+            values: ['White', 'Sand', 'Natural', 'Peach', 'Grey', 'Pink'],
             placeholder: 'Select color',
           },
         ],
