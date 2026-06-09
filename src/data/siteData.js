@@ -321,8 +321,8 @@ export const collectionPages = [
         id: 38,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
         price: 58,
-        meta: ['Price: $58', 'Shown in Sand, Available in White.'],
-        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt in the color Sand. Also comes in white.",
+        meta: ['Price: $58', 'Available in Peach, Natural, Sand, and White.'],
+        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt. Comes in Peach, Natural, Sand, and White.",
         options: [
           {
             name: 'Size',
@@ -331,7 +331,7 @@ export const collectionPages = [
           },
           {
             name: 'Color',
-            values: ['Sand', 'White'],
+            values: ['Peach', 'Natural', 'Sand', 'White'],
             placeholder: 'Select color',
           },
         ],
@@ -346,7 +346,7 @@ export const collectionPages = [
         id: 39,
         title: 'Turquoise Chic Blinged Out T-Shirt',
         price: 38,
-        meta: ['Price: $38', 'Available in White, Sand, Natural, Peach, Grey, and Pink.'],
+        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.'],
         description: 'Turquoise Chick is Blinged Out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
         options: [
           {
@@ -356,7 +356,7 @@ export const collectionPages = [
           },
           {
             name: 'Color',
-            values: ['White', 'Sand', 'Natural', 'Peach', 'Grey', 'Pink'],
+            values: ['Peach', 'Natural', 'Pink', 'Sand', 'White'],
             placeholder: 'Select color',
           },
         ],
@@ -371,7 +371,7 @@ export const collectionPages = [
         id: 40,
         title: "Don't Burst My Bubble Blinged Out T-Shirt",
         price: 38,
-        meta: ['Price: $38', 'Shown in Sand, Available in Pink or White.'],
+        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.'],
         description: "A Cowgirl with Attitude. Of course she's all Blinged Out!",
         options: [
           {
@@ -381,7 +381,7 @@ export const collectionPages = [
           },
           {
             name: 'Color',
-            values: ['Sand', 'Pink', 'White'],
+            values: ['Peach', 'Natural', 'Pink', 'Sand', 'White'],
             placeholder: 'Select color',
           },
         ],
@@ -723,7 +723,19 @@ export const collectionPages = [
 const firstProductImage = (page) =>
   page.products.find((product) => !product.placeholder && product.images?.length)?.images[0]
 
+const freeShippingMeta = 'Free shipping'
+
+const withFreeShippingMeta = (meta) => {
+  const items = Array.isArray(meta) ? meta : [meta]
+  return items.some((item) => String(item).trim().toLowerCase() === freeShippingMeta.toLowerCase())
+    ? items
+    : [...items, freeShippingMeta]
+}
+
 collectionPages.forEach((page) => {
+  page.products.forEach((product) => {
+    product.meta = withFreeShippingMeta(product.meta)
+  })
   page.count = page.products.filter((product) => !product.placeholder).length
   if (page.cardImageFromProduct) {
     page.cardImage = firstProductImage(page) || page.cardImage
@@ -854,6 +866,10 @@ export const sitePages = [
     slug: 'terms-of-service',
     path: '/terms-of-service',
     title: 'Terms of Service',
-    content: `<p>Use of this site is subject to our standard terms and conditions.</p>`,
+    content: `
+      <p>Use of this site is subject to our standard terms and conditions.</p>
+      <h2>Buyer Sales Tax Notice</h2>
+      <p>Sales tax is applied according to New York State and local sales tax rules. Qualifying clothing and footwear items under $110 may be exempt from New York State sales tax, but local tax rules may vary outside New York City. In New York City, qualifying clothing and footwear under $110 are generally tax exempt. Clothing and footwear priced at $110 or more, taxable accessories, and non-exempt items are generally subject to the applicable sales tax rate. If sales tax is included in the listed price, it will be handled in accordance with applicable New York tax rules and shown separately on receipts where required.</p>
+    `,
   },
 ]
