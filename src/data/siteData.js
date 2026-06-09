@@ -319,7 +319,7 @@ export const collectionPages = [
     products: [
       {
         id: 38,
-        title: "Wende's Choice Blinged Out Sweatshirt",
+        title: 'On a Bad Day there’s Always Lipstick Blinged out sweatshirt',
         price: 58,
         meta: ['Price: $58', 'Shown in Sand, Available in White.'],
         description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged out sweatshirt in the color Sand. Also comes in white.",

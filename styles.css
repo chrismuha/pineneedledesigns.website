@@ -749,11 +749,21 @@ header {
 }
 
 .hero-card--new-arrivals .hero-placeholder-stack {
-    gap: 12px;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
 }
 
 .hero-card--new-arrivals .hero-placeholder-inline--tall {
     height: 230px;
+    margin-left: auto;
+    margin-right: auto;
+    object-position: center center;
+}
+
+.hero-card--new-arrivals .hero-hurry--bunny {
+    align-self: center;
+    margin-top: 22px;
 }
 
 .hero-2 {
@@ -1277,7 +1287,10 @@ section {
     width: 100%;
     height: clamp(260px, 32vw, 420px);
     min-height: 0;
+    margin-left: auto;
+    margin-right: auto;
     object-fit: contain;
+    object-position: center center;
 }
 
 .tile .copy {
