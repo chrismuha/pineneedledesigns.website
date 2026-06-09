@@ -87,10 +87,19 @@
               <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
             </div>
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
+              <div class="hero-image-pair">
+                <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
+                <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
+              </div>
               <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
-              <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
+              <div class="hero-image-pair">
+                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
+                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
+              </div>
+              <div class="hero-image-pair">
+                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
+                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
+              </div>
             </div>
           </div>
         </article>
@@ -188,11 +197,17 @@ import comingSoon021 from '../../images/comingsoon/comingsoon021.webp'
 import comingSoon022 from '../../images/comingsoon/comingsoon022.webp'
 import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
 import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
+import comingSoon025 from '../../images/comingsoon/comingsoon025.webp'
+import comingSoon026 from '../../images/comingsoon/comingsoon026.webp'
+import comingSoon027 from '../../images/comingsoon/comingsoon027.webp'
 
 const homePlaceholderImages = {
   denimFeature: comingSoon017,
+  denimFeatureAlt: comingSoon025,
   denimFirstCard: comingSoon018,
+  denimFirstCardAlt: comingSoon026,
   denimSecondCard: comingSoon019,
+  denimSecondCardAlt: comingSoon027,
   newArrivalsFeature: comingSoon020,
   newArrivalsFirstCard: comingSoon021,
   newArrivalsSecondCard: comingSoon022,

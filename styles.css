@@ -731,6 +731,21 @@ header {
     flex-shrink: 0;
 }
 
+.hero-image-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.hero-image-pair .placeholder-image {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: contain;
+    object-position: center center;
+}
+
 .hero-bunny {
     width: 100%;
     height: clamp(240px, 36vw, 340px);
@@ -2427,5 +2442,30 @@ footer>section {
     .hero-card--new-arrivals .hero-placeholder-stack .hero-placeholder-inline {
         width: 100%;
         height: clamp(150px, 44vw, 230px);
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack {
+        display: flex;
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-image-pair {
+        width: 100%;
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-image-pair .hero-placeholder-inline {
+        grid-column: auto;
+        height: clamp(150px, 44vw, 230px);
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-image-pair {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .hero-card:not(.hero-card--new-arrivals) .hero-image-pair .placeholder-image {
+        width: 100%;
+        max-width: 100%;
     }
 }
