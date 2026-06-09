@@ -315,14 +315,14 @@ export const collectionPages = [
     path: '/collections/shirts',
     count: 0,
     cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
-    description: 'Blinged out shirts and sweatshirts made to stand out.',
+    description: 'Blinged Out shirts and sweatshirts made to stand out.',
     products: [
       {
         id: 38,
-        title: 'On a Bad Day there’s Always Lipstick Blinged out sweatshirt',
+        title: 'On a Bad Day there’s Always Lipstick Blinged Out sweatshirt',
         price: 58,
         meta: ['Price: $58', 'Shown in Sand, Available in White.'],
-        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged out sweatshirt in the color Sand. Also comes in white.",
+        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt in the color Sand. Also comes in white.",
         options: [
           {
             name: 'Size',
@@ -344,10 +344,10 @@ export const collectionPages = [
       },
       {
         id: 39,
-        title: 'Turquoise Chic Blinged Out T Shirt',
+        title: 'Turquoise Chic Blinged Out T-Shirt',
         price: 38,
         meta: ['Price: $38', 'Available in White, Sand, Natural, Peach, Grey, and Pink.'],
-        description: 'Turquoise Chick is blinged out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
+        description: 'Turquoise Chick is Blinged Out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
         options: [
           {
             name: 'Size',
@@ -369,10 +369,10 @@ export const collectionPages = [
       },
       {
         id: 40,
-        title: "Don't Burst My Bubble T-Shirt",
+        title: "Don't Burst My Bubble Blinged Out T-Shirt",
         price: 38,
         meta: ['Price: $38', 'Shown in Sand, Available in Pink or White.'],
-        description: "A Cowgirl with Attitude. Of course she's all blinged out!",
+        description: "A Cowgirl with Attitude. Of course she's all Blinged Out!",
         options: [
           {
             name: 'Size',
