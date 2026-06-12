@@ -143,11 +143,33 @@ app.delete('/api/cart', (req, res) => {
   res.json([]);
 });
 
+const DISCOUNT_RULES = {
+  'B$': { type: 'fixed', value: 20 },
+  'W$': { type: 'fixed', value: 25 },
+  'FAM': { type: 'percent', value: 40 },
+  'SURPRISE': { type: 'percent', value: 20 },
+  'SEW': { type: 'percent', value: 10 },
+}
+
+const getDiscountAmount = (total, code) => {
+  if (!code || typeof code !== 'string') return 0
+
+  const rule = DISCOUNT_RULES[code.trim().toUpperCase()]
+  if (!rule) return 0
+
+  if (rule.type === 'fixed') {
+    return Math.min(rule.value, total)
+  }
+
+  return Number(((total * rule.value) / 100).toFixed(2))
+}
+
 // Checkout
 
 app.post('/api/checkout', async (req, res) => {
   try {
-    const cart = req.session.cart
+    const { code } = req.body || {}
+    const cart = req.session.cart || []
     const itemDescription = (item) => {
       const selectedOptions = item.selectedOptions
         ? Object.entries(item.selectedOptions).map(([name, value]) => `${name}: ${value}`).join(', ')
@@ -157,6 +179,32 @@ app.post('/api/checkout', async (req, res) => {
     const total = cart.reduce((sum, item) => {
       return sum + item.price * item.quantity;
     }, 0);
+    const discount = getDiscountAmount(total, code)
+    const totalAfterDiscount = Math.max(0, total - discount)
+
+    const orderItems = cart.map((item) => {
+      return {
+        name: item.title,
+        quantity: item.quantity.toString(),
+        unitAmount: {
+          currencyCode: 'USD',
+          value: item.price.toFixed(2)
+        },
+        description: itemDescription(item),
+      }
+    })
+
+    if (discount > 0) {
+      orderItems.push({
+        name: `Discount${code ? ` (${code.trim().toUpperCase()})` : ''}`,
+        quantity: '1',
+        unitAmount: {
+          currencyCode: 'USD',
+          value: (-discount).toFixed(2)
+        },
+        description: 'Applied discount code',
+      })
+    }
 
     const order = await orders.createOrder({
       prefer: 'return=representation',
@@ -166,25 +214,15 @@ app.post('/api/checkout', async (req, res) => {
           {
             amount: {
               currencyCode: "USD",
-              value: total.toString(),
+              value: totalAfterDiscount.toFixed(2),
               breakdown: {
                 itemTotal: {
                   currencyCode: "USD",
-                  value: total.toString(),
+                  value: totalAfterDiscount.toFixed(2),
                 }
               }
             },
-            items: cart.map((item) => {
-              return {
-                name: item.title,
-                quantity: item.quantity.toString(),
-                unitAmount: {
-                  currencyCode: "USD",
-                  value: item.price.toString()
-                },
-                description: itemDescription(item),
-              }
-            })
+            items: orderItems
           }
         ],
         applicationContext: {

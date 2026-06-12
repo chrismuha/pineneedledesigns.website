@@ -3,10 +3,20 @@ import { ref, computed } from 'vue'
 
 const API_BASE = 'http://localhost:3001/api'
 
+const DISCOUNT_CODES = {
+  'B$': { type: 'fixed', value: 20, label: '$20 off' },
+  'W$': { type: 'fixed', value: 25, label: '$25 off' },
+  'FAM': { type: 'percent', value: 40, label: '40% off' },
+  'SURPRISE': { type: 'percent', value: 20, label: '20% off' },
+  'SEW': { type: 'percent', value: 10, label: '10% off' },
+}
+
 export const useCartStore = defineStore('cart', () => {
   const items = ref([])
   const isOpen = ref(false)
   const isLoading = ref(false)
+  const appliedDiscountCode = ref('')
+  const discountError = ref('')
 
   const totalItems = computed(() => {
     return items.value.reduce((total, item) => total + item.quantity, 0)
@@ -15,6 +25,57 @@ export const useCartStore = defineStore('cart', () => {
   const totalPrice = computed(() => {
     return items.value.reduce((total, item) => total + (item.price * item.quantity), 0)
   })
+
+  const discountRule = (code) => {
+    if (!code || typeof code !== 'string') return null
+    return DISCOUNT_CODES[code.trim().toUpperCase()] || null
+  }
+
+  const discountAmount = computed(() => {
+    const rule = discountRule(appliedDiscountCode.value)
+    if (!rule) return 0
+
+    if (rule.type === 'fixed') {
+      return Math.min(rule.value, totalPrice.value)
+    }
+
+    return Number(((totalPrice.value * rule.value) / 100).toFixed(2))
+  })
+
+  const discountedTotal = computed(() => {
+    return Math.max(0, totalPrice.value - discountAmount.value)
+  })
+
+  const discountDescription = computed(() => {
+    const rule = discountRule(appliedDiscountCode.value)
+    if (!rule) return ''
+    return `${rule.label} applied` 
+  })
+
+  const applyDiscountCode = (code) => {
+    const normalized = code ? code.trim().toUpperCase() : ''
+    if (!normalized) {
+      appliedDiscountCode.value = ''
+      discountError.value = ''
+      return true
+    }
+
+    const rule = discountRule(normalized)
+    if (!rule) {
+      appliedDiscountCode.value = ''
+      discountError.value = 'Invalid discount code.'
+      return false
+    }
+
+    appliedDiscountCode.value = normalized
+    discountError.value = ''
+    return true
+  }
+
+  const clearDiscount = () => {
+    appliedDiscountCode.value = ''
+    discountError.value = ''
+  }
 
   const fetchCart = async () => {
     try {
@@ -130,13 +191,20 @@ export const useCartStore = defineStore('cart', () => {
     isLoading,
     totalItems,
     totalPrice,
+    discountAmount,
+    discountedTotal,
+    discountDescription,
+    appliedDiscountCode,
+    discountError,
+    applyDiscountCode,
+    clearDiscount,
     fetchCart,
     addItem,
     removeItem,
     updateQuantity,
     clearCart,
     toggleOpen,
-    close, 
+    close,
     API_BASE
   }
 })

@@ -30,9 +30,33 @@
             ${{ item.price * item.quantity }}
           </div>
         </div>
+        <div class="discount-box">
+          <label for="discount-code">Discount Code</label>
+          <div class="discount-input-row">
+            <input
+              id="discount-code"
+              type="text"
+              v-model="codeInput"
+              :placeholder="cartStore.appliedDiscountCode ? 'You\'ve already used a code.' : 'Enter Code'"
+              @keyup.enter="applyCoupon"
+              :disabled="Boolean(cartStore.appliedDiscountCode)"
+            />
+            <button class="btn apply-btn" @click="applyCoupon">
+              {{ cartStore.appliedDiscountCode ? 'Clear all discounts' : 'Apply' }}
+            </button>
+          </div>
+          <p v-if="cartStore.discountError" class="discount-error">{{ cartStore.discountError }}</p>
+          <p v-else-if="cartStore.discountDescription" class="discount-description">{{ cartStore.discountDescription }}</p>
+          <p v-if="cartStore.discountAmount > 0" class="discount-amount">
+            You saved ${{ cartStore.discountAmount.toFixed(2) }}
+          </p>
+        </div>
         <div class="cart-summary">
           <p>Total Items: {{ cartStore.totalItems }}</p>
-          <p>Total Price: ${{ cartStore.totalPrice }}</p>
+          <p>Total Price: ${{ cartStore.totalPrice.toFixed(2) }}</p>
+          <p v-if="cartStore.discountAmount > 0">Discount: -${{ cartStore.discountAmount.toFixed(2) }}</p>
+          <p v-if="cartStore.discountAmount > 0" class="discount-amount-summary">You saved ${{ cartStore.discountAmount.toFixed(2) }}</p>
+          <p class="cart-final-total">Final Total: ${{ cartStore.discountedTotal.toFixed(2) }}</p>
           <button @click="clearCart" class="btn">Clear Cart</button>
           <button @click="checkout" class="btn btn-primary">Checkout</button>
         </div>
@@ -42,9 +66,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useCartStore } from '../stores/cart'
 
 const cartStore = useCartStore()
+const codeInput = ref('')
 
 const updateQuantity = async (id, quantity) => {
   await cartStore.updateQuantity(id, quantity)
@@ -58,6 +84,18 @@ const clearCart = async () => {
   await cartStore.clearCart()
 }
 
+const applyCoupon = () => {
+  if (cartStore.appliedDiscountCode) {
+    cartStore.clearDiscount()
+    codeInput.value = ''
+    return
+  }
+
+  if (cartStore.applyDiscountCode(codeInput.value)) {
+    codeInput.value = ''
+  }
+}
+
 const checkout = async () => {
   const request = await fetch(`/api/checkout`, {
     method: 'POST',
@@ -65,6 +103,7 @@ const checkout = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({ code: cartStore.appliedDiscountCode })
   })
 
   const data = await request.json();
@@ -158,6 +197,60 @@ const checkout = async () => {
   padding-top: 20px;
   border-top: 1px solid var(--line);
   text-align: center;
+}
+
+.discount-box {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: var(--white-smoke);
+}
+
+.discount-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.discount-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.discount-input-row input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.apply-btn {
+  min-width: 100px;
+}
+
+.discount-error {
+  color: #b00020;
+  font-size: 0.95rem;
+}
+
+.discount-description {
+  color: #117a65;
+  font-size: 0.95rem;
+}
+
+.discount-amount,
+.discount-amount-summary {
+  color: #0b5345;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.cart-final-total {
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .btn {
