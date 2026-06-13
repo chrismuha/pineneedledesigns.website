@@ -58,7 +58,35 @@
           <p v-if="cartStore.discountAmount > 0" class="discount-amount-summary">You saved ${{ cartStore.discountAmount.toFixed(2) }}</p>
           <p class="cart-final-total">Final Total: ${{ cartStore.discountedTotal.toFixed(2) }}</p>
           <button @click="clearCart" class="btn">Clear Cart</button>
-          <button @click="checkout" class="btn btn-primary">Checkout</button>
+          <button v-if="!showCheckoutForm" @click="checkout" class="btn btn-primary">Checkout</button>
+        </div>
+      </div>
+      <div v-if="showCheckoutForm" class="checkout-popup-overlay" @click="handlePopupBackdropClick">
+        <div class="checkout-popup" @click.stop>
+          <button type="button" class="popup-close" @click="showCheckoutForm = false">×</button>
+          <h3>Checkout details</h3>
+          <p class="popup-subtitle">Please enter your name, email, and location before proceeding to payment.</p>
+
+          <label for="customer-name">Name</label>
+          <input id="customer-name" type="text" v-model="customerName" placeholder="Full name" />
+
+          <label for="customer-email">Email</label>
+          <input id="customer-email" type="email" v-model="customerEmail" placeholder="Email address" />
+
+          <label for="customer-location">Location</label>
+          <select id="customer-location" v-model="customerLocation">
+            <option disabled value="">Select location</option>
+            <option>Oneida County</option>
+            <option>Elsewhere in NY</option>
+          </select>
+
+          <p class="checkout-note">These information are required for proper tax calculations.</p>
+          <p v-if="checkoutError" class="checkout-error">{{ checkoutError }}</p>
+
+          <div class="checkout-actions">
+            <button type="button" class="btn btn-secondary" @click="showCheckoutForm = false">Cancel</button>
+            <button type="button" class="btn btn-primary" @click="submitCheckout">Proceed to payment</button>
+          </div>
         </div>
       </div>
     </div>
@@ -71,6 +99,11 @@ import { useCartStore } from '../stores/cart'
 
 const cartStore = useCartStore()
 const codeInput = ref('')
+const showCheckoutForm = ref(false)
+const customerName = ref('')
+const customerEmail = ref('')
+const customerLocation = ref('')
+const checkoutError = ref('')
 
 const updateQuantity = async (id, quantity) => {
   await cartStore.updateQuantity(id, quantity)
@@ -96,17 +129,44 @@ const applyCoupon = () => {
   }
 }
 
-const checkout = async () => {
+const checkout = () => {
+  showCheckoutForm.value = true
+}
+
+const handlePopupBackdropClick = () => {
+  // keep popup open unless user explicitly cancels
+}
+
+const submitCheckout = async () => {
+  checkoutError.value = ''
+
+  if (!customerName.value.trim() || !customerEmail.value.trim() || !customerLocation.value) {
+    checkoutError.value = 'Please provide your name, email, and location.'
+    return
+  }
+
   const request = await fetch(`/api/checkout`, {
     method: 'POST',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ code: cartStore.appliedDiscountCode })
+    body: JSON.stringify({
+      code: cartStore.appliedDiscountCode,
+      customer: {
+        name: customerName.value.trim(),
+        email: customerEmail.value.trim(),
+        location: customerLocation.value,
+      },
+    })
   })
 
   const data = await request.json();
+
+  if (!request.ok) {
+    checkoutError.value = data.error || 'Unable to start checkout. Please try again.'
+    return
+  }
 
   window.location.href = data.url
 }
@@ -197,6 +257,102 @@ const checkout = async () => {
   padding-top: 20px;
   border-top: 1px solid var(--line);
   text-align: center;
+}
+
+.checkout-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+}
+
+.checkout-popup {
+  width: min(600px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.32);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.popup-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #333;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.checkout-popup h3 {
+  margin: 0 0 12px;
+  font-size: 1.45rem;
+}
+
+.popup-subtitle {
+  margin: 0 0 22px;
+  color: #5f6d7a;
+  line-height: 1.6;
+}
+
+.checkout-popup label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #22313f;
+}
+
+.checkout-popup input,
+.checkout-popup select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d3d8df;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 1rem;
+  color: #16202b;
+}
+
+.checkout-popup select {
+  appearance: none;
+}
+
+.checkout-note {
+  margin-top: 10px;
+  color: #586675;
+  font-size: 0.95rem;
+}
+
+.checkout-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btn-secondary {
+  background: #f5f7fa;
+  color: #2e3a47;
+}
+
+.checkout-error {
+  margin-top: 14px;
+  color: #b00020;
+  font-size: 0.95rem;
 }
 
 .discount-box {

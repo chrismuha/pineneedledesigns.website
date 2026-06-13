@@ -168,14 +168,20 @@ const getDiscountAmount = (total, code) => {
 
 app.post('/api/checkout', async (req, res) => {
   try {
-    const { code } = req.body || {}
+    const { code, customer } = req.body || {}
     const cart = req.session.cart || []
+
+    if (!customer || !customer.name || !customer.email || !customer.location) {
+      return res.status(400).json({ error: 'Name, email, and location are required for checkout.' })
+    }
+
     const itemDescription = (item) => {
       const selectedOptions = item.selectedOptions
         ? Object.entries(item.selectedOptions).map(([name, value]) => `${name}: ${value}`).join(', ')
         : '';
       return [item.description, selectedOptions].filter(Boolean).join(' | ');
     };
+
     const total = cart.reduce((sum, item) => {
       return sum + item.price * item.quantity;
     }, 0);
@@ -232,12 +238,18 @@ app.post('/api/checkout', async (req, res) => {
       },
     })
 
-
-
     const orderBody = JSON.parse(order.body);
     const link = orderBody.links.find(link => link.rel === 'approve').href;
 
-    orderMap.set(orderBody.id, orderBody.purchase_units[0].items)
+    orderMap.set(orderBody.id, {
+      items: orderBody.purchase_units[0].items,
+      customer: {
+        name: customer.name,
+        email: customer.email,
+        location: customer.location,
+      },
+      discountCode: code ? code.trim().toUpperCase() : '',
+    })
 
     res.json({ url: link });
 
@@ -257,9 +269,11 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
     res.json({ success: true });
 
     const order = JSON.parse(request.body);
-    const items = orderMap.get(order.id);
+    const storedOrder = orderMap.get(order.id);
 
-    if (!items) return;
+    if (!storedOrder) return;
+
+    const { items, customer, discountCode } = storedOrder;
 
     let itemsList = ``;
     let total = 0;
@@ -270,12 +284,15 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
       total += Number(item.quantity) * Number(item.unit_amount.value);
     }
 
+    const discountLine = discountCode ? `<br>Discount Code: ${discountCode}` : '';
+    const customerInfo = `Name: ${customer.name}<br>Email: ${customer.email}<br>Location: ${customer.location}<br>`;
+
     const options = {
       from: '"Pin Needle Designs" <onpinesandneedles@gmail.com>',
       to: "onpinesandneedles@gmail.com",
       subject: `Order #${order.id}`,
-      html: `Item Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
-      text: `Item Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
+      html: `Customer information<br><br>${customerInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
+      text: `Customer information\n\nName: ${customer.name}\nEmail: ${customer.email}\nLocation: ${customer.location}${discountLine ? `\nDiscount Code: ${discountCode}` : ''}\n\nItems Ordered\n\n${itemsList.replace(/<br>/g, '\n')}\n\nTotal: ${total}`,
     }
 
     await transporter.sendMail(options);
