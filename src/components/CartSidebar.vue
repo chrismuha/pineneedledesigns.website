@@ -14,20 +14,26 @@
       </div>
       <div v-else class="cart-items">
         <div v-for="item in cartStore.items" :key="item.cartItemId || item.id" class="cart-item">
-          <div class="item-details">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
-            <p v-for="(value, name) in item.selectedOptions" :key="name">{{ name }}: {{ value }}</p>
-            <p>Price: ${{ item.price }}</p>
+          <div class="item-row">
+            <div class="item-image-wrap">
+              <img :src="itemImage(item)" :alt="item.title" class="item-image" loading="lazy" decoding="async" />
+            </div>
+            <div class="item-main">
+              <h3>{{ item.title }}</h3>
+              <span class="item-price">${{ item.price.toFixed(2) }}</span>
+            </div>
           </div>
-          <div class="item-controls">
-            <button @click="updateQuantity(item.cartItemId || item.id, item.quantity - 1)">-</button>
-            <span>{{ item.quantity }}</span>
-            <button @click="updateQuantity(item.cartItemId || item.id, item.quantity + 1)">+</button>
-            <button @click="removeItem(item.cartItemId || item.id)" class="remove">Remove</button>
+          <div class="item-actions">
+            <div class="item-controls">
+              <button type="button" class="qty-btn" @click="updateQuantity(item.cartItemId || item.id, item.quantity - 1)">−</button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button type="button" class="qty-btn" @click="updateQuantity(item.cartItemId || item.id, item.quantity + 1)">+</button>
+            </div>
+            <button type="button" class="remove-button" @click="removeItem(item.cartItemId || item.id)">Remove</button>
           </div>
-          <div class="item-total">
-            ${{ item.price * item.quantity }}
+          <div class="item-footer">
+            <span class="item-total-label">Total</span>
+            <strong class="item-total-value">${{ (item.price * item.quantity).toFixed(2) }}</strong>
           </div>
         </div>
         <div class="discount-box">
@@ -104,6 +110,10 @@ const customerName = ref('')
 const customerEmail = ref('')
 const customerLocation = ref('')
 const checkoutError = ref('')
+
+const itemImage = (item) => {
+  return item.images?.[0] || item.image || item.placeholderImage || item.placeholderImages?.[0] || '/images/comingsoon/comingsoon015.webp'
+}
 
 const updateQuantity = async (id, quantity) => {
   await cartStore.updateQuantity(id, quantity)
@@ -231,25 +241,150 @@ const submitCheckout = async () => {
 .cart-item {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--line);
-  padding: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  border: 1px solid rgba(34, 49, 63, 0.12);
+  background: #f9fbfd;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
 }
 
-.item-details {
-  margin-bottom: 10px;
+.item-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.item-image-wrap {
+  flex: 0 0 100px;
+  position: relative;
+  min-width: 100px;
+  height: 100px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(34, 49, 63, 0.06);
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.item-main h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.item-price {
+  color: #0d6efd;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.item-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-total {
+  grid-area: total;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+  min-width: 90px;
 }
 
 .item-controls {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
 }
 
-.item-total {
-  font-weight: bold;
-  text-align: right;
+.qty-btn,
+.remove-button {
+  border: none;
+  border-radius: 999px;
+  min-width: 38px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.qty-btn {
+  background: #fff;
+  color: #0d6efd;
+  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.08);
+}
+
+.qty-btn:hover {
+  transform: translateY(-1px);
+  background: #e7f1ff;
+}
+
+.quantity {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.remove-button {
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  padding: 0 14px;
+}
+
+.remove-button:hover {
+  background: rgba(220, 38, 38, 0.16);
+}
+
+@media (max-width: 720px) {
+  .item-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .item-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+.item-total-label {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.item-total-value {
+  font-size: 1.05rem;
+  color: #111827;
+  font-weight: 700;
 }
 
 .cart-summary {
