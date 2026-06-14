@@ -168,11 +168,19 @@ const getDiscountAmount = (total, code) => {
 
 app.post('/api/checkout', async (req, res) => {
   try {
-    const { code, customer } = req.body || {}
+    const { code, customer, billingAddress, shippingAddress } = req.body || {}
     const cart = req.session.cart || []
 
-    if (!customer || !customer.name || !customer.email || !customer.location) {
-      return res.status(400).json({ error: 'Name, email, and location are required for checkout.' })
+    if (!customer || !customer.email || !customer.phone || !customer.type) {
+      return res.status(400).json({ error: 'Customer email, phone, and type are required for checkout.' })
+    }
+
+    if (!billingAddress || !billingAddress.name || !billingAddress.address1 || !billingAddress.city || !billingAddress.state || !billingAddress.zip) {
+      return res.status(400).json({ error: 'Complete billing address is required.' })
+    }
+
+    if (!shippingAddress || !shippingAddress.name || !shippingAddress.address1 || !shippingAddress.city || !shippingAddress.state || !shippingAddress.zip) {
+      return res.status(400).json({ error: 'Complete shipping address is required.' })
     }
 
     const itemDescription = (item) => {
@@ -244,10 +252,12 @@ app.post('/api/checkout', async (req, res) => {
     orderMap.set(orderBody.id, {
       items: orderBody.purchase_units[0].items,
       customer: {
-        name: customer.name,
+        type: customer.type,
         email: customer.email,
-        location: customer.location,
+        phone: customer.phone,
       },
+      billingAddress,
+      shippingAddress,
       discountCode: code ? code.trim().toUpperCase() : '',
     })
 
@@ -273,7 +283,7 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 
     if (!storedOrder) return;
 
-    const { items, customer, discountCode } = storedOrder;
+    const { items, customer, billingAddress, shippingAddress, discountCode } = storedOrder;
 
     let itemsList = ``;
     let total = 0;
@@ -285,14 +295,16 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
     }
 
     const discountLine = discountCode ? `<br>Discount Code: ${discountCode}` : '';
-    const customerInfo = `Name: ${customer.name}<br>Email: ${customer.email}<br>Location: ${customer.location}<br>`;
+    const customerInfo = `Customer type: ${customer.type}<br>Email: ${customer.email}<br>Phone: ${customer.phone}<br>`;
+    const billingInfo = `Billing address:<br>${billingAddress.name}<br>${billingAddress.address1}<br>${billingAddress.address2 ? billingAddress.address2 + '<br>' : ''}${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}<br>`;
+    const shippingInfo = `Shipping address:<br>${shippingAddress.name}<br>${shippingAddress.address1}<br>${shippingAddress.address2 ? shippingAddress.address2 + '<br>' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}<br>`;
 
     const options = {
       from: '"Pin Needle Designs" <onpinesandneedles@gmail.com>',
       to: "onpinesandneedles@gmail.com",
       subject: `Order #${order.id}`,
-      html: `Customer information<br><br>${customerInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
-      text: `Customer information\n\nName: ${customer.name}\nEmail: ${customer.email}\nLocation: ${customer.location}${discountLine ? `\nDiscount Code: ${discountCode}` : ''}\n\nItems Ordered\n\n${itemsList.replace(/<br>/g, '\n')}\n\nTotal: ${total}`,
+      html: `Customer information<br><br>${customerInfo}${billingInfo}${shippingInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
+      text: `Customer information\n\nCustomer type: ${customer.type}\nEmail: ${customer.email}\nPhone: ${customer.phone}\n\nBilling address:\n${billingAddress.name}\n${billingAddress.address1}\n${billingAddress.address2 ? billingAddress.address2 + '\n' : ''}${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}\n\nShipping address:\n${shippingAddress.name}\n${shippingAddress.address1}\n${shippingAddress.address2 ? shippingAddress.address2 + '\n' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}${discountLine ? `\n\nDiscount Code: ${discountCode}` : ''}\n\nItems Ordered\n\n${itemsList.replace(/<br>/g, '\n')}\n\nTotal: ${total}`,
     }
 
     await transporter.sendMail(options);

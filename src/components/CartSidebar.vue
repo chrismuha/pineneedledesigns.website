@@ -13,29 +13,6 @@
         <router-link to="/collections" class="btn" @click="cartStore.close">Browse Collections</router-link>
       </div>
       <div v-else class="cart-items">
-        <div v-for="item in cartStore.items" :key="item.cartItemId || item.id" class="cart-item">
-          <div class="item-row">
-            <div class="item-image-wrap">
-              <img :src="itemImage(item)" :alt="item.title" class="item-image" loading="lazy" decoding="async" />
-            </div>
-            <div class="item-main">
-              <h3>{{ item.title }}</h3>
-              <span class="item-price">${{ item.price.toFixed(2) }}</span>
-            </div>
-          </div>
-          <div class="item-actions">
-            <div class="item-controls">
-              <button type="button" class="qty-btn" @click="updateQuantity(item.cartItemId || item.id, item.quantity - 1)">−</button>
-              <span class="quantity">{{ item.quantity }}</span>
-              <button type="button" class="qty-btn" @click="updateQuantity(item.cartItemId || item.id, item.quantity + 1)">+</button>
-            </div>
-            <button type="button" class="remove-button" @click="removeItem(item.cartItemId || item.id)">Remove</button>
-          </div>
-          <div class="item-footer">
-            <span class="item-total-label">Total</span>
-            <strong class="item-total-value">${{ (item.price * item.quantity).toFixed(2) }}</strong>
-          </div>
-        </div>
         <div class="discount-box">
           <label for="discount-code">Discount Code</label>
           <div class="discount-input-row">
@@ -71,20 +48,76 @@
         <div class="checkout-popup" @click.stop>
           <button type="button" class="popup-close" @click="showCheckoutForm = false">×</button>
           <h3>Checkout details</h3>
-          <p class="popup-subtitle">Please enter your name, email, and location before proceeding to payment.</p>
-
-          <label for="customer-name">Name</label>
-          <input id="customer-name" type="text" v-model="customerName" placeholder="Full name" />
+          <p class="popup-subtitle">Please enter your contact, billing, and shipping details before proceeding to payment.</p>
 
           <label for="customer-email">Email</label>
           <input id="customer-email" type="email" v-model="customerEmail" placeholder="Email address" />
 
-          <label for="customer-location">Location</label>
-          <select id="customer-location" v-model="customerLocation">
-            <option disabled value="">Select location</option>
-            <option>Oneida County</option>
-            <option>Elsewhere in NY</option>
+          <label for="customer-phone">Phone</label>
+          <input id="customer-phone" type="tel" v-model="customerPhone" placeholder="Phone number" />
+
+          <label for="customer-type">Are you purchasing as:</label>
+          <select id="customer-type" v-model="customerType">
+            <option value="Individual">Individual</option>
+            <option value="Business / Organization">Business / Organization</option>
           </select>
+
+          <div class="checkout-grid">
+            <div>
+              <h4>Billing address</h4>
+
+              <label for="billing-name">Full name</label>
+              <input id="billing-name" type="text" v-model="billingName" placeholder="Full name" />
+
+              <label for="billing-address-1">Street address line 1</label>
+              <input id="billing-address-1" type="text" v-model="billingAddress1" placeholder="Street address line 1" />
+
+              <label for="billing-address-2">Street address line 2 (optional)</label>
+              <input id="billing-address-2" type="text" v-model="billingAddress2" placeholder="Street address line 2" />
+
+              <label for="billing-city">City</label>
+              <input id="billing-city" type="text" v-model="billingCity" placeholder="City" />
+
+              <label for="billing-state">State</label>
+              <select id="billing-state" v-model="billingState">
+                <option disabled value="">Select state</option>
+                <option v-for="state in US_STATES" :key="state" :value="state">{{ state }}</option>
+              </select>
+
+              <label for="billing-zip">ZIP code</label>
+              <input id="billing-zip" type="text" v-model="billingZip" placeholder="ZIP code" />
+
+              <label class="checkbox-label">
+                <input type="checkbox" v-model="sameAsBilling" />
+                My shipping address is same as my billing address.
+              </label>
+            </div>
+
+            <div v-if="!sameAsBilling">
+              <h4>Shipping address</h4>
+
+              <label for="shipping-name">Full name</label>
+              <input id="shipping-name" type="text" v-model="shippingName" placeholder="Shipping full name" />
+
+              <label for="shipping-address-1">Street address line 1</label>
+              <input id="shipping-address-1" type="text" v-model="shippingAddress1" placeholder="Street address line 1" />
+
+              <label for="shipping-address-2">Street address line 2 (optional)</label>
+              <input id="shipping-address-2" type="text" v-model="shippingAddress2" placeholder="Street address line 2" />
+
+              <label for="shipping-city">City</label>
+              <input id="shipping-city" type="text" v-model="shippingCity" placeholder="City" />
+
+              <label for="shipping-state">State</label>
+              <select id="shipping-state" v-model="shippingState">
+                <option disabled value="">Select state</option>
+                <option v-for="state in US_STATES" :key="state" :value="state">{{ state }}</option>
+              </select>
+
+              <label for="shipping-zip">ZIP code</label>
+              <input id="shipping-zip" type="text" v-model="shippingZip" placeholder="ZIP code" />
+            </div>
+          </div>
 
           <p class="checkout-note">These information are required for proper tax calculations.</p>
           <p v-if="checkoutError" class="checkout-error">{{ checkoutError }}</p>
@@ -100,16 +133,59 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 
 const cartStore = useCartStore()
 const codeInput = ref('')
 const showCheckoutForm = ref(false)
-const customerName = ref('')
+const customerType = ref('Individual')
 const customerEmail = ref('')
-const customerLocation = ref('')
+const customerPhone = ref('')
+const billingName = ref('')
+const billingAddress1 = ref('')
+const billingAddress2 = ref('')
+const billingCity = ref('')
+const billingState = ref('')
+const billingZip = ref('')
+const sameAsBilling = ref(true)
+const shippingName = ref('')
+const shippingAddress1 = ref('')
+const shippingAddress2 = ref('')
+const shippingCity = ref('')
+const shippingState = ref('')
+const shippingZip = ref('')
 const checkoutError = ref('')
+
+// Prevent background scrolling when modal is open
+watch(showCheckoutForm, (open) => {
+  try {
+    if (open) {
+      document.documentElement.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.documentElement.style.overflow = ''
+      document.body.style.overflow = ''
+    }
+  } catch (e) {
+    // SSR or test environments may not have document
+  }
+})
+
+onUnmounted(() => {
+  try {
+    document.documentElement.style.overflow = ''
+    document.body.style.overflow = ''
+  } catch (e) {}
+})
+
+const US_STATES = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
+  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
+  'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
+  'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia',
+]
 
 const itemImage = (item) => {
   return item.images?.[0] || item.image || item.placeholderImage || item.placeholderImages?.[0] || '/images/comingsoon/comingsoon015.webp'
@@ -150,9 +226,21 @@ const handlePopupBackdropClick = () => {
 const submitCheckout = async () => {
   checkoutError.value = ''
 
-  if (!customerName.value.trim() || !customerEmail.value.trim() || !customerLocation.value) {
-    checkoutError.value = 'Please provide your name, email, and location.'
+  if (!customerEmail.value.trim() || !customerPhone.value.trim()) {
+    checkoutError.value = 'Please provide your email and phone number.'
     return
+  }
+
+  if (!billingName.value.trim() || !billingAddress1.value.trim() || !billingCity.value.trim() || !billingState.value || !billingZip.value.trim()) {
+    checkoutError.value = 'Please complete your billing address.'
+    return
+  }
+
+  if (!sameAsBilling.value) {
+    if (!shippingName.value.trim() || !shippingAddress1.value.trim() || !shippingCity.value.trim() || !shippingState.value || !shippingZip.value.trim()) {
+      checkoutError.value = 'Please complete your shipping address.'
+      return
+    }
   }
 
   const request = await fetch(`/api/checkout`, {
@@ -164,9 +252,32 @@ const submitCheckout = async () => {
     body: JSON.stringify({
       code: cartStore.appliedDiscountCode,
       customer: {
-        name: customerName.value.trim(),
+        type: customerType.value,
         email: customerEmail.value.trim(),
-        location: customerLocation.value,
+        phone: customerPhone.value.trim(),
+      },
+      billingAddress: {
+        name: billingName.value.trim(),
+        address1: billingAddress1.value.trim(),
+        address2: billingAddress2.value.trim(),
+        city: billingCity.value.trim(),
+        state: billingState.value,
+        zip: billingZip.value.trim(),
+      },
+      shippingAddress: sameAsBilling.value ? {
+        name: billingName.value.trim(),
+        address1: billingAddress1.value.trim(),
+        address2: billingAddress2.value.trim(),
+        city: billingCity.value.trim(),
+        state: billingState.value,
+        zip: billingZip.value.trim(),
+      } : {
+        name: shippingName.value.trim(),
+        address1: shippingAddress1.value.trim(),
+        address2: shippingAddress2.value.trim(),
+        city: shippingCity.value.trim(),
+        state: shippingState.value,
+        zip: shippingZip.value.trim(),
       },
     })
   })
@@ -364,17 +475,18 @@ const submitCheckout = async () => {
   background: rgba(220, 38, 38, 0.16);
 }
 
-@media (max-width: 720px) {
-  .item-row {
+/* @media (max-width: 720px) {
+  .cart-items .item-row {
     flex-direction: column;
     gap: 12px;
   }
 
-  .item-actions {
+  .cart-items .item-actions {
     justify-content: flex-start;
     flex-wrap: wrap;
   }
-}
+} */
+
 
 .item-total-label {
   font-size: 0.82rem;
@@ -407,15 +519,16 @@ const submitCheckout = async () => {
 }
 
 .checkout-popup {
-  width: min(600px, 100%);
+  width: min(920px, 100%);
+  max-width: 920px;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
   background: white;
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.32);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.95);
 }
 
 .popup-close {
@@ -433,33 +546,89 @@ const submitCheckout = async () => {
 }
 
 .checkout-popup h3 {
-  margin: 0 0 12px;
-  font-size: 1.45rem;
+  margin: 0 0 10px;
+  font-size: 1.3rem;
 }
 
 .popup-subtitle {
-  margin: 0 0 22px;
+  margin: 0 0 18px;
   color: #5f6d7a;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 0.95rem;
 }
 
 .checkout-popup label {
   display: block;
-  margin-top: 18px;
-  margin-bottom: 8px;
+  margin-top: 14px;
+  margin-bottom: 6px;
   font-weight: 600;
   color: #22313f;
+  font-size: 0.92rem;
 }
 
 .checkout-popup input,
 .checkout-popup select {
   width: 100%;
-  padding: 14px 16px;
+  padding: 10px 12px;
   border: 1px solid #d3d8df;
-  border-radius: 12px;
+  border-radius: 10px;
   background: #fff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #16202b;
+}
+
+.checkout-popup .checkout-grid {
+  display: flex;
+  gap: 18px;
+  margin-top: 20px;
+}
+.checkout-grid > * {
+  flex: 1;
+  max-width: calc(50% - 18px);
+}
+
+@media (max-width: 800px) {
+  .checkout-popup {
+    width: min(100%, 100%);
+    margin: 0 10px;
+    max-width: 100%;
+    padding: 18px;
+  }
+
+  .checkout-popup h3 {
+    font-size: 1.2rem;
+  }
+
+  .checkout-popup .checkout-grid {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .checkout-grid > * {
+    max-width: 100%;
+  }
+
+  /* Ensure header and checkbox stack on small screens */
+  .checkout-popup .shipping-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .checkout-popup .shipping-header-row .checkbox-label {
+    margin-top: 0;
+    align-self: stretch;
+  }
+
+  .checkout-popup input,
+  .checkout-popup select {
+    padding: 10px 12px;
+  }
+}
+
+.checkout-popup h4 {
+  margin: 20px 0 10px;
+  font-size: 1rem;
 }
 
 .checkout-popup select {
@@ -469,7 +638,23 @@ const submitCheckout = async () => {
 .checkout-note {
   margin-top: 10px;
   color: #586675;
+  font-size: 0.9rem;
+}
+
+.checkout-popup .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
   font-size: 0.95rem;
+  color: #22313f;
+  cursor: pointer;
+}
+
+.checkout-popup .checkbox-label input {
+  margin: 0;
+  width: 16px;
+  height: 16px;
 }
 
 .checkout-actions {
