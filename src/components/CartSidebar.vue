@@ -211,6 +211,40 @@
             </div>
           </div>
 
+          <div class="item-breakdown">
+            <h4>Order details</h4>
+            <div class="item-breakdown-table-wrapper">
+              <table class="item-breakdown-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                    <th>Discount</th>
+                    <th>Tax</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="line in itemizedLineItems" :key="line.id">
+                    <td>{{ line.title }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>${{ line.subtotal.toFixed(2) }}</td>
+                    <td>
+                      <span>{{ line.discountPercentDisplay }}</span>
+                      <span class="item-detail-secondary">(${{ line.discountAmount.toFixed(2) }})</span>
+                    </td>
+                    <td>
+                      <span>{{ line.taxRateDisplay }}</span>
+                      <span class="item-detail-secondary">(${{ line.taxAmount.toFixed(2) }})</span>
+                    </td>
+                    <td>${{ line.lineTotal.toFixed(2) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <div class="checkout-summary">
             <div class="summary-row">
               <span>Subtotal</span>
@@ -368,6 +402,36 @@ const totalTax = computed(() => {
     const itemAfterDiscount = Math.max(0, itemTotal - itemDiscount)
     return sum + itemAfterDiscount * shippingTaxRate.value
   }, 0)
+})
+
+const itemizedLineItems = computed(() => {
+  const total = cartStore.totalPrice
+  const discountAmount = cartStore.discountAmount || 0
+  return cartStore.items.map(item => {
+    const itemTotal = item.price * item.quantity
+    const itemDiscount = total > 0 ? (itemTotal / total) * discountAmount : 0
+    const itemAfterDiscount = Math.max(0, itemTotal - itemDiscount)
+    const itemTaxRate = item.taxRate ?? shippingTaxRate.value
+    const itemTax = canCalculateTax.value ? itemAfterDiscount * itemTaxRate : 0
+    const discountPercent = itemTotal > 0 ? itemDiscount / itemTotal : 0
+    return {
+      id: item.id,
+      title: item.title || item.name || 'Item',
+      quantity: item.quantity,
+      subtotal: itemTotal,
+      discountAmount: itemDiscount,
+      discountPercentDisplay: discountPercent > 0
+        ? `-${(discountPercent * 100).toFixed(0)}%`
+        : '0%',
+      taxAmount: itemTax,
+      taxRateDisplay: canCalculateTax.value
+        ? itemTaxRate > 0
+          ? `${(itemTaxRate * 100).toFixed(2)}%`
+          : '0%'
+        : 'N/A',
+      lineTotal: Math.max(0, itemAfterDiscount + itemTax),
+    }
+  })
 })
 
 const finalTotalWithTax = computed(() => {
@@ -1106,6 +1170,53 @@ const submitCheckout = async () => {
   margin-top: 10px;
   color: #586675;
   font-size: 0.9rem;
+}
+
+.item-breakdown {
+  margin-top: 20px;
+}
+
+.item-breakdown h4 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: #22313f;
+}
+
+.item-breakdown-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #d3d8df;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.item-breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.item-breakdown-table th,
+.item-breakdown-table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 0.925rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.item-breakdown-table th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 700;
+}
+
+.item-breakdown-table tr:last-child td {
+  border-bottom: none;
+}
+
+.item-detail-secondary {
+  display: block;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 .checkout-summary {
