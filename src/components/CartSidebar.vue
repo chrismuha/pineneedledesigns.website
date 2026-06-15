@@ -22,18 +22,18 @@
               <div class="item-main">
                 <h3>{{ item.title || item.name || 'Item' }}</h3>
                 <div class="item-price">${{ item.price.toFixed(2) }}</div>
+                <div class="item-total">
+                  <span class="item-total-label">Total</span>
+                  <strong class="item-total-value">${{ (item.price * item.quantity).toFixed(2) }}</strong>
+                </div>
                 <div class="item-actions">
                   <div class="item-controls">
                     <button class="qty-btn" type="button" @click="updateQuantity(item.id, Math.max(1, item.quantity - 1))">-</button>
                     <span class="quantity">{{ item.quantity }}</span>
                     <button class="qty-btn" type="button" @click="updateQuantity(item.id, item.quantity + 1)">+</button>
                   </div>
-                  <button class="remove-button" type="button" @click="removeItem(item.id)">Remove</button>
+                  <button class="remove-button" type="button" @click="removeItem(item.id)" aria-label="Remove item">×</button>
                 </div>
-              </div>
-              <div class="item-total">
-                <span>Total</span>
-                <strong>${{ (item.price * item.quantity).toFixed(2) }}</strong>
               </div>
             </div>
           </div>
@@ -830,12 +830,9 @@ const submitCheckout = async () => {
 
 .item-total {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 6px;
-  text-align: right;
-  min-width: 90px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .item-controls {
@@ -879,31 +876,14 @@ const submitCheckout = async () => {
 .remove-button {
   background: rgba(220, 38, 38, 0.08);
   color: #dc2626;
-  padding: 0 14px;
+  width: 38px;
+  min-width: 38px;
+  padding: 0;
+  font-size: 1.1rem;
 }
 
 .remove-button:hover {
   background: rgba(220, 38, 38, 0.16);
-}
-
-.item-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.qty-btn,
-.remove-button {
-  border: none;
-  border-radius: 999px;
-  min-width: 38px;
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .qty-btn {
@@ -922,16 +902,6 @@ const submitCheckout = async () => {
   text-align: center;
   font-weight: 700;
   color: #1f2937;
-}
-
-.remove-button {
-  background: rgba(220, 38, 38, 0.08);
-  color: #dc2626;
-  padding: 0 14px;
-}
-
-.remove-button:hover {
-  background: rgba(220, 38, 38, 0.16);
 }
 
 /* @media (max-width: 720px) {
