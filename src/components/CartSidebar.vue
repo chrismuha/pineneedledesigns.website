@@ -13,6 +13,31 @@
         <router-link to="/collections" class="btn" @click="cartStore.close">Browse Collections</router-link>
       </div>
       <div v-else class="cart-items">
+        <div v-if="cartStore.items.length" class="cart-items-list">
+          <div v-for="item in cartStore.items" :key="item.id" class="cart-item">
+            <div class="item-row">
+              <div class="item-image-wrap">
+                <img :src="itemImage(item)" alt="Cart item" class="item-image" />
+              </div>
+              <div class="item-main">
+                <h3>{{ item.title || item.name || 'Item' }}</h3>
+                <div class="item-price">${{ item.price.toFixed(2) }}</div>
+                <div class="item-actions">
+                  <div class="item-controls">
+                    <button class="qty-btn" type="button" @click="updateQuantity(item.id, Math.max(1, item.quantity - 1))">-</button>
+                    <span class="quantity">{{ item.quantity }}</span>
+                    <button class="qty-btn" type="button" @click="updateQuantity(item.id, item.quantity + 1)">+</button>
+                  </div>
+                  <button class="remove-button" type="button" @click="removeItem(item.id)">Remove</button>
+                </div>
+              </div>
+              <div class="item-total">
+                <span>Total</span>
+                <strong>${{ (item.price * item.quantity).toFixed(2) }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="discount-box">
           <label for="discount-code">Discount Code</label>
           <div class="discount-input-row">
@@ -47,11 +72,12 @@
       <div v-if="showCheckoutForm" class="checkout-popup-overlay" @click="handlePopupBackdropClick">
         <div class="checkout-popup" @click.stop>
           <button type="button" class="popup-close" @click="showCheckoutForm = false">×</button>
-          <h3>Checkout details</h3>
-          <p class="popup-subtitle">Please enter your contact, billing, and shipping details before proceeding to payment.</p>
+          <div class="checkout-popup-body">
+            <h3>Checkout details</h3>
+            <p class="popup-subtitle">Please enter your contact, billing, and shipping details before proceeding to payment.</p>
 
-          <label for="customer-email">Email</label>
-          <input id="customer-email" type="email" v-model="customerEmail" placeholder="Email address" />
+            <label for="customer-email">Email</label>
+            <input id="customer-email" type="email" v-model="customerEmail" placeholder="Email address" />
 
           <label for="customer-phone">Phone</label>
           <input id="customer-phone" type="tel" v-model="customerPhone" placeholder="Phone number" />
@@ -79,10 +105,43 @@
               <input id="billing-city" type="text" v-model="billingCity" placeholder="City" />
 
               <label for="billing-state">State</label>
-              <select id="billing-state" v-model="billingState">
-                <option disabled value="">Select state</option>
-                <option v-for="state in US_STATES" :key="state" :value="state">{{ state }}</option>
-              </select>
+              <div class="dropdown-field" @click.stop>
+                <input
+                  id="billing-state"
+                  type="text"
+                  v-model="billingStateQuery"
+                  @focus="billingStateOpen = true"
+                  @input="billingStateOpen = true"
+                  @blur="onBillingStateBlur"
+                  placeholder="Search and select state"
+                  autocomplete="off"
+                />
+                <button type="button" class="dropdown-toggle" @click="billingStateOpen = !billingStateOpen">▾</button>
+                <ul v-if="billingStateOpen" class="dropdown-list">
+                  <li v-for="state in filteredStates" :key="state" @mousedown.prevent="selectBillingState(state)">{{ state }}</li>
+                </ul>
+              </div>
+              <p v-if="billingStateInvalid" class="field-error">Invalid state</p>
+
+              <label for="billing-county">County</label>
+              <div class="dropdown-field" @click.stop>
+                <input
+                  id="billing-county"
+                  type="text"
+                  v-model="billingCountyQuery"
+                  @focus="billingCountyOpen = billingState !== ''"
+                  @input="billingCountyOpen = billingState !== ''"
+                  @blur="onBillingCountyBlur"
+                  placeholder="Search and select county"
+                  :disabled="!billingState"
+                  autocomplete="off"
+                />
+                <button type="button" class="dropdown-toggle" @click="billingCountyOpen = billingState !== '' ? !billingCountyOpen : false">▾</button>
+                <ul v-if="billingCountyOpen" class="dropdown-list">
+                  <li v-for="county in filteredBillingCounties" :key="county" @mousedown.prevent="selectBillingCounty(county)">{{ county }}</li>
+                </ul>
+              </div>
+              <p v-if="!billingState" class="field-note">Please select a state first.</p>
 
               <label for="billing-zip">ZIP code</label>
               <input id="billing-zip" type="text" v-model="billingZip" placeholder="ZIP code" />
@@ -109,17 +168,74 @@
               <input id="shipping-city" type="text" v-model="shippingCity" placeholder="City" />
 
               <label for="shipping-state">State</label>
-              <select id="shipping-state" v-model="shippingState">
-                <option disabled value="">Select state</option>
-                <option v-for="state in US_STATES" :key="state" :value="state">{{ state }}</option>
-              </select>
+              <div class="dropdown-field" @click.stop>
+                <input
+                  id="shipping-state"
+                  type="text"
+                  v-model="shippingStateQuery"
+                  @focus="shippingStateOpen = true"
+                  @input="shippingStateOpen = true"
+                  @blur="onShippingStateBlur"
+                  placeholder="Search and select state"
+                  autocomplete="off"
+                />
+                <button type="button" class="dropdown-toggle" @click="shippingStateOpen = !shippingStateOpen">▾</button>
+                <ul v-if="shippingStateOpen" class="dropdown-list">
+                  <li v-for="state in filteredShippingStates" :key="state" @mousedown.prevent="selectShippingState(state)">{{ state }}</li>
+                </ul>
+              </div>
+              <p v-if="shippingStateInvalid" class="field-error">Invalid state</p>
+
+              <label for="shipping-county">County</label>
+              <div class="dropdown-field" @click.stop>
+                <input
+                  id="shipping-county"
+                  type="text"
+                  v-model="shippingCountyQuery"
+                  @focus="shippingCountyOpen = shippingState !== ''"
+                  @input="shippingCountyOpen = shippingState !== ''"
+                  @blur="onShippingCountyBlur"
+                  placeholder="Search and select county"
+                  :disabled="!shippingState"
+                  autocomplete="off"
+                />
+                <button type="button" class="dropdown-toggle" @click="shippingCountyOpen = shippingState !== '' ? !shippingCountyOpen : false">▾</button>
+                <ul v-if="shippingCountyOpen" class="dropdown-list">
+                  <li v-for="county in filteredShippingCounties" :key="county" @mousedown.prevent="selectShippingCounty(county)">{{ county }}</li>
+                </ul>
+              </div>
+              <p v-if="!shippingState" class="field-note">Please select a state first.</p>
 
               <label for="shipping-zip">ZIP code</label>
               <input id="shipping-zip" type="text" v-model="shippingZip" placeholder="ZIP code" />
             </div>
           </div>
 
-          <p class="checkout-note">These information are required for proper tax calculations.</p>
+          <div class="checkout-summary">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>${{ cartStore.totalPrice.toFixed(2) }}</span>
+            </div>
+            <div v-if="cartStore.discountAmount > 0" class="summary-row">
+              <span>Discount</span>
+              <span class="summary-discount">- ${{ cartStore.discountAmount.toFixed(2) }}</span>
+            </div>
+            <div v-if="cartStore.discountAmount > 0" class="summary-row">
+              <span>Total without tax</span>
+              <span>${{ cartStore.discountedTotal.toFixed(2) }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax {{ canCalculateTax ? `(${shippingTaxRatePercent})` : '' }}</span>
+              <span v-if="canCalculateTax">+ ${{ totalTax.toFixed(2) }}</span>
+              <span v-else>Waiting for customer information</span>
+            </div>
+            <div class="summary-row summary-total">
+              <span>Final total</span>
+              <span>${{ finalTotalWithTax.toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <p class="checkout-note">These information are necessary for us to process your order.</p>
           <p v-if="checkoutError" class="checkout-error">{{ checkoutError }}</p>
 
           <div class="checkout-actions">
@@ -130,11 +246,13 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
 import { useCartStore } from '../stores/cart'
+import countiesData from '../data/counties.json'
 
 const cartStore = useCartStore()
 const codeInput = ref('')
@@ -147,14 +265,26 @@ const billingAddress1 = ref('')
 const billingAddress2 = ref('')
 const billingCity = ref('')
 const billingState = ref('')
+const billingStateQuery = ref('')
+const billingStateInvalid = ref(false)
+const billingCounty = ref('')
+const billingCountyQuery = ref('')
 const billingZip = ref('')
+const billingStateOpen = ref(false)
+const billingCountyOpen = ref(false)
 const sameAsBilling = ref(true)
 const shippingName = ref('')
 const shippingAddress1 = ref('')
 const shippingAddress2 = ref('')
 const shippingCity = ref('')
 const shippingState = ref('')
+const shippingStateQuery = ref('')
+const shippingStateInvalid = ref(false)
+const shippingCounty = ref('')
+const shippingCountyQuery = ref('')
 const shippingZip = ref('')
+const shippingStateOpen = ref(false)
+const shippingCountyOpen = ref(false)
 const checkoutError = ref('')
 
 // Prevent background scrolling when modal is open
@@ -179,13 +309,70 @@ onUnmounted(() => {
   } catch (e) {}
 })
 
-const US_STATES = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
-  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
-  'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
-  'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'District of Columbia',
-]
+const uniqueStates = [...new Set(countiesData.map(item => item.state))].sort()
+const filteredStates = computed(() => {
+  const query = billingStateQuery.value.trim().toLowerCase()
+  return query
+    ? uniqueStates.filter(state => state.toLowerCase().includes(query))
+    : uniqueStates
+})
+const filteredShippingStates = computed(() => {
+  const query = shippingStateQuery.value.trim().toLowerCase()
+  return query
+    ? uniqueStates.filter(state => state.toLowerCase().includes(query))
+    : uniqueStates
+})
+const billingCountyOptions = computed(() => {
+  return billingState.value ? countiesData.filter(item => item.state === billingState.value).map(item => item.county) : []
+})
+const effectiveShippingState = computed(() => sameAsBilling.value ? billingState.value : shippingState.value)
+const effectiveShippingCounty = computed(() => sameAsBilling.value ? billingCounty.value : shippingCounty.value)
+
+const shippingCountyOptions = computed(() => {
+  return effectiveShippingState.value ? countiesData.filter(item => item.state === effectiveShippingState.value).map(item => item.county) : []
+})
+const filteredBillingCounties = computed(() => {
+  const query = billingCountyQuery.value.trim().toLowerCase()
+  return query
+    ? billingCountyOptions.value.filter(county => county.toLowerCase().includes(query))
+    : billingCountyOptions.value
+})
+const filteredShippingCounties = computed(() => {
+  const query = shippingCountyQuery.value.trim().toLowerCase()
+  return query
+    ? shippingCountyOptions.value.filter(county => county.toLowerCase().includes(query))
+    : shippingCountyOptions.value
+})
+
+const shippingTaxRate = computed(() => {
+  if (!effectiveShippingState.value || !effectiveShippingCounty.value) return 0
+  const county = countiesData.find(item => item.state === effectiveShippingState.value && item.county === effectiveShippingCounty.value)
+  return county?.combinedTaxRateStatewideAvg ?? 0
+})
+
+const shippingTaxRatePercent = computed(() => {
+  const rate = shippingTaxRate.value * 100
+  return `${rate.toFixed(4).replace(/\.?0+$/, '')}%`
+})
+
+const canCalculateTax = computed(() => {
+  return effectiveShippingState.value && effectiveShippingCounty.value && shippingTaxRate.value > 0
+})
+
+const totalTax = computed(() => {
+  const total = cartStore.totalPrice
+  if (!total || !canCalculateTax.value) return 0
+  return cartStore.items.reduce((sum, item) => {
+    const itemTotal = item.price * item.quantity
+    const itemDiscount = total > 0 ? (itemTotal / total) * cartStore.discountAmount : 0
+    const itemAfterDiscount = Math.max(0, itemTotal - itemDiscount)
+    return sum + itemAfterDiscount * shippingTaxRate.value
+  }, 0)
+})
+
+const finalTotalWithTax = computed(() => {
+  return Math.max(0, cartStore.discountedTotal + totalTax.value)
+})
 
 const itemImage = (item) => {
   return item.images?.[0] || item.image || item.placeholderImage || item.placeholderImages?.[0] || '/images/comingsoon/comingsoon015.webp'
@@ -193,6 +380,160 @@ const itemImage = (item) => {
 
 const updateQuantity = async (id, quantity) => {
   await cartStore.updateQuantity(id, quantity)
+}
+
+const selectBillingState = (state) => {
+  billingState.value = state
+  billingStateQuery.value = state
+  billingCounty.value = ''
+  billingCountyQuery.value = ''
+  billingStateOpen.value = false
+  billingStateInvalid.value = false
+}
+
+const selectShippingState = (state) => {
+  shippingState.value = state
+  shippingStateQuery.value = state
+  shippingCounty.value = ''
+  shippingCountyQuery.value = ''
+  shippingStateOpen.value = false
+  shippingStateInvalid.value = false
+}
+
+const selectBillingCounty = (county) => {
+  billingCounty.value = county
+  billingCountyQuery.value = county
+  billingCountyOpen.value = false
+}
+
+const selectShippingCounty = (county) => {
+  shippingCounty.value = county
+  shippingCountyQuery.value = county
+  shippingCountyOpen.value = false
+}
+
+watch(billingState, (state) => {
+  if (!state || !billingCountyOptions.value.includes(billingCounty.value)) {
+    billingCounty.value = ''
+    billingCountyQuery.value = ''
+  }
+  if (!state) {
+    billingStateQuery.value = ''
+  }
+  billingStateInvalid.value = false
+})
+
+watch(shippingState, (state) => {
+  if (!state || !shippingCountyOptions.value.includes(shippingCounty.value)) {
+    shippingCounty.value = ''
+    shippingCountyQuery.value = ''
+  }
+  if (!state) {
+    shippingStateQuery.value = ''
+  }
+  shippingStateInvalid.value = false
+})
+
+watch(billingStateQuery, (query) => {
+  const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.trim().toLowerCase())
+  if (exactMatch) {
+    billingState.value = exactMatch
+  } else if (query.trim() === '') {
+    billingState.value = ''
+  }
+})
+
+watch(shippingStateQuery, (query) => {
+  const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.trim().toLowerCase())
+  if (exactMatch) {
+    shippingState.value = exactMatch
+  } else if (query.trim() === '') {
+    shippingState.value = ''
+  }
+})
+
+watch(billingCountyQuery, (query) => {
+  const exactMatch = billingCountyOptions.value.find(county => county.toLowerCase() === query.trim().toLowerCase())
+  if (exactMatch) {
+    billingCounty.value = exactMatch
+  } else if (query.trim() === '') {
+    billingCounty.value = ''
+  }
+})
+
+watch(shippingCountyQuery, (query) => {
+  const exactMatch = shippingCountyOptions.value.find(county => county.toLowerCase() === query.trim().toLowerCase())
+  if (exactMatch) {
+    shippingCounty.value = exactMatch
+  } else if (query.trim() === '') {
+    shippingCounty.value = ''
+  }
+})
+
+const onBillingStateBlur = () => {
+  setTimeout(() => {
+    const query = billingStateQuery.value.trim()
+    const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.toLowerCase())
+    if (exactMatch) {
+      selectBillingState(exactMatch)
+      billingStateInvalid.value = false
+      return
+    }
+    if (query) {
+      billingStateInvalid.value = true
+    }
+    billingState.value = ''
+    billingStateQuery.value = ''
+    billingStateOpen.value = false
+  }, 0)
+}
+
+const onBillingCountyBlur = () => {
+  setTimeout(() => {
+    const query = billingCountyQuery.value.trim()
+    const exactMatch = billingCountyOptions.value.find(county => county.toLowerCase() === query.toLowerCase())
+    if (!exactMatch) {
+      billingCounty.value = ''
+      billingCountyQuery.value = ''
+    } else {
+      billingCounty.value = exactMatch
+      billingCountyQuery.value = exactMatch
+    }
+    billingCountyOpen.value = false
+  }, 0)
+}
+
+const onShippingStateBlur = () => {
+  setTimeout(() => {
+    const query = shippingStateQuery.value.trim()
+    const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.toLowerCase())
+    if (exactMatch) {
+      selectShippingState(exactMatch)
+      shippingStateInvalid.value = false
+      return
+    }
+    if (query) {
+      shippingStateInvalid.value = true
+    }
+    shippingState.value = ''
+    shippingStateQuery.value = ''
+    shippingStateOpen.value = false
+  }, 0)
+}
+
+const onShippingCountyBlur = () => {
+  setTimeout(() => {
+    const query = shippingCountyQuery.value.trim()
+    const exactMatch = shippingCountyOptions.value.find(county => county.toLowerCase() === query.toLowerCase())
+    if (!exactMatch) {
+      shippingCounty.value = ''
+      shippingCountyQuery.value = ''
+    } else {
+      shippingCounty.value = exactMatch
+      shippingCountyQuery.value = exactMatch
+    }
+    shippingCountyOpen.value = false
+  }, 0)
 }
 
 const removeItem = async (id) => {
@@ -231,14 +572,24 @@ const submitCheckout = async () => {
     return
   }
 
-  if (!billingName.value.trim() || !billingAddress1.value.trim() || !billingCity.value.trim() || !billingState.value || !billingZip.value.trim()) {
+  if (!billingName.value.trim() || !billingAddress1.value.trim() || !billingCity.value.trim() || !billingState.value || !billingCounty.value || !billingZip.value.trim()) {
     checkoutError.value = 'Please complete your billing address.'
     return
   }
 
+  if (billingState.value && !billingCountyOptions.value.includes(billingCounty.value)) {
+    checkoutError.value = 'Please select a valid billing county for the chosen state.'
+    return
+  }
+
   if (!sameAsBilling.value) {
-    if (!shippingName.value.trim() || !shippingAddress1.value.trim() || !shippingCity.value.trim() || !shippingState.value || !shippingZip.value.trim()) {
+    if (!shippingName.value.trim() || !shippingAddress1.value.trim() || !shippingCity.value.trim() || !shippingState.value || !shippingCounty.value || !shippingZip.value.trim()) {
       checkoutError.value = 'Please complete your shipping address.'
+      return
+    }
+
+    if (shippingState.value && !shippingCountyOptions.value.includes(shippingCounty.value)) {
+      checkoutError.value = 'Please select a valid shipping county for the chosen state.'
       return
     }
   }
@@ -262,6 +613,7 @@ const submitCheckout = async () => {
         address2: billingAddress2.value.trim(),
         city: billingCity.value.trim(),
         state: billingState.value,
+        county: billingCounty.value,
         zip: billingZip.value.trim(),
       },
       shippingAddress: sameAsBilling.value ? {
@@ -270,6 +622,7 @@ const submitCheckout = async () => {
         address2: billingAddress2.value.trim(),
         city: billingCity.value.trim(),
         state: billingState.value,
+        county: billingCounty.value,
         zip: billingZip.value.trim(),
       } : {
         name: shippingName.value.trim(),
@@ -277,6 +630,7 @@ const submitCheckout = async () => {
         address2: shippingAddress2.value.trim(),
         city: shippingCity.value.trim(),
         state: shippingState.value,
+        county: shippingCounty.value,
         zip: shippingZip.value.trim(),
       },
     })
@@ -410,14 +764,7 @@ const submitCheckout = async () => {
   align-items: center;
 }
 
-.item-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .item-total {
-  grid-area: total;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -425,6 +772,54 @@ const submitCheckout = async () => {
   gap: 6px;
   text-align: right;
   min-width: 90px;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-btn,
+.remove-button {
+  border: none;
+  border-radius: 999px;
+  min-width: 38px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.qty-btn {
+  background: #fff;
+  color: #0d6efd;
+  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.08);
+}
+
+.qty-btn:hover {
+  transform: translateY(-1px);
+  background: #e7f1ff;
+}
+
+.quantity {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.remove-button {
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  padding: 0 14px;
+}
+
+.remove-button:hover {
+  background: rgba(220, 38, 38, 0.16);
 }
 
 .item-controls {
@@ -522,27 +917,37 @@ const submitCheckout = async () => {
   width: min(920px, 100%);
   max-width: 920px;
   max-height: calc(100vh - 40px);
-  overflow-y: auto;
   background: white;
   border-radius: 20px;
-  padding: 24px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+}
+
+.checkout-popup-body {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 18px 24px 24px;
 }
 
 .popup-close {
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
   color: #333;
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
   cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  z-index: 2;
 }
 
 .checkout-popup h3 {
@@ -575,6 +980,68 @@ const submitCheckout = async () => {
   background: #fff;
   font-size: 0.95rem;
   color: #16202b;
+}
+
+.dropdown-field {
+  position: relative;
+}
+
+.dropdown-field input {
+  width: 100%;
+  padding-right: 42px;
+}
+
+.dropdown-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.dropdown-list {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #d3d8df;
+  border-radius: 10px;
+  margin-top: 4px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  list-style: none;
+  padding: 0;
+}
+
+.dropdown-list li {
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background: #eef2ff;
+}
+
+.dropdown-field input:disabled {
+  background: #f7f8fb;
+  cursor: not-allowed;
+}
+
+.field-note {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 0.88rem;
+}
+
+.field-error {
+  margin: 6px 0 0;
+  color: #b91c1c;
+  font-size: 0.88rem;
 }
 
 .checkout-popup .checkout-grid {
@@ -639,6 +1106,34 @@ const submitCheckout = async () => {
   margin-top: 10px;
   color: #586675;
   font-size: 0.9rem;
+}
+
+.checkout-summary {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px solid #d3d8df;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.96rem;
+}
+
+.summary-row.summary-total {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+  font-weight: 700;
+}
+
+.summary-discount {
+  color: #dc2626;
 }
 
 .checkout-popup .checkbox-label {
