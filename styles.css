@@ -957,6 +957,7 @@ section {
 }
 
 .collection-card {
+    container-type: inline-size;
     padding: 0;
     border-radius: 0;
     background: var(--white);
@@ -1052,6 +1053,7 @@ section {
     max-width: calc(100% - 8px);
     margin: 0 0 6px;
     font-size: clamp(12pt, 1.7vw, 16pt);
+    font-size: clamp(12pt, 8cqw, 24pt);
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.06;
@@ -1130,6 +1132,7 @@ section {
 }
 
 .collections:not(.collections-catalog) .card {
+    container-type: inline-size;
     position: relative;
     border: 0;
     border-radius: 0;
@@ -1194,6 +1197,7 @@ section {
     max-width: calc(100% - 8px);
     margin: 0 0 6px;
     font-size: clamp(12pt, 1.7vw, 16pt);
+    font-size: clamp(12pt, 8cqw, 24pt);
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.06;
@@ -1207,7 +1211,7 @@ section {
     .collection-link .subtle,
     .collections:not(.collections-catalog) .subtle,
     .home-page .collections:not(.collections-catalog) .body h3 {
-        font-size: clamp(15pt, 1.6vw, 20pt);
+        font-size: clamp(15pt, 8cqw, 24pt);
     }
 }
 
@@ -2403,6 +2407,7 @@ footer>section {
         .collection-group h4 {
             max-width: min(360px, 98%);
             font-size: clamp(11pt, 3.2vw, 15pt);
+            font-size: clamp(11pt, 8cqw, 21pt);
             line-height: 1.06;
             white-space: normal;
             word-break: normal;
@@ -2441,6 +2446,7 @@ footer>section {
         .home-page .collections:not(.collections-catalog) .body h3 {
             max-width: min(360px, 98%);
             font-size: clamp(11pt, 3.2vw, 15pt);
+            font-size: clamp(11pt, 8cqw, 21pt);
             white-space: normal;
             word-break: normal;
         }
@@ -2449,6 +2455,7 @@ footer>section {
         .collections:not(.collections-catalog) .subtle {
             max-width: min(360px, 98%);
             font-size: clamp(11pt, 3.2vw, 15pt);
+            font-size: clamp(11pt, 8cqw, 21pt);
         }
 
         .home-page .tile .copy h3 {
