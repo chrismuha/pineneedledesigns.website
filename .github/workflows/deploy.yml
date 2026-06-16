@@ -28,7 +28,6 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             git clean -fd
-            npm install
-            npm run build
-            pm2 restart server
+            npm ci --omit=dev --ignore-scripts
+            pm2 restart server --update-env
             pm2 save
