@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-const API_BASE = 'http://localhost:3001/api'
-
 const DISCOUNT_CODES = {
   'B$': { type: 'fixed', value: 20, label: '$20 off' },
   'W$': { type: 'fixed', value: 25, label: '$25 off' },
@@ -205,6 +203,5 @@ export const useCartStore = defineStore('cart', () => {
     clearCart,
     toggleOpen,
     close,
-    API_BASE
   }
 })
