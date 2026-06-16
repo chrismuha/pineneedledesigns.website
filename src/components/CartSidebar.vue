@@ -427,7 +427,12 @@ const taxableTotal = computed(() => {
 })
 
 const formatTaxRate = (rate) => {
-  return `${(rate * 100).toFixed(4).replace(/\.?0+$/, '')}%`
+  const percent = rate * 100
+  if (!Number.isFinite(percent) || percent === 0) return '0%'
+
+  const wholeDigits = Math.max(1, Math.floor(Math.abs(percent)).toString().length)
+  const decimalPlaces = Math.max(0, 4 - wholeDigits)
+  return `${Number(percent.toFixed(decimalPlaces))}%`
 }
 
 const taxLocationLabel = computed(() => {
