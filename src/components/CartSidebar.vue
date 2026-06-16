@@ -404,8 +404,7 @@ const shippingTaxRate = computed(() => {
 })
 
 const shippingTaxRatePercent = computed(() => {
-  const rate = shippingTaxRate.value * 100
-  return `${rate.toFixed(4).replace(/\.?0+$/, '')}%`
+  return formatTaxRate(shippingTaxRate.value)
 })
 
 const canCalculateTax = computed(() => {
@@ -453,7 +452,7 @@ const taxBreakdownRows = computed(() => {
       amount: taxableTotal.value * stateRate,
     },
     {
-      label: 'Local sales tax estimate',
+      label: 'Local sales tax',
       rate: formatTaxRate(localRate),
       amount: taxableTotal.value * localRate,
     },
@@ -492,7 +491,7 @@ const itemizedLineItems = computed(() => {
       taxAmount: itemTax,
       taxRateDisplay: canCalculateTax.value
         ? itemTaxRate > 0
-          ? `${(itemTaxRate * 100).toFixed(2)}%`
+          ? formatTaxRate(itemTaxRate)
           : '0%'
         : 'N/A',
       lineTotal: Math.max(0, itemAfterDiscount + itemTax),
