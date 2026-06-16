@@ -86,7 +86,7 @@ const toggleCart = () => {
 @media (max-width: 640px) {
   .floating-cart-btn {
     right: 14px;
-    bottom: 14px;
+    bottom: calc(92px + env(safe-area-inset-bottom));
     width: 54px;
     height: 54px;
     font-size: 22pt;
