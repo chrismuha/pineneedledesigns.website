@@ -14,7 +14,7 @@
       </div>
       <div v-else class="cart-items">
         <div v-if="cartStore.items.length" class="cart-items-list">
-          <div v-for="item in cartStore.items" :key="item.id" class="cart-item">
+          <div v-for="item in cartStore.items" :key="cartLineId(item)" class="cart-item">
             <div class="item-row">
               <div class="item-image-wrap">
                 <img :src="itemImage(item)" alt="Cart item" class="item-image" />
@@ -28,11 +28,11 @@
                 </div>
                 <div class="item-actions">
                   <div class="item-controls">
-                    <button class="qty-btn" type="button" @click="updateQuantity(item.id, Math.max(1, item.quantity - 1))">-</button>
+                    <button class="qty-btn" type="button" @click="updateQuantity(cartLineId(item), Math.max(1, item.quantity - 1))">-</button>
                     <span class="quantity">{{ item.quantity }}</span>
-                    <button class="qty-btn" type="button" @click="updateQuantity(item.id, item.quantity + 1)">+</button>
+                    <button class="qty-btn" type="button" @click="updateQuantity(cartLineId(item), item.quantity + 1)">+</button>
                   </div>
-                  <button class="remove-button" type="button" @click="removeItem(item.id)" aria-label="Remove item">×</button>
+                  <button class="remove-button" type="button" @click="removeItem(cartLineId(item))" aria-label="Remove item">×</button>
                 </div>
               </div>
             </div>
@@ -64,7 +64,8 @@
           <p>Total Price: ${{ cartStore.totalPrice.toFixed(2) }}</p>
           <p v-if="cartStore.discountAmount > 0">Discount: -${{ cartStore.discountAmount.toFixed(2) }}</p>
           <p v-if="cartStore.discountAmount > 0" class="discount-amount-summary">You saved ${{ cartStore.discountAmount.toFixed(2) }}</p>
-          <p class="cart-final-total">Final Total: ${{ cartStore.discountedTotal.toFixed(2) }}</p>
+          <p class="cart-final-total">Total before taxes: ${{ cartStore.discountedTotal.toFixed(2) }}</p>
+          <p class="cart-tax-note">Taxes will be calculated at checkout.</p>
           <button @click="clearCart" class="btn">Clear Cart</button>
           <button v-if="!showCheckoutForm" @click="checkout" class="btn btn-primary">Checkout</button>
         </div>
@@ -507,6 +508,10 @@ const itemImage = (item) => {
   return item.images?.[0] || item.image || item.placeholderImage || item.placeholderImages?.[0] || '/images/comingsoon/comingsoon015.webp'
 }
 
+const cartLineId = (item) => {
+  return item.cartItemId || String(item.id)
+}
+
 const updateQuantity = async (id, quantity) => {
   await cartStore.updateQuantity(id, quantity)
 }
@@ -800,6 +805,10 @@ const submitCheckout = async () => {
   overflow-y: auto;
 }
 
+.cart-sidebar * {
+  box-sizing: border-box;
+}
+
 .cart-header {
   display: flex;
   justify-content: space-between;
@@ -830,6 +839,7 @@ const submitCheckout = async () => {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .cart-item {
@@ -844,7 +854,8 @@ const submitCheckout = async () => {
 }
 
 .item-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
   gap: 16px;
   align-items: flex-start;
 }
@@ -873,11 +884,15 @@ const submitCheckout = async () => {
   gap: 12px;
   align-items: flex-start;
   flex: 1;
+  min-width: 0;
+  width: 100%;
 }
 
 .item-main h3 {
   font-size: 1rem;
   margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .item-price {
@@ -891,6 +906,8 @@ const submitCheckout = async () => {
   gap: 12px;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  min-width: 0;
 }
 
 .item-total {
@@ -904,6 +921,7 @@ const submitCheckout = async () => {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .qty-btn,
@@ -942,6 +960,8 @@ const submitCheckout = async () => {
   background: rgba(220, 38, 38, 0.08);
   color: #dc2626;
   width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
   min-width: 38px;
   padding: 0;
   font-size: 1.1rem;
@@ -969,17 +989,47 @@ const submitCheckout = async () => {
   color: #1f2937;
 }
 
-/* @media (max-width: 720px) {
+@media (max-width: 460px) {
+  .cart-items {
+    padding: 16px;
+  }
+
+  .cart-item {
+    padding: 14px;
+  }
+
   .cart-items .item-row {
-    flex-direction: column;
+    grid-template-columns: 86px minmax(0, 1fr);
     gap: 12px;
   }
 
-  .cart-items .item-actions {
-    justify-content: flex-start;
-    flex-wrap: wrap;
+  .item-image-wrap {
+    flex-basis: 86px;
+    min-width: 86px;
+    width: 86px;
+    height: 86px;
   }
-} */
+
+  .cart-items .item-actions {
+    gap: 8px;
+  }
+
+  .item-controls {
+    gap: 8px;
+  }
+
+  .qty-btn,
+  .remove-button {
+    min-width: 34px;
+    min-height: 34px;
+  }
+
+  .remove-button {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+}
 
 
 .item-total-label {
@@ -1476,6 +1526,13 @@ const submitCheckout = async () => {
 .cart-final-total {
   font-size: 1.1rem;
   font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.cart-tax-note {
+  margin: 0 0 12px;
+  color: #586675;
+  font-size: 0.9rem;
 }
 
 .btn {

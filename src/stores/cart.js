@@ -9,10 +9,13 @@ const DISCOUNT_CODES = {
   'SEW': { type: 'percent', value: 10, label: '10% off' },
 }
 
+const LOCAL_CART_KEY = 'pine-needle-designs-cart'
+
 export const useCartStore = defineStore('cart', () => {
   const items = ref([])
   const isOpen = ref(false)
   const isLoading = ref(false)
+  const useServerCart = ref(true)
   const appliedDiscountCode = ref('')
   const discountError = ref('')
 
@@ -75,6 +78,63 @@ export const useCartStore = defineStore('cart', () => {
     discountError.value = ''
   }
 
+  const readLocalCart = () => {
+    try {
+      return JSON.parse(window.localStorage.getItem(LOCAL_CART_KEY) || '[]')
+    } catch (error) {
+      console.error('Failed to read local cart:', error)
+      return []
+    }
+  }
+
+  const writeLocalCart = (cartItems = items.value) => {
+    try {
+      window.localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(cartItems))
+    } catch (error) {
+      console.error('Failed to save local cart:', error)
+    }
+  }
+
+  const cartItemKey = (itemOrId) => {
+    if (typeof itemOrId === 'object' && itemOrId !== null) {
+      return itemOrId.cartItemId || String(itemOrId.id)
+    }
+
+    return String(itemOrId)
+  }
+
+  const setCartItems = (cartItems) => {
+    items.value = Array.isArray(cartItems) ? cartItems : []
+    writeLocalCart(items.value)
+  }
+
+  const addLocalItem = (product) => {
+    const productCartItemId = product.cartItemId || String(product.id)
+    const existingItem = items.value.find(item => cartItemKey(item) === productCartItemId)
+
+    if (existingItem) {
+      existingItem.quantity += 1
+    } else {
+      items.value.push({ ...product, cartItemId: productCartItemId, quantity: 1 })
+    }
+
+    writeLocalCart()
+  }
+
+  const updateLocalQuantity = (productId, quantity) => {
+    const id = String(productId)
+    items.value = items.value
+      .map(item => cartItemKey(item) === id ? { ...item, quantity } : item)
+      .filter(item => item.quantity > 0)
+    writeLocalCart()
+  }
+
+  const removeLocalItem = (productId) => {
+    const id = String(productId)
+    items.value = items.value.filter(item => cartItemKey(item) !== id)
+    writeLocalCart()
+  }
+
   const fetchCart = async () => {
     try {
       isLoading.value = true
@@ -82,16 +142,28 @@ export const useCartStore = defineStore('cart', () => {
         credentials: 'include'
       })
       if (response.ok) {
-        items.value = await response.json()
+        useServerCart.value = true
+        setCartItems(await response.json())
+      } else {
+        useServerCart.value = false
+        setCartItems(readLocalCart())
       }
     } catch (error) {
       console.error('Failed to fetch cart:', error)
+      useServerCart.value = false
+      setCartItems(readLocalCart())
     } finally {
       isLoading.value = false
     }
   }
 
   const addItem = async (product) => {
+    if (!useServerCart.value) {
+      addLocalItem(product)
+      isOpen.value = true
+      return
+    }
+
     try {
       isLoading.value = true
       const response = await fetch(`/api/cart`, {
@@ -104,17 +176,28 @@ export const useCartStore = defineStore('cart', () => {
       })
 
       if (response.ok) {
-        items.value = await response.json()
-        isOpen.value = true // Auto open cart when item is added
+        useServerCart.value = true
+        setCartItems(await response.json())
+      } else {
+        useServerCart.value = false
+        addLocalItem(product)
       }
     } catch (error) {
       console.error('Failed to add item:', error)
+      useServerCart.value = false
+      addLocalItem(product)
     } finally {
+      isOpen.value = true // Auto open cart when item is added
       isLoading.value = false
     }
   }
 
   const removeItem = async (productId) => {
+    if (!useServerCart.value) {
+      removeLocalItem(productId)
+      return
+    }
+
     try {
       isLoading.value = true
       const response = await fetch(`/api/cart/${productId}`, {
@@ -123,16 +206,27 @@ export const useCartStore = defineStore('cart', () => {
       })
 
       if (response.ok) {
-        items.value = await response.json()
+        useServerCart.value = true
+        setCartItems(await response.json())
+      } else {
+        useServerCart.value = false
+        removeLocalItem(productId)
       }
     } catch (error) {
       console.error('Failed to remove item:', error)
+      useServerCart.value = false
+      removeLocalItem(productId)
     } finally {
       isLoading.value = false
     }
   }
 
   const updateQuantity = async (productId, quantity) => {
+    if (!useServerCart.value) {
+      updateLocalQuantity(productId, quantity)
+      return
+    }
+
     try {
       isLoading.value = true
       const response = await fetch(`/api/cart/${productId}`, {
@@ -145,16 +239,27 @@ export const useCartStore = defineStore('cart', () => {
       })
 
       if (response.ok) {
-        items.value = await response.json()
+        useServerCart.value = true
+        setCartItems(await response.json())
+      } else {
+        useServerCart.value = false
+        updateLocalQuantity(productId, quantity)
       }
     } catch (error) {
       console.error('Failed to update quantity:', error)
+      useServerCart.value = false
+      updateLocalQuantity(productId, quantity)
     } finally {
       isLoading.value = false
     }
   }
 
   const clearCart = async () => {
+    if (!useServerCart.value) {
+      setCartItems([])
+      return
+    }
+
     try {
       isLoading.value = true
       const response = await fetch(`/api/cart`, {
@@ -163,10 +268,16 @@ export const useCartStore = defineStore('cart', () => {
       })
 
       if (response.ok) {
-        items.value = await response.json()
+        useServerCart.value = true
+        setCartItems(await response.json())
+      } else {
+        useServerCart.value = false
+        setCartItems([])
       }
     } catch (error) {
       console.error('Failed to clear cart:', error)
+      useServerCart.value = false
+      setCartItems([])
     } finally {
       isLoading.value = false
     }
