@@ -17,19 +17,40 @@ const orderMap = new Map();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Base URL for application links (can be overridden via .env)
+const APP_BASE_URL = process.env.APP_BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://pineneedledesigns.store' : 'http://localhost:5173');
+
+const _isLocalApp = APP_BASE_URL.includes('localhost') || APP_BASE_URL.includes('127.0.0.1') || APP_BASE_URL.startsWith('http://');
+
+const _paypalEnvironment = _isLocalApp ? paypal.Environment.Sandbox : paypal.Environment.Production;
+const _paypalClientId = _isLocalApp ? process.env.SANDBOX_PAYPAL_CLIENT_ID : process.env.PAYPAL_CLIENT_ID;
+const _paypalClientSecret = _isLocalApp ? process.env.SANDBOX_PAYPAL_CLIENT_SECRET : process.env.PAYPAL_CLIENT_SECRET;
+
+// Email defaults and overrides
+const DEFAULT_PROD_EMAIL = 'onpinesandneedles@gmail.com';
+const DEFAULT_SANDBOX_EMAIL = 'alnabidrm@gmail.com';
+
+const EMAIL_SENDER = process.env.EMAIL || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
+const EMAIL_RECIPIENTS = process.env.ORDER_EMAILS || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL,
+    user: EMAIL_SENDER,
     pass: process.env.EMAIL_APP_PASSWORD,
   },
 });
 
+// Verify transporter configuration at startup so failures surface early
+transporter.verify()
+  .then(() => console.log('✅ Mailer verified (ready to send emails)'))
+  .catch(err => console.error('❌ Mailer verification failed:', err));
+
 const client = new paypal.Client({
-  environment: paypal.Environment.Production,
+  environment: _paypalEnvironment,
   clientCredentialsAuthCredentials: {
-    oAuthClientId: process.env.PAYPAL_CLIENT_ID,
-    oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET
+    oAuthClientId: _paypalClientId,
+    oAuthClientSecret: _paypalClientSecret
   }
 })
 
@@ -239,9 +260,9 @@ app.post('/api/checkout', async (req, res) => {
             items: orderItems
           }
         ],
-        applicationContext: {
-          returnUrl: "https://pineneedledesigns.store/order-success",
-          cancelUrl: "https://pineneedledesigns.store/cancel"
+          applicationContext: {
+          returnUrl: `${APP_BASE_URL}/order-success`,
+          cancelUrl: `${APP_BASE_URL}/cancel`
         },
       },
     })
@@ -264,8 +285,8 @@ app.post('/api/checkout', async (req, res) => {
     res.json({ url: link });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error creating PayPal order");
+    console.error('Error in /api/checkout:', err && err.stack ? err.stack : err);
+    res.status(500).json({ error: 'Error creating PayPal order', message: err && err.message ? err.message : String(err) });
   }
 });
 
@@ -300,14 +321,19 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
     const shippingInfo = `Shipping address:<br>${shippingAddress.name}<br>${shippingAddress.address1}<br>${shippingAddress.address2 ? shippingAddress.address2 + '<br>' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}<br>`;
 
     const options = {
-      from: '"Pin Needle Designs" <onpinesandneedles@gmail.com>',
-      to: "onpinesandneedles@gmail.com",
+      from: `"Pin Needle Designs" <${EMAIL_SENDER}>`,
+      to: EMAIL_RECIPIENTS,
       subject: `Order #${order.id}`,
       html: `Customer information<br><br>${customerInfo}${billingInfo}${shippingInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
       text: `Customer information\n\nCustomer type: ${customer.type}\nEmail: ${customer.email}\nPhone: ${customer.phone}\n\nBilling address:\n${billingAddress.name}\n${billingAddress.address1}\n${billingAddress.address2 ? billingAddress.address2 + '\n' : ''}${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}\n\nShipping address:\n${shippingAddress.name}\n${shippingAddress.address1}\n${shippingAddress.address2 ? shippingAddress.address2 + '\n' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}${discountLine ? `\n\nDiscount Code: ${discountCode}` : ''}\n\nItems Ordered\n\n${itemsList.replace(/<br>/g, '\n')}\n\nTotal: ${total}`,
     }
 
-    await transporter.sendMail(options);
+    try {
+      const info = await transporter.sendMail(options);
+      console.log('✅ Order email sent:', info);
+    } catch (mailErr) {
+      console.error('❌ Failed to send order email:', mailErr);
+    }
 
     orderMap.delete(order.id);
 
