@@ -321,7 +321,7 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
     const shippingInfo = `Shipping address:<br>${shippingAddress.name}<br>${shippingAddress.address1}<br>${shippingAddress.address2 ? shippingAddress.address2 + '<br>' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}<br>`;
 
     const options = {
-      from: `"Pin Needle Designs" <${EMAIL_SENDER}>`,
+      from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
       to: EMAIL_RECIPIENTS,
       subject: `Order #${order.id}`,
       html: `Customer information<br><br>${customerInfo}${billingInfo}${shippingInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
