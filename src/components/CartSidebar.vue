@@ -263,13 +263,27 @@
               <span v-if="canCalculateTax">+ ${{ totalTax.toFixed(2) }}</span>
               <span v-else>Waiting for customer information</span>
             </div>
+            <div v-if="canCalculateTax" class="tax-breakdown">
+              <div class="tax-breakdown-header">
+                <span>Tax breakdown</span>
+                <span>{{ taxLocationLabel }}</span>
+              </div>
+              <div v-for="line in taxBreakdownRows" :key="line.label" class="tax-breakdown-row">
+                <span>
+                  {{ line.label }}
+                  <small>{{ line.rate }}</small>
+                </span>
+                <span>${{ line.amount.toFixed(2) }}</span>
+              </div>
+              <p v-if="taxBreakdownNote" class="tax-breakdown-note">{{ taxBreakdownNote }}</p>
+            </div>
             <div class="summary-row summary-total">
               <span>Final total</span>
               <span>${{ finalTotalWithTax.toFixed(2) }}</span>
             </div>
           </div>
 
-          <p class="checkout-note">These information are necessary for us to process your order.</p>
+          <p class="checkout-note">This information is necessary for us to process your order.</p>
           <p v-if="checkoutError" class="checkout-error">{{ checkoutError }}</p>
 
           <div class="checkout-actions">
@@ -361,6 +375,7 @@ const billingCountyOptions = computed(() => {
 })
 const effectiveShippingState = computed(() => sameAsBilling.value ? billingState.value : shippingState.value)
 const effectiveShippingCounty = computed(() => sameAsBilling.value ? billingCounty.value : shippingCounty.value)
+const effectiveShippingCity = computed(() => sameAsBilling.value ? billingCity.value.trim() : shippingCity.value.trim())
 
 const shippingCountyOptions = computed(() => {
   return effectiveShippingState.value ? countiesData.filter(item => item.state === effectiveShippingState.value).map(item => item.county) : []
@@ -378,10 +393,13 @@ const filteredShippingCounties = computed(() => {
     : shippingCountyOptions.value
 })
 
+const shippingTaxRecord = computed(() => {
+  if (!effectiveShippingState.value || !effectiveShippingCounty.value) return null
+  return countiesData.find(item => item.state === effectiveShippingState.value && item.county === effectiveShippingCounty.value) || null
+})
+
 const shippingTaxRate = computed(() => {
-  if (!effectiveShippingState.value || !effectiveShippingCounty.value) return 0
-  const county = countiesData.find(item => item.state === effectiveShippingState.value && item.county === effectiveShippingCounty.value)
-  return county?.combinedTaxRateStatewideAvg ?? 0
+  return shippingTaxRecord.value?.combinedTaxRateStatewideAvg ?? 0
 })
 
 const shippingTaxRatePercent = computed(() => {
@@ -402,6 +420,53 @@ const totalTax = computed(() => {
     const itemAfterDiscount = Math.max(0, itemTotal - itemDiscount)
     return sum + itemAfterDiscount * shippingTaxRate.value
   }, 0)
+})
+
+const taxableTotal = computed(() => {
+  return canCalculateTax.value ? cartStore.discountedTotal : 0
+})
+
+const formatTaxRate = (rate) => {
+  return `${(rate * 100).toFixed(4).replace(/\.?0+$/, '')}%`
+}
+
+const taxLocationLabel = computed(() => {
+  return [
+    effectiveShippingCity.value,
+    effectiveShippingCounty.value,
+    effectiveShippingState.value,
+  ].filter(Boolean).join(', ')
+})
+
+const taxBreakdownRows = computed(() => {
+  if (!canCalculateTax.value || !shippingTaxRecord.value) return []
+
+  const stateRate = shippingTaxRecord.value.stateTaxRate ?? 0
+  const localRate = shippingTaxRecord.value.avgLocalTaxRateStatewide ?? 0
+  const combinedRate = shippingTaxRecord.value.combinedTaxRateStatewideAvg ?? shippingTaxRate.value
+
+  return [
+    {
+      label: 'State sales tax',
+      rate: formatTaxRate(stateRate),
+      amount: taxableTotal.value * stateRate,
+    },
+    {
+      label: 'Local sales tax estimate',
+      rate: formatTaxRate(localRate),
+      amount: taxableTotal.value * localRate,
+    },
+    {
+      label: 'Combined tax applied',
+      rate: formatTaxRate(combinedRate),
+      amount: totalTax.value,
+    },
+  ]
+})
+
+const taxBreakdownNote = computed(() => {
+  if (!shippingTaxRecord.value?.countyLevelTaxRateStatus) return ''
+  return shippingTaxRecord.value.countyLevelTaxRateStatus
 })
 
 const itemizedLineItems = computed(() => {
@@ -1200,10 +1265,15 @@ const submitCheckout = async () => {
 .summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 10px;
   font-size: 0.96rem;
+}
+
+.summary-row span:last-child {
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .summary-row.summary-total {
@@ -1215,6 +1285,62 @@ const submitCheckout = async () => {
 
 .summary-discount {
   color: #dc2626;
+}
+
+.tax-breakdown {
+  margin: 4px 0 12px;
+  padding: 12px;
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.tax-breakdown-header,
+.tax-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tax-breakdown-header {
+  margin-bottom: 8px;
+  color: #22313f;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.tax-breakdown-header span:last-child {
+  max-width: 58%;
+  text-align: right;
+  color: #526173;
+  font-weight: 600;
+}
+
+.tax-breakdown-row {
+  padding: 6px 0;
+  color: #334155;
+  font-size: 0.9rem;
+  border-top: 1px solid #eef2f6;
+}
+
+.tax-breakdown-row small {
+  display: block;
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.tax-breakdown-row span:last-child {
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.tax-breakdown-note {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.35;
 }
 
 .checkout-popup .checkbox-label {
@@ -1240,9 +1366,56 @@ const submitCheckout = async () => {
   margin-top: 26px;
 }
 
+.checkout-actions .btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: normal;
+}
+
 .btn-secondary {
   background: #f5f7fa;
   color: #2e3a47;
+}
+
+@media (max-width: 560px) {
+  .checkout-popup-overlay {
+    padding: 12px;
+  }
+
+  .checkout-popup {
+    margin: 0;
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  .checkout-popup-body {
+    padding: 16px;
+  }
+
+  .checkout-summary {
+    padding: 14px;
+  }
+
+  .checkout-actions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .checkout-actions .btn {
+    min-height: 44px;
+  }
 }
 
 .checkout-error {
