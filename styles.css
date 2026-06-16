@@ -1048,10 +1048,16 @@ section {
 }
 
 .collection-group h4 {
+    width: 100%;
+    max-width: calc(100% - 8px);
     margin: 0 0 6px;
-    font-size: 14pt;
+    font-size: clamp(12pt, 1.7vw, 16pt);
     font-weight: 800;
-    line-height: 1.2;
+    letter-spacing: 0;
+    line-height: 1.06;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    text-transform: uppercase;
 }
 
 .section-head h2 {
@@ -1181,6 +1187,30 @@ section {
     color: var(--white);
 }
 
+.collection-link .subtle,
+.collections:not(.collections-catalog) .subtle,
+.home-page .collections:not(.collections-catalog) .body h3 {
+    width: 100%;
+    max-width: calc(100% - 8px);
+    margin: 0 0 6px;
+    font-size: clamp(12pt, 1.7vw, 16pt);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.06;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    text-transform: uppercase;
+}
+
+@media (min-width: 1100px) {
+    .collection-group h4,
+    .collection-link .subtle,
+    .collections:not(.collections-catalog) .subtle,
+    .home-page .collections:not(.collections-catalog) .body h3 {
+        font-size: clamp(15pt, 1.6vw, 20pt);
+    }
+}
+
 .highlighted-collection {
     padding: 12px 18px 24px;
 }
@@ -1194,6 +1224,15 @@ section {
 .highlighted-collection .product {
     background: var(--white);
     border-radius: 20px;
+}
+
+.home-page .highlighted-collection .body h3 {
+    margin: 0;
+    font-size: clamp(20pt, 3.2vw, 30pt);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
 }
 
 @media (max-width: 960px) {
@@ -1319,6 +1358,15 @@ section {
     align-items: center;
     text-align: center;
     gap: 10px;
+}
+
+.home-page .tile .copy h3 {
+    margin: 0;
+    font-size: clamp(20pt, 3vw, 28pt);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    text-transform: uppercase;
 }
 
 .tile .copy .btn {
@@ -1737,6 +1785,20 @@ footer>section {
     opacity: .85;
     font-size: 11pt;
     font-weight: 300;
+}
+
+.collection-link .subtle,
+.collections:not(.collections-catalog) .subtle {
+    color: var(--white);
+    opacity: 1;
+    font-weight: 600;
+    text-shadow: 0 2px 10px var(--black-50);
+}
+
+.home-page .collections:not(.collections-catalog) .subtle {
+    color: var(--white);
+    opacity: 1;
+    filter: none;
 }
 
 /* “Oh beautiful…” line */
@@ -2339,17 +2401,25 @@ footer>section {
         }
 
         .collection-group h4 {
-            font-size: clamp(13pt, 4.6vw, 18pt);
-            line-height: 1.08;
+            max-width: min(360px, 98%);
+            font-size: clamp(11pt, 3.2vw, 15pt);
+            line-height: 1.06;
+            white-space: normal;
+            word-break: normal;
         }
 
         .collection-link .subtle {
             color: var(--white);
+            opacity: 1;
         }
 
         .collections:not(.collections-catalog) .grid-6 {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
+        }
+
+        .home-page .collections:not(.collections-catalog) .grid-6 {
+            grid-template-columns: 1fr;
         }
 
         .collections:not(.collections-catalog) .body {
@@ -2364,14 +2434,25 @@ footer>section {
             display: inline-flex;
         }
 
-        /* Shrink highlighted collection placeholder headers by ~2pt on phones/tablets */
-        .highlighted-collection .body h3 {
-            font-size: 12pt;
+        .home-page .highlighted-collection .body h3 {
+            font-size: clamp(18pt, 7vw, 26pt);
         }
 
-        /* Reduce placeholder item header text for all collections on small screens */
-        .grid .body h3 {
-            font-size: 11pt;
+        .home-page .collections:not(.collections-catalog) .body h3 {
+            max-width: min(360px, 98%);
+            font-size: clamp(11pt, 3.2vw, 15pt);
+            white-space: normal;
+            word-break: normal;
+        }
+
+        .collection-link .subtle,
+        .collections:not(.collections-catalog) .subtle {
+            max-width: min(360px, 98%);
+            font-size: clamp(11pt, 3.2vw, 15pt);
+        }
+
+        .home-page .tile .copy h3 {
+            font-size: clamp(17pt, 6vw, 24pt);
         }
 
         /* Keep pills narrower on phones so they stay inside the card */

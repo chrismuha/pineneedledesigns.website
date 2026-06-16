@@ -18,8 +18,8 @@
                 decoding="async"
               />
               <div class="body">
-                <h4>{{ collection.title }}</h4>
-                <div class="subtle">{{ collection.count }} items</div>
+                <h4>{{ uppercase(collection.title) }}</h4>
+                <div class="subtle">{{ itemCountLabel(collection.count) }}</div>
               </div>
             </router-link>
           </article>
@@ -68,4 +68,6 @@ const collectionImagePriority = (groupIndex, collectionIndex) =>
   groupIndex === 0 && collectionIndex === 0 ? 'high' : 'auto'
 
 const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
+const uppercase = (value) => String(value).toUpperCase()
+const itemCountLabel = (count) => `${count} ITEMS`
 </script>

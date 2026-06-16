@@ -24,7 +24,7 @@
             </router-link>
             <div class="body">
               <div class="pill">{{ card.pill }}</div>
-              <h3>{{ card.title }}</h3>
+              <h3>{{ uppercase(card.title) }}</h3>
               <div class="product-meta"><span>{{ card.meta }}</span></div>
               <div class="price">{{ card.price }}</div>
               <div class="description">{{ card.description }}</div>
@@ -55,8 +55,8 @@
                 :src="collection.cardImage"
               />
               <div class="body">
-                <h3>{{ collection.title }}</h3>
-                <div class="subtle">{{ collection.count }} items</div>
+                <h3>{{ uppercase(collection.title) }}</h3>
+                <div class="subtle">{{ itemCountLabel(collection.count) }}</div>
               </div>
             </router-link>
             <div v-else>
@@ -67,8 +67,8 @@
                 :src="collection.cardImage"
               />
               <div class="body">
-                <h3>{{ collection.title }}</h3>
-                <div class="subtle">0 items</div>
+                <h3>{{ uppercase(collection.title) }}</h3>
+                <div class="subtle">{{ itemCountLabel(0) }}</div>
               </div>
             </div>
           </article>
@@ -219,4 +219,6 @@ const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
 const collectionImageLoading = (index) => (index < 2 ? 'eager' : 'lazy')
 const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
+const uppercase = (value) => String(value).toUpperCase()
+const itemCountLabel = (count) => `${count} ITEMS`
 </script>
