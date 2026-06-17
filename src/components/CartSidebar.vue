@@ -771,6 +771,20 @@ const submitCheckout = async () => {
         county: shippingCounty.value,
         zip: shippingZip.value.trim(),
       },
+      summary: {
+        subtotal: cartStore.totalPrice,
+        discount: cartStore.discountAmount,
+        discountedTotal: cartStore.discountedTotal,
+        tax: totalTax.value,
+        finalTotal: finalTotalWithTax.value,
+      },
+
+      lineItems: itemizedLineItems.value,
+      tax: {
+        rate: shippingTaxRate.value,
+        label: taxLocationLabel.value,
+        breakdown: taxBreakdownRows.value
+      },
     })
   })
 

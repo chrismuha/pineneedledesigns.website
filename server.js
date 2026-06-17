@@ -280,6 +280,9 @@ app.post('/api/checkout', async (req, res) => {
       billingAddress,
       shippingAddress,
       discountCode: code ? code.trim().toUpperCase() : '',
+      summary: req.body.summary,
+      lineItems: req.body.lineItems,
+      tax: req.body.tax,
     })
 
     res.json({ url: link });
@@ -295,7 +298,7 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
   try {
     const { token } = req.params;
 
-    const request = await orders.captureOrder({ id: token })
+    const request = await orders.captureOrder({ id: token });
 
     res.json({ success: true });
 
@@ -306,27 +309,144 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 
     const { items, customer, billingAddress, shippingAddress, discountCode } = storedOrder;
 
-    let itemsList = ``;
-    let total = 0;
+    const money = (v) => `$${Number(v || 0).toFixed(2)}`;
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      itemsList += `${item.quantity} x ${item.name}: ${item.quantity} x ${item.unit_amount.value} = ${Number(item.quantity) * Number(item.unit_amount.value)}<br>`;
-      total += Number(item.quantity) * Number(item.unit_amount.value);
-    }
+    const summary = storedOrder.summary || {};
+    const lineItems = storedOrder.lineItems || [];
+    const tax = storedOrder.tax || {};
 
-    const discountLine = discountCode ? `<br>Discount Code: ${discountCode}` : '';
-    const customerInfo = `Customer type: ${customer.type}<br>Email: ${customer.email}<br>Phone: ${customer.phone}<br>`;
-    const billingInfo = `Billing address:<br>${billingAddress.name}<br>${billingAddress.address1}<br>${billingAddress.address2 ? billingAddress.address2 + '<br>' : ''}${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}<br>`;
-    const shippingInfo = `Shipping address:<br>${shippingAddress.name}<br>${shippingAddress.address1}<br>${shippingAddress.address2 ? shippingAddress.address2 + '<br>' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}<br>`;
+    const itemsHtml = items.map(i => `
+      <tr>
+        <td style="padding:10px;border-bottom:1px solid #eee;">${i.name}</td>
+        <td style="padding:10px;border-bottom:1px solid #eee;text-align:center;">${i.quantity}</td>
+        <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;">${money(i.unit_amount.value)}</td>
+        <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;">${money(Number(i.quantity) * Number(i.unit_amount.value))}</td>
+      </tr>
+    `).join('');
+
+    const lineItemsHtml = lineItems.map(l => `
+      <tr>
+        <td style="padding:10px;border-bottom:1px solid #eee;">${l.title}</td>
+        <td style="text-align:center;">${l.quantity}</td>
+        <td style="text-align:right;">${money(l.subtotal)}</td>
+        <td style="text-align:right;">${l.discountPercentDisplay} (${money(l.discountAmount)})</td>
+        <td style="text-align:right;">${l.taxRateDisplay} (${money(l.taxAmount)})</td>
+        <td style="text-align:right;">${money(l.lineTotal)}</td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <div style="font-family:Arial,sans-serif;background:#f7f7f7;padding:20px;">
+        <div style="max-width:900px;margin:auto;background:white;padding:20px;border-radius:10px;">
+
+          <h2 style="margin:0;">🧾 New Order Received</h2>
+          <p style="color:#666;">Order ID: <b>${order.id}</b></p>
+
+          <hr>
+
+          <h3>👤 Customer</h3>
+          <p>
+            Type: ${customer.type}<br>
+            Email: ${customer.email}<br>
+            Phone: ${customer.phone}
+          </p>
+
+          <h3>📦 Billing Address</h3>
+          <p>
+            ${billingAddress.name}<br>
+            ${billingAddress.address1}<br>
+            ${billingAddress.address2 || ''}<br>
+            ${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}
+          </p>
+
+          <h3>🚚 Shipping Address</h3>
+          <p>
+            ${shippingAddress.name}<br>
+            ${shippingAddress.address1}<br>
+            ${shippingAddress.address2 || ''}<br>
+            ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}
+          </p>
+
+          ${discountCode ? `<p><b>Discount Code:</b> ${discountCode}</p>` : ''}
+
+          <hr>
+
+          <h3>📦 Items (PayPal)</h3>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <hr>
+
+          <h3>📊 Full Order Breakdown</h3>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tbody>
+              ${lineItemsHtml}
+            </tbody>
+          </table>
+
+          <hr>
+
+          <h3>💰 Summary</h3>
+          <p>
+            Subtotal: <b>${money(summary.subtotal)}</b><br>
+            Discount: <b>-${money(summary.discount)}</b><br>
+            Tax: <b>${money(summary.tax)}</b><br>
+            <b style="font-size:16px;">Final Total: ${money(summary.finalTotal)}</b>
+          </p>
+
+          <p style="color:#999;font-size:12px;margin-top:20px;">
+            This order was automatically generated from the checkout system.
+          </p>
+
+        </div>
+      </div>
+      `;
+
+    const text = `
+      NEW ORDER RECEIVED
+      Order ID: ${order.id}
+
+      CUSTOMER
+      Type: ${customer.type}
+      Email: ${customer.email}
+      Phone: ${customer.phone}
+
+      BILLING ADDRESS
+      ${billingAddress.name}
+      ${billingAddress.address1}
+      ${billingAddress.address2 || ''}
+      ${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}
+
+      SHIPPING ADDRESS
+      ${shippingAddress.name}
+      ${shippingAddress.address1}
+      ${shippingAddress.address2 || ''}
+      ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}
+
+      ${discountCode ? `Discount Code: ${discountCode}\n` : ''}
+
+      ITEMS
+      ${lineItems.map(l =>
+        `${l.title} | Qty: ${l.quantity} | Subtotal: $${l.subtotal.toFixed(2)} | Tax: $${l.taxAmount.toFixed(2)} | Total: $${l.lineTotal.toFixed(2)}`
+      ).join('\n')}
+
+      SUMMARY
+      Subtotal: $${summary.subtotal}
+      Discount: $${summary.discount}
+      Tax: $${summary.tax}
+      Final Total: $${summary.finalTotal}
+      `;
 
     const options = {
       from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
       to: EMAIL_RECIPIENTS,
       subject: `Order #${order.id}`,
-      html: `Customer information<br><br>${customerInfo}${billingInfo}${shippingInfo}${discountLine}<br><br>Items Ordered<br><br>${itemsList}<br><br>Total: ${total}`,
-      text: `Customer information\n\nCustomer type: ${customer.type}\nEmail: ${customer.email}\nPhone: ${customer.phone}\n\nBilling address:\n${billingAddress.name}\n${billingAddress.address1}\n${billingAddress.address2 ? billingAddress.address2 + '\n' : ''}${billingAddress.city}, ${billingAddress.state} ${billingAddress.zip}\n\nShipping address:\n${shippingAddress.name}\n${shippingAddress.address1}\n${shippingAddress.address2 ? shippingAddress.address2 + '\n' : ''}${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}${discountLine ? `\n\nDiscount Code: ${discountCode}` : ''}\n\nItems Ordered\n\n${itemsList.replace(/<br>/g, '\n')}\n\nTotal: ${total}`,
-    }
+      html,
+      text,
+    };
 
     try {
       const info = await transporter.sendMail(options);
@@ -339,7 +459,6 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    orderMap.delete(order.id);
     res.status(500).json({ success: false });
   }
 });
