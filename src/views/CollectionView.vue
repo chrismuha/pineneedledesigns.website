@@ -120,16 +120,19 @@ const hasRequiredOptions = (product) => {
 const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
+const videoPosterFor = (product, index) =>
+  product.videoPosters?.[index] || product.images?.[0] || ''
 const productMedia = (product) => [
   ...(product.images || []).map((src) => ({
     src,
     type: 'image',
     alt: product.title,
   })),
-  ...(product.videos || []).map((src) => ({
+  ...(product.videos || []).map((src, index) => ({
     src,
     type: 'video',
     alt: product.title,
+    poster: videoPosterFor(product, index),
   })),
 ]
 const defaultPlaceholderImage = '/images/comingsoon/comingsoon015.webp'

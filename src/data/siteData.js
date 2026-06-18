@@ -215,6 +215,8 @@ export const collectionPages = [
         meta: ['Price: $214.00 plus sales tax with free shipping', 'Size: ML'],
         description: "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
         images: ['/images/jackets/jacket1a.webp', '/images/jackets/jacket1b.webp'],
+        videos: ['/videos/jackets/jacket1c.webm'],
+        videoPosters: ['/images/video-posters/jackets/jacket1c.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -240,7 +242,9 @@ export const collectionPages = [
         ],
         videos: [
           '/videos/one-offs/jackets/ruby-lee1a.webm',
-          '/videos/one-offs/jackets/ruby-lee1b.webm',
+        ],
+        videoPosters: [
+          '/images/video-posters/one-offs/jackets/ruby-lee1a.png',
         ],
         imageWrapper: 'image-frame',
       },
@@ -340,6 +344,7 @@ export const collectionPages = [
           '/images/one-offs/shirts/wende-choice/wende-choice_1b.webp',
         ],
         videos: ['/videos/one-offs/shirts/wende-choice/wende-choice.webm'],
+        videoPosters: ['/images/video-posters/one-offs/shirts/wende-choice.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -365,6 +370,7 @@ export const collectionPages = [
           '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1b.webp',
         ],
         videos: ['/videos/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt.webm'],
+        videoPosters: ['/images/video-posters/one-offs/shirts/blinged-out-tshirt.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -387,6 +393,7 @@ export const collectionPages = [
         ],
         images: ['/images/one-offs/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webp'],
         videos: ['/videos/one-offs/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webm'],
+        videoPosters: ['/images/video-posters/one-offs/shirts/dont-burst-my-bubble.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -501,6 +508,7 @@ export const collectionPages = [
           '/images/whimsical-fairy/whim6.webp',
         ],
         videos: ['/videos/whimsical-fairy/whim.webm'],
+        videoPosters: ['/images/video-posters/whimsical-fairy/whim.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -517,6 +525,7 @@ export const collectionPages = [
           '/images/denimlace/brandybracelet/brandybracelet5.webp',
         ],
         videos: ['/videos/denimlace/brandybracelet/braceletbrandy.webm'],
+        videoPosters: ['/images/video-posters/denimlace/brandybracelet/braceletbrandy.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -534,6 +543,10 @@ export const collectionPages = [
         videos: [
           '/videos/denimlace/adelinebracelet/adeline-bracelet-01.webm',
           '/videos/denimlace/adelinebracelet/adeline-bracelet-02.webm',
+        ],
+        videoPosters: [
+          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-01.png',
+          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-02.png',
         ],
         imageWrapper: 'image-frame',
       },

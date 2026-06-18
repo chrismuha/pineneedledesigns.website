@@ -173,15 +173,21 @@ const queueNearbyMedia = (index) => {
 
 const shouldLoad = (index) => loadedIndexes.value.has(index)
 
-const preloadImage = (item) => {
-  if (!item || item.type !== 'image' || preloadedSources.has(item.src) || typeof Image === 'undefined') return
+const preloadSource = (src) => {
+  if (!src || preloadedSources.has(src) || typeof Image === 'undefined') return
 
-  preloadedSources.add(item.src)
+  preloadedSources.add(src)
   const image = new Image()
   image.decoding = 'async'
   image.loading = 'eager'
-  image.src = item.src
+  image.src = src
   image.decode?.().catch(() => {})
+}
+
+const preloadImage = (item) => {
+  if (!item) return
+  if (item.type === 'image') preloadSource(item.src)
+  if (item.type === 'video') preloadSource(item.poster)
 }
 
 const preloadImages = (indexes) => {
