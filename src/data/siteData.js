@@ -237,7 +237,6 @@ export const collectionPages = [
         images: [
           '/images/one-offs/jackets/ruby-lee/ruby-lee-1a.webp',
           '/images/one-offs/jackets/ruby-lee/ruby-lee-1b.webp',
-          '/images/one-offs/jackets/ruby-lee/ruby-lee-1c.webp',
           '/images/one-offs/jackets/ruby-lee/ruby-lee-1d.webp',
         ],
         videos: [
