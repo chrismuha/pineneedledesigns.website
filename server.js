@@ -440,7 +440,8 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
       Final Total: $${summary.finalTotal}
       `;
 
-    const options = {
+    // ================= ADMIN EMAIL =================
+    const adminOptions = {
       from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
       to: EMAIL_RECIPIENTS,
       subject: `Order #${order.id}`,
@@ -448,11 +449,88 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
       text,
     };
 
+    // ================= CUSTOMER RECEIPT EMAIL =================
+    const customerReceiptHtml = `
+    <div style="font-family:Arial,sans-serif;background:#f7f7f7;padding:20px;">
+      <div style="max-width:700px;margin:auto;background:white;padding:30px;border-radius:10px;">
+
+        <h2 style="margin-top:0;">Thank you for your order!</h2>
+
+        <p>Hi ${shippingAddress.name},</p>
+
+        <p>Your payment has been successfully received. Below is your receipt.</p>
+
+        <hr>
+
+        <p>
+          <strong>Order ID:</strong> ${order.id}<br>
+          <strong>Email:</strong> ${customer.email}
+        </p>
+
+        <h3>Items</h3>
+
+        <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
+          <tbody>
+            ${items.map(i => `
+              <tr>
+                <td>${i.name}</td>
+                <td align="center">${i.quantity}</td>
+                <td align="right">$${Number(i.unit_amount.value).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <hr>
+
+        <h3>Summary</h3>
+
+        <p>
+          Subtotal: $${Number(summary.subtotal || 0).toFixed(2)}<br>
+          Discount: -$${Number(summary.discount || 0).toFixed(2)}<br>
+          Tax: $${Number(summary.tax || 0).toFixed(2)}<br>
+          <strong>Total Paid: $${Number(summary.finalTotal || 0).toFixed(2)}</strong>
+        </p>
+
+        <hr>
+
+        <h3>Shipping Address</h3>
+
+        <p>
+          ${shippingAddress.name}<br>
+          ${shippingAddress.address1}<br>
+          ${shippingAddress.address2 || ''}<br>
+          ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}
+        </p>
+
+        <p style="margin-top:20px;">
+          If you have any questions, call (315) 272-8928
+        </p>
+
+        <p>— Pine Needle Designs</p>
+
+      </div>
+    </div>
+    `;
+
+    // send both emails
     try {
-      const info = await transporter.sendMail(options);
-      console.log('✅ Order email sent:', info);
+      const [adminInfo, customerInfo] = await Promise.all([
+        transporter.sendMail(adminOptions),
+        transporter.sendMail({
+          from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
+          to: customer.email,
+          subject: `Receipt for Order ${order.id}`,
+          html: customerReceiptHtml,
+          text: `Receipt for Order ${order.id} - Total: $${summary.finalTotal}`
+        })
+      ]);
+
+      console.log('✅ Admin email sent:', adminInfo.messageId);
+      console.log('✅ Customer receipt sent:', customerInfo.messageId);
+
     } catch (mailErr) {
-      console.error('❌ Failed to send order email:', mailErr);
+      console.error('❌ Email sending failed:', mailErr);
     }
 
     orderMap.delete(order.id);
