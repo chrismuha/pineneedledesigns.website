@@ -1518,6 +1518,13 @@ footer .footer-actions a:focus-visible {
     transform: translateY(-1px);
 }
 
+footer .footer-actions a.active,
+footer .footer-actions a.router-link-active,
+footer .footer-actions a:active {
+    background: var(--success);
+    color: var(--white);
+}
+
 footer .footer-actions a:focus-visible {
     outline: 3px solid var(--brand-red-45);
     outline-offset: 3px;

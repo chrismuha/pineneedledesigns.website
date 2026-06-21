@@ -212,7 +212,7 @@ export const collectionPages = [
         id: 12,
         title: "America She's Beautiful",
         price: 214,
-        meta: ['Price: $214.00 plus sales tax with free shipping', 'Size: ML'],
+        meta: ['Price: $214.00 plus sales tax with free shipping', 'Size: M/L'],
         description: "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
         images: ['/images/jackets/jacket1a.webp', '/images/jackets/jacket1b.webp'],
         videos: ['/videos/jackets/jacket1c.webm'],
