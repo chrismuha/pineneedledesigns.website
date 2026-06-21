@@ -1,7 +1,7 @@
 <template>
   <footer>
     <div class="footer-actions" aria-label="Shop and booking links">
-      <a href="https://pineneedledesigns.store">
+      <a href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
       </a>
@@ -9,11 +9,11 @@
         <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
         <span>Collections</span>
       </router-link>
-      <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">
+      <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>Fitting</span>
       </a>
-      <a href="https://calendar.app.google/EU8HAuemRhmr4zBY6">
+      <a href="https://calendar.app.google/EU8HAuemRhmr4zBY6" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-gem" aria-hidden="true"></i>
         <span>Brides</span>
       </a>
@@ -105,7 +105,7 @@
     </section>
 
     <div class="container footer-qr">
-      <a class="qr-link" href="https://pineneedledesigns.store" target="_blank">
+      <a class="qr-link" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">
         <img loading="lazy" decoding="async" src="/images/1b.webp" width="250" height="250" />
         <span>One-of-a-kind Designs</span>
       </a>
