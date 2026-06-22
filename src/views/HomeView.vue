@@ -88,17 +88,17 @@
             </div>
             <div class="hero-placeholder-stack">
               <div class="hero-image-pair">
-                <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
-                <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
+                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
+                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
               </div>
               <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
               <div class="hero-image-pair">
-                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
-                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
+                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
+                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
               </div>
               <div class="hero-image-pair">
-                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
-                <img loading="lazy" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
+                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
+                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
               </div>
             </div>
           </div>
@@ -112,10 +112,10 @@
             <div class="cta">
               <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Take me there</a>
             </div>
-            <img loading="lazy" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
+            <img loading="eager" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
             <div class="hero-placeholder-stack">
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
-              <img loading="lazy" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
+              <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
+              <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
             </div>
             <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
           </div>
@@ -130,7 +130,10 @@
               <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
             </div>
             <div class="hero-images hero-images--with-caption hero-images--boots">
-              <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
+              <div class="hero-image-row">
+                <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
+                <img loading="lazy" decoding="async" class="hero-2" src="/images/comingsoon/comingsoon015.webp" />
+              </div>
               <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </div>
@@ -189,28 +192,19 @@
 <script setup>
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
-import comingSoon017 from '../../images/comingsoon/comingsoon017.webp'
-import comingSoon018 from '../../images/comingsoon/comingsoon018.webp'
-import comingSoon019 from '../../images/comingsoon/comingsoon019.webp'
-import comingSoon020 from '../../images/comingsoon/comingsoon020.webp'
-import comingSoon021 from '../../images/comingsoon/comingsoon021.webp'
-import comingSoon022 from '../../images/comingsoon/comingsoon022.webp'
 import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
 import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
-import comingSoon025 from '../../images/comingsoon/comingsoon025.webp'
-import comingSoon026 from '../../images/comingsoon/comingsoon026.webp'
-import comingSoon027 from '../../images/comingsoon/comingsoon027.webp'
 
 const homePlaceholderImages = {
-  denimFeature: comingSoon017,
-  denimFeatureAlt: comingSoon025,
-  denimFirstCard: comingSoon018,
-  denimFirstCardAlt: comingSoon026,
-  denimSecondCard: comingSoon019,
-  denimSecondCardAlt: comingSoon027,
-  newArrivalsFeature: comingSoon020,
-  newArrivalsFirstCard: comingSoon021,
-  newArrivalsSecondCard: comingSoon022,
+  denimFeature: '/images/whimsical-fairy/crownb.webp',
+  denimFeatureAlt: '/images/denimlace/brandybracelet/brandybracelet1.webp',
+  denimFirstCard: '/images/denimlace/adelinebracelet/adeline-bracelet-1.webp',
+  denimFirstCardAlt: '/images/jackets/jacket1a.webp',
+  denimSecondCard: '/images/one-offs/jackets/ruby-lee/ruby-lee-1a.webp',
+  denimSecondCardAlt: '/images/ear-rings/ear-rings-1a.webp',
+  newArrivalsFeature: '/images/upcycled-collaboration/adirondack-chic-leather-cowhide-overnight-duffel-bag/cowhide-bag2.webp',
+  newArrivalsFirstCard: '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
+  newArrivalsSecondCard: '/images/upcycled-collaboration/pink-tooled-leather-speedy-bag/pink-tooled-leather-speedy-bag1.webp',
   bottomsTile: comingSoon023,
   topsTile: comingSoon024,
 }
