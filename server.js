@@ -32,6 +32,7 @@ const DEFAULT_SANDBOX_EMAIL = 'alnabidrm@gmail.com';
 
 const EMAIL_SENDER = process.env.EMAIL || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
 const EMAIL_RECIPIENTS = process.env.ORDER_EMAILS || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
+const mailerConfigured = Boolean(EMAIL_SENDER && process.env.EMAIL_APP_PASSWORD);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -42,9 +43,13 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verify transporter configuration at startup so failures surface early
-transporter.verify()
-  .then(() => console.log('✅ Mailer verified (ready to send emails)'))
-  .catch(err => console.error('❌ Mailer verification failed:', err));
+if (mailerConfigured) {
+  transporter.verify()
+    .then(() => console.log('✅ Mailer verified (ready to send emails)'))
+    .catch(err => console.error('❌ Mailer verification failed:', err));
+} else {
+  console.log('ℹ️ Mailer not configured; set EMAIL_APP_PASSWORD to enable order emails.');
+}
 
 const client = new paypal.Client({
   environment: _paypalEnvironment,
@@ -515,6 +520,10 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
 
     // send both emails
     try {
+      if (!mailerConfigured) {
+        throw new Error('Mailer is not configured. Set EMAIL_APP_PASSWORD to enable order emails.');
+      }
+
       const [adminInfo, customerInfo] = await Promise.all([
         transporter.sendMail(adminOptions),
         transporter.sendMail({
