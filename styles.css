@@ -693,6 +693,14 @@ header {
     width: 100%;
 }
 
+.limited-run-image {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+}
+
 .limited-run-control {
     align-items: center;
     aspect-ratio: 1 / 1;

@@ -135,9 +135,7 @@
                   <button class="limited-run-control limited-run-control--previous" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
                     <i class="bi bi-chevron-left" aria-hidden="true"></i>
                   </button>
-                  <div class="limited-run-placeholder">
-                    <span>{{ currentLimitedTimeSlide.label }}</span>
-                  </div>
+                  <img class="limited-run-image" :src="currentLimitedTimeSlide.src" :alt="currentLimitedTimeSlide.label" loading="lazy" decoding="async" />
                   <button class="limited-run-control limited-run-control--next" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
                     <i class="bi bi-chevron-right" aria-hidden="true"></i>
                   </button>
@@ -233,13 +231,16 @@
 import { computed, ref } from 'vue'
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
+import comingSoon017 from '../../images/comingsoon/comingsoon017.webp'
+import comingSoon019 from '../../images/comingsoon/comingsoon019.webp'
 import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
 import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
+import comingSoon028 from '../../images/comingsoon/comingsoon028.webp'
 
 const limitedTimeSlides = [
-  { label: 'Image 1' },
-  { label: 'Image 2' },
-  { label: 'Image 3' },
+  { label: 'Limited-time coming soon image 1', src: comingSoon017 },
+  { label: 'Limited-time coming soon image 2', src: comingSoon028 },
+  { label: 'Limited-time coming soon image 3', src: comingSoon019 },
 ]
 const limitedTimeSlideIndex = ref(0)
 const currentLimitedTimeSlide = computed(() => limitedTimeSlides[limitedTimeSlideIndex.value])
