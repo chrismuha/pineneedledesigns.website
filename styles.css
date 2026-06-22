@@ -657,9 +657,8 @@ header {
 .limited-run-slider {
     align-items: center;
     align-self: flex-start;
-    display: grid;
+    display: block;
     gap: 8px;
-    grid-template-columns: 44px minmax(0, 1fr) 44px;
     min-height: 360px;
     width: min(100%, 560px);
 }
@@ -678,6 +677,7 @@ header {
     aspect-ratio: 1 / 1;
     border-radius: 14px;
     overflow: hidden;
+    position: relative;
     width: 100%;
 }
 
@@ -696,14 +696,26 @@ header {
 .limited-run-control {
     align-items: center;
     aspect-ratio: 1 / 1;
-    background: var(--white);
+    background: var(--white-92);
     border: 0;
     border-radius: 999px;
     box-shadow: var(--shadow-sm);
     color: var(--black);
     display: inline-flex;
     justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     width: 44px;
+    z-index: 1;
+}
+
+.limited-run-control--previous {
+    left: 12px;
+}
+
+.limited-run-control--next {
+    right: 12px;
 }
 
 .limited-run-preview {

@@ -130,14 +130,17 @@
               <p>Small-batch pieces landing here soon.</p>
             </div>
             <div class="limited-run-slider" aria-label="Limited-time image previews">
-              <button class="limited-run-control" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
-                <i class="bi bi-chevron-left" aria-hidden="true"></i>
-              </button>
               <div class="limited-run-main">
                 <div class="limited-run-frame" aria-live="polite">
+                  <button class="limited-run-control limited-run-control--previous" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
+                    <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                  </button>
                   <div class="limited-run-placeholder">
                     <span>{{ currentLimitedTimeSlide.label }}</span>
                   </div>
+                  <button class="limited-run-control limited-run-control--next" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
+                    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                  </button>
                 </div>
                 <router-link class="btn btn-accent limited-run-preview" to="/collections/limited-time">Preview</router-link>
                 <div class="limited-run-dots" role="tablist" aria-label="Limited-time image navigation">
@@ -153,9 +156,6 @@
                   ></button>
                 </div>
               </div>
-              <button class="limited-run-control" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
-                <i class="bi bi-chevron-right" aria-hidden="true"></i>
-              </button>
             </div>
           </article>
         </div>
