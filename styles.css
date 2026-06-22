@@ -656,7 +656,7 @@ header {
 
 .limited-run-slider {
     align-items: center;
-    align-self: center;
+    align-self: flex-start;
     display: grid;
     gap: 8px;
     grid-template-columns: 44px minmax(0, 1fr) 44px;
