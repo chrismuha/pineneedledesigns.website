@@ -1263,13 +1263,13 @@ section {
 
 .shop-split .placeholder-image {
     width: 100%;
-    height: clamp(260px, 32vw, 420px);
+    height: auto;
+    aspect-ratio: 1 / 1;
     min-height: 0;
     margin-left: auto;
     margin-right: auto;
-    object-fit: contain;
-    object-position: center top;
-    background: var(--white);
+    object-fit: cover;
+    object-position: center center;
 }
 
 .tile .copy {
@@ -2173,7 +2173,7 @@ footer>section {
         }
 
         .shop-split .placeholder-image {
-            height: clamp(220px, 54vw, 360px);
+            height: auto;
             min-height: 0;
         }
 
