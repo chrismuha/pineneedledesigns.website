@@ -602,6 +602,14 @@ header {
     .hero-grid {
         grid-template-columns: 1fr;
     }
+
+    .limited-run-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .limited-run-preview {
+        grid-column: 1;
+    }
 }
 
 .hero-card {
@@ -613,6 +621,103 @@ header {
     display: flex;
     flex-direction: column;
     height: auto;
+}
+
+.limited-run-strip {
+    align-items: stretch;
+    background: var(--white-92);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, .55fr) minmax(360px, 1.25fr);
+    min-height: 500px;
+    overflow: hidden;
+    padding: 18px;
+}
+
+.limited-run-copy {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+.limited-run-copy h2 {
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1;
+    margin: 0;
+}
+
+.limited-run-copy p {
+    margin: 0 0 6px;
+}
+
+.limited-run-slider {
+    align-items: center;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    min-height: 360px;
+}
+
+.limited-run-frame {
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.limited-run-placeholder {
+    align-items: center;
+    background: linear-gradient(135deg, #e7e7e7, #b8b8b8);
+    color: var(--black-70);
+    display: flex;
+    font-weight: 700;
+    height: 100%;
+    justify-content: center;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.limited-run-control {
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    background: var(--white);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    color: var(--black);
+    display: inline-flex;
+    justify-content: center;
+    width: 44px;
+}
+
+.limited-run-preview {
+    grid-column: 2;
+    justify-self: center;
+}
+
+.limited-run-dots {
+    display: flex;
+    gap: 6px;
+    grid-column: 1 / -1;
+    justify-content: center;
+}
+
+.limited-run-dot {
+    background: var(--black-18);
+    border: 0;
+    border-radius: 999px;
+    height: 8px;
+    padding: 0;
+    width: 8px;
+}
+
+.limited-run-dot--active {
+    background: var(--brand-green);
+    width: 20px;
 }
 
 /* keep the featured art from dominating the hero layout */
@@ -667,6 +772,11 @@ header {
     gap: 16px;
     flex: 1;
     justify-content: flex-end;
+}
+
+.hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack {
+    flex: 0 0 auto;
+    justify-content: flex-start;
 }
 
 .hero-placeholder-stack .hero-placeholder-inline,

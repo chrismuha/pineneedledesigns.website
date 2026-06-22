@@ -122,6 +122,40 @@
               </div>
             </div>
           </article>
+
+          <article class="limited-run-strip" aria-label="Limited Time Collection">
+            <div class="limited-run-copy">
+              <div class="eyebrow">Limited Run</div>
+              <h2>Limited-Time Collection</h2>
+              <p>Small-batch pieces landing here soon.</p>
+            </div>
+            <div class="limited-run-slider" aria-label="Limited-time image previews">
+              <button class="limited-run-control" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+              </button>
+              <div class="limited-run-frame" aria-live="polite">
+                <div class="limited-run-placeholder">
+                  <span>{{ currentLimitedTimeSlide.label }}</span>
+                </div>
+              </div>
+              <button class="limited-run-control" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+              </button>
+              <router-link class="btn btn-accent limited-run-preview" to="/collections/limited-time">Preview</router-link>
+              <div class="limited-run-dots" role="tablist" aria-label="Limited-time image navigation">
+                <button
+                  v-for="(slide, slideIndex) in limitedTimeSlides"
+                  :key="slide.label"
+                  type="button"
+                  :class="['limited-run-dot', { 'limited-run-dot--active': slideIndex === limitedTimeSlideIndex }]"
+                  :aria-label="`Show limited-time image ${slideIndex + 1}`"
+                  :aria-selected="slideIndex === limitedTimeSlideIndex"
+                  role="tab"
+                  @click="setLimitedTimeSlide(slideIndex)"
+                ></button>
+              </div>
+            </div>
+          </article>
         </div>
 
         <div class="hero-column">
@@ -194,10 +228,24 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
 import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
 import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
+
+const limitedTimeSlides = [
+  { label: 'Image 1' },
+  { label: 'Image 2' },
+  { label: 'Image 3' },
+]
+const limitedTimeSlideIndex = ref(0)
+const currentLimitedTimeSlide = computed(() => limitedTimeSlides[limitedTimeSlideIndex.value])
+const setLimitedTimeSlide = (index) => {
+  limitedTimeSlideIndex.value = (index + limitedTimeSlides.length) % limitedTimeSlides.length
+}
+const previousLimitedTimeSlide = () => setLimitedTimeSlide(limitedTimeSlideIndex.value - 1)
+const nextLimitedTimeSlide = () => setLimitedTimeSlide(limitedTimeSlideIndex.value + 1)
 
 const homePlaceholderImages = {
   denimFeature: '/images/whimsical-fairy/crownb.webp',

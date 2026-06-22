@@ -10,6 +10,7 @@ const collectionNavLinks = [
   { label: 'Hat Bands', path: '/collections/hat-bands', slug: 'hat-bands' },
   { label: 'Jackets', path: '/collections/jackets', slug: 'jackets' },
   { label: 'Jeans', path: '/collections/jeans', slug: 'jeans' },
+  { label: 'Limited Time', path: '/collections/limited-time', slug: 'limited-time' },
   { label: 'Necklaces', path: '/collections/necklaces', slug: 'necklaces' },
   { label: 'Pooch Smooches', path: '/collections/pooch-smooches', slug: 'pooch-smooches' },
   { label: 'Purses', path: '/collections/purses', slug: 'purses' },
@@ -269,6 +270,16 @@ export const collectionPages = [
       },
       */
     ],
+  },
+  {
+    slug: 'limited-time',
+    title: 'Limited-Time Collection',
+    path: '/collections/limited-time',
+    count: 0,
+    hidden: true,
+    cardImage: '',
+    description: 'A small-batch limited-time collection coming soon.',
+    products: [],
   },
   {
     slug: 'necklaces',
@@ -680,7 +691,7 @@ export const collectionPages = [
         id: 66,
         title: 'Upcycled Black Suede and Brown Tooled Leather Backpack',
         price: 160,
-        meta: ['Price: $160', 'Color: Black suede and brown tooled leather', 'Size: TBD'],
+        meta: ['Price: $160', 'Color: Black suede and brown tooled leather', 'Size: 15”X9.5”X5”'],
         description: 'Of course with the Lv logo! Great for school or a hike! Stitching is the famous boot stitch.',
         images: [
           '/images/upcycled-logo/brown-tooled-leather-backpack/brown-tooled-leather-backpack1.webp',
