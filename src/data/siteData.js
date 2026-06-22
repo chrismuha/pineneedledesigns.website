@@ -160,14 +160,14 @@ export const collectionPages = [
     path: '/collections/earrings',
     count: 1,
     cardImage: '/images/ear-rings/ear-rings-1a.webp',
-    description: 'Description of Earring 1',
+    description: 'Red flower earrings, 2.5" long.',
     products: [
       {
         id: 10,
         title: 'Red Flower',
         price: 38,
-        meta: ['Price: $38', 'Size: TBD'],
-        description: 'Description of Earring 1',
+        meta: ['Price: $38', 'Size: 2.5" long'],
+        description: 'Red flower earrings, 2.5" long.',
         images: [
           '/images/ear-rings/ear-rings-1a.webp',
           '/images/ear-rings/ear-rings-2a.webp',
@@ -221,10 +221,10 @@ export const collectionPages = [
       },
       {
         id: 13,
-        title: 'Statement Jacket 2',
-        price: 180,
-        meta: ['Price: $', 'Size: TBD'],
-        description: 'Textured fibers and dramatic silhouette.',
+        title: 'Carmen',
+        price: 222,
+        meta: ['Price: SOLD ($222)', 'Size: XL Ladies'],
+        description: "Carmen is a light weight Cream colored jean jacket. The back is all hand stamped with exotic inks. Carmen is a special order and isn't finished yet. She will be adorned with jewels and possibly feathers. An updated picture is coming! Stay tuned. Created by Wende Maliani.",
         images: ['/images/jackets/jacket2a.webp'],
         imageWrapper: 'image-frame',
       },
