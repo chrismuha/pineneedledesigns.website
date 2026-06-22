@@ -133,27 +133,29 @@
               <button class="limited-run-control" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
                 <i class="bi bi-chevron-left" aria-hidden="true"></i>
               </button>
-              <div class="limited-run-frame" aria-live="polite">
-                <div class="limited-run-placeholder">
-                  <span>{{ currentLimitedTimeSlide.label }}</span>
+              <div class="limited-run-main">
+                <div class="limited-run-frame" aria-live="polite">
+                  <div class="limited-run-placeholder">
+                    <span>{{ currentLimitedTimeSlide.label }}</span>
+                  </div>
+                </div>
+                <router-link class="btn btn-accent limited-run-preview" to="/collections/limited-time">Preview</router-link>
+                <div class="limited-run-dots" role="tablist" aria-label="Limited-time image navigation">
+                  <button
+                    v-for="(slide, slideIndex) in limitedTimeSlides"
+                    :key="slide.label"
+                    type="button"
+                    :class="['limited-run-dot', { 'limited-run-dot--active': slideIndex === limitedTimeSlideIndex }]"
+                    :aria-label="`Show limited-time image ${slideIndex + 1}`"
+                    :aria-selected="slideIndex === limitedTimeSlideIndex"
+                    role="tab"
+                    @click="setLimitedTimeSlide(slideIndex)"
+                  ></button>
                 </div>
               </div>
               <button class="limited-run-control" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
                 <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </button>
-              <router-link class="btn btn-accent limited-run-preview" to="/collections/limited-time">Preview</router-link>
-              <div class="limited-run-dots" role="tablist" aria-label="Limited-time image navigation">
-                <button
-                  v-for="(slide, slideIndex) in limitedTimeSlides"
-                  :key="slide.label"
-                  type="button"
-                  :class="['limited-run-dot', { 'limited-run-dot--active': slideIndex === limitedTimeSlideIndex }]"
-                  :aria-label="`Show limited-time image ${slideIndex + 1}`"
-                  :aria-selected="slideIndex === limitedTimeSlideIndex"
-                  role="tab"
-                  @click="setLimitedTimeSlide(slideIndex)"
-                ></button>
-              </div>
             </div>
           </article>
         </div>
