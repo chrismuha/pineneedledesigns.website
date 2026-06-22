@@ -25,6 +25,7 @@
     --soft-ink: #e6e6e6;
     --placeholder: #d9d9d9;
     --placeholder-2: #e0e0e0;
+    --collection-media-end: #f2f2f2;
     --disabled-bg: #f0f0f0;
     --disabled-ink: #8f8f8f;
     --button-disabled: #c0c6cf;
@@ -153,70 +154,6 @@ img {
     padding: 0 18px;
 }
 
-/* Announcement banner */
-.bar {
-    background: var(--ink);
-    color: var(--white);
-    font-size: 11pt;
-    overflow-x: auto;
-    padding: 0 8px;
-}
-
-.bar .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-align: center;
-}
-
-.bar .container>* {
-    white-space: normal;
-}
-
-.bar .container .qr-link {
-    order: 3;
-    display: block;
-    text-align: center;
-    margin: 8px 0 4px;
-}
-
-.bar .container .qr-link img {
-    width: var(--qr-size-mobile);
-    height: auto;
-    display: inline-block;
-    border-radius: 6px;
-}
-
-/* Desktop refinement — smaller QR & slightly tighter spacing */
-@media (min-width: 980px) {
-    .bar .container {
-        gap: 8px;
-    }
-}
-
-.bar .container .qr-link img {
-    width: var(--qr-size-desktop);
-}
-
-.bar a {
-    color: var(--white);
-    text-decoration: underline;
-    white-space: nowrap;
-}
-
-@media (min-width: 980px) {
-    .bar .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        text-align: center;
-    }
-}
-
 /* Header / Nav */
 header {
     background: var(--white);
@@ -282,51 +219,12 @@ header {
     align-self: center;
 } */
 
-/* Search */
-.search {
-    grid-column: 1;
-    justify-self: start;
-    max-width: none;
-}
-
-.search input {
-    background: var(--transparent);
-    border: 0;
-    padding: 6px 0;
-    color: var(--accent);
-    font-size: 13pt;
-}
-
-.search input::placeholder {
-    color: var(--accent);
-    opacity: 1;
-}
-
-.search .loupe {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    margin-left: 8px;
-    opacity: 1;
-    color: var(--accent);
-}
-
 .nav-actions {
     display: flex;
     gap: 12px;
     align-items: center;
     justify-content: center;
     order: 2;
-}
-
-.nav-aux {
-    display: inline-flex;
-    gap: 12px;
-    align-items: center;
-    flex-shrink: 0;
-    justify-content: center;
-    width: auto;
 }
 
 .nav-main {
@@ -504,12 +402,6 @@ header {
         display: inline-flex;
     }
 
-    .nav-aux {
-        order: 4;
-        width: auto;
-        justify-content: center;
-        align-self: center;
-    }
 }
 
 @media (max-width: 768px) {
@@ -869,12 +761,6 @@ h1 {
     line-height: 1.1;
 }
 
-.chic-header {
-    text-align: center;
-    font-size: 19pt;
-    margin: 0 0 12px;
-}
-
 .cta {
     display: flex;
     gap: 10px;
@@ -946,18 +832,6 @@ h1 {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--white);
-}
-
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--success);
-    border: 1px solid var(--border);
-    padding: 8px 10px;
-    border-radius: 999px;
-    box-shadow: var(--shadow-sm);
-    white-space: nowrap;
 }
 
 /* Sections */
@@ -1422,27 +1296,6 @@ section {
     align-self: center;
 }
 
-/* Benefits */
-.benefits {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-.benefit {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    background: var(--white);
-    box-shadow: var(--shadow-sm);
-}
-
-.subtle2 {
-    opacity: .7;
-    font-size: 11pt;
-    font-weight: 300;
-}
-
 /* About */
 .about {
     display: grid;
@@ -1896,14 +1749,6 @@ footer>section {
     display: none !important;
 }
 
-.hide-sm {
-    display: block;
-}
-
-.show-sm {
-    display: none;
-}
-
 /* Big + / − toggle button */
 .icon-plusminus {
     color: var(--white) !important;
@@ -1954,13 +1799,6 @@ footer>section {
     padding-left: clamp(18px, 4vw, 32px);
     padding-right: clamp(18px, 4vw, 32px);
     padding-bottom: 140px;
-}
-
-.product-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
 }
 
 .products-header {
@@ -2357,11 +2195,6 @@ footer>section {
             grid-template-columns: 1fr;
         }
 
-        .benefits {
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
         h1 {
             font-size: 22pt;
             line-height: 1.2;
@@ -2489,14 +2322,6 @@ footer>section {
             padding: 10px;
         }
 
-        .hide-sm {
-            display: none;
-        }
-
-        .show-sm {
-            display: inline-flex;
-        }
-
         .home-page .highlighted-collection .body h3 {
             font-size: clamp(18pt, 7vw, 26pt);
         }
@@ -2524,16 +2349,6 @@ footer>section {
         .pill {
             max-width: clamp(120px, 86%, 170px);
             overflow-wrap: anywhere;
-        }
-    }
-
-    @media (max-width: 480px) {
-
-        .bar .container {
-            justify-content: space-between;
-            flex-wrap: wrap;
-            padding: 10px 12px;
-
         }
     }
 

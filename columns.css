@@ -9,7 +9,7 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
-    background: #fff;
+    background: var(--white);
 }
 
 .collections .card-link {
@@ -29,7 +29,7 @@
 
 .collections .media {
     aspect-ratio: 4 / 3;
-    background: linear-gradient(180deg, #ddd, #f2f2f2);
+    background: linear-gradient(180deg, var(--line), var(--collection-media-end));
 }
 
 .collections .body {
