@@ -81,7 +81,13 @@
             <input id="customer-email" type="email" v-model="customerEmail" placeholder="Email address" />
 
           <label for="customer-phone">Phone</label>
-          <input id="customer-phone" type="tel" v-model="customerPhone" placeholder="Phone number" />
+          <input
+            id="customer-phone"
+            type="tel"
+            v-model="customerPhone"
+            placeholder="US phone number only, i.e. (555) 123-4567"
+            maxlength="18"
+          />
 
           <label for="customer-type">Are you purchasing as:</label>
           <select id="customer-type" v-model="customerType">
@@ -356,6 +362,18 @@ onUnmounted(() => {
     document.documentElement.style.overflow = ''
     document.body.style.overflow = ''
   } catch (e) {}
+})
+
+watch(customerPhone, (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+
+  if (digits.length === 11 && digits.startsWith('1')) {
+    customerPhone.value = `+1 ${digits.slice(1,4)} ${digits.slice(4,7)} ${digits.slice(7)}`
+  } else if (digits.length === 10) {
+    customerPhone.value = `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6)}`
+  } else {
+    customerPhone.value = digits
+  }
 })
 
 const uniqueStates = [...new Set(countiesData.map(item => item.state))].sort()
@@ -705,6 +723,30 @@ const handlePopupBackdropClick = () => {
 const submitCheckout = async () => {
   checkoutError.value = ''
 
+  const email = customerEmail.value.trim()
+  const phone = customerPhone.value.trim()
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    checkoutError.value = 'Please enter a valid email address.'
+    return
+  }
+
+  // US phone validation
+  const digitsOnly = phone.replace(/\D/g, '')
+
+// Accept 10-digit US numbers OR 11-digit starting with 1
+  if (!/^(1?\d{10})$/.test(digitsOnly)) {
+    checkoutError.value = 'Please enter a valid US phone number.'
+    return
+  }
+
+  // Accept:
+  // 5551234567
+  // (555) 123-4567
+  // 555-123-4567
+  // +1 555 123 4567
   if (!customerEmail.value.trim() || !customerPhone.value.trim()) {
     checkoutError.value = 'Please provide your email and phone number.'
     return
@@ -743,7 +785,9 @@ const submitCheckout = async () => {
       customer: {
         type: customerType.value,
         email: customerEmail.value.trim(),
-        phone: customerPhone.value.trim(),
+        phone: digitsOnly.length === 11
+          ? `+${digitsOnly}`
+          : `+1${digitsOnly}`,
       },
       billingAddress: {
         name: billingName.value.trim(),
