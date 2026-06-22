@@ -61,6 +61,7 @@
           </template>
         </div>
         <button v-if="canAddToCart(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>
+        <button v-else-if="isProductSold(product)" class="addtocart" disabled>Sold</button>
         <button v-else-if="Number.isFinite(product.price)" class="addtocart" disabled>Select Options</button>
         <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
@@ -117,7 +118,15 @@ const hasRequiredOptions = (product) => {
   return product.options.every((option) => Boolean(selectedOptions.value[optionKey(product, option)]))
 }
 
-const canAddToCart = (product) => Number.isFinite(product.price) && hasRequiredOptions(product)
+const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isProductSold = (product) => {
+  if (product.sold || product.soldOut) return true
+  if (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim())) return true
+  if (typeof product.availability === 'string' && /^sold(?:\s*out)?$/i.test(product.availability.trim())) return true
+
+  return productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
+}
+const canAddToCart = (product) => Number.isFinite(product.price) && !isProductSold(product) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
 const videoPosterFor = (product, index) =>
@@ -144,6 +153,8 @@ const placeholderImagePriority = (productIndex, imageIndex) =>
   productIndex === 0 && imageIndex === 0 ? 'high' : 'auto'
 
 const addToCart = async (product) => {
+  if (!canAddToCart(product)) return
+
   const selectedProduct = {
     ...product,
     selectedOptions: productSelections(product),

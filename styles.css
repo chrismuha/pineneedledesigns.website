@@ -431,6 +431,11 @@ header {
     transform: translateY(-1px);
 }
 
+.icon-btn.active,
+.icon-btn.router-link-active {
+    color: var(--success);
+}
+
 .icon-btn:focus-visible {
     outline: 3px solid var(--brand-red-45);
     outline-offset: 3px;
@@ -485,7 +490,7 @@ header {
     right: 0;
     bottom: -6px;
     height: 3px;
-    background: var(--ink);
+    background: var(--success);
 }
 
 /* Image Slider */
@@ -1521,8 +1526,14 @@ footer .footer-actions a:focus-visible {
 footer .footer-actions a.active,
 footer .footer-actions a.router-link-active,
 footer .footer-actions a:active {
-    background: var(--success);
-    color: var(--white);
+    background: var(--white);
+    color: var(--ink);
+}
+
+footer .footer-actions a.active i,
+footer .footer-actions a.router-link-active i,
+footer .footer-actions a:active i {
+    color: var(--success);
 }
 
 footer .footer-actions a:focus-visible {

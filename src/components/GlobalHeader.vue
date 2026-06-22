@@ -2,7 +2,7 @@
   <header>
     <div class="container nav" role="navigation" aria-label="Primary">
       <div class="nav-actions">
-        <router-link class="icon-btn" to="/" aria-label="Home">
+        <router-link class="icon-btn" to="/" aria-label="Home" :class="{ active: route.path === '/' }">
           <i class="bi bi-house"></i>
         </router-link>
 
@@ -39,11 +39,11 @@
     </div>
 
     <nav class="nav-main" aria-label="Main">
-      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" active-class="active">{{ link.label }}</router-link>
+      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }">{{ link.label }}</router-link>
     </nav>
 
     <nav id="mnav" class="mobile-nav" aria-label="Mobile menu" :class="{ 'mobile-nav--open': menuOpen }">
-      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" @click="closeMenu" active-class="active">{{ link.label }}</router-link>
+      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }" @click="closeMenu">{{ link.label }}</router-link>
     </nav>
 
   </header>
@@ -65,6 +65,12 @@ const closeMenu = () => {
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
+}
+
+const isNavLinkActive = (link) => {
+  if (link.path === '/') return route.path === '/'
+  if (link.path === '/collections') return route.path.startsWith('/collections')
+  return route.path === link.path
 }
 
 const handleEscape = (event) => {

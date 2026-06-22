@@ -5,7 +5,7 @@
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
       </a>
-      <router-link to="/collections" aria-label="Browse all collections">
+      <router-link to="/collections" aria-label="Browse all collections" :class="{ active: route.path.startsWith('/collections') }">
         <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
         <span>Collections</span>
       </router-link>
@@ -119,6 +119,9 @@
 
 <script setup>
 import { reactive } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const expanded = reactive({
   about: false,
