@@ -2,6 +2,7 @@
 :root {
     --bg: #ffffff;
     --white: #ffffff;
+    --white-smoke: #f5f5f5;
     --black: #000000;
     --transparent: #00000000;
     --page-bg: #d3d3d3;
@@ -32,6 +33,31 @@
     --pink: #ffc0cb;
     --slate-gray: #708090;
     --cart-muted: #666666;
+    --cart-panel: #f9fbfd;
+    --cart-panel-soft: #f7f8fb;
+    --cart-panel-cool: #f8fafc;
+    --cart-panel-secondary: #f5f7fa;
+    --cart-link: #0d6efd;
+    --cart-link-soft: #e7f1ff;
+    --cart-focus-soft: #eef2ff;
+    --cart-ink: #22313f;
+    --cart-ink-dark: #111827;
+    --cart-ink-strong: #16202b;
+    --cart-ink-medium: #334155;
+    --cart-ink-muted: #586675;
+    --cart-ink-secondary: #5f6d7a;
+    --cart-ink-faint: #64748b;
+    --cart-ink-subtle: #6b7280;
+    --cart-ink-button: #2e3a47;
+    --cart-line: #d3d8df;
+    --cart-line-soft: #e5e7eb;
+    --cart-line-faint: #e1e7ef;
+    --cart-line-pale: #eef2f6;
+    --cart-danger: #dc2626;
+    --cart-danger-dark: #b91c1c;
+    --cart-error: #b00020;
+    --cart-success: #117a65;
+    --cart-success-dark: #0b5345;
     --checkout-blue: #007bff;
     --checkout-green: #28a745;
     --white-85: #ffffffd9;
@@ -43,8 +69,17 @@
     --black-08: #00000014;
     --black-10: #0000001a;
     --black-50: #00000080;
+    --black-55: #0000008c;
     --shadow-ink-06: #0a0a0a0f;
     --shadow-ink-08: #0a0a0a14;
+    --cart-ink-06: #22313f0f;
+    --cart-ink-12: #22313f1f;
+    --cart-link-08: #0d6efd14;
+    --cart-danger-08: #dc262614;
+    --cart-danger-16: #dc262629;
+    --shadow-dark-12: #0000001f;
+    --shadow-dark-24: #0000003d;
+    --shadow-slate-12: #0f172a1f;
     --brand-red-45: #b03b2e73;
     --accent-60: #0f6c7899;
     --accent-3-50: #0b536080;
@@ -433,6 +468,11 @@ header {
 
 .icon-btn.active,
 .icon-btn.router-link-active {
+    color: var(--success);
+}
+
+.icon-btn.active i,
+.icon-btn.router-link-active i {
     color: var(--success);
 }
 
@@ -1526,14 +1566,14 @@ footer .footer-actions a:focus-visible {
 footer .footer-actions a.active,
 footer .footer-actions a.router-link-active,
 footer .footer-actions a:active {
-    background: var(--white);
-    color: var(--ink);
+    background: var(--success);
+    color: var(--white);
 }
 
 footer .footer-actions a.active i,
 footer .footer-actions a.router-link-active i,
 footer .footer-actions a:active i {
-    color: var(--success);
+    color: var(--white);
 }
 
 footer .footer-actions a:focus-visible {
