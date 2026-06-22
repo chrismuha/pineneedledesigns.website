@@ -588,8 +588,8 @@ header {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
     gap: 14px;
-    align-items: stretch;
-    grid-auto-rows: minmax(420px, auto);
+    align-items: start;
+    grid-auto-rows: auto;
 }
 
 @media (max-width: 900px) {
@@ -606,7 +606,7 @@ header {
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
 }
 
 /* keep the featured art from dominating the hero layout */
