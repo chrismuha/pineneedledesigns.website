@@ -78,81 +78,85 @@
 
     <section class="hero">
       <div class="container hero-grid">
-        <article class="hero-card" aria-label="Hero — Denim & Lace">
-          <div class="copy">
-            <div class="eyebrow">New Drop</div>
-            <h1>Denim & Lace yes please ✨</h1>
-            <p>Limited-run upcycled pieces crafted to stand out.</p>
-            <div class="cta">
-              <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
+        <div class="hero-column">
+          <article class="hero-card" aria-label="Hero — Denim & Lace">
+            <div class="copy">
+              <div class="eyebrow">New Drop</div>
+              <h1>Denim & Lace yes please ✨</h1>
+              <p>Limited-run upcycled pieces crafted to stand out.</p>
+              <div class="cta">
+                <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
+              </div>
+              <div class="hero-placeholder-stack">
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
+                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
+                </div>
+                <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
+                </div>
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
+                </div>
+              </div>
             </div>
-            <div class="hero-placeholder-stack">
-              <div class="hero-image-pair">
-                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
-                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
-              </div>
-              <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              <div class="hero-image-pair">
-                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
-                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
-              </div>
-              <div class="hero-image-pair">
-                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
-                <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
-              </div>
-            </div>
-          </div>
-        </article>
+          </article>
 
-        <article class="hero-card hero-card--new-arrivals" aria-label="New Arrivals">
-          <div class="copy">
-            <div class="eyebrow">Fresh Picks</div>
-            <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>
-            <p>Must-haves just in. Find your next statement piece.</p>
-            <div class="cta">
-              <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Take me there</a>
-            </div>
-            <img loading="eager" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
-            <div class="hero-placeholder-stack">
-              <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
-              <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
-            </div>
-            <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-          </div>
-        </article>
-
-        <article class="hero-card" aria-label="Winter/Spring Picks">
-          <div class="copy">
-            <div class="eyebrow">Curated</div>
-            <h2 style="margin:.2rem 0 1rem">Winter/Spring Favorites</h2>
-            <p>Shop the pieces we can't stop thinking about this season.</p>
-            <div class="cta">
-              <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
-            </div>
-            <div class="hero-images hero-images--with-caption hero-images--boots">
-              <div class="hero-image-row">
-                <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
-                <img loading="lazy" decoding="async" class="hero-2" src="/images/comingsoon/comingsoon015.webp" />
+          <article class="hero-card" aria-label="Winter/Spring Picks">
+            <div class="copy">
+              <div class="eyebrow">Curated</div>
+              <h2 style="margin:.2rem 0 1rem">Winter/Spring Favorites</h2>
+              <p>Shop the pieces we can't stop thinking about this season.</p>
+              <div class="cta">
+                <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
               </div>
-              <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+              <div class="hero-images hero-images--with-caption hero-images--boots">
+                <div class="hero-image-row">
+                  <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
+                  <img loading="lazy" decoding="async" class="hero-2" src="/images/comingsoon/comingsoon015.webp" />
+                </div>
+                <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </div>
 
-        <article class="hero-card" aria-label="Summer/Fall Picks">
-          <div class="copy">
-            <div class="eyebrow">Curated</div>
-            <h2 style="margin:.2rem 0 1rem">Summer/Fall Favorites</h2>
-            <p>Winter may be here now but order ahead and get discounts when you purchase ahead for the next seasons.</p>
-            <div class="cta">
-              <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
+        <div class="hero-column">
+          <article class="hero-card hero-card--new-arrivals" aria-label="New Arrivals">
+            <div class="copy">
+              <div class="eyebrow">Fresh Picks</div>
+              <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>
+              <p>Must-haves just in. Find your next statement piece.</p>
+              <div class="cta">
+                <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Take me there</a>
+              </div>
+              <img loading="eager" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
+              <div class="hero-placeholder-stack">
+                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
+                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
+              </div>
+              <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
-            <div class="hero-images hero-images--with-caption">
-              <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon016.webp" />
-              <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+          </article>
+
+          <article class="hero-card" aria-label="Summer/Fall Picks">
+            <div class="copy">
+              <div class="eyebrow">Curated</div>
+              <h2 style="margin:.2rem 0 1rem">Summer/Fall Favorites</h2>
+              <p>Winter may be here now but order ahead and get discounts when you purchase ahead for the next seasons.</p>
+              <div class="cta">
+                <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
+              </div>
+              <div class="hero-images hero-images--with-caption">
+                <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon016.webp" />
+                <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </div>
       </div>
     </section>
 

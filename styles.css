@@ -592,6 +592,12 @@ header {
     grid-auto-rows: auto;
 }
 
+.hero-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
 @media (max-width: 900px) {
     .hero-grid {
         grid-template-columns: 1fr;
