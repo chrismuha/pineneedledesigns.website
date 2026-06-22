@@ -220,15 +220,6 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 13,
-        title: 'Carmen',
-        price: 222,
-        meta: ['Price: SOLD ($222)', 'Size: XL Ladies'],
-        description: "Carmen is a light weight Cream colored jean jacket. The back is all hand stamped with exotic inks. Carmen is a special order and isn't finished yet. She will be adorned with jewels and possibly feathers. An updated picture is coming! Stay tuned. Created by Wende Maliani.",
-        images: ['/images/jackets/jacket2a.webp'],
-        imageWrapper: 'image-frame',
-      },
-      {
         id: 37,
         title: 'Ruby Lee',
         price: 264,
@@ -245,6 +236,15 @@ export const collectionPages = [
         videoPosters: [
           '/images/video-posters/one-offs/jackets/ruby-lee1a.png',
         ],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 13,
+        title: 'Carmen',
+        price: 222,
+        meta: ['Price: SOLD ($222)', 'Size: XL Ladies'],
+        description: "Carmen is a light weight Cream colored jean jacket. The back is all hand stamped with exotic inks. Carmen is a special order and isn't finished yet. She will be adorned with jewels and possibly feathers. An updated picture is coming! Stay tuned. Created by Wende Maliani.",
+        images: ['/images/jackets/jacket2a.webp'],
         imageWrapper: 'image-frame',
       },
     ],

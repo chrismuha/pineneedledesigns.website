@@ -1267,8 +1267,9 @@ section {
     min-height: 0;
     margin-left: auto;
     margin-right: auto;
-    object-fit: cover;
-    object-position: center center;
+    object-fit: contain;
+    object-position: center top;
+    background: var(--white);
 }
 
 .tile .copy {
@@ -1888,6 +1889,7 @@ footer>section {
         align-items: center;
         width: 100%;
         white-space: nowrap;
+        text-transform: uppercase;
     }
 
     .addtocart:disabled {
