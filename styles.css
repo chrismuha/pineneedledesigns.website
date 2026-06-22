@@ -693,7 +693,9 @@ header {
 }
 
 .hero-card--new-arrivals .hero-bunny {
-    height: clamp(210px, 30vw, 300px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-position: center center;
 }
 
 .hero-card--new-arrivals .cta {
@@ -707,7 +709,8 @@ header {
 }
 
 .hero-card--new-arrivals .hero-placeholder-inline--tall {
-    height: clamp(210px, 30vw, 300px);
+    aspect-ratio: 1 / 1;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
     object-fit: cover;
@@ -2404,7 +2407,8 @@ footer>section {
     .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack .hero-card__placeholder,
     .hero-card--new-arrivals .hero-placeholder-stack .hero-placeholder-inline {
         width: 100%;
-        height: clamp(150px, 44vw, 230px);
+        height: auto;
+        aspect-ratio: 1 / 1;
     }
 
     .hero-card:not(.hero-card--new-arrivals) .hero-placeholder-stack {
@@ -2417,7 +2421,8 @@ footer>section {
 
     .hero-card:not(.hero-card--new-arrivals) .hero-image-pair .hero-placeholder-inline {
         grid-column: auto;
-        height: clamp(150px, 44vw, 230px);
+        height: auto;
+        aspect-ratio: 1 / 1;
     }
 
     .hero-card:not(.hero-card--new-arrivals) .hero-image-pair {
