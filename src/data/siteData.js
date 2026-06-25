@@ -327,16 +327,16 @@ export const collectionPages = [
     slug: 'shirts',
     title: 'Shirts',
     path: '/collections/shirts',
-    count: 5,
-    cardImage: '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
+    count: 6,
+    cardImage: '/images/one-offs/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp',
     description: 'Blinged Out T-Shirts and Sweatshirts made to stand out.',
     products: [
       {
         id: 38,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
         price: 58,
-        meta: ['Price: $58', 'Available in Peach, Natural, Sand, and White.'],
-        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt. Comes in Peach, Natural, Sand, and White.",
+        meta: ['Price: $58', 'Available in Peach, Natural, Grey, Sand, and White.'],
+        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt. Comes in Peach, Natural, Grey, Sand, and White.",
         options: [
           {
             name: 'Size',
@@ -345,16 +345,16 @@ export const collectionPages = [
           },
           {
             name: 'Color',
-            values: ['Peach', 'Natural', 'Sand', 'White'],
+            values: ['Peach', 'Natural', 'Grey', 'Sand', 'White'],
             placeholder: 'Select color',
           },
         ],
         images: [
-          '/images/one-offs/shirts/wende-choice/wende-choice_1a.webp',
-          '/images/one-offs/shirts/wende-choice/wende-choice_1b.webp',
+          '/images/one-offs/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp',
+          '/images/one-offs/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1b.webp',
         ],
-        videos: ['/videos/one-offs/shirts/wende-choice/wende-choice.webm'],
-        videoPosters: ['/images/video-posters/one-offs/shirts/wende-choice.png'],
+        videos: ['/videos/one-offs/shirts/wende-choice-blinged-out-sweatshirt/wende-choice.webm'],
+        videoPosters: ['/images/video-posters/one-offs/shirts/wende-choice-blinged-out-sweatshirt.png'],
         imageWrapper: 'image-frame',
       },
       {
@@ -376,11 +376,34 @@ export const collectionPages = [
           },
         ],
         images: [
-          '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1a.webp',
-          '/images/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt-1b.webp',
+          '/images/one-offs/shirts/cowgirl-tshirt/1.webp',
+          '/images/one-offs/shirts/cowgirl-tshirt/2.webp',
         ],
-        videos: ['/videos/one-offs/shirts/blinged-out-tshirt/blinged-out-tshirt.webm'],
-        videoPosters: ['/images/video-posters/one-offs/shirts/blinged-out-tshirt.png'],
+        videos: ['/videos/one-offs/shirts/cowgirl-tshirt/1.webm'],
+        videoPosters: ['/images/video-posters/one-offs/shirts/cowgirl-tshirt.png'],
+        imageWrapper: 'image-frame',
+      },
+      {
+        id: 74,
+        title: 'wende-choice-blinged-out-tshirt',
+        price: 38,
+        meta: ['Price: $38', 'Available in Peach, Natural, Grey, Sand, and White.'],
+        description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out T-shirt. Comes in Peach, Natural, Grey, Sand, and White.",
+        options: [
+          {
+            name: 'Size',
+            values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
+            placeholder: 'Select size',
+          },
+          {
+            name: 'Color',
+            values: ['Peach', 'Natural', 'Grey', 'Sand', 'White'],
+            placeholder: 'Select color',
+          },
+        ],
+        images: ['/images/one-offs/shirts/wende-choice-blinged-out-tshirt/wende-choice-blinged-out-tshirt-11.webp'],
+        videos: ['/videos/one-offs/shirts/wende-choice-blinged-out-tshirt/wende-choice-blinged-out-tshirt-1b.webm'],
+        videoPosters: ['/images/one-offs/shirts/wende-choice-blinged-out-tshirt/wende-choice-blinged-out-tshirt-11.webp'],
         imageWrapper: 'image-frame',
       },
       {
