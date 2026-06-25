@@ -12,7 +12,7 @@
     <div v-if="page.products.length" class="product-grid">
       <article v-for="(product, productIndex) in page.products" :key="product.title" class="product-card">
         <header>
-          <h3>{{ product.title }}</h3>
+          <h3>{{ displayTitle(product) }}</h3>
           <div class="product-meta">
             <div v-for="(item, index) in displayProductMeta(product)" :key="index">{{ item }}</div>
             <div v-if="product.maker" class="product-maker">{{ product.maker }}</div>
@@ -36,7 +36,7 @@
           <template v-if="hasMedia(product)">
             <MediaSlider
               :media="productMedia(product)"
-              :label="`${product.title} media gallery`"
+              :label="`${displayTitle(product)} media gallery`"
               :eager="productIndex < 2"
               :priority="productIndex === 0 ? 'high' : 'auto'"
             />
@@ -101,6 +101,7 @@ const nextPath = computed(() => {
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
 const styleOptionName = 'Style'
+const blingStyle = 'Bling'
 const noBlingStyle = 'No Bling'
 const productSelections = (product) => {
   if (!product.options || !product.options.length) return {}
@@ -118,6 +119,19 @@ const hasRequiredOptions = (product) => {
 
 const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
 const selectedStyle = (product) => selectedOptions.value[optionKey(product, { name: styleOptionName })] || ''
+const hasBlingStyleOption = (product) =>
+  product.options?.some((option) => option.name === styleOptionName && option.values?.includes(blingStyle))
+const cleanNonBlingTitle = (title) =>
+  String(title)
+    .replace(/\bblinged\s+out\b\s*/gi, '')
+    .replace(/\bblinged\b\s*/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+const displayTitle = (product) => {
+  if (!hasBlingStyleOption(product)) return cleanNonBlingTitle(product.title)
+  if (selectedStyle(product) === blingStyle) return product.title
+  return cleanNonBlingTitle(product.title)
+}
 const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
 const productPrice = (product) => {
   if (isNoBlingSelected(product) && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice
@@ -159,12 +173,12 @@ const productMedia = (product) => [
   ...(product.images || []).map((src) => ({
     src,
     type: 'image',
-    alt: product.title,
+    alt: displayTitle(product),
   })),
   ...(product.videos || []).map((src, index) => ({
     src,
     type: 'video',
-    alt: product.title,
+    alt: displayTitle(product),
     poster: videoPosterFor(product, index),
   })),
 ]
@@ -195,6 +209,7 @@ const addToCart = async (product) => {
 
   const selectedProduct = {
     ...product,
+    title: displayTitle(product),
     price: productPrice(product),
     meta: displayProductMeta(product),
     description: displayDescription(product),
