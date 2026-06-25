@@ -2115,12 +2115,6 @@ footer>section {
     box-shadow: var(--shadow-sm);
 }
 
-@media (max-width: 640px) {
-    .collection-filter-stack {
-        display: contents;
-    }
-}
-
 .product-grid {
     display: grid;
     gap: 24px;
