@@ -1,20 +1,32 @@
 <template>
-  <GlobalHeader v-if="!hideLayout" @toggle-cart="toggleCart" />
-  <main>
+  <template v-if="isDashboard">
     <router-view />
-  </main>
-  <GlobalFooter v-if="!hideLayout" />
-  <button
-    v-if="!hideLayout && cartStore.totalItems > 0 && !cartStore.isOpen"
-    class="floating-cart-btn"
-    type="button"
-    aria-label="Open cart"
-    @click="toggleCart"
-  >
-    <i class="bi bi-bag"></i>
-    <span class="floating-cart-btn__count">{{ cartStore.totalItems }}</span>
-  </button>
-  <CartSidebar />
+  </template>
+
+  <template v-else>
+    <GlobalHeader @toggle-cart="toggleCart" />
+
+    <main>
+      <router-view />
+    </main>
+
+    <GlobalFooter />
+
+    <button
+      v-if="cartStore.totalItems > 0 && !cartStore.isOpen"
+      class="floating-cart-btn"
+      type="button"
+      aria-label="Open cart"
+      @click="toggleCart"
+    >
+      <i class="bi bi-bag"></i>
+      <span class="floating-cart-btn__count">
+        {{ cartStore.totalItems }}
+      </span>
+    </button>
+
+    <CartSidebar />
+  </template>
 </template>
 
 <script setup>
@@ -26,9 +38,14 @@ import CartSidebar from './components/CartSidebar.vue'
 import { useCartStore } from './stores/cart'
 
 const route = useRoute()
-const hideLayout = computed(() => route.meta.hideLayout)
-const cartStore = useCartStore()
 
+const hideLayout = computed(() => route.meta.hideLayout)
+
+const isDashboard = computed(() =>
+  route.path.startsWith('/dashboard')
+)
+
+const cartStore = useCartStore()
 
 const toggleCart = () => {
   cartStore.toggleOpen()
