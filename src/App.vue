@@ -16,7 +16,6 @@
       v-if="cartStore.totalItems > 0 && !cartStore.isOpen"
       ref="floatingCartButton"
       class="floating-cart-btn"
-      :class="{ 'floating-cart-btn--dimmed': isDesktopPageScrolling && !floatingCartDrag }"
       type="button"
       aria-label="Open cart"
       :style="floatingCartStyle"
@@ -69,10 +68,23 @@ const scrollFadeDelay = 320
 let desktopScrollFadeMedia = null
 let scrollFadeTimer = null
 
+const isFloatingCartDimmed = computed(() =>
+  isDesktopPageScrolling.value && !floatingCartDrag.value
+)
+
 const floatingCartStyle = computed(() => {
-  if (!floatingCartPosition.value) return {}
+  const styles = isFloatingCartDimmed.value
+    ? {
+        opacity: '0.14',
+        pointerEvents: 'none',
+        transform: 'scale(0.96)',
+      }
+    : {}
+
+  if (!floatingCartPosition.value) return styles
 
   return {
+    ...styles,
     left: `${floatingCartPosition.value.x}px`,
     top: `${floatingCartPosition.value.y}px`,
     right: 'auto',
@@ -264,13 +276,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
   touch-action: none;
   user-select: none;
-  transition: transform 180ms ease, background 180ms ease;
-}
-
-.floating-cart-btn--dimmed {
-  opacity: 0.14;
-  pointer-events: none;
-  transform: scale(0.96);
+  transition: opacity 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
 .floating-cart-btn:hover {

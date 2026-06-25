@@ -38,11 +38,16 @@
       </div>
     </div>
 
-    <nav class="nav-main" aria-label="Main">
+    <nav class="nav-main" :class="{ 'nav-main--dimmed': chromeDimmed }" aria-label="Main">
       <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }">{{ link.label }}</router-link>
     </nav>
 
-    <nav id="mnav" class="mobile-nav" aria-label="Mobile menu" :class="{ 'mobile-nav--open': menuOpen }">
+    <nav
+      id="mnav"
+      class="mobile-nav"
+      aria-label="Mobile menu"
+      :class="{ 'mobile-nav--open': menuOpen, 'mobile-nav--dimmed': chromeDimmed }"
+    >
       <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }" @click="closeMenu">{{ link.label }}</router-link>
     </nav>
 
@@ -149,6 +154,18 @@ watch(
   opacity: 0.14;
   pointer-events: none;
   transform: scale(0.96);
+}
+
+.nav-main,
+.mobile-nav {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.nav-main--dimmed,
+.mobile-nav--dimmed {
+  opacity: 0.14;
+  pointer-events: none;
+  transform: scale(0.98);
 }
 
 .icon-btn {
