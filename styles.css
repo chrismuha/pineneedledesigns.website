@@ -2032,8 +2032,8 @@ footer>section {
     display: grid;
     grid-template-columns: repeat(4, max-content);
     align-items: start;
-    justify-content: start;
-    width: min(900px, 100%);
+    justify-content: center;
+    width: 100%;
     column-gap: 8px;
     row-gap: 8px;
 }
@@ -2145,18 +2145,14 @@ footer>section {
 
 @media (max-width: 920px) {
     .collection-filters--with-bag-types {
-        grid-template-columns: repeat(3, max-content);
+        grid-template-columns: repeat(2, minmax(0, 280px));
+        column-gap: 16px;
     }
 
-    .collection-filters--with-bag-types .collection-filter--filter-wallets {
-        grid-column: 3;
-        grid-row: 2;
-    }
-}
-
-@media (max-width: 640px) {
-    .collection-filters--with-bag-types {
-        grid-template-columns: repeat(2, max-content);
+    .collection-filters--with-bag-types .collection-filter,
+    .collection-filters--with-bag-types .collection-filter-select {
+        justify-self: stretch;
+        width: 100%;
     }
 
     .collection-filters--with-bag-types .collection-filter--filter-fanny-packs {
@@ -2167,6 +2163,13 @@ footer>section {
     .collection-filters--with-bag-types .collection-filter--filter-wallets {
         grid-column: 2;
         grid-row: 3;
+    }
+}
+
+@media (max-width: 640px) {
+    .collection-filters--with-bag-types {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 10px;
     }
 }
 
