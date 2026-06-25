@@ -44,7 +44,6 @@ export const collectionPages = [
     slug: 'adirondack-bridal',
     title: 'Adirondack Bridal Collection',
     path: '/collections/adirondack-bridal',
-    count: 0,
     cardImage: '/images/comingsoon/adkbridalcomingsoon.webp',
     description: 'Hand-cut denim, luxe trims, and mountain-ready detailing designed for the bold bride who loves heritage craft and unexpected glamour.',
     products: [
@@ -65,14 +64,13 @@ export const collectionPages = [
     slug: 'adirondack-chic',
     title: 'Adirondack Chic',
     path: '/collections/adirondack-chic',
-    count: 1,
     showWhenEmpty: true,
     cardImage: '/images/adirondack-chic-collection/torquoise-white-speedy-bag/turquoise-white-speedy-bag1.webp',
     cardImageFromProduct: true,
     description: 'Country-chic Adirondack style with rustic textures, bold details, and handcrafted attitude.',
     products: [
       {
-        id: 58,
+        id: 1,
         title: 'Turquoise and White Leather Speedy Bag',
         price: 230,
         meta: ['Price: $230', 'Size: Small', 'Size: Large (SOLD)'],
@@ -90,7 +88,6 @@ export const collectionPages = [
     slug: 'boot-bands',
     title: 'Boot Bands',
     path: '/collections/boot-bands',
-    count: 0,
     cardImage: '/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp',
     description: 'Studded detail for every boot.',
     products: [
@@ -111,7 +108,6 @@ export const collectionPages = [
     slug: 'bracelets',
     title: 'Bracelets',
     path: '/collections/bracelets',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon1.webp',
     description: 'Handwoven metals for texture.',
     products: [
@@ -132,7 +128,6 @@ export const collectionPages = [
     slug: 'chic-jewelry',
     title: 'Chic Jewelry',
     path: '/collections/chic-jewelry',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Mixed metals with delicate stones.',
     products: [
@@ -153,7 +148,6 @@ export const collectionPages = [
     slug: 'cuffs',
     title: 'Cuffs',
     path: '/collections/cuffs',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon001.webp',
     description: 'Bold silhouette with tactile finish.',
     products: [
@@ -174,12 +168,11 @@ export const collectionPages = [
     slug: 'earrings',
     title: 'Earrings',
     path: '/collections/earrings',
-    count: 1,
     cardImage: '/images/ear-rings/ear-rings-1a.webp',
     description: 'Red flower earrings, 2.5" long.',
     products: [
       {
-        id: 10,
+        id: 2,
         title: 'Red Flower',
         price: 38,
         meta: ['Price: $38', 'Size: 2.5" long'],
@@ -199,7 +192,6 @@ export const collectionPages = [
     slug: 'hat-bands',
     title: 'Hat Bands',
     path: '/collections/hat-bands',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon002.webp',
     description: 'Feather accents with beaded thread.',
     products: [
@@ -220,12 +212,11 @@ export const collectionPages = [
     slug: 'jackets',
     title: 'Jackets',
     path: '/collections/jackets',
-    count: 3,
     cardImage: '/images/jackets/ruby-lee/ruby-lee-1a.webp',
     description: "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
     products: [
       {
-        id: 12,
+        id: 3,
         title: "America She's Beautiful",
         price: 214,
         meta: ['Price: $214.00 plus sales tax with free shipping', 'Size: M/L'],
@@ -236,7 +227,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 37,
+        id: 4,
         title: 'Ruby Lee',
         price: 264,
         meta: ['Price: $264', 'Size: M/L'],
@@ -255,7 +246,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 13,
+        id: 5,
         title: 'Carmen',
         price: 222,
         meta: ['Price: SOLD ($222)', 'Size: XL Ladies'],
@@ -269,7 +260,6 @@ export const collectionPages = [
     slug: 'jeans',
     title: 'Jeans',
     path: '/collections/jeans',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon003.webp',
     description: 'Sculpted fit with vintage wash.',
     products: [
@@ -290,7 +280,6 @@ export const collectionPages = [
     slug: 'limited-time',
     title: 'Limited-Time Collection',
     path: '/collections/limited-time',
-    count: 0,
     hidden: true,
     cardImage: '',
     description: 'A small-batch limited-time collection coming soon.',
@@ -300,7 +289,6 @@ export const collectionPages = [
     slug: 'necklaces',
     title: 'Necklaces',
     path: '/collections/necklaces',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon004.webp',
     description: 'Mix of chains and charms.',
     products: [
@@ -321,7 +309,6 @@ export const collectionPages = [
     slug: 'pooch-smooches',
     title: 'The Pooch Smooches Collection',
     path: '/collections/pooch-smooches',
-    count: 0,
     cardImage: '/images/poochsmooches/Polaris-and-Luna_1.webp',
     description: 'Bandanas, collars, and keepsakes made to celebrate the snuggly pals who are already obsessed with hugs.',
     products: [
@@ -342,13 +329,12 @@ export const collectionPages = [
     slug: 'shirts',
     title: 'Shirts',
     path: '/collections/shirts',
-    count: 7,
     cardImage: '/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp',
     description: 'Blinged Out T-Shirts and Sweatshirts made to stand out.',
     filters: ['T-Shirts', 'Sweatshirts'],
     products: [
       {
-        id: 38,
+        id: 6,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
         filters: ['Sweatshirts'],
         price: 58,
@@ -382,7 +368,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 39,
+        id: 7,
         title: 'Turquoise Chic Blinged Out T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
@@ -416,7 +402,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 74,
+        id: 8,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
@@ -447,7 +433,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 40,
+        id: 9,
         title: "Don't Burst My Bubble Blinged Out T-Shirt",
         filters: ['T-Shirts'],
         price: 38,
@@ -478,7 +464,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 63,
+        id: 10,
         title: 'Cowgirl Concert Goer T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
@@ -507,7 +493,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 64,
+        id: 11,
         title: 'Guts, Grit And Lipstick Blinged Out T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
@@ -536,7 +522,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 75,
+        id: 12,
         title: 'Happy Girls are the PRETTIEST! Blinged Out T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
@@ -563,7 +549,6 @@ export const collectionPages = [
     slug: 'purses',
     title: 'Purses',
     path: '/collections/purses',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon005.webp',
     description: 'Structured shape with mixed leather.',
     products: [
@@ -584,7 +569,6 @@ export const collectionPages = [
     slug: 'shorts',
     title: 'Shorts',
     path: '/collections/shorts',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon006.webp',
     description: 'A-line shape with luxe hardware.',
     products: [
@@ -605,13 +589,12 @@ export const collectionPages = [
     slug: 'denim-and-lace',
     title: 'Denim & Lace',
     path: '/collections/denim-and-lace',
-    count: 3,
     cardImage: '/images/whimsical-fairy/crownb.webp',
     description: 'Limited-run upcycled pieces crafted to stand out.',
     filters: ['Vests', 'Bracelets'],
     products: [
       {
-        id: 34,
+        id: 13,
         title: 'The Crowned Hare Vest',
         filters: ['Vests'],
         price: 77,
@@ -633,7 +616,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 41,
+        id: 14,
         title: 'Brandi Bracelet',
         filters: ['Bracelets'],
         price: 29,
@@ -651,7 +634,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 62,
+        id: 15,
         title: 'Adeline Bracelet',
         filters: ['Bracelets'],
         price: 32,
@@ -679,14 +662,13 @@ export const collectionPages = [
     slug: 'upcycled-collaboration',
     title: 'Upcycled Collaboration',
     path: '/collections/upcycled-collaboration',
-    count: 4,
     cardImage: '/images/upcycled-collaboration/adirondack-chic-leather-cowhide-overnight-duffel-bag/cowhide-bag1.webp',
     cardImageFromProduct: true,
     description: 'Collaborative upcycled pieces with country-chic materials and handcrafted details.',
     filters: ['Bags', 'Fanny Packs', 'Wallets'],
     products: [
       {
-        id: 55,
+        id: 16,
         title: 'Adirondack Chic Leather and Cowhide Overnight Duffel Bag',
         filters: ['Bags'],
         bagTypes: ['Duffel Bags'],
@@ -703,12 +685,13 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 61,
+        id: 17,
         title: 'Leather Fanny Pack with Fringe',
         filters: ['Fanny Packs'],
         price: 99,
         meta: ['Price: $99'],
-        description: 'Upcycled leather and made by jGypsie in the USA. Convenient back zipper pocket. Great for a day at the rodeo or horse show! You decide.',
+        maker: 'Made by jGypsie',
+        description: 'Upcycled leather in the USA. Convenient back zipper pocket. Great for a day at the rodeo or horse show! You decide.',
         images: [
           '/images/upcycled-collaboration/leather-fanny-pack/leather-fanny-pack1-1.webp',
           '/images/upcycled-collaboration/leather-fanny-pack/leather-fanny-pack1-2.webp',
@@ -717,12 +700,13 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 56,
+        id: 18,
         title: 'Cowhide Leather Checkered Wallet Wristlet',
         filters: ['Wallets'],
         price: 69,
-        meta: ['Price: $69', 'Color: Orchid', 'Size: 3.5" x 5"', 'Upcycled by j.Gypsie', 'Made in the USA'],
-        description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
+        meta: ['Price: $69', 'Color: Orchid', 'Size: 3.5" x 5"', 'Made in the USA'],
+        maker: 'Made by jGypsie',
+        description: 'Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
         images: [
           '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
           '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet2.webp',
@@ -730,12 +714,13 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 65,
-        title: 'Pink Tooled Leather Speedy Bag by jGypsie',
+        id: 19,
+        title: 'Pink Tooled Leather Speedy Bag',
         filters: ['Bags'],
         bagTypes: ['Speedy Bags'],
         price: 189,
-        meta: ['Price: $189', 'Made by jGypsie'],
+        meta: ['Price: $189'],
+        maker: 'Made by jGypsie',
         description: 'Whether you are country Western or Adirondack Chic this bag is perfect for femininity and rustic style.',
         images: [
           '/images/upcycled-collaboration/pink-tooled-leather-speedy-bag/pink-tooled-leather-speedy-bag1.webp',
@@ -749,19 +734,19 @@ export const collectionPages = [
     slug: 'upcycled-logo',
     title: 'Upcycled Logo',
     path: '/collections/upcycled-logo',
-    count: 12,
     cardImage: '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style1.webp',
     cardImageFromProduct: true,
     description: 'Upcycled finds reimagined as one-of-a-kind accessories and statement pieces.',
     filters: ['Bags', 'Wallets', 'Accessories'],
     products: [
       {
-        id: 54,
+        id: 20,
         title: 'Upcycled LOGO Barrette',
         filters: ['Accessories'],
         price: 49,
-        meta: ['Price: $49', 'Lv leather French style', 'Hair clip brown', 'Made by jGypsie'],
-        description: 'Lv leather French style. Hair clip brown. Made by jGypsie.',
+        meta: ['Price: $49', 'Lv leather French style', 'Hair clip brown'],
+        maker: 'Made by jGypsie',
+        description: 'Lv leather French style. Hair clip brown.',
         images: [
           '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style1.webp',
           '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style2.webp',
@@ -770,13 +755,14 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 57,
+        id: 21,
         title: 'Upcycled LV Canvas Pack',
         filters: ['Bags'],
         bagTypes: ['Packs'],
         price: 79,
-        meta: ['Price: $79', 'Made by jGypsie Designs'],
-        description: 'Perfect for walking with a stroller or dog leash. Made by jGypsie Designs. Fanny pack sling pack bum pack.',
+        meta: ['Price: $79'],
+        maker: 'Made by jGypsie',
+        description: 'Perfect for walking with a stroller or dog leash. Fanny pack sling pack bum pack.',
         images: [
           '/images/upcycled-logo/upcycled-lv-canvas-pack/upcyled-canvas-pack1.webp',
           '/images/upcycled-logo/upcycled-lv-canvas-pack/upcyled-canvas-pack2.webp',
@@ -785,7 +771,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 59,
+        id: 22,
         title: 'Upcycled LV Tooled Wristlet or Makeup Bag',
         filters: ['Bags', 'Wallets'],
         bagTypes: ['Makeup Bags', 'Wristlets'],
@@ -801,7 +787,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 60,
+        id: 23,
         title: 'The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag',
         filters: ['Bags'],
         bagTypes: ['Crossbody Bags'],
@@ -816,7 +802,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 66,
+        id: 24,
         title: 'Upcycled Black Suede and Brown Tooled Leather Backpack',
         filters: ['Bags'],
         bagTypes: ['Backpacks'],
@@ -830,7 +816,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 67,
+        id: 25,
         title: 'Cowhide Lv Faux Leather Shoulder Bag',
         filters: ['Bags'],
         bagTypes: ['Shoulder Bags'],
@@ -845,7 +831,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 68,
+        id: 26,
         title: 'Upcycled LV Logo Bag',
         filters: ['Bags'],
         bagTypes: ['Crossbody Bags'],
@@ -860,7 +846,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 69,
+        id: 27,
         title: 'The Weekender Tote Bag',
         filters: ['Bags'],
         bagTypes: ['Tote Bags'],
@@ -875,7 +861,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 70,
+        id: 28,
         title: 'LV Upcycled Cowhide Leather Bag',
         filters: ['Bags'],
         bagTypes: ['Crossbody Bags', 'Clutches'],
@@ -888,7 +874,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 71,
+        id: 29,
         title: 'Upcycled LV Cowhide Leather Fringe Crossbody Bag',
         filters: ['Bags'],
         bagTypes: ['Crossbody Bags'],
@@ -902,7 +888,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 72,
+        id: 30,
         title: 'Cowhide Leather Wristlet',
         filters: ['Wallets'],
         price: 80,
@@ -916,7 +902,7 @@ export const collectionPages = [
         imageWrapper: 'image-frame',
       },
       {
-        id: 73,
+        id: 31,
         title: 'Upcycled LV Mini Flask Bag Charm',
         filters: ['Accessories'],
         price: 46,
@@ -936,7 +922,6 @@ export const collectionPages = [
     slug: 'upcycled-denim',
     title: 'Upcycled Denim',
     path: '/collections/upcycled-denim',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon007.webp',
     description: 'One-of-a-kind patchwork silhouette.',
     products: [
@@ -957,12 +942,11 @@ export const collectionPages = [
     slug: 'summer-fall',
     title: 'Summer/Fall',
     path: '/collections/summer-fall',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon008.webp',
     description: 'Warm-weather statement pieces and early-order seasonal favorites.',
     products: [
       {
-        id: 50,
+        id: 32,
         title: 'Placeholder Item',
         placeholder: true,
         price: 'TBD',
@@ -973,7 +957,7 @@ export const collectionPages = [
         placeholderImage: '/images/comingsoon/comingsoon009.webp',
       },
       {
-        id: 51,
+        id: 33,
         title: 'Placeholder Item',
         placeholder: true,
         price: 'TBD',
@@ -989,7 +973,6 @@ export const collectionPages = [
     slug: 'vests',
     title: 'Vests',
     path: '/collections/vests',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon011.webp',
     description: 'Edgy layers with artisanal trim.',
     products: [
@@ -1010,12 +993,11 @@ export const collectionPages = [
     slug: 'winter-spring',
     title: 'Winter/Spring',
     path: '/collections/winter-spring',
-    count: 0,
     cardImage: '/images/comingsoon/comingsoon012.webp',
     description: "Cold-weather favorites and spring pieces we can't stop thinking about.",
     products: [
       {
-        id: 52,
+        id: 34,
         title: 'Placeholder Item',
         placeholder: true,
         price: 'TBD',
@@ -1026,7 +1008,7 @@ export const collectionPages = [
         placeholderImage: '/images/comingsoon/comingsoon013.webp',
       },
       {
-        id: 53,
+        id: 35,
         title: 'Placeholder Item',
         placeholder: true,
         price: 'TBD',
