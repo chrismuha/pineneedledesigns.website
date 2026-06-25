@@ -593,10 +593,12 @@ export const collectionPages = [
     count: 3,
     cardImage: '/images/whimsical-fairy/crownb.webp',
     description: 'Limited-run upcycled pieces crafted to stand out.',
+    filters: ['Vests', 'Bracelets'],
     products: [
       {
         id: 34,
         title: 'The Crowned Hare Vest',
+        filters: ['Vests'],
         price: 77,
         meta: ['Price: $77', 'Size: M/L'],
         description: 'This bunny is picture perfect with her resting in the woods of the Adirondacks wearing her crown of gold and rhinestones. 2 gold flower brooches popping out. Chain of gold leaves and rainbow crystals shine down on her. Rust embroidery travel around the denim vest. Lace and pearls outline the hem and neck. 2 front pockets are trimmed in either pearls and lace or stamped ink trees and a chain of leaves and crystals. One of a kind Country Chic or Whimsical Fairy.',
@@ -618,6 +620,7 @@ export const collectionPages = [
       {
         id: 41,
         title: 'Bracelet Brandi',
+        filters: ['Bracelets'],
         price: 29,
         meta: ['Price: $29', 'Size: 7 to 7.5"'],
         description: 'Brandi is a bracelet with a denim band. She is trimmed in lace flowers and has an ivory floral brooch with 3 large pearls and scattered rhinestones. Attached is bridal leaf lace with a triple circle and tiny rhinestones.',
@@ -635,6 +638,7 @@ export const collectionPages = [
       {
         id: 62,
         title: 'Adeline Bracelet',
+        filters: ['Bracelets'],
         price: 32,
         meta: ['Price: $32', 'Size: 7-8"', 'Stretches to 8"'],
         description: 'Adeline is a country chic bracelet. Denim, lace, pink chiffon, and a matching rose colored cameo. Trimmed in gold boucle ribbon and a string of pearls. Fastens in the back with a pearl flower and centered rhinestone. Closure is a corded elastic. Adeline stretches to 8".',
@@ -664,10 +668,12 @@ export const collectionPages = [
     cardImage: '/images/upcycled-collaboration/adirondack-chic-leather-cowhide-overnight-duffel-bag/cowhide-bag1.webp',
     cardImageFromProduct: true,
     description: 'Collaborative upcycled pieces with country-chic materials and handcrafted details.',
+    filters: ['Bags', 'Fanny Packs', 'Wallets'],
     products: [
       {
         id: 55,
         title: 'Adirondack Chic Leather and Cowhide Overnight Duffel Bag',
+        filters: ['Bags'],
         price: 160,
         meta: ['Price: $160'],
         maker: 'Made by jGypsie',
@@ -683,6 +689,7 @@ export const collectionPages = [
       {
         id: 61,
         title: 'Leather Fanny Pack with Fringe',
+        filters: ['Fanny Packs'],
         price: 99,
         meta: ['Price: $99'],
         description: 'Upcycled leather and made by jGypsie in the USA. Convenient back zipper pocket. Great for a day at the rodeo or horse show! You decide.',
@@ -696,6 +703,7 @@ export const collectionPages = [
       {
         id: 56,
         title: 'Cowhide Leather Checkered Wallet Wristlet',
+        filters: ['Wallets'],
         price: 69,
         meta: ['Price: $69', 'Color: Orchid', 'Size: 3.5" x 5"', 'Upcycled by j.Gypsie', 'Made in the USA'],
         description: 'Upcycled by j.Gypsie. Made in the USA. Comes with leather wrist strap. Folds down to 3.5" x 5". What is more country chic than leather and cowhide? Cute!',
@@ -708,6 +716,7 @@ export const collectionPages = [
       {
         id: 65,
         title: 'Pink Tooled Leather Speedy Bag by jGypsie',
+        filters: ['Bags'],
         price: 189,
         meta: ['Price: $189', 'Made by jGypsie'],
         description: 'Whether you are country Western or Adirondack Chic this bag is perfect for femininity and rustic style.',
@@ -727,10 +736,12 @@ export const collectionPages = [
     cardImage: '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style1.webp',
     cardImageFromProduct: true,
     description: 'Upcycled finds reimagined as one-of-a-kind accessories and statement pieces.',
+    filters: ['Bags', 'Wallets', 'Accessories'],
     products: [
       {
         id: 54,
         title: 'Upcycled LOGO Barrette',
+        filters: ['Accessories'],
         price: 49,
         meta: ['Price: $49', 'Lv leather French style', 'Hair clip brown', 'Made by jGypsie'],
         description: 'Lv leather French style. Hair clip brown. Made by jGypsie.',
@@ -744,6 +755,7 @@ export const collectionPages = [
       {
         id: 57,
         title: 'Upcycled LV Canvas Pack',
+        filters: ['Bags'],
         price: 79,
         meta: ['Price: $79', 'Made by jGypsie Designs'],
         description: 'Perfect for walking with a stroller or dog leash. Made by jGypsie Designs. Fanny pack sling pack bum pack.',
@@ -757,6 +769,7 @@ export const collectionPages = [
       {
         id: 59,
         title: 'Upcycled LV Tooled Wristlet or Makeup Bag',
+        filters: ['Bags', 'Wallets'],
         price: 88,
         meta: ['Price: $88'],
         description: 'All recycled leather and hand tooled for that Adirondack Charm! Great for country Western and North country girls alike!',
@@ -771,6 +784,7 @@ export const collectionPages = [
       {
         id: 60,
         title: 'The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag',
+        filters: ['Bags'],
         price: 160,
         meta: ['Price: $160', 'Color: Rustic Charm and Feminine'],
         description: 'One of a kind. Nicely concealed back zipper pocket. Love that leather fringe.',
@@ -784,6 +798,7 @@ export const collectionPages = [
       {
         id: 66,
         title: 'Upcycled Black Suede and Brown Tooled Leather Backpack',
+        filters: ['Bags'],
         price: 160,
         meta: ['Price: $160', 'Color: Black suede and brown tooled leather', 'Size: 15”X9.5”X5”'],
         description: 'Of course with the Lv logo! Great for school or a hike! Stitching is the famous boot stitch.',
@@ -796,6 +811,7 @@ export const collectionPages = [
       {
         id: 67,
         title: 'Cowhide Lv Faux Leather Shoulder Bag',
+        filters: ['Bags'],
         price: 138,
         meta: ['Price: $138', 'Color: Golden brown', 'Durable faux leather with cowhide'],
         description: 'A nice rich golden brown color with a roomy inside for an iPad and make up bag. Durable faux leather with cowhide to match. Goes perfect with Lv logo.',
@@ -809,6 +825,7 @@ export const collectionPages = [
       {
         id: 68,
         title: 'Upcycled LV Logo Bag',
+        filters: ['Bags'],
         price: 171,
         meta: ['Price: $171', 'Pink and white checkered', 'Natural cowhide and leather fringe', "There's only one"],
         description: "This crossbody bag is pink and white checkered with natural cowhide and leather fringe. Total statement bag with that LV logo! And there's only one!",
@@ -822,6 +839,7 @@ export const collectionPages = [
       {
         id: 69,
         title: 'The Weekender Tote Bag',
+        filters: ['Bags'],
         price: 98,
         meta: ['Price: $98', 'Neutral canvas tones', 'Brown leather handles'],
         description: 'Perfect neutral tones on canvas and brown leather handles. Of course you will rock it with the LV logo! Very roomy and fun with the canvas front fringe and flashy dark diamond print.',
@@ -835,6 +853,7 @@ export const collectionPages = [
       {
         id: 70,
         title: 'LV Upcycled Cowhide Leather Bag',
+        filters: ['Bags'],
         price: 118,
         meta: ['Price: $118', 'Color: Golden brown', 'Crossbody or handheld clutch', 'Comes with 2 straps'],
         description: 'Two bags in one. LV upcycled cowhide leather bag. Crossbody or handheld clutch. You choose. Comes with 2 straps: one short for your wrist or arm and one long strap. Beautiful golden brown.',
@@ -846,6 +865,7 @@ export const collectionPages = [
       {
         id: 71,
         title: 'Upcycled LV Cowhide Leather Fringe Crossbody Bag',
+        filters: ['Bags'],
         price: 160,
         meta: ['Price: $160', 'Color: Brown', 'One of a kind', 'Western style'],
         description: 'Upcycled LV cowhide leather fringe crossbody bag. Brown. One of a kind bag. Western style with hand tooled front markings. Back has a zipped concealed compartment.',
@@ -858,6 +878,7 @@ export const collectionPages = [
       {
         id: 72,
         title: 'Cowhide Leather Wristlet',
+        filters: ['Wallets'],
         price: 80,
         meta: ['Price: $80', 'Upcycled LV wallet bag and card holder', 'Braided leather handle', 'Medium brown cowhide'],
         description: 'Cowhide leather wristlet. Upcycled LV wallet bag and card holder. Small enough for your wrist or to insert in your large bag. Beautiful and convenient for running into the store. Handle is braided leather and the bag is a rich medium brown with matching two-tone cowhide. Brass metal holds the LV logo.',
@@ -871,6 +892,7 @@ export const collectionPages = [
       {
         id: 73,
         title: 'Upcycled LV Mini Flask Bag Charm',
+        filters: ['Accessories'],
         price: 46,
         meta: ['Price: $46', 'Size: 2" x 2"'],
         description: 'Upcycled LV Mini Flask Bag Charm.',
