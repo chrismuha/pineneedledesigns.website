@@ -7,48 +7,41 @@
       </div>
       <h2>{{ page.title }}</h2>
       <p>{{ page.description }}</p>
-      <div v-if="collectionFilters.length" class="collection-filters" aria-label="Product filters">
+      <div
+        v-if="collectionFilters.length"
+        class="collection-filters"
+        :class="{ 'collection-filters--with-bag-types': showBagTypeFilter }"
+        aria-label="Product filters"
+      >
         <button
           type="button"
           class="collection-filter"
-          :class="{ 'collection-filter--active': activeFilter === allFilter }"
+          :class="['collection-filter--filter-all', { 'collection-filter--active': activeFilter === allFilter }]"
           :aria-pressed="activeFilter === allFilter"
           @click="activeFilter = allFilter"
         >
           All
         </button>
-        <template v-for="filter in collectionFilters" :key="filter">
-          <span v-if="showBagTypeFilter && filter === bagsFilter" class="collection-filter-stack">
-            <button
-              type="button"
-              class="collection-filter"
-              :class="{ 'collection-filter--active': activeFilter === filter }"
-              :aria-pressed="activeFilter === filter"
-              @click="activeFilter = filter"
-            >
-              {{ filter }}
-            </button>
-            <label class="collection-filter-select">
-              <span class="visually-hidden">Bag type</span>
-              <select v-model="activeBagType">
-                <option :value="allBagTypes">Select bag type</option>
-                <option v-for="bagType in bagTypeOptions" :key="bagType" :value="bagType">
-                  {{ bagType }}
-                </option>
-              </select>
-            </label>
-          </span>
-          <button
-            v-else
-            type="button"
-            class="collection-filter"
-            :class="{ 'collection-filter--active': activeFilter === filter }"
-            :aria-pressed="activeFilter === filter"
-            @click="activeFilter = filter"
-          >
-            {{ filter }}
-          </button>
-        </template>
+        <button
+          v-for="filter in collectionFilters"
+          :key="filter"
+          type="button"
+          class="collection-filter"
+          :class="[filterClass(filter), { 'collection-filter--active': activeFilter === filter }]"
+          :aria-pressed="activeFilter === filter"
+          @click="activeFilter = filter"
+        >
+          {{ filter }}
+        </button>
+        <label v-if="showBagTypeFilter" class="collection-filter-select">
+          <span class="visually-hidden">Bag type</span>
+          <select v-model="activeBagType">
+            <option :value="allBagTypes">Select bag type</option>
+            <option v-for="bagType in bagTypeOptions" :key="bagType" :value="bagType">
+              {{ bagType }}
+            </option>
+          </select>
+        </label>
       </div>
     </div>
 
@@ -148,6 +141,8 @@ const nextPath = computed(() => {
 })
 
 const collectionFilters = computed(() => page.value?.filters || [])
+const filterClass = (filter) =>
+  `collection-filter--filter-${String(filter).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 const productFilters = (product) => Array.isArray(product.filters) ? product.filters : [product.filters].filter(Boolean)
 const productBagTypes = (product) => Array.isArray(product.bagTypes) ? product.bagTypes : [product.bagTypes].filter(Boolean)
 const bagTypeOptions = computed(() => {

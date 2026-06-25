@@ -2028,6 +2028,41 @@ footer>section {
     margin: 8px auto 0;
 }
 
+.collection-filters--with-bag-types {
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+    align-items: start;
+    justify-content: start;
+    width: min(900px, 100%);
+    column-gap: 8px;
+    row-gap: 8px;
+}
+
+.collection-filters--with-bag-types .collection-filter--filter-all {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.collection-filters--with-bag-types .collection-filter--filter-bags {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.collection-filters--with-bag-types .collection-filter--filter-fanny-packs {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.collection-filters--with-bag-types .collection-filter--filter-wallets {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+.collection-filters--with-bag-types .collection-filter-select {
+    grid-column: 2;
+    grid-row: 2;
+}
+
 .collection-filter {
     appearance: none;
     border: 1px solid var(--border);
@@ -2042,13 +2077,6 @@ footer>section {
     min-height: 42px;
     padding: 9px 18px;
     transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.collection-filter-stack {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
 }
 
 .collection-filter:hover,
@@ -2113,6 +2141,33 @@ footer>section {
 .collection-filter-select select:focus-visible {
     outline: none;
     box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 920px) {
+    .collection-filters--with-bag-types {
+        grid-template-columns: repeat(3, max-content);
+    }
+
+    .collection-filters--with-bag-types .collection-filter--filter-wallets {
+        grid-column: 3;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 640px) {
+    .collection-filters--with-bag-types {
+        grid-template-columns: repeat(2, max-content);
+    }
+
+    .collection-filters--with-bag-types .collection-filter--filter-fanny-packs {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .collection-filters--with-bag-types .collection-filter--filter-wallets {
+        grid-column: 2;
+        grid-row: 3;
+    }
 }
 
 .product-grid {
