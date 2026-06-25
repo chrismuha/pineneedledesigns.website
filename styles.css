@@ -71,6 +71,8 @@
     --black-10: #0000001a;
     --black-50: #00000080;
     --black-55: #0000008c;
+    --black-70: #000000b3;
+    --black-18: #0000002e;
     --shadow-ink-06: #0a0a0a0f;
     --shadow-ink-08: #0a0a0a14;
     --cart-ink-06: #22313f0f;
@@ -85,6 +87,11 @@
     --accent-60: #0f6c7899;
     --accent-3-50: #0b536080;
     --accent-3-55: #0b53608c;
+    --brand-green: #48a740;
+    --text-secondary: #666666;
+    --error-red-bright: #ed2024;
+    --limited-run-placeholder-start: #e7e7e7;
+    --limited-run-placeholder-end: #b8b8b8;
     --radius: 14px;
     --shadow: 0 10px 30px var(--shadow-ink-08);
     --shadow-sm: 0 4px 14px var(--shadow-ink-06);
@@ -645,7 +652,7 @@ header {
 }
 
 .limited-run-copy h2 {
-    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    font-size: 24pt;
     line-height: 1;
     margin: 0;
 }
@@ -683,7 +690,7 @@ header {
 
 .limited-run-placeholder {
     align-items: center;
-    background: linear-gradient(135deg, #e7e7e7, #b8b8b8);
+    background: linear-gradient(135deg, var(--limited-run-placeholder-start), var(--limited-run-placeholder-end));
     color: var(--black-70);
     display: flex;
     font-weight: 700;
@@ -1011,7 +1018,7 @@ section {
     margin: 0;
     color: var(--ink);
     font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    font-size: clamp(28pt, 5vw, 44pt);
+    font-size: 36pt;
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.05;
@@ -1120,8 +1127,7 @@ section {
     width: 100%;
     max-width: calc(100% - 8px);
     margin: 0 0 6px;
-    font-size: clamp(12pt, 1.7vw, 16pt);
-    font-size: clamp(12pt, 8cqw, 24pt);
+    font-size: 16pt;
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.06;
@@ -1264,8 +1270,7 @@ section {
     width: 100%;
     max-width: calc(100% - 8px);
     margin: 0 0 6px;
-    font-size: clamp(12pt, 1.7vw, 16pt);
-    font-size: clamp(12pt, 8cqw, 24pt);
+    font-size: 16pt;
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.06;
@@ -1279,7 +1284,7 @@ section {
     .collection-link .subtle,
     .collections:not(.collections-catalog) .subtle,
     .home-page .collections:not(.collections-catalog) .body h3 {
-        font-size: clamp(15pt, 8cqw, 24pt);
+        font-size: 18pt;
     }
 }
 
@@ -1300,7 +1305,7 @@ section {
 
 .home-page .highlighted-collection .body h3 {
     margin: 0;
-    font-size: clamp(20pt, 3.2vw, 30pt);
+    font-size: 24pt;
     font-weight: 800;
     letter-spacing: 0.02em;
     line-height: 1.05;
@@ -1435,7 +1440,7 @@ section {
 
 .home-page .tile .copy h3 {
     margin: 0;
-    font-size: clamp(20pt, 3vw, 28pt);
+    font-size: 24pt;
     font-weight: 800;
     letter-spacing: 0.03em;
     line-height: 1.05;
@@ -2331,7 +2336,7 @@ footer>section {
         }
 
         .shop-split .tile .copy h3 {
-            font-size: clamp(14pt, 5vw, 18pt);
+            font-size: 16pt;
             line-height: 1.1;
         }
 
@@ -2425,11 +2430,11 @@ footer>section {
         }
 
         .collections-page-header h1 {
-            font-size: clamp(22pt, 8vw, 30pt);
+            font-size: 26pt;
         }
 
         .collection-group h3 {
-            font-size: clamp(13pt, 5vw, 16pt);
+            font-size: 14pt;
             line-height: 1.15;
         }
 
@@ -2448,8 +2453,7 @@ footer>section {
 
         .collection-group h4 {
             max-width: min(360px, 98%);
-            font-size: clamp(11pt, 3.2vw, 15pt);
-            font-size: clamp(11pt, 8cqw, 21pt);
+            font-size: 13pt;
             line-height: 1.06;
             white-space: normal;
             word-break: normal;
@@ -2474,13 +2478,12 @@ footer>section {
         }
 
         .home-page .highlighted-collection .body h3 {
-            font-size: clamp(18pt, 7vw, 26pt);
+            font-size: 22pt;
         }
 
         .home-page .collections:not(.collections-catalog) .body h3 {
             max-width: min(360px, 98%);
-            font-size: clamp(11pt, 3.2vw, 15pt);
-            font-size: clamp(11pt, 8cqw, 21pt);
+            font-size: 13pt;
             white-space: normal;
             word-break: normal;
         }
@@ -2488,12 +2491,11 @@ footer>section {
         .collection-link .subtle,
         .collections:not(.collections-catalog) .subtle {
             max-width: min(360px, 98%);
-            font-size: clamp(11pt, 3.2vw, 15pt);
-            font-size: clamp(11pt, 8cqw, 21pt);
+            font-size: 13pt;
         }
 
         .home-page .tile .copy h3 {
-            font-size: clamp(17pt, 6vw, 24pt);
+            font-size: 20pt;
         }
 
         /* Keep pills narrower on phones so they stay inside the card */
