@@ -37,6 +37,8 @@
             <MediaSlider
               :media="productMedia(product)"
               :label="`${product.title} media gallery`"
+              :eager="productIndex < 2"
+              :priority="productIndex === 0 ? 'high' : 'auto'"
             />
           </template>
           <template v-else>
@@ -69,18 +71,17 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
 import MediaSlider from '../components/MediaSlider.vue'
 import ProductOptionSelect from '../components/ProductOptionSelect.vue'
 import { collectionPages } from '../data/siteData'
 import { useCartStore } from '../stores/cart'
+import { firstVisibleProductMedia, preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
 const props = defineProps({
   slug: String,
 })
 
-const route = useRoute()
 const cartStore = useCartStore()
 const selectedOptions = ref({})
 
@@ -174,6 +175,20 @@ const placeholderImageLoading = (productIndex, imageIndex) =>
   productIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'
 const placeholderImagePriority = (productIndex, imageIndex) =>
   productIndex === 0 && imageIndex === 0 ? 'high' : 'auto'
+
+const pageVisibleMedia = (currentPage) => {
+  if (!currentPage) return []
+  return currentPage.products.flatMap(firstVisibleProductMedia)
+}
+
+const preloadPageMedia = (currentPage) => {
+  const media = pageVisibleMedia(currentPage)
+  preloadImages(media.slice(0, 2))
+  preloadImagesOnIdle(media.slice(2), 2)
+}
+
+onMounted(() => preloadPageMedia(page.value))
+watch(page, preloadPageMedia)
 
 const addToCart = async (product) => {
   if (!canAddToCart(product)) return

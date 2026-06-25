@@ -30,7 +30,9 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { visibleCollectionPages } from '../data/siteData'
+import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
 const categoryOrder = [
   {
@@ -70,4 +72,13 @@ const collectionImagePriority = (groupIndex, collectionIndex) =>
 const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
 const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
+
+onMounted(() => {
+  const visibleImages = collectionGroups.flatMap((group) =>
+    group.collections.map((collection) => collection.cardImage)
+  )
+
+  preloadImages(visibleImages.slice(0, 4))
+  preloadImagesOnIdle(visibleImages.slice(4), 3)
+})
 </script>

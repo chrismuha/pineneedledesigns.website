@@ -50,6 +50,7 @@
             <router-link v-if="collection.count > 0" class="card-link" :to="collection.path">
               <img
                 :loading="collectionImageLoading(collectionIndex)"
+                :fetchpriority="collectionImagePriority(collectionIndex)"
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
@@ -62,6 +63,7 @@
             <div v-else>
               <img
                 :loading="collectionImageLoading(collectionIndex)"
+                :fetchpriority="collectionImagePriority(collectionIndex)"
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
@@ -228,9 +230,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import ImageSlider from '../components/ImageSlider.vue'
 import { homeSections, otherCollections } from '../data/siteData'
+import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 import comingSoon017 from '../../images/comingsoon/comingsoon017.webp'
 import comingSoon019 from '../../images/comingsoon/comingsoon019.webp'
 import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
@@ -267,7 +270,14 @@ const homePlaceholderImages = {
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
 const collectionImageLoading = (index) => (index < 2 ? 'eager' : 'lazy')
+const collectionImagePriority = (index) => (index === 0 ? 'high' : 'auto')
 const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
 const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
+
+onMounted(() => {
+  const visibleImages = otherCollections.map((collection) => collection.cardImage)
+  preloadImages(visibleImages.slice(0, 4))
+  preloadImagesOnIdle(visibleImages.slice(4), 3)
+})
 </script>

@@ -41,8 +41,8 @@
             class="media-slider__media"
             :src="item.src"
             :alt="item.alt || ''"
-            loading="eager"
-            :fetchpriority="index === currentIndex ? 'high' : 'low'"
+            :loading="imageLoading(index)"
+            :fetchpriority="imagePriority(index)"
             decoding="async"
             draggable="false"
           />
@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   media: {
@@ -102,6 +102,14 @@ const props = defineProps({
     type: String,
     default: 'Media gallery',
   },
+  eager: {
+    type: Boolean,
+    default: false,
+  },
+  priority: {
+    type: String,
+    default: 'auto',
+  },
 })
 
 const currentIndex = ref(0)
@@ -110,8 +118,6 @@ const dragOffsetX = ref(0)
 const isDragging = ref(false)
 const loadedIndexes = ref(new Set([0]))
 const preloadedSources = new Set()
-let remainingPreloadTimer
-let remainingIdleCallback
 
 const imageExtensions = ['avif', 'gif', 'jpeg', 'jpg', 'png', 'webp']
 const videoExtensions = ['mp4', 'mov', 'ogg', 'webm']
@@ -172,6 +178,8 @@ const queueNearbyMedia = (index) => {
 }
 
 const shouldLoad = (index) => loadedIndexes.value.has(index)
+const imageLoading = (index) => props.eager && index === currentIndex.value ? 'eager' : 'lazy'
+const imagePriority = (index) => index === currentIndex.value ? props.priority : 'low'
 
 const preloadSource = (src) => {
   if (!src || preloadedSources.has(src) || typeof Image === 'undefined') return
@@ -196,19 +204,6 @@ const preloadImages = (indexes) => {
   })
 }
 
-const preloadRemainingImages = () => {
-  const preload = () => {
-    preloadImages(normalizedMedia.value.map((_, index) => index))
-  }
-
-  if ('requestIdleCallback' in window) {
-    remainingIdleCallback = window.requestIdleCallback(preload, { timeout: 1500 })
-    return
-  }
-
-  remainingPreloadTimer = window.setTimeout(preload, 800)
-}
-
 watch(
   currentIndex,
   (index) => {
@@ -221,8 +216,7 @@ watch(
   normalizedMedia,
   () => {
     if (typeof window === 'undefined') return
-    window.clearTimeout(remainingPreloadTimer)
-    preloadRemainingImages()
+    queueNearbyMedia(currentIndex.value)
   },
   { immediate: true }
 )
@@ -268,13 +262,6 @@ const cancelDrag = () => {
   dragOffsetX.value = 0
 }
 
-onBeforeUnmount(() => {
-  if (typeof window === 'undefined') return
-  window.clearTimeout(remainingPreloadTimer)
-  if ('cancelIdleCallback' in window && remainingIdleCallback) {
-    window.cancelIdleCallback(remainingIdleCallback)
-  }
-})
 </script>
 
 <style scoped>
