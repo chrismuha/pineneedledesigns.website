@@ -2022,6 +2022,7 @@ footer>section {
 .collection-filters {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 8px;
     width: min(720px, 100%);
     margin: 8px auto 0;
