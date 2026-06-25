@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="container nav" role="navigation" aria-label="Primary">
-      <div class="nav-actions">
+      <div class="nav-actions" :class="{ 'nav-actions--dimmed': chromeDimmed }">
         <router-link class="icon-btn" to="/" aria-label="Home" :class="{ active: route.path === '/' }">
           <i class="bi bi-house"></i>
         </router-link>
@@ -58,6 +58,13 @@ import { useCartStore } from '../stores/cart'
 const menuOpen = ref(false)
 const route = useRoute()
 const cartStore = useCartStore()
+
+defineProps({
+  chromeDimmed: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const closeMenu = () => {
   menuOpen.value = false
@@ -135,6 +142,13 @@ watch(
   background: var(--white-92);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(12px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.nav-actions--dimmed {
+  opacity: 0.14;
+  pointer-events: none;
+  transform: scale(0.96);
 }
 
 .icon-btn {

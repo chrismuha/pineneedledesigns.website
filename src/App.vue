@@ -4,7 +4,7 @@
   </template>
 
   <template v-else>
-    <GlobalHeader @toggle-cart="toggleCart" />
+    <GlobalHeader :chrome-dimmed="isDesktopPageScrolling" @toggle-cart="toggleCart" />
 
     <main>
       <router-view />
@@ -14,10 +14,14 @@
 
     <button
       v-if="cartStore.totalItems > 0 && !cartStore.isOpen"
+      ref="floatingCartButton"
       class="floating-cart-btn"
+      :class="{ 'floating-cart-btn--dimmed': isDesktopPageScrolling && !floatingCartDrag }"
       type="button"
       aria-label="Open cart"
-      @click="toggleCart"
+      :style="floatingCartStyle"
+      @click="handleFloatingCartClick"
+      @pointerdown="startFloatingCartDrag"
     >
       <i class="bi bi-bag"></i>
       <span class="floating-cart-btn__count">
@@ -30,7 +34,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import GlobalHeader from './components/GlobalHeader.vue'
 import GlobalFooter from './components/GlobalFooter.vue'
@@ -50,6 +54,193 @@ const cartStore = useCartStore()
 const toggleCart = () => {
   cartStore.toggleOpen()
 }
+
+const floatingCartButton = ref(null)
+const floatingCartPosition = ref(null)
+const floatingCartDrag = ref(null)
+const suppressFloatingCartClick = ref(false)
+const isDesktopPageScrolling = ref(false)
+const desktopScrollFadeEnabled = ref(false)
+const floatingCartPositionKey = 'pine-needle-floating-cart-position'
+const floatingCartMargin = 8
+const floatingCartDragThreshold = 4
+const desktopScrollFadeQuery = '(min-width: 769px)'
+const scrollFadeDelay = 320
+let desktopScrollFadeMedia = null
+let scrollFadeTimer = null
+
+const floatingCartStyle = computed(() => {
+  if (!floatingCartPosition.value) return {}
+
+  return {
+    left: `${floatingCartPosition.value.x}px`,
+    top: `${floatingCartPosition.value.y}px`,
+    right: 'auto',
+    bottom: 'auto',
+  }
+})
+
+const clampFloatingCartPosition = (x, y) => {
+  const button = floatingCartButton.value
+  const width = button?.offsetWidth || 58
+  const height = button?.offsetHeight || 58
+  const maxX = Math.max(floatingCartMargin, window.innerWidth - width - floatingCartMargin)
+  const maxY = Math.max(floatingCartMargin, window.innerHeight - height - floatingCartMargin)
+
+  return {
+    x: Math.min(Math.max(x, floatingCartMargin), maxX),
+    y: Math.min(Math.max(y, floatingCartMargin), maxY),
+  }
+}
+
+const saveFloatingCartPosition = () => {
+  if (!floatingCartPosition.value) return
+
+  try {
+    window.localStorage.setItem(floatingCartPositionKey, JSON.stringify(floatingCartPosition.value))
+  } catch (error) {
+    console.error('Failed to save cart bubble position:', error)
+  }
+}
+
+const loadFloatingCartPosition = () => {
+  try {
+    const savedPosition = JSON.parse(window.localStorage.getItem(floatingCartPositionKey) || 'null')
+    if (!savedPosition || !Number.isFinite(savedPosition.x) || !Number.isFinite(savedPosition.y)) return
+
+    floatingCartPosition.value = clampFloatingCartPosition(savedPosition.x, savedPosition.y)
+  } catch (error) {
+    console.error('Failed to read cart bubble position:', error)
+  }
+}
+
+const startFloatingCartDrag = (event) => {
+  if (event.button !== undefined && event.button !== 0) return
+
+  const button = floatingCartButton.value
+  if (!button) return
+
+  const rect = button.getBoundingClientRect()
+  floatingCartDrag.value = {
+    pointerId: event.pointerId,
+    startClientX: event.clientX,
+    startClientY: event.clientY,
+    startX: rect.left,
+    startY: rect.top,
+    moved: false,
+  }
+  floatingCartPosition.value = clampFloatingCartPosition(rect.left, rect.top)
+  button.setPointerCapture?.(event.pointerId)
+  window.addEventListener('pointermove', handleFloatingCartDrag)
+  window.addEventListener('pointerup', stopFloatingCartDrag)
+  window.addEventListener('pointercancel', stopFloatingCartDrag)
+}
+
+const handleFloatingCartDrag = (event) => {
+  const drag = floatingCartDrag.value
+  if (!drag || event.pointerId !== drag.pointerId) return
+
+  const deltaX = event.clientX - drag.startClientX
+  const deltaY = event.clientY - drag.startClientY
+  const movedEnough = Math.hypot(deltaX, deltaY) >= floatingCartDragThreshold
+
+  if (!drag.moved && movedEnough) {
+    drag.moved = true
+  }
+
+  if (!drag.moved) return
+
+  event.preventDefault()
+  floatingCartPosition.value = clampFloatingCartPosition(drag.startX + deltaX, drag.startY + deltaY)
+}
+
+const stopFloatingCartDrag = (event) => {
+  const drag = floatingCartDrag.value
+  if (!drag || event.pointerId !== drag.pointerId) return
+
+  if (drag.moved) {
+    suppressFloatingCartClick.value = true
+    saveFloatingCartPosition()
+    window.setTimeout(() => {
+      suppressFloatingCartClick.value = false
+    }, 150)
+  }
+
+  floatingCartButton.value?.releasePointerCapture?.(event.pointerId)
+  floatingCartDrag.value = null
+  window.removeEventListener('pointermove', handleFloatingCartDrag)
+  window.removeEventListener('pointerup', stopFloatingCartDrag)
+  window.removeEventListener('pointercancel', stopFloatingCartDrag)
+}
+
+const handleFloatingCartClick = () => {
+  if (suppressFloatingCartClick.value) return
+
+  toggleCart()
+}
+
+const keepFloatingCartInView = () => {
+  if (!floatingCartPosition.value) return
+
+  floatingCartPosition.value = clampFloatingCartPosition(
+    floatingCartPosition.value.x,
+    floatingCartPosition.value.y
+  )
+  saveFloatingCartPosition()
+}
+
+const stopScrollFadeTimer = () => {
+  if (!scrollFadeTimer) return
+
+  window.clearTimeout(scrollFadeTimer)
+  scrollFadeTimer = null
+}
+
+const finishPageScroll = () => {
+  isDesktopPageScrolling.value = false
+  scrollFadeTimer = null
+}
+
+const handlePageScroll = () => {
+  if (!desktopScrollFadeEnabled.value) return
+
+  isDesktopPageScrolling.value = true
+  stopScrollFadeTimer()
+  scrollFadeTimer = window.setTimeout(finishPageScroll, scrollFadeDelay)
+}
+
+const setDesktopScrollFadeEnabled = (matches) => {
+  desktopScrollFadeEnabled.value = matches
+  if (!matches) {
+    stopScrollFadeTimer()
+    isDesktopPageScrolling.value = false
+  }
+}
+
+const handleDesktopScrollFadeChange = (event) => {
+  setDesktopScrollFadeEnabled(event.matches)
+}
+
+onMounted(() => {
+  loadFloatingCartPosition()
+  desktopScrollFadeMedia = window.matchMedia(desktopScrollFadeQuery)
+  setDesktopScrollFadeEnabled(desktopScrollFadeMedia.matches)
+  desktopScrollFadeMedia.addEventListener?.('change', handleDesktopScrollFadeChange)
+  desktopScrollFadeMedia.addListener?.(handleDesktopScrollFadeChange)
+  window.addEventListener('resize', keepFloatingCartInView)
+  window.addEventListener('scroll', handlePageScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  stopScrollFadeTimer()
+  desktopScrollFadeMedia?.removeEventListener?.('change', handleDesktopScrollFadeChange)
+  desktopScrollFadeMedia?.removeListener?.(handleDesktopScrollFadeChange)
+  window.removeEventListener('resize', keepFloatingCartInView)
+  window.removeEventListener('scroll', handlePageScroll)
+  window.removeEventListener('pointermove', handleFloatingCartDrag)
+  window.removeEventListener('pointerup', stopFloatingCartDrag)
+  window.removeEventListener('pointercancel', stopFloatingCartDrag)
+})
 </script>
 
 <style scoped>
@@ -71,7 +262,15 @@ const toggleCart = () => {
   font-size: 24pt;
   line-height: 1;
   cursor: pointer;
+  touch-action: none;
+  user-select: none;
   transition: transform 180ms ease, background 180ms ease;
+}
+
+.floating-cart-btn--dimmed {
+  opacity: 0.14;
+  pointer-events: none;
+  transform: scale(0.96);
 }
 
 .floating-cart-btn:hover {

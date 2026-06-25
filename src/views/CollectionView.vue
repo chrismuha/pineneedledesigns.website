@@ -28,10 +28,11 @@
         >
           {{ filter }}
         </button>
+        <span v-if="showBagTypeFilter" class="collection-filter-break" aria-hidden="true"></span>
         <label v-if="showBagTypeFilter" class="collection-filter-select">
-          <span>Bag type</span>
+          <span class="visually-hidden">Bag type</span>
           <select v-model="activeBagType">
-            <option :value="allBagTypes">All bag types</option>
+            <option :value="allBagTypes">Select bag type</option>
             <option v-for="bagType in bagTypeOptions" :key="bagType" :value="bagType">
               {{ bagType }}
             </option>
