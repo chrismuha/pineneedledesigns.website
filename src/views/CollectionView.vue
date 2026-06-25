@@ -28,6 +28,15 @@
         >
           {{ filter }}
         </button>
+        <label v-if="showBagTypeFilter" class="collection-filter-select">
+          <span>Bag type</span>
+          <select v-model="activeBagType">
+            <option :value="allBagTypes">All bag types</option>
+            <option v-for="bagType in bagTypeOptions" :key="bagType" :value="bagType">
+              {{ bagType }}
+            </option>
+          </select>
+        </label>
       </div>
     </div>
 
@@ -107,7 +116,10 @@ const props = defineProps({
 const cartStore = useCartStore()
 const selectedOptions = ref({})
 const allFilter = 'All'
+const bagsFilter = 'Bags'
+const allBagTypes = 'All'
 const activeFilter = ref(allFilter)
+const activeBagType = ref(allBagTypes)
 
 const page = computed(() =>
   collectionPages.find((item) => item.slug === props.slug)
@@ -125,10 +137,30 @@ const nextPath = computed(() => {
 
 const collectionFilters = computed(() => page.value?.filters || [])
 const productFilters = (product) => Array.isArray(product.filters) ? product.filters : [product.filters].filter(Boolean)
+const productBagTypes = (product) => Array.isArray(product.bagTypes) ? product.bagTypes : [product.bagTypes].filter(Boolean)
+const bagTypeOptions = computed(() => {
+  if (!page.value) return []
+
+  return [...new Set(
+    page.value.products
+      .filter((product) => productFilters(product).includes(bagsFilter))
+      .flatMap(productBagTypes)
+      .filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b))
+})
+const showBagTypeFilter = computed(() =>
+  activeFilter.value === bagsFilter && bagTypeOptions.value.length > 0
+)
 const filteredProducts = computed(() => {
   if (!page.value) return []
   if (activeFilter.value === allFilter) return page.value.products
-  return page.value.products.filter((product) => productFilters(product).includes(activeFilter.value))
+
+  return page.value.products.filter((product) => {
+    if (!productFilters(product).includes(activeFilter.value)) return false
+    if (activeFilter.value !== bagsFilter || activeBagType.value === allBagTypes) return true
+
+    return productBagTypes(product).includes(activeBagType.value)
+  })
 })
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
@@ -236,7 +268,11 @@ const preloadPageMedia = (currentPage) => {
 onMounted(() => preloadPageMedia(page.value))
 watch(page, (currentPage) => {
   activeFilter.value = allFilter
+  activeBagType.value = allBagTypes
   preloadPageMedia(currentPage)
+})
+watch(activeFilter, () => {
+  activeBagType.value = allBagTypes
 })
 
 const addToCart = async (product) => {

@@ -31,29 +31,14 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { visibleCollectionPages } from '../data/siteData'
+import { collectionCategoryOrder, visibleCollectionPages } from '../data/siteData'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
-const categoryOrder = [
-  {
-    title: 'Clothing Collections',
-    slugs: ['jackets', 'shirts', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
-  },
-  {
-    title: 'Jewelry & Accessories',
-    slugs: ['earrings', 'necklaces', 'bracelets', 'cuffs', 'hat-bands', 'boot-bands', 'purses'],
-  },
-  {
-    title: 'Specialty Collections',
-    slugs: ['adirondack-bridal', 'adirondack-chic', 'pooch-smooches', 'chic-jewelry'],
-  },
-]
-
 const visibleBySlug = new Map(visibleCollectionPages.map((collection) => [collection.slug, collection]))
-const groupedSlugs = new Set(categoryOrder.flatMap((group) => group.slugs))
+const groupedSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))
 
 const collectionGroups = [
-  ...categoryOrder.map((group) => ({
+  ...collectionCategoryOrder.map((group) => ({
     title: group.title,
     collections: group.slugs.map((slug) => visibleBySlug.get(slug)).filter(Boolean),
   })),

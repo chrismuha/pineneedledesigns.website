@@ -83,7 +83,7 @@
                 </tr>
 
                 <tr>
-                  <td>Bracelet Brandi</td>
+                  <td>Brandi Bracelet</td>
                   <td>1</td>
                   <td>$29.00</td>
                   <td>-$11.60</td>

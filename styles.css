@@ -2049,6 +2049,43 @@ footer>section {
     box-shadow: var(--shadow-sm);
 }
 
+.collection-filter-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 6px 10px 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink);
+    font-size: 12pt;
+    font-weight: 600;
+}
+
+.collection-filter-select span {
+    white-space: nowrap;
+}
+
+.collection-filter-select select {
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--white);
+    cursor: pointer;
+    font: inherit;
+    font-size: 11pt;
+    line-height: 1.2;
+    min-height: 30px;
+    max-width: min(230px, 52vw);
+    padding: 5px 28px 5px 12px;
+}
+
+.collection-filter-select select:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-sm);
+}
+
 .product-grid {
     display: grid;
     gap: 24px;

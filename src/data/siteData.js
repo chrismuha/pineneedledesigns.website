@@ -24,6 +24,21 @@ const collectionNavLinks = [
   { label: 'Winter/Spring', path: '/collections/winter-spring', slug: 'winter-spring' },
 ]
 
+export const collectionCategoryOrder = [
+  {
+    title: 'Clothing Collections',
+    slugs: ['jackets', 'shirts', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
+  },
+  {
+    title: 'Jewelry & Accessories',
+    slugs: ['earrings', 'necklaces', 'bracelets', 'cuffs', 'hat-bands', 'boot-bands', 'purses'],
+  },
+  {
+    title: 'Specialty Collections',
+    slugs: ['adirondack-bridal', 'adirondack-chic', 'pooch-smooches', 'chic-jewelry'],
+  },
+]
+
 export const collectionPages = [
   {
     slug: 'adirondack-bridal',
@@ -464,7 +479,7 @@ export const collectionPages = [
       },
       {
         id: 63,
-        title: 'Cowgirl Concert Goer',
+        title: 'Cowgirl Concert Goer T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
@@ -619,7 +634,7 @@ export const collectionPages = [
       },
       {
         id: 41,
-        title: 'Bracelet Brandi',
+        title: 'Brandi Bracelet',
         filters: ['Bracelets'],
         price: 29,
         meta: ['Price: $29', 'Size: 7 to 7.5"'],
@@ -674,6 +689,7 @@ export const collectionPages = [
         id: 55,
         title: 'Adirondack Chic Leather and Cowhide Overnight Duffel Bag',
         filters: ['Bags'],
+        bagTypes: ['Duffel Bags'],
         price: 160,
         meta: ['Price: $160'],
         maker: 'Made by jGypsie',
@@ -717,6 +733,7 @@ export const collectionPages = [
         id: 65,
         title: 'Pink Tooled Leather Speedy Bag by jGypsie',
         filters: ['Bags'],
+        bagTypes: ['Speedy Bags'],
         price: 189,
         meta: ['Price: $189', 'Made by jGypsie'],
         description: 'Whether you are country Western or Adirondack Chic this bag is perfect for femininity and rustic style.',
@@ -756,6 +773,7 @@ export const collectionPages = [
         id: 57,
         title: 'Upcycled LV Canvas Pack',
         filters: ['Bags'],
+        bagTypes: ['Packs'],
         price: 79,
         meta: ['Price: $79', 'Made by jGypsie Designs'],
         description: 'Perfect for walking with a stroller or dog leash. Made by jGypsie Designs. Fanny pack sling pack bum pack.',
@@ -770,6 +788,7 @@ export const collectionPages = [
         id: 59,
         title: 'Upcycled LV Tooled Wristlet or Makeup Bag',
         filters: ['Bags', 'Wallets'],
+        bagTypes: ['Makeup Bags', 'Wristlets'],
         price: 88,
         meta: ['Price: $88'],
         description: 'All recycled leather and hand tooled for that Adirondack Charm! Great for country Western and North country girls alike!',
@@ -785,6 +804,7 @@ export const collectionPages = [
         id: 60,
         title: 'The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag',
         filters: ['Bags'],
+        bagTypes: ['Crossbody Bags'],
         price: 160,
         meta: ['Price: $160', 'Color: Rustic Charm and Feminine'],
         description: 'One of a kind. Nicely concealed back zipper pocket. Love that leather fringe.',
@@ -799,6 +819,7 @@ export const collectionPages = [
         id: 66,
         title: 'Upcycled Black Suede and Brown Tooled Leather Backpack',
         filters: ['Bags'],
+        bagTypes: ['Backpacks'],
         price: 160,
         meta: ['Price: $160', 'Color: Black suede and brown tooled leather', 'Size: 15”X9.5”X5”'],
         description: 'Of course with the Lv logo! Great for school or a hike! Stitching is the famous boot stitch.',
@@ -812,6 +833,7 @@ export const collectionPages = [
         id: 67,
         title: 'Cowhide Lv Faux Leather Shoulder Bag',
         filters: ['Bags'],
+        bagTypes: ['Shoulder Bags'],
         price: 138,
         meta: ['Price: $138', 'Color: Golden brown', 'Durable faux leather with cowhide'],
         description: 'A nice rich golden brown color with a roomy inside for an iPad and make up bag. Durable faux leather with cowhide to match. Goes perfect with Lv logo.',
@@ -826,6 +848,7 @@ export const collectionPages = [
         id: 68,
         title: 'Upcycled LV Logo Bag',
         filters: ['Bags'],
+        bagTypes: ['Crossbody Bags'],
         price: 171,
         meta: ['Price: $171', 'Pink and white checkered', 'Natural cowhide and leather fringe', "There's only one"],
         description: "This crossbody bag is pink and white checkered with natural cowhide and leather fringe. Total statement bag with that LV logo! And there's only one!",
@@ -840,6 +863,7 @@ export const collectionPages = [
         id: 69,
         title: 'The Weekender Tote Bag',
         filters: ['Bags'],
+        bagTypes: ['Tote Bags'],
         price: 98,
         meta: ['Price: $98', 'Neutral canvas tones', 'Brown leather handles'],
         description: 'Perfect neutral tones on canvas and brown leather handles. Of course you will rock it with the LV logo! Very roomy and fun with the canvas front fringe and flashy dark diamond print.',
@@ -854,6 +878,7 @@ export const collectionPages = [
         id: 70,
         title: 'LV Upcycled Cowhide Leather Bag',
         filters: ['Bags'],
+        bagTypes: ['Crossbody Bags', 'Clutches'],
         price: 118,
         meta: ['Price: $118', 'Color: Golden brown', 'Crossbody or handheld clutch', 'Comes with 2 straps'],
         description: 'Two bags in one. LV upcycled cowhide leather bag. Crossbody or handheld clutch. You choose. Comes with 2 straps: one short for your wrist or arm and one long strap. Beautiful golden brown.',
@@ -866,6 +891,7 @@ export const collectionPages = [
         id: 71,
         title: 'Upcycled LV Cowhide Leather Fringe Crossbody Bag',
         filters: ['Bags'],
+        bagTypes: ['Crossbody Bags'],
         price: 160,
         meta: ['Price: $160', 'Color: Brown', 'One of a kind', 'Western style'],
         description: 'Upcycled LV cowhide leather fringe crossbody bag. Brown. One of a kind bag. Western style with hand tooled front markings. Back has a zipped concealed compartment.',
@@ -1040,10 +1066,21 @@ collectionPages.forEach((page) => {
 
 export const visibleCollectionPages = collectionPages.filter((page) => (page.count > 0 || page.showWhenEmpty) && !page.hidden)
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
+const visibleCollectionBySlug = new Map(visibleCollectionPages.map((page) => [page.slug, page]))
+const groupedCollectionSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))
+const orderedVisibleCollectionPages = [
+  ...collectionCategoryOrder.flatMap((group) =>
+    group.slugs.map((slug) => visibleCollectionBySlug.get(slug)).filter(Boolean)
+  ),
+  ...visibleCollectionPages.filter((page) => !groupedCollectionSlugs.has(page.slug)),
+]
 
-visibleCollectionPages.forEach((page, index) => {
-  page.previous = index > 0 ? visibleCollectionPages[index - 1].slug : null
-  page.next = index < visibleCollectionPages.length - 1 ? visibleCollectionPages[index + 1].slug : null
+orderedVisibleCollectionPages.forEach((page, index) => {
+  const previousIndex = (index - 1 + orderedVisibleCollectionPages.length) % orderedVisibleCollectionPages.length
+  const nextIndex = (index + 1) % orderedVisibleCollectionPages.length
+
+  page.previous = orderedVisibleCollectionPages.length > 1 ? orderedVisibleCollectionPages[previousIndex].slug : null
+  page.next = orderedVisibleCollectionPages.length > 1 ? orderedVisibleCollectionPages[nextIndex].slug : null
 })
 
 export const navLinks = [
