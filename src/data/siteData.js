@@ -399,7 +399,7 @@ export const collectionPages = [
       },
       {
         id: 74,
-        title: 'wende-choice-blinged-out-tshirt',
+        title: 'On a Bad Day there’s Always Lipstick Blinged Out T-Shirt',
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Available in Peach, Natural, Grey, Sand, and White.', 'Free shipping'],
