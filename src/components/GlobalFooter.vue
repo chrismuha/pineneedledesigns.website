@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <div class="footer-actions" aria-label="Shop and booking links">
+    <div class="footer-actions" :class="{ 'footer-actions--dimmed': chromeDimmed }" aria-label="Shop and booking links">
       <a
         href="https://pineneedledesigns.store"
         target="_blank"
@@ -126,6 +126,13 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useRoute } from 'vue-router'
+
+defineProps({
+  chromeDimmed: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const route = useRoute()
 const isShopActive = computed(() => route.path === '/' || route.path === '/index.html')

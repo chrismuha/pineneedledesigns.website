@@ -1534,6 +1534,13 @@ footer .footer-actions {
     background: var(--white-92);
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(12px);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+footer .footer-actions.footer-actions--dimmed {
+    opacity: 0.14;
+    pointer-events: none;
+    transform: scale(0.98);
 }
 
 footer .footer-actions a {

@@ -10,7 +10,7 @@
       <router-view />
     </main>
 
-    <GlobalFooter />
+    <GlobalFooter :chrome-dimmed="isDesktopPageScrolling" />
 
     <button
       v-if="cartStore.totalItems > 0 && !cartStore.isOpen"
