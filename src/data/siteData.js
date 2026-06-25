@@ -335,9 +335,16 @@ export const collectionPages = [
         id: 38,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
         price: 58,
+        noBlingPrice: 28,
         meta: ['Price: $58', 'Available in Peach, Natural, Grey, Sand, and White.'],
         description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt. Comes in Peach, Natural, Grey, Sand, and White.",
+        noBlingDescription: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Sweatshirt. Comes in Peach, Natural, Grey, Sand, and White.",
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
@@ -361,9 +368,16 @@ export const collectionPages = [
         id: 39,
         title: 'Turquoise Chic Blinged Out T-Shirt',
         price: 38,
-        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.'],
+        noBlingPrice: 28,
+        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.', 'Free shipping'],
         description: 'Turquoise Chick is Blinged Out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.',
+        noBlingDescription: 'Turquoise Chick T-Shirt. Rustic and Chic.',
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
@@ -387,9 +401,16 @@ export const collectionPages = [
         id: 74,
         title: 'wende-choice-blinged-out-tshirt',
         price: 38,
-        meta: ['Price: $38', 'Available in Peach, Natural, Grey, Sand, and White.'],
+        noBlingPrice: 28,
+        meta: ['Price: $38', 'Available in Peach, Natural, Grey, Sand, and White.', 'Free shipping'],
         description: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out T-shirt. Comes in Peach, Natural, Grey, Sand, and White.",
+        noBlingDescription: "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! T-shirt. Comes in Peach, Natural, Grey, Sand, and White.",
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
@@ -410,9 +431,16 @@ export const collectionPages = [
         id: 40,
         title: "Don't Burst My Bubble Blinged Out T-Shirt",
         price: 38,
-        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.'],
+        noBlingPrice: 28,
+        meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.', 'Free shipping'],
         description: "A Cowgirl with Attitude. Of course she's all Blinged Out!",
+        noBlingDescription: 'A Cowgirl with Attitude T-Shirt.',
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
@@ -433,9 +461,16 @@ export const collectionPages = [
         id: 63,
         title: 'Cowgirl Concert Goer',
         price: 38,
-        meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, grey, sand, natural, and pink.'],
+        noBlingPrice: 28,
+        meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, grey, sand, natural, and pink.', 'Free shipping'],
         description: 'Blinged out Tshirt.',
+        noBlingDescription: 'T-shirt.',
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
@@ -454,9 +489,16 @@ export const collectionPages = [
         id: 64,
         title: 'Guts, Grit And Lipstick Blinged Out T-Shirt',
         price: 38,
-        meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, peach, pink, sand, and natural.'],
+        noBlingPrice: 28,
+        meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, peach, pink, sand, and natural.', 'Free shipping'],
         description: 'Blinged out T-Shirt.',
+        noBlingDescription: 'T-Shirt.',
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],

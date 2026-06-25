@@ -14,17 +14,12 @@
         <header>
           <h3>{{ product.title }}</h3>
           <div class="product-meta">
-            <template v-if="Array.isArray(product.meta)">
-              <div v-for="(item, index) in product.meta" :key="index">{{ item }}</div>
-            </template>
-            <template v-else>
-              {{ product.meta }}
-            </template>
+            <div v-for="(item, index) in displayProductMeta(product)" :key="index">{{ item }}</div>
             <div v-if="product.maker" class="product-maker">{{ product.maker }}</div>
           </div>
           <div class="product-description">
             <h4>Description</h4>
-            <p>{{ product.description }}</p>
+            <p>{{ displayDescription(product) }}</p>
           </div>
         </header>
         <div v-if="product.options && product.options.length" class="product-options">
@@ -62,7 +57,7 @@
         </div>
         <button v-if="canAddToCart(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>
         <button v-else-if="isProductSold(product)" class="addtocart" disabled>Sold</button>
-        <button v-else-if="Number.isFinite(product.price)" class="addtocart" disabled>Select Options</button>
+        <button v-else-if="Number.isFinite(productPrice(product))" class="addtocart" disabled>Select Options</button>
         <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
     </div>
@@ -104,6 +99,8 @@ const nextPath = computed(() => {
 })
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
+const styleOptionName = 'Style'
+const noBlingStyle = 'No Bling'
 const productSelections = (product) => {
   if (!product.options || !product.options.length) return {}
 
@@ -119,6 +116,32 @@ const hasRequiredOptions = (product) => {
 }
 
 const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const selectedStyle = (product) => selectedOptions.value[optionKey(product, { name: styleOptionName })] || ''
+const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
+const productPrice = (product) => {
+  if (isNoBlingSelected(product) && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice
+  return product.price
+}
+const displayDescription = (product) => {
+  if (isNoBlingSelected(product)) return product.noBlingDescription || product.description
+  return product.description
+}
+const displayProductMeta = (product) => {
+  const meta = productMeta(product)
+  const price = productPrice(product)
+
+  if (!Number.isFinite(price)) return meta
+
+  let replacedPrice = false
+  return meta.map((item) => {
+    if (!replacedPrice && /^price:/i.test(String(item).trim())) {
+      replacedPrice = true
+      return `Price: $${price}`
+    }
+
+    return item
+  })
+}
 const isProductSold = (product) => {
   if (product.sold || product.soldOut) return true
   if (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim())) return true
@@ -126,7 +149,7 @@ const isProductSold = (product) => {
 
   return productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
 }
-const canAddToCart = (product) => Number.isFinite(product.price) && !isProductSold(product) && hasRequiredOptions(product)
+const canAddToCart = (product) => Number.isFinite(productPrice(product)) && !isProductSold(product) && hasRequiredOptions(product)
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
 const videoPosterFor = (product, index) =>
@@ -157,6 +180,9 @@ const addToCart = async (product) => {
 
   const selectedProduct = {
     ...product,
+    price: productPrice(product),
+    meta: displayProductMeta(product),
+    description: displayDescription(product),
     selectedOptions: productSelections(product),
   }
 
