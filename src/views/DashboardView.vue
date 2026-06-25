@@ -16,10 +16,6 @@ const menuItems = [
     label: 'Orders',
     to: '/dashboard/orders',
   },
-  {
-    label: 'Earnings',
-    to: '/dashboard/earnings',
-  },
 ]
 
 const isActive = (path) => {

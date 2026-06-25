@@ -10,9 +10,9 @@ import DashboardView from '../views/DashboardView.vue'
 import DashboardHome from '../components/dashboard/DashboardHome.vue'
 import DashboardItems from '../components/dashboard/DashboardItems.vue'
 import DashboardOrders from '../components/dashboard/DashboardOrders.vue'
-import DashboardEarnings from '../components/dashboard/DashboardEarnings.vue'
 
 import { collectionPages, sitePages } from '../data/siteData'
+import DashboardItemCreation from '../components/dashboard/DashboardItemCreation.vue'
 
 const routes = [
   {
@@ -69,9 +69,9 @@ const routes = [
         component: DashboardOrders,
       },
       {
-        path: 'earnings',
-        name: 'DashboardEarnings',
-        component: DashboardEarnings,
+        path: 'create',
+        name: 'DashboardItemCreation',
+        component: DashboardItemCreation,
       },
     ],
   },
