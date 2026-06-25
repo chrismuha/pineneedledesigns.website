@@ -330,10 +330,12 @@ export const collectionPages = [
     count: 7,
     cardImage: '/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp',
     description: 'Blinged Out T-Shirts and Sweatshirts made to stand out.',
+    filters: ['T-Shirts', 'Sweatshirts'],
     products: [
       {
         id: 38,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt',
+        filters: ['Sweatshirts'],
         price: 58,
         noBlingPrice: 28,
         meta: ['Price: $58', 'Available in Peach, Natural, Grey, Sand, and White.'],
@@ -367,6 +369,7 @@ export const collectionPages = [
       {
         id: 39,
         title: 'Turquoise Chic Blinged Out T-Shirt',
+        filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.', 'Free shipping'],
@@ -400,6 +403,7 @@ export const collectionPages = [
       {
         id: 74,
         title: 'On a Bad Day there’s Always Lipstick Blinged Out T-Shirt',
+        filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Available in Peach, Natural, Grey, Sand, and White.', 'Free shipping'],
@@ -430,6 +434,7 @@ export const collectionPages = [
       {
         id: 40,
         title: "Don't Burst My Bubble Blinged Out T-Shirt",
+        filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Available in Peach, Natural, Pink, Sand, and White.', 'Free shipping'],
@@ -460,6 +465,7 @@ export const collectionPages = [
       {
         id: 63,
         title: 'Cowgirl Concert Goer',
+        filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, grey, sand, natural, and pink.', 'Free shipping'],
@@ -488,6 +494,7 @@ export const collectionPages = [
       {
         id: 64,
         title: 'Guts, Grit And Lipstick Blinged Out T-Shirt',
+        filters: ['T-Shirts'],
         price: 38,
         noBlingPrice: 28,
         meta: ['Price: $38', 'Sizes: S-3X', 'Comes in white, peach, pink, sand, and natural.', 'Free shipping'],
@@ -516,6 +523,7 @@ export const collectionPages = [
       {
         id: 75,
         title: 'Happy Girls are the PRETTIEST! Blinged Out T-Shirt',
+        filters: ['T-Shirts'],
         price: 38,
         meta: ['Price: $38', 'Available in White, Gray, Sand, Peach, and Natural.'],
         description: 'Is that Audrey Hepburn blowing a blue bubble? From the Bubble Blower Collection! Added is a touch of highlights of bling. Priced the same for all sizes and colors listed. Perfect for your Bubble Blower T-shirt Collection. And... there are more Bubble Blowers listed in my shop. Go Look!',

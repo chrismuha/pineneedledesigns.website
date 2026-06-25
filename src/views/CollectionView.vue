@@ -7,10 +7,32 @@
       </div>
       <h2>{{ page.title }}</h2>
       <p>{{ page.description }}</p>
+      <div v-if="collectionFilters.length" class="collection-filters" aria-label="Product filters">
+        <button
+          type="button"
+          class="collection-filter"
+          :class="{ 'collection-filter--active': activeFilter === allFilter }"
+          :aria-pressed="activeFilter === allFilter"
+          @click="activeFilter = allFilter"
+        >
+          All
+        </button>
+        <button
+          v-for="filter in collectionFilters"
+          :key="filter"
+          type="button"
+          class="collection-filter"
+          :class="{ 'collection-filter--active': activeFilter === filter }"
+          :aria-pressed="activeFilter === filter"
+          @click="activeFilter = filter"
+        >
+          {{ filter }}
+        </button>
+      </div>
     </div>
 
-    <div v-if="page.products.length" class="product-grid">
-      <article v-for="(product, productIndex) in page.products" :key="product.title" class="product-card">
+    <div v-if="filteredProducts.length" class="product-grid">
+      <article v-for="(product, productIndex) in filteredProducts" :key="product.title" class="product-card">
         <header>
           <h3>{{ displayTitle(product) }}</h3>
           <div class="product-meta">
@@ -63,7 +85,7 @@
         <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
     </div>
-    <p v-else class="subtle">Coming Soon</p>
+    <p v-else class="subtle">{{ page.products.length ? 'No matching items' : 'Coming Soon' }}</p>
   </section>
   <section v-else class="not-found">
     <p>Collection not found.</p>
@@ -84,6 +106,8 @@ const props = defineProps({
 
 const cartStore = useCartStore()
 const selectedOptions = ref({})
+const allFilter = 'All'
+const activeFilter = ref(allFilter)
 
 const page = computed(() =>
   collectionPages.find((item) => item.slug === props.slug)
@@ -97,6 +121,14 @@ const previousPath = computed(() => {
 const nextPath = computed(() => {
   if (!page.value || !page.value.next) return '/collections'
   return `/collections/${page.value.next}`
+})
+
+const collectionFilters = computed(() => page.value?.filters || [])
+const productFilters = (product) => Array.isArray(product.filters) ? product.filters : [product.filters].filter(Boolean)
+const filteredProducts = computed(() => {
+  if (!page.value) return []
+  if (activeFilter.value === allFilter) return page.value.products
+  return page.value.products.filter((product) => productFilters(product).includes(activeFilter.value))
 })
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
@@ -202,7 +234,10 @@ const preloadPageMedia = (currentPage) => {
 }
 
 onMounted(() => preloadPageMedia(page.value))
-watch(page, preloadPageMedia)
+watch(page, (currentPage) => {
+  activeFilter.value = allFilter
+  preloadPageMedia(currentPage)
+})
 
 const addToCart = async (product) => {
   if (!canAddToCart(product)) return
