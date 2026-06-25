@@ -16,6 +16,14 @@ const orderMap = new Map();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const docsDir = path.join(__dirname, 'docs');
+const revalidateCacheControl = 'no-cache, must-revalidate';
+
+const setRevalidationHeaders = (res) => {
+  res.setHeader('Cache-Control', revalidateCacheControl);
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+};
 
 // Base URL for application links (can be overridden via .env)
 const APP_BASE_URL = process.env.APP_BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://pineneedledesigns.store' : 'http://localhost:5173');
@@ -90,8 +98,17 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  setRevalidationHeaders(res);
+  next();
+});
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'docs')));
+app.use(express.static(docsDir, {
+  setHeaders(res, filePath) {
+    setRevalidationHeaders(res);
+  },
+}));
 
 // Session configuration
 app.use(session({
@@ -110,9 +127,6 @@ app.get('/api/cart', (req, res) => {
   }
   res.json(req.session.cart);
 });
-
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/videos', express.static(path.join(__dirname, 'videos')));
 
 app.post('/api/cart', (req, res) => {
   const { product } = req.body;
@@ -556,7 +570,8 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'docs', 'index.html'));
+  setRevalidationHeaders(res);
+  res.sendFile(path.join(docsDir, 'index.html'));
 });
 
 const server = app.listen(PORT, () => {

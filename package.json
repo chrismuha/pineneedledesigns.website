@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run dev:vite\"",
     "dev:vite": "vite",
-    "build": "vite build && cp CNAME docs/CNAME && mkdir -p docs/images docs/videos && rsync -a images/ docs/images/ && rsync -a --include='*/' --include='*.webm' --exclude='*' videos/ docs/videos/",
+    "build": "vite build && cp CNAME docs/CNAME && mkdir -p docs/images docs/videos && rsync -a --delete images/ docs/images/ && rsync -a --delete --include='*/' --include='*.webm' --exclude='*' videos/ docs/videos/",
     "preview": "vite preview",
     "server": "node server.js",
     "dev:full": "npm run dev"
