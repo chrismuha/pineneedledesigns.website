@@ -1,5 +1,5 @@
 <template>
-  <template v-if="isDashboard">
+  <template v-if="isDashboard || hideLayout">
     <router-view />
   </template>
 

@@ -3,7 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import CollectionsView from '../views/CollectionsView.vue'
 import CollectionView from '../views/CollectionView.vue'
 import StaticPageView from '../views/StaticPageView.vue'
-import NotFoundView from '../views/NotFoundView.vue'
+import NotFoundView from '../../404View.vue'
 import OrderSuccessView from '../views/OrderSuccessView.vue'
 import DashboardView from '../views/DashboardView.vue'
 

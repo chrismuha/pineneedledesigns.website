@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-const logoSrc = '/404images/MCRwhiteNred.png'
+const logoSrc = '/404images/MCRwhiteNred.webp'
 </script>
 
 <style src="../../404.css"></style>
