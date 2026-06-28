@@ -1618,13 +1618,21 @@ footer .footer-actions a:focus-visible {
         flex: 1 1 0;
         min-width: 0;
         height: auto;
-        min-height: 52px;
+        min-height: 58px;
         padding: 6px 4px;
     }
 
+    footer .footer-actions i {
+        flex: 0 0 18px;
+        height: 18px;
+    }
+
     footer .footer-actions span {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         max-width: 100%;
+        min-height: 2.1em;
         color: currentColor;
         font-size: 7pt;
         line-height: 1.05;
