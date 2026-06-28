@@ -1,16 +1,14 @@
 <template>
   <footer>
     <div class="footer-actions" :class="{ 'footer-actions--dimmed': chromeDimmed }" aria-label="Shop and booking links">
-      <a
-        href="https://pineneedledesigns.store"
-        target="_blank"
-        rel="noopener noreferrer"
-        :class="{ active: isShopActive }"
-        :aria-current="isShopActive ? 'page' : undefined"
+      <router-link
+        to="/collections"
+        aria-label="Shop all collections"
+        :class="{ active: route.path.startsWith('/collections') }"
       >
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
-      </a>
+      </router-link>
       <router-link to="/booking/fitting">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>Fitting</span>
@@ -124,7 +122,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineProps({
@@ -135,7 +133,6 @@ defineProps({
 })
 
 const route = useRoute()
-const isShopActive = computed(() => route.path === '/' || route.path === '/index.html')
 
 const expanded = reactive({
   about: false,

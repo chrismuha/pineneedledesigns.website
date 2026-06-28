@@ -1625,13 +1625,11 @@ footer .footer-actions a:focus-visible {
     footer .footer-actions span {
         display: block;
         max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
         color: currentColor;
         font-size: 7pt;
-        line-height: 1;
+        line-height: 1.05;
         text-align: center;
-        white-space: nowrap;
+        white-space: normal;
     }
 }
 
