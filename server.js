@@ -167,7 +167,25 @@ app.post('/api/booking-deposit', async (req, res) => {
           amount: {
             currencyCode: 'USD',
             value: booking.amount,
+            breakdown: {
+              itemTotal: {
+                currencyCode: 'USD',
+                value: booking.amount,
+              },
+              taxTotal: {
+                currencyCode: 'USD',
+                value: '0.00',
+              },
+            },
           },
+          items: [{
+            name: booking.title,
+            quantity: '1',
+            unitAmount: {
+              currencyCode: 'USD',
+              value: booking.amount,
+            },
+          }],
         }],
         applicationContext: {
           returnUrl: `${APP_BASE_URL}/booking-payment-success`,
