@@ -52,7 +52,7 @@
         aria-controls="calendar-menu"
         @click="calendarMenuOpen = !calendarMenuOpen"
       >
-        <span>Book Fitting</span>
+        <span>Book Fitting Appointment</span>
       </button>
     </div>
 
