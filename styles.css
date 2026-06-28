@@ -1544,9 +1544,9 @@ footer .footer-actions.footer-actions--dimmed {
 }
 
 footer .footer-actions a {
-    display: inline-flex;
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
     align-items: center;
-    justify-content: center;
     gap: 6px;
     width: 100%;
     min-height: 42px;
@@ -1568,8 +1568,13 @@ footer .footer-actions i {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 20px;
     font-size: 13pt;
     line-height: 1;
+}
+
+footer .footer-actions span {
+    text-align: left;
 }
 
 footer .footer-actions a:hover,
@@ -1613,6 +1618,7 @@ footer .footer-actions a:focus-visible {
     }
 
     footer .footer-actions a {
+        display: inline-flex;
         flex-direction: column;
         gap: 3px;
         flex: 1 1 0;
