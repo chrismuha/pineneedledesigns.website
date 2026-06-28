@@ -174,7 +174,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineProps({
@@ -232,4 +232,9 @@ function handleOutsidePointerDown(event) {
 function handleEscape(event) {
   if (event.key === 'Escape') closeCalendarMenu()
 }
+
+watch(
+  () => route.fullPath,
+  () => closeCalendarMenu()
+)
 </script>

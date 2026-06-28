@@ -663,7 +663,7 @@ header {
 
 .limited-run-slider {
     align-items: center;
-    align-self: flex-start;
+    align-self: center;
     display: block;
     gap: 8px;
     min-height: 360px;
@@ -753,7 +753,7 @@ header {
 }
 
 .limited-run-dot--active {
-    background: var(--brand-green);
+    background: var(--accent);
     width: 8px;
 }
 

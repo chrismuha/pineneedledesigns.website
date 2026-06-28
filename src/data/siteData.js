@@ -589,7 +589,7 @@ export const collectionPages = [
     slug: 'denim-and-lace',
     title: 'Denim & Lace',
     path: '/collections/denim-and-lace',
-    cardImage: '/images/whimsical-fairy/crownb.webp',
+    cardImage: '/images/whimsical-fairy/crowna.webp',
     description: 'Limited-run upcycled pieces crafted to stand out.',
     filters: ['Vests', 'Bracelets'],
     products: [

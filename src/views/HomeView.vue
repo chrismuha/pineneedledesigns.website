@@ -161,7 +161,7 @@
         </div>
 
         <div class="hero-column">
-          <article class="hero-card hero-card--new-arrivals" aria-label="New Arrivals">
+          <article class="hero-card" aria-label="New Arrivals">
             <div class="copy">
               <div class="eyebrow">Fresh Picks</div>
               <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>
@@ -169,12 +169,21 @@
               <div class="cta">
                 <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
               </div>
-              <img loading="eager" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
               <div class="hero-placeholder-stack">
-                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
-                <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
+                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFeatureAlt" />
+                </div>
+                <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCardAlt" />
+                </div>
+                <div class="hero-image-pair">
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
+                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCardAlt" />
+                </div>
               </div>
-              <p class="hero-hurry hero-hurry--inline hero-hurry--bunny">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
             </div>
           </article>
 
@@ -258,11 +267,14 @@ const homePlaceholderImages = {
   denimFeatureAlt: '/images/denimlace/brandybracelet/brandybracelet1.webp',
   denimFirstCard: '/images/denimlace/adelinebracelet/adeline-bracelet-1.webp',
   denimFirstCardAlt: '/images/jackets/america-she-beautiful/jacket1a.webp',
-  denimSecondCard: '/images/jackets/ruby-lee/ruby-lee-1a.webp',
+  denimSecondCard: '/images/jackets/carmen/carmen.webp',
   denimSecondCardAlt: '/images/ear-rings/ear-rings-1a.webp',
-  newArrivalsFeature: '/images/upcycled-collaboration/adirondack-chic-leather-cowhide-overnight-duffel-bag/cowhide-bag2.webp',
-  newArrivalsFirstCard: '/images/upcycled-collaboration/cowhide-leather-wallet-wristlet/cowhide-wristlet1.webp',
-  newArrivalsSecondCard: '/images/upcycled-collaboration/pink-tooled-leather-speedy-bag/pink-tooled-leather-speedy-bag1.webp',
+  newArrivalsFeature: '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style2.webp',
+  newArrivalsFeatureAlt: '/images/upcycled-logo/upcycled-lv-canvas-pack/upcyled-canvas-pack2.webp',
+  newArrivalsFirstCard: '/images/upcycled-logo/lv-cowhide-western-bag/cowhide-bag2.webp',
+  newArrivalsFirstCardAlt: '/images/upcycled-collaboration/pink-tooled-leather-speedy-bag/pink-tooled-leather-speedy-bag1.webp',
+  newArrivalsSecondCard: '/images/upcycled-logo/brown-tooled-leather-backpack/brown-tooled-leather-backpack2.webp',
+  newArrivalsSecondCardAlt: '/images/upcycled-logo/cowhide-shoulder-bag/cowhide-shoulder-bag2.webp',
   bottomsTile: comingSoon023,
   topsTile: comingSoon024,
 }
