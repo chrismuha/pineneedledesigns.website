@@ -23,6 +23,10 @@
         <i class="bi bi-gem" aria-hidden="true"></i>
         <span>Brides</span>
       </a>
+      <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+        <span>Repeat Customers</span>
+      </a>
     </div>
 
     <section id="foot-section-1" class="footer-section">
