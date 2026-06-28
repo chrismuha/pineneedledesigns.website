@@ -1573,6 +1573,10 @@ footer .footer-actions i {
     line-height: 1;
 }
 
+footer .footer-actions .bi-arrow-repeat {
+    font-size: 15pt;
+}
+
 footer .footer-actions span {
     text-align: left;
 }
