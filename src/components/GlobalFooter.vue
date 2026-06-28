@@ -11,10 +11,6 @@
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
       </a>
-      <router-link to="/collections" aria-label="Browse all collections" :class="{ active: route.path.startsWith('/collections') }">
-        <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
-        <span>Collections</span>
-      </router-link>
       <router-link to="/booking/fitting">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>Fitting</span>
