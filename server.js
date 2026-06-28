@@ -13,6 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const orderMap = new Map();
 const bookingDepositMap = new Map();
+const BOOKING_DEPOSITS_ENABLED = String(process.env.PAYPAL_BOOKING_DEPOSITS_ENABLED || '').toLowerCase() === 'true';
 
 const BOOKING_DEPOSITS = Object.freeze({
   fitting: {
@@ -135,8 +136,16 @@ app.use(session({
   }
 }));
 
+app.get('/api/booking-deposit/config', (req, res) => {
+  res.json({ enabled: BOOKING_DEPOSITS_ENABLED });
+});
+
 app.post('/api/booking-deposit', async (req, res) => {
   try {
+    if (!BOOKING_DEPOSITS_ENABLED) {
+      return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
+    }
+
     const { service, customer } = req.body || {};
     const booking = BOOKING_DEPOSITS[service];
 
@@ -192,6 +201,10 @@ app.post('/api/booking-deposit', async (req, res) => {
 
 app.get('/api/booking-deposit/capture/:token', async (req, res) => {
   try {
+    if (!BOOKING_DEPOSITS_ENABLED) {
+      return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
+    }
+
     const { token } = req.params;
     const capture = await orders.captureOrder({ id: token });
     const order = JSON.parse(capture.body);

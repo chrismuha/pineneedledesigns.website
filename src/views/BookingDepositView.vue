@@ -1,6 +1,6 @@
 <template>
   <section class="booking-deposit-page">
-    <div class="booking-deposit-card">
+    <div v-if="ready" class="booking-deposit-card">
       <p class="booking-eyebrow">Reserve your appointment</p>
       <h1>{{ details.title }}</h1>
       <p class="booking-intro">
@@ -35,20 +35,43 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 const props = defineProps({ service: { type: String, required: true } })
 
 const services = {
-  fitting: { title: 'First Fitting', amount: '10.00' },
-  brides: { title: 'Bridal Appointment', amount: '25.00' },
+  fitting: {
+    title: 'First Fitting',
+    amount: '10.00',
+    calendarUrl: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+  },
+  brides: {
+    title: 'Bridal Appointment',
+    amount: '25.00',
+    calendarUrl: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+  },
 }
 
 const details = computed(() => services[props.service] || services.fitting)
 const customer = reactive({ name: '', email: '', phone: '' })
 const loading = ref(false)
+const ready = ref(false)
 const error = ref('')
 const cancelled = new URLSearchParams(window.location.search).get('cancelled') === '1'
+
+onMounted(async () => {
+  try {
+    const response = await fetch('/api/booking-deposit/config')
+    const config = await response.json()
+    if (!response.ok || config.enabled !== true) {
+      window.location.replace(details.value.calendarUrl)
+      return
+    }
+    ready.value = true
+  } catch {
+    window.location.replace(details.value.calendarUrl)
+  }
+})
 
 const startPayment = async () => {
   loading.value = true

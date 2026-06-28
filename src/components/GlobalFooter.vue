@@ -9,14 +9,22 @@
         <i class="bi bi-shop" aria-hidden="true"></i>
         <span>Shop</span>
       </router-link>
-      <router-link to="/booking/fitting">
+      <router-link v-if="bookingDepositsEnabled" to="/booking/fitting">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>Fitting</span>
       </router-link>
-      <router-link to="/booking/brides">
+      <a v-else :href="calendarLinks.fitting" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+        <span>Fitting</span>
+      </a>
+      <router-link v-if="bookingDepositsEnabled" to="/booking/brides">
         <i class="bi bi-gem" aria-hidden="true"></i>
         <span>Brides</span>
       </router-link>
+      <a v-else :href="calendarLinks.brides" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-gem" aria-hidden="true"></i>
+        <span>Brides</span>
+      </a>
       <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
         <span>Repeat Customers</span>
@@ -122,7 +130,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineProps({
@@ -133,6 +141,21 @@ defineProps({
 })
 
 const route = useRoute()
+const bookingDepositsEnabled = ref(false)
+const calendarLinks = {
+  fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+  brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+}
+
+onMounted(async () => {
+  try {
+    const response = await fetch('/api/booking-deposit/config')
+    const config = await response.json()
+    bookingDepositsEnabled.value = response.ok && config.enabled === true
+  } catch {
+    bookingDepositsEnabled.value = false
+  }
+})
 
 const expanded = reactive({
   about: false,

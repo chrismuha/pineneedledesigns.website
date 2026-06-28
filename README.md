@@ -77,6 +77,16 @@ The backend provides the following cart API endpoints:
 - `DELETE /api/cart` - Clear entire cart
 - `GET /api/health` - Health check
 
+## PayPal Booking Deposits
+
+PayPal deposits for First Fittings and Bridal appointments are disabled by default. To enable them, set this server environment variable and restart the server:
+
+```bash
+PAYPAL_BOOKING_DEPOSITS_ENABLED=true
+```
+
+Any other value, or an omitted variable, keeps deposits disabled and sends customers directly to the corresponding Google Calendar booking page.
+
 ## Cart Features
 
 - **Session-Based**: Cart persists across page refreshes and browser sessions
