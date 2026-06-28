@@ -1,5 +1,45 @@
 <template>
-  <footer>
+  <footer class="footer--temporary-booking">
+    <div class="temporary-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
+      <div v-if="calendarMenuOpen" id="calendar-menu" class="calendar-menu" aria-label="Choose calendar">
+        <p class="calendar-menu__title">Choose Calendar</p>
+        <div class="calendar-menu__actions">
+          <router-link v-if="bookingDepositsEnabled" to="/booking/fitting" @click="closeCalendarMenu">
+            <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
+            <span>Fitting</span>
+          </router-link>
+          <a v-else :href="calendarLinks.fitting" @click="closeCalendarMenu">
+            <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
+            <span>Fitting</span>
+          </a>
+          <router-link v-if="bookingDepositsEnabled" to="/booking/brides" @click="closeCalendarMenu">
+            <span class="calendar-menu__emoji" aria-hidden="true">👰🏻‍♀️</span>
+            <span>Brides</span>
+          </router-link>
+          <a v-else :href="calendarLinks.brides" @click="closeCalendarMenu">
+            <span class="calendar-menu__emoji" aria-hidden="true">👰🏻‍♀️</span>
+            <span>Brides</span>
+          </a>
+          <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" @click="closeCalendarMenu">
+            <span class="calendar-menu__emoji" aria-hidden="true">👚</span>
+            <span>Repeat Customers</span>
+          </a>
+        </div>
+      </div>
+
+      <button
+        class="temporary-booking__trigger"
+        type="button"
+        :aria-expanded="String(calendarMenuOpen)"
+        aria-controls="calendar-menu"
+        @click="calendarMenuOpen = !calendarMenuOpen"
+      >
+        <span>Book Fitting</span>
+      </button>
+    </div>
+
+    <!-- Temporarily hidden; retained intact for when the global footer returns. -->
+    <div v-show="false" class="global-footer-content" aria-hidden="true">
     <div class="footer-actions" :class="{ 'footer-actions--dimmed': chromeDimmed }" aria-label="Shop and booking links">
       <router-link
         to="/collections"
@@ -10,23 +50,23 @@
         <span>Shop</span>
       </router-link>
       <router-link v-if="bookingDepositsEnabled" to="/booking/fitting">
-        <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+        <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
         <span>Fitting</span>
       </router-link>
-      <a v-else :href="calendarLinks.fitting" target="_blank" rel="noopener noreferrer">
-        <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+      <a v-else :href="calendarLinks.fitting">
+        <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
         <span>Fitting</span>
       </a>
       <router-link v-if="bookingDepositsEnabled" to="/booking/brides">
-        <i class="bi bi-gem" aria-hidden="true"></i>
+        <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
         <span>Brides</span>
       </router-link>
-      <a v-else :href="calendarLinks.brides" target="_blank" rel="noopener noreferrer">
-        <i class="bi bi-gem" aria-hidden="true"></i>
+      <a v-else :href="calendarLinks.brides">
+        <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
         <span>Brides</span>
       </a>
-      <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" target="_blank" rel="noopener noreferrer">
-        <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+      <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7">
+        <i class="footer-actions__emoji" aria-hidden="true">👚</i>
         <span>Repeat Customers</span>
       </a>
     </div>
@@ -117,7 +157,7 @@
     </section>
 
     <div class="container footer-qr">
-      <a class="qr-link" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">
+      <a class="qr-link" href="https://pineneedledesigns.store">
         <img loading="lazy" decoding="async" src="/images/1b.webp" width="250" height="250" />
         <span>One-of-a-kind Designs</span>
       </a>
@@ -125,6 +165,7 @@
 
     <div class="container copyright" role="contentinfo" style="text-align:center">
       <span>© 2025 Pine Needle Designs <br /> All Rights Reserved.</span>
+    </div>
     </div>
   </footer>
 </template>
@@ -142,6 +183,7 @@ defineProps({
 
 const route = useRoute()
 const bookingDepositsEnabled = ref(false)
+const calendarMenuOpen = ref(false)
 const calendarLinks = {
   fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
   brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
@@ -164,5 +206,9 @@ const expanded = reactive({
 
 const toggle = (id) => {
   expanded[id] = !expanded[id]
+}
+
+const closeCalendarMenu = () => {
+  calendarMenuOpen.value = false
 }
 </script>

@@ -754,7 +754,7 @@ header {
 
 .limited-run-dot--active {
     background: var(--brand-green);
-    width: 20px;
+    width: 8px;
 }
 
 /* keep the featured art from dominating the hero layout */
@@ -1508,6 +1508,116 @@ section {
 }
 
 /* Footer */
+.footer--temporary-booking {
+    min-height: 0;
+    margin-top: 0;
+    background: transparent;
+}
+
+.temporary-booking {
+    position: fixed;
+    right: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 950;
+    display: flex;
+    width: min(420px, calc(100vw - 24px));
+    flex-direction: column;
+    gap: 10px;
+    transform: translateX(50%);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.temporary-booking--dimmed {
+    opacity: 0.14;
+    pointer-events: none;
+    transform: translateX(50%) scale(0.98);
+}
+
+.temporary-booking__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 62px;
+    padding: 12px 20px;
+    border: 1px solid var(--black-08);
+    border-radius: 999px;
+    background: var(--accent-2);
+    color: var(--white);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    font: inherit;
+    font-size: 14pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.calendar-menu {
+    padding: 16px;
+    border: 1px solid var(--black-08);
+    border-radius: 22px;
+    background: var(--white-95);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+}
+
+.calendar-menu__title {
+    margin: 0 0 12px;
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.calendar-menu__actions {
+    display: grid;
+    gap: 10px;
+}
+
+.calendar-menu__actions a {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    min-height: 58px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 2px 10px var(--black-08);
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 180ms ease, transform 180ms ease;
+}
+
+.calendar-menu__actions a:hover,
+.calendar-menu__actions a:focus-visible {
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.calendar-menu__actions a:focus-visible,
+.temporary-booking__trigger:focus-visible {
+    outline: 3px solid var(--brand-red-45);
+    outline-offset: 3px;
+}
+
+.calendar-menu__actions i,
+.calendar-menu__emoji {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    font-size: 19pt;
+    line-height: 1;
+    text-align: center;
+}
+
 footer {
     background: var(--dark-surface);
     color: var(--soft-ink);
@@ -1531,7 +1641,7 @@ footer .footer-actions {
     width: 158px;
     padding: 8px;
     border: 1px solid var(--black-08);
-    border-radius: 22px;
+    border-radius: 999px;
     background: var(--white-92);
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(12px);
@@ -1572,6 +1682,10 @@ footer .footer-actions i {
     width: 20px;
     font-size: 13pt;
     line-height: 1;
+}
+
+footer .footer-actions .footer-actions__emoji {
+    font-style: normal;
 }
 
 footer .footer-actions .bi-arrow-repeat {

@@ -167,7 +167,7 @@
               <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>
               <p>Must-haves just in. Find your next statement piece.</p>
               <div class="cta">
-                <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Take me there</a>
+                <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
               </div>
               <img loading="eager" decoding="async" class="hero-bunny placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
               <div class="hero-placeholder-stack">
@@ -202,14 +202,14 @@
           <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.bottomsTile" />
           <div class="copy">
             <h3>Explore Bottoms</h3>
-            <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Shop now</a>
+            <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
         <div class="tile">
           <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.topsTile" />
           <div class="copy">
             <h3>Explore Tops</h3>
-            <a class="btn btn-accent" href="https://pineneedledesigns.store" target="_blank" rel="noopener noreferrer">Shop now</a>
+            <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
           </div>
         </div>
       </div>

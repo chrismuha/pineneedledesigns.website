@@ -143,7 +143,7 @@ watch(
   justify-content: flex-start;
   padding: 8px;
   border: 1px solid var(--black-08);
-  border-radius: 22px;
+  border-radius: 999px;
   background: var(--white-92);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(12px);
