@@ -1067,6 +1067,7 @@ orderedVisibleCollectionPages.forEach((page, index) => {
 
 export const navLinks = [
   { label: 'Home', path: '/' },
+  { label: 'All Collections', path: '/collections' },
   ...collectionNavLinks
     .filter((link) => visibleCollectionSlugs.has(link.slug))
     .map(({ label, path }) => ({ label, path })),

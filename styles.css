@@ -1511,7 +1511,7 @@ section {
 .footer--temporary-booking {
     min-height: 0;
     margin-top: 0;
-    background: transparent;
+    background: var(--dark-surface);
 }
 
 .temporary-booking {
@@ -1625,8 +1625,29 @@ section {
     font-size: 11pt;
     font-weight: 700;
     letter-spacing: 0.05em;
-    text-transform: uppercase;
     transition: color 180ms ease, transform 180ms ease;
+}
+
+.calendar-choice__copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.calendar-choice__copy strong {
+    font-size: 11pt;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.calendar-choice__copy span {
+    color: var(--text-secondary);
+    font-size: 8pt;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.35;
 }
 
 .calendar-menu__actions a:hover,
@@ -1680,6 +1701,10 @@ footer .footer-actions {
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(12px);
     transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.footer--temporary-booking > .footer-actions {
+    display: none;
 }
 
 footer .footer-actions.footer-actions--dimmed {
@@ -1815,7 +1840,8 @@ footer .foot-toggle-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
+    min-height: 40px;
     overflow: visible;
 }
 
@@ -2079,8 +2105,8 @@ footer>section {
 /* Big + / − toggle button */
 .icon-plusminus {
     color: var(--white) !important;
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
     border: 1px solid var(--border);
     background: var(--transparent);
     display: inline-flex;
@@ -2097,7 +2123,7 @@ footer>section {
 
 .icon-plusminus::before {
     content: "+";
-    font-size: 26pt;
+    font-size: 18pt;
     line-height: 1;
     transition: opacity 180ms ease, transform 180ms ease;
     opacity: .95;

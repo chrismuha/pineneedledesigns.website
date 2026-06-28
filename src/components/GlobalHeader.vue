@@ -6,6 +6,15 @@
           <i class="bi bi-house"></i>
         </router-link>
 
+        <router-link
+          class="icon-btn"
+          to="/collections"
+          aria-label="All collections"
+          :class="{ active: route.path.startsWith('/collections') }"
+        >
+          <i class="bi bi-shop"></i>
+        </router-link>
+
         <button
           id="menuBtn"
           class="nav-toggle"
@@ -133,15 +142,15 @@ watch(
 
 .nav-actions {
   position: fixed;
-  top: 18px;
+  top: 8px;
   left: 18px;
   z-index: 960;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   align-items: center;
   justify-content: flex-start;
-  padding: 8px;
+  padding: 4px;
   border: 1px solid var(--black-08);
   border-radius: 999px;
   background: var(--white-92);
@@ -170,13 +179,14 @@ watch(
 
 .icon-btn {
   position: relative;
-  width: 42px;
-  height: 42px;
-  min-height: 42px;
-  flex: 0 0 42px;
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  flex: 0 0 34px;
   border-radius: 50%;
   background: var(--white);
   box-shadow: 0 2px 10px var(--black-08);
+  font-size: 16pt;
 }
 
 .icon-btn .bi {
@@ -187,30 +197,30 @@ watch(
 }
 
 .nav-toggle {
-  width: 42px;
-  height: 42px;
-  min-height: 42px;
-  flex: 0 0 42px;
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  flex: 0 0 34px;
   order: 0;
   background: var(--white);
   box-shadow: 0 2px 10px var(--black-08);
 }
 
 .nav-toggle__bar {
-  width: 21px;
+  width: 18px;
 }
 
 .nav-toggle__bar:nth-child(1) {
-  top: 10px;
+  top: 8px;
 }
 
 .nav-toggle__bar:nth-child(3) {
-  bottom: 10px;
+  bottom: 8px;
 }
 
 @media (max-width: 640px) {
   .nav-actions {
-    top: 12px;
+    top: 8px;
     left: 10px;
     border-radius: 999px;
   }

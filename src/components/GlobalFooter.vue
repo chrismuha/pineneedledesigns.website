@@ -9,23 +9,38 @@
         <div class="calendar-menu__actions">
           <router-link v-if="bookingDepositsEnabled" to="/booking/fitting" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
-            <span>First Fitting</span>
+            <span class="calendar-choice__copy">
+              <strong>First Fitting</strong>
+              <span>For new customers choosing their first personalized fitting.</span>
+            </span>
           </router-link>
           <a v-else :href="calendarLinks.fitting" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
-            <span>First Fitting</span>
+            <span class="calendar-choice__copy">
+              <strong>First Fitting</strong>
+              <span>For new customers choosing their first personalized fitting.</span>
+            </span>
           </a>
           <router-link v-if="bookingDepositsEnabled" to="/booking/brides" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">👰🏻‍♀️</span>
-            <span>Brides</span>
+            <span class="calendar-choice__copy">
+              <strong>Brides</strong>
+              <span>For bridal styling, gown details, and wedding appointments.</span>
+            </span>
           </router-link>
           <a v-else :href="calendarLinks.brides" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">👰🏻‍♀️</span>
-            <span>Brides</span>
+            <span class="calendar-choice__copy">
+              <strong>Brides</strong>
+              <span>For bridal styling, gown details, and wedding appointments.</span>
+            </span>
           </a>
           <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">👚</span>
-            <span>Repeat Customers</span>
+            <span class="calendar-choice__copy">
+              <strong>Repeat Customers</strong>
+              <span>For returning customers booking another fitting or follow-up.</span>
+            </span>
           </a>
         </div>
       </div>
@@ -41,8 +56,6 @@
       </button>
     </div>
 
-    <!-- Temporarily hidden; retained intact for when the global footer returns. -->
-    <div v-show="false" class="global-footer-content" aria-hidden="true">
     <div class="footer-actions" :class="{ 'footer-actions--dimmed': chromeDimmed }" aria-label="Shop and booking links">
       <router-link
         to="/collections"
@@ -168,7 +181,6 @@
 
     <div class="container copyright" role="contentinfo" style="text-align:center">
       <span>© 2025 Pine Needle Designs <br /> All Rights Reserved.</span>
-    </div>
     </div>
   </footer>
 </template>
