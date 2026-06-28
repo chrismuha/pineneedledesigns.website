@@ -12,6 +12,20 @@ import * as paypal from '@paypal/paypal-server-sdk'
 const app = express();
 const PORT = process.env.PORT || 3001;
 const orderMap = new Map();
+const bookingDepositMap = new Map();
+
+const BOOKING_DEPOSITS = Object.freeze({
+  fitting: {
+    title: 'First Fitting Deposit',
+    amount: '10.00',
+    calendarUrl: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+  },
+  brides: {
+    title: 'Bridal Appointment Deposit',
+    amount: '25.00',
+    calendarUrl: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+  },
+});
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -120,6 +134,112 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
+
+app.post('/api/booking-deposit', async (req, res) => {
+  try {
+    const { service, customer } = req.body || {};
+    const booking = BOOKING_DEPOSITS[service];
+
+    if (!booking) {
+      return res.status(400).json({ error: 'Unknown booking service.' });
+    }
+
+    if (!customer?.name?.trim() || !customer?.email?.trim() || !customer?.phone?.trim()) {
+      return res.status(400).json({ error: 'Name, email, and phone are required.' });
+    }
+
+    const order = await orders.createOrder({
+      prefer: 'return=representation',
+      body: {
+        intent: paypal.CheckoutPaymentIntent.Capture,
+        purchaseUnits: [{
+          referenceId: `booking-${service}`,
+          description: booking.title,
+          amount: {
+            currencyCode: 'USD',
+            value: booking.amount,
+          },
+        }],
+        applicationContext: {
+          returnUrl: `${APP_BASE_URL}/booking-payment-success`,
+          cancelUrl: `${APP_BASE_URL}/booking/${service}?cancelled=1`,
+        },
+      },
+    });
+
+    const orderBody = JSON.parse(order.body);
+    const approvalLink = orderBody.links?.find((link) => link.rel === 'approve');
+
+    if (!approvalLink) {
+      throw new Error('PayPal did not return an approval link.');
+    }
+
+    bookingDepositMap.set(orderBody.id, {
+      service,
+      customer: {
+        name: customer.name.trim(),
+        email: customer.email.trim(),
+        phone: customer.phone.trim(),
+      },
+    });
+
+    res.json({ url: approvalLink.href });
+  } catch (err) {
+    console.error('Error creating booking deposit:', err);
+    res.status(500).json({ error: 'Unable to start the PayPal deposit. Please try again.' });
+  }
+});
+
+app.get('/api/booking-deposit/capture/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const capture = await orders.captureOrder({ id: token });
+    const order = JSON.parse(capture.body);
+    const purchaseUnit = order.purchase_units?.[0];
+    const service = String(purchaseUnit?.reference_id || '').replace(/^booking-/, '');
+    const booking = BOOKING_DEPOSITS[service];
+    const paid = purchaseUnit?.payments?.captures?.[0];
+
+    if (
+      !booking ||
+      order.status !== 'COMPLETED' ||
+      paid?.status !== 'COMPLETED' ||
+      paid?.amount?.currency_code !== 'USD' ||
+      paid?.amount?.value !== booking.amount
+    ) {
+      return res.status(400).json({ error: 'The deposit payment could not be verified.' });
+    }
+
+    const deposit = bookingDepositMap.get(order.id);
+    bookingDepositMap.delete(order.id);
+
+    if (deposit && mailerConfigured) {
+      transporter.sendMail({
+        from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
+        to: EMAIL_RECIPIENTS,
+        subject: `${booking.title} paid by ${deposit.customer.name}`,
+        text: [
+          `${booking.title} paid: $${booking.amount}`,
+          `Name: ${deposit.customer.name}`,
+          `Email: ${deposit.customer.email}`,
+          `Phone: ${deposit.customer.phone}`,
+          `PayPal order: ${order.id}`,
+        ].join('\n'),
+      }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
+    }
+
+    res.json({
+      success: true,
+      service,
+      title: booking.title,
+      amount: booking.amount,
+      bookingUrl: booking.calendarUrl,
+    });
+  } catch (err) {
+    console.error('Error capturing booking deposit:', err);
+    res.status(500).json({ error: 'Unable to verify the PayPal deposit.' });
+  }
+});
 // Cart API Routes
 app.get('/api/cart', (req, res) => {
   if (!req.session.cart) {

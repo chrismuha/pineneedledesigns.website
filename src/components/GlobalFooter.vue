@@ -15,14 +15,14 @@
         <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
         <span>Collections</span>
       </router-link>
-      <a href="https://calendar.app.google/NU1nzMP69Vjz7JU4A" target="_blank" rel="noopener noreferrer">
+      <router-link to="/booking/fitting">
         <i class="bi bi-calendar-heart" aria-hidden="true"></i>
         <span>Fitting</span>
-      </a>
-      <a href="https://calendar.app.google/EU8HAuemRhmr4zBY6" target="_blank" rel="noopener noreferrer">
+      </router-link>
+      <router-link to="/booking/brides">
         <i class="bi bi-gem" aria-hidden="true"></i>
         <span>Brides</span>
-      </a>
+      </router-link>
       <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
         <span>Repeat Customers</span>

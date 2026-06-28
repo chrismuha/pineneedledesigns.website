@@ -5,6 +5,8 @@ import CollectionView from '../views/CollectionView.vue'
 import StaticPageView from '../views/StaticPageView.vue'
 import NotFoundView from '../../404View.vue'
 import OrderSuccessView from '../views/OrderSuccessView.vue'
+import BookingDepositView from '../views/BookingDepositView.vue'
+import BookingPaymentSuccessView from '../views/BookingPaymentSuccessView.vue'
 import DashboardView from '../views/DashboardView.vue'
 
 import DashboardHome from '../components/dashboard/DashboardHome.vue'
@@ -80,6 +82,19 @@ const routes = [
     path: '/order-success',
     name: 'OrderSuccess',
     component: OrderSuccessView,
+  },
+
+  {
+    path: '/booking/:service(fitting|brides)',
+    name: 'BookingDeposit',
+    component: BookingDepositView,
+    props: true,
+  },
+
+  {
+    path: '/booking-payment-success',
+    name: 'BookingPaymentSuccess',
+    component: BookingPaymentSuccessView,
   },
 
   {
