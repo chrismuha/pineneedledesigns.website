@@ -1,16 +1,19 @@
 <template>
   <footer class="footer--temporary-booking">
-    <div class="temporary-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
+    <div ref="bookingControl" class="temporary-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
       <div v-if="calendarMenuOpen" id="calendar-menu" class="calendar-menu" aria-label="Choose calendar">
-        <p class="calendar-menu__title">Choose Calendar</p>
+        <div class="calendar-menu__header">
+          <p class="calendar-menu__title">Choose Calendar</p>
+          <button class="calendar-menu__close" type="button" aria-label="Close calendar choices" @click="closeCalendarMenu">×</button>
+        </div>
         <div class="calendar-menu__actions">
           <router-link v-if="bookingDepositsEnabled" to="/booking/fitting" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
-            <span>Fitting</span>
+            <span>First Fitting</span>
           </router-link>
           <a v-else :href="calendarLinks.fitting" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">💃🏻</span>
-            <span>Fitting</span>
+            <span>First Fitting</span>
           </a>
           <router-link v-if="bookingDepositsEnabled" to="/booking/brides" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">👰🏻‍♀️</span>
@@ -51,11 +54,11 @@
       </router-link>
       <router-link v-if="bookingDepositsEnabled" to="/booking/fitting">
         <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
-        <span>Fitting</span>
+        <span>First Fitting</span>
       </router-link>
       <a v-else :href="calendarLinks.fitting">
         <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
-        <span>Fitting</span>
+        <span>First Fitting</span>
       </a>
       <router-link v-if="bookingDepositsEnabled" to="/booking/brides">
         <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
@@ -171,7 +174,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 defineProps({
@@ -184,12 +187,16 @@ defineProps({
 const route = useRoute()
 const bookingDepositsEnabled = ref(false)
 const calendarMenuOpen = ref(false)
+const bookingControl = ref(null)
 const calendarLinks = {
   fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
   brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
 }
 
 onMounted(async () => {
+  document.addEventListener('pointerdown', handleOutsidePointerDown)
+  document.addEventListener('keydown', handleEscape)
+
   try {
     const response = await fetch('/api/booking-deposit/config')
     const config = await response.json()
@@ -197,6 +204,11 @@ onMounted(async () => {
   } catch {
     bookingDepositsEnabled.value = false
   }
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handleOutsidePointerDown)
+  document.removeEventListener('keydown', handleEscape)
 })
 
 const expanded = reactive({
@@ -210,5 +222,14 @@ const toggle = (id) => {
 
 const closeCalendarMenu = () => {
   calendarMenuOpen.value = false
+}
+
+function handleOutsidePointerDown(event) {
+  if (!calendarMenuOpen.value || bookingControl.value?.contains(event.target)) return
+  closeCalendarMenu()
+}
+
+function handleEscape(event) {
+  if (event.key === 'Escape') closeCalendarMenu()
 }
 </script>

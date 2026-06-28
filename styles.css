@@ -1563,13 +1563,47 @@ section {
     backdrop-filter: blur(12px);
 }
 
+.calendar-menu__header {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
 .calendar-menu__title {
-    margin: 0 0 12px;
+    grid-column: 2;
+    margin: 0;
     font-size: 11pt;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-align: center;
     text-transform: uppercase;
+}
+
+.calendar-menu__close {
+    grid-column: 3;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 2px 10px var(--black-08);
+    cursor: pointer;
+    font: inherit;
+    font-size: 20pt;
+    line-height: 1;
+}
+
+.calendar-menu__close:hover,
+.calendar-menu__close:focus-visible {
+    color: var(--accent);
+}
+
+.calendar-menu__close:focus-visible {
+    outline: 3px solid var(--brand-red-45);
+    outline-offset: 3px;
 }
 
 .calendar-menu__actions {
