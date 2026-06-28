@@ -832,8 +832,9 @@ header {
     height: auto;
     margin-left: auto;
     margin-right: auto;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center center;
+    width: 100%;
 }
 
 .hero-bunny {

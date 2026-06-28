@@ -143,7 +143,7 @@ watch(
   justify-content: flex-start;
   padding: 8px;
   border: 1px solid var(--black-08);
-  border-radius: 999px;
+  border-radius: 22px;
   background: var(--white-92);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(12px);
@@ -172,6 +172,7 @@ watch(
   position: relative;
   width: 42px;
   height: 42px;
+  min-height: 42px;
   flex: 0 0 42px;
   border-radius: 50%;
   background: var(--white);
@@ -188,6 +189,7 @@ watch(
 .nav-toggle {
   width: 42px;
   height: 42px;
+  min-height: 42px;
   flex: 0 0 42px;
   order: 0;
   background: var(--white);
@@ -210,6 +212,7 @@ watch(
   .nav-actions {
     top: 12px;
     left: 10px;
+    border-radius: 999px;
   }
 }
 </style>
