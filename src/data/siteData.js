@@ -17,12 +17,10 @@ const collectionNavLinks = [
   { label: 'Shirts', path: '/collections/shirts', slug: 'shirts' },
   { label: 'Shoes', path: '/collections/shoes', slug: 'shoes' },
   { label: 'Shorts', path: '/collections/shorts', slug: 'shorts' },
-  { label: 'Summer/Fall', path: '/collections/summer-fall', slug: 'summer-fall' },
   { label: 'Upcycled Collaboration', path: '/collections/upcycled-collaboration', slug: 'upcycled-collaboration' },
   { label: 'Upcycled Logo', path: '/collections/upcycled-logo', slug: 'upcycled-logo' },
   { label: 'Upcycled Denim', path: '/collections/upcycled-denim', slug: 'upcycled-denim' },
   { label: 'Vests', path: '/collections/vests', slug: 'vests' },
-  { label: 'Winter/Spring', path: '/collections/winter-spring', slug: 'winter-spring' },
 ]
 
 export const collectionCategoryOrder = [
@@ -152,7 +150,7 @@ export const collectionPages = [
         description: "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
         images: ['/images/jackets/america-she-beautiful/jacket1a.webp', '/images/jackets/america-she-beautiful/jacket1b.webp'],
         videos: ['/videos/jackets/america-she-beautiful.webm'],
-        videoPosters: ['/images/video-posters/jackets/america-she-beautiful/america-she-beautiful.png'],
+        videoPosters: ['/images/video-posters/jackets/america-she-beautiful/america-she-beautiful.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -170,7 +168,7 @@ export const collectionPages = [
           '/videos/jackets/ruby-lee1a.webm',
         ],
         videoPosters: [
-          '/images/video-posters/jackets/ruby-lee/ruby-lee1a.png',
+          '/images/video-posters/jackets/ruby-lee/ruby-lee1a.webp',
         ],
         imageWrapper: 'image-frame',
       },
@@ -178,7 +176,8 @@ export const collectionPages = [
         id: 5,
         title: 'Carmen',
         price: 222,
-        meta: ['Price: SOLD ($222)', 'Size: XL Ladies'],
+        sold: true,
+        meta: ['Price: $222', 'Size: XL Ladies'],
         description: "Carmen is a light weight Cream colored jean jacket. The back is all hand stamped with exotic inks. Carmen is a special order and isn't finished yet. She will be adorned with jewels and possibly feathers. An updated picture is coming! Stay tuned. Created by Wende Maliani.",
         images: ['/images/jackets/carmen/carmen.webp'],
         imageWrapper: 'image-frame',
@@ -257,7 +256,7 @@ export const collectionPages = [
           '/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1b.webp',
         ],
         videos: ['/videos/shirts/wende-choice-blinged-out-sweatshirt/wende-choice.webm'],
-        videoPosters: ['/images/video-posters/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt.png'],
+        videoPosters: ['/images/video-posters/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -291,7 +290,7 @@ export const collectionPages = [
           '/images/shirts/cowgirl-tshirt/2.webp',
         ],
         videos: ['/videos/shirts/cowgirl-tshirt/1.webm'],
-        videoPosters: ['/images/video-posters/shirts/cowgirl-tshirt/cowgirl-tshirt.png'],
+        videoPosters: ['/images/video-posters/shirts/cowgirl-tshirt/cowgirl-tshirt.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -353,7 +352,7 @@ export const collectionPages = [
         ],
         images: ['/images/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webp'],
         videos: ['/videos/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webm'],
-        videoPosters: ['/images/video-posters/shirts/dont-burst-my-bubble/dont-burst-my-bubble.png'],
+        videoPosters: ['/images/video-posters/shirts/dont-burst-my-bubble/dont-burst-my-bubble.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -459,7 +458,8 @@ export const collectionPages = [
         filters: ['Shoes'],
         shoeTypes: ['Satin Heels'],
         price: 129,
-        meta: ['Price: SOLD ($129)', 'Size: 9.5', 'Color: Blush Satin', 'Ankle strap and toe band'],
+        sold: true,
+        meta: ['Price: $129', 'Size: 9.5', 'Color: Blush Satin', 'Ankle strap and toe band'],
         description: 'Stiletto block heel for a dressy look. Back zipper closure for easy wear.',
         images: [
           '/images/shoes/blush-satin-heels.webp',
@@ -503,7 +503,7 @@ export const collectionPages = [
           '/images/whimsical-fairy/whim6.webp',
         ],
         videos: ['/videos/whimsical-fairy/whim.webm'],
-        videoPosters: ['/images/video-posters/whimsical-fairy/whim.png'],
+        videoPosters: ['/images/video-posters/whimsical-fairy/whim.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -521,7 +521,7 @@ export const collectionPages = [
           '/images/denimlace/brandybracelet/brandybracelet5.webp',
         ],
         videos: ['/videos/denimlace/brandybracelet/braceletbrandy.webm'],
-        videoPosters: ['/images/video-posters/denimlace/brandybracelet/braceletbrandy.png'],
+        videoPosters: ['/images/video-posters/denimlace/brandybracelet/braceletbrandy.webp'],
         imageWrapper: 'image-frame',
       },
       {
@@ -542,8 +542,8 @@ export const collectionPages = [
           '/videos/denimlace/adelinebracelet/adeline-bracelet-02.webm',
         ],
         videoPosters: [
-          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-01.png',
-          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-02.png',
+          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-01.webp',
+          '/images/video-posters/denimlace/adelinebracelet/adeline-bracelet-02.webp',
         ],
         imageWrapper: 'image-frame',
       },
@@ -818,27 +818,11 @@ export const collectionPages = [
     products: [],
   },
   {
-    slug: 'summer-fall',
-    title: 'Summer/Fall',
-    path: '/collections/summer-fall',
-    cardImage: '/images/comingsoon/comingsoon008.webp',
-    description: 'Warm-weather statement pieces and early-order seasonal favorites.',
-    products: [],
-  },
-  {
     slug: 'vests',
     title: 'Vests',
     path: '/collections/vests',
     cardImage: '/images/comingsoon/comingsoon011.webp',
     description: 'Edgy layers with artisanal trim.',
-    products: [],
-  },
-  {
-    slug: 'winter-spring',
-    title: 'Winter/Spring',
-    path: '/collections/winter-spring',
-    cardImage: '/images/comingsoon/comingsoon012.webp',
-    description: "Cold-weather favorites and spring pieces we can't stop thinking about.",
     products: [],
   },
 ]
