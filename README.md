@@ -87,6 +87,18 @@ PAYPAL_BOOKING_DEPOSITS_ENABLED=true
 
 Any other value, or an omitted variable, keeps deposits disabled and sends customers directly to the corresponding Google Calendar booking page.
 
+## Order Email
+
+Local development sends through Gmail SMTP when `EMAIL` and `EMAIL_APP_PASSWORD` are set in `.env`.
+Production sends through the Resend HTTPS API because DigitalOcean blocks outbound SMTP. Configure these deployment values:
+
+```bash
+RESEND_API_KEY=re_...
+RESEND_FROM=orders@pineneedledesigns.store
+```
+
+The sending domain must be verified in Resend before production messages can be delivered. `RESEND_API_KEY` belongs in GitHub Actions Secrets; never commit it or the local `.env` file.
+
 ## Cart Features
 
 - **Session-Based**: Cart persists across page refreshes and browser sessions

@@ -55,23 +55,68 @@ const DEFAULT_SANDBOX_EMAIL = 'alnabidrm@gmail.com';
 
 const EMAIL_SENDER = process.env.EMAIL || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
 const EMAIL_RECIPIENTS = process.env.ORDER_EMAILS || (_isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
-const mailerConfigured = Boolean(EMAIL_SENDER && process.env.EMAIL_APP_PASSWORD);
+const RESEND_FROM = process.env.RESEND_FROM || 'orders@pineneedledesigns.store';
+const emailProvider = process.env.RESEND_API_KEY ? 'resend' : 'smtp';
+const mailerConfigured = emailProvider === 'resend'
+  ? Boolean(RESEND_FROM)
+  : Boolean(EMAIL_SENDER && process.env.EMAIL_APP_PASSWORD);
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: EMAIL_SENDER,
-    pass: process.env.EMAIL_APP_PASSWORD,
-  },
-});
+const transporter = emailProvider === 'smtp' && mailerConfigured
+  ? nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: EMAIL_SENDER,
+        pass: process.env.EMAIL_APP_PASSWORD,
+      },
+    })
+  : null;
 
-// Verify transporter configuration at startup so failures surface early
-if (mailerConfigured) {
+const normalizeRecipients = (recipients) => Array.isArray(recipients)
+  ? recipients
+  : String(recipients).split(',').map(email => email.trim()).filter(Boolean);
+
+const sendEmail = async ({ from: _from, to, ...message }) => {
+  if (!mailerConfigured) {
+    throw new Error('Mailer is not configured. Set RESEND_API_KEY in production or EMAIL_APP_PASSWORD locally.');
+  }
+
+  if (emailProvider === 'resend') {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: `Pine Needle Designs <${RESEND_FROM}>`,
+        to: normalizeRecipients(to),
+        ...message,
+      }),
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(`Resend API error (${response.status}): ${result.message || 'Unknown error'}`);
+    }
+
+    return { messageId: result.id };
+  }
+
+  return transporter.sendMail({
+    from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
+    to,
+    ...message,
+  });
+};
+
+if (emailProvider === 'resend') {
+  console.log('✅ Resend mailer configured (ready to send emails over HTTPS)');
+} else if (mailerConfigured) {
   transporter.verify()
-    .then(() => console.log('✅ Mailer verified (ready to send emails)'))
-    .catch(err => console.error('❌ Mailer verification failed:', err));
+    .then(() => console.log('✅ SMTP mailer verified (ready to send emails)'))
+    .catch(err => console.error('❌ SMTP mailer verification failed:', err));
 } else {
-  console.log('ℹ️ Mailer not configured; set EMAIL_APP_PASSWORD to enable order emails.');
+  console.log('ℹ️ Mailer not configured; set RESEND_API_KEY in production or EMAIL_APP_PASSWORD locally.');
 }
 
 const client = new paypal.Client({
@@ -245,8 +290,7 @@ app.get('/api/booking-deposit/capture/:token', async (req, res) => {
     bookingDepositMap.delete(order.id);
 
     if (deposit && mailerConfigured) {
-      transporter.sendMail({
-        from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
+      sendEmail({
         to: EMAIL_RECIPIENTS,
         subject: `${booking.title} paid by ${deposit.customer.name}`,
         text: [
@@ -686,13 +730,12 @@ app.get('/api/checkout/capture-order/:token', async (req, res) => {
     // send both emails
     try {
       if (!mailerConfigured) {
-        throw new Error('Mailer is not configured. Set EMAIL_APP_PASSWORD to enable order emails.');
+        throw new Error('Mailer is not configured. Set RESEND_API_KEY in production or EMAIL_APP_PASSWORD locally.');
       }
 
       const [adminInfo, customerInfo] = await Promise.all([
-        transporter.sendMail(adminOptions),
-        transporter.sendMail({
-          from: `"Pine Needle Designs" <${EMAIL_SENDER}>`,
+        sendEmail(adminOptions),
+        sendEmail({
           to: customer.email,
           subject: `Receipt for Order ${order.id}`,
           html: customerReceiptHtml,
