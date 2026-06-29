@@ -13,6 +13,15 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'docs'
+    outDir: 'docs',
+    rollupOptions: {
+      output: {
+        // Keep the main bundle tracked under one predictable filename. Vite's
+        // default content hash creates a new untracked file on every change,
+        // which makes it easy to commit index.html without its new bundle.
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+      },
+    },
   },
 })
