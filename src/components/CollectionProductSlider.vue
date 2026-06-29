@@ -7,8 +7,27 @@
     @keydown.right.prevent="next"
   >
     <div class="collection-product-slider__header">
-      <p class="collection-product-slider__eyebrow">{{ presentation.eyebrow }}</p>
-      <h3>{{ presentation.heading }}</h3>
+      <div class="collection-product-slider__heading">
+        <p class="collection-product-slider__eyebrow">{{ presentation.eyebrow }}</p>
+        <h3>{{ presentation.heading }}</h3>
+      </div>
+      <div v-if="products.length > 1" class="collection-product-slider__quick-controls" aria-label="Quick product navigation">
+        <button
+          type="button"
+          :aria-label="`Previous ${collection.title} product`"
+          @click="previous"
+        >
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <span aria-live="polite">{{ currentIndex + 1 }} / {{ products.length }}</span>
+        <button
+          type="button"
+          :aria-label="`Next ${collection.title} product`"
+          @click="next"
+        >
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
 
     <div class="collection-product-slider__descriptions" aria-live="polite">
@@ -117,7 +136,7 @@ const collectionPresentations = {
   },
   jackets: {
     eyebrow: 'Statement Layers',
-    heading: 'Jackets with Main-Character Energy 🧥',
+    heading: 'Jackets with Energy 🧥',
   },
   'upcycled-logo': {
     eyebrow: 'Reimagined Icons',
@@ -183,7 +202,55 @@ watch(
 }
 
 .collection-product-slider__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
   margin-bottom: 8px;
+}
+
+.collection-product-slider__heading {
+  min-width: 0;
+}
+
+.collection-product-slider__quick-controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.collection-product-slider__quick-controls button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-2);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.collection-product-slider__quick-controls button:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.collection-product-slider__quick-controls button:focus-visible {
+  outline: 3px solid var(--brand-red-45);
+  outline-offset: 3px;
+}
+
+.collection-product-slider__quick-controls span {
+  min-width: 42px;
+  color: var(--text-secondary);
+  font-size: 10pt;
+  font-weight: 800;
+  text-align: center;
 }
 
 .collection-product-slider__eyebrow {
@@ -381,6 +448,23 @@ watch(
 .collection-product-slider__dot--active { background: var(--accent-2); }
 
 @media (max-width: 720px) {
+  .collection-product-slider__header {
+    align-items: center;
+  }
+
+  .collection-product-slider__quick-controls {
+    gap: 5px;
+  }
+
+  .collection-product-slider__quick-controls button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .collection-product-slider__quick-controls span {
+    display: none;
+  }
+
   .collection-product-slider__footer {
     justify-content: center;
   }
