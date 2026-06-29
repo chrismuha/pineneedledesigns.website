@@ -35,6 +35,16 @@
       </div>
     </section>
 
+    <section class="home-product-collections" aria-label="Featured product collections">
+      <div class="container">
+        <CollectionProductSlider
+          v-for="collection in featuredProductCollections"
+          :key="collection.slug"
+          :collection="collection"
+        />
+      </div>
+    </section>
+
     <section class="collections">
       <div class="container">
         <div class="section-head">
@@ -75,16 +85,6 @@
             </div>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section class="home-product-collections" aria-label="Featured product collections">
-      <div class="container">
-        <CollectionProductSlider
-          v-for="collection in featuredProductCollections"
-          :key="collection.slug"
-          :collection="collection"
-        />
       </div>
     </section>
 

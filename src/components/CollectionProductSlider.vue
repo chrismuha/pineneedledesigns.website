@@ -7,14 +7,10 @@
     @keydown.right.prevent="next"
   >
     <div class="collection-product-slider__header">
-      <div class="collection-product-slider__intro">
-        <h3>{{ collection.title }}</h3>
-        <p class="collection-product-slider__description">{{ collection.description }}</p>
-      </div>
-      <router-link class="collection-product-slider__all" :to="collection.path">
-        View Full Collection <span aria-hidden="true">→</span>
-      </router-link>
+      <h3>{{ collection.title }}</h3>
     </div>
+
+    <p class="collection-product-slider__description">{{ currentProduct.description }}</p>
 
     <div class="collection-product-slider__stage" aria-live="polite">
       <button
@@ -67,6 +63,12 @@
         @click="currentIndex = index"
       ></button>
     </div>
+
+    <div class="collection-product-slider__footer">
+      <router-link class="collection-product-slider__all" :to="collection.path">
+        View Full Collection <span aria-hidden="true">→</span>
+      </router-link>
+    </div>
   </article>
 </template>
 
@@ -118,11 +120,7 @@ watch(
 }
 
 .collection-product-slider__header {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 
 .collection-product-slider__header h3,
@@ -145,16 +143,18 @@ watch(
   text-transform: uppercase;
 }
 
-.collection-product-slider__intro {
-  display: grid;
-  max-width: 720px;
-  gap: 8px;
-}
-
 .collection-product-slider__description {
+  max-width: 900px;
+  margin: 0 0 18px;
   color: var(--text-secondary);
   font-size: clamp(11pt, 2vw, 13pt);
   line-height: 1.55;
+}
+
+.collection-product-slider__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
 }
 
 .collection-product-slider__all {
@@ -278,9 +278,12 @@ watch(
 .collection-product-slider__dot--active { background: var(--accent-2); }
 
 @media (max-width: 720px) {
-  .collection-product-slider__header {
-    align-items: flex-start;
-    flex-direction: column;
+  .collection-product-slider__footer {
+    justify-content: stretch;
+  }
+
+  .collection-product-slider__all {
+    width: 100%;
   }
 
   .collection-product-slider__product {
