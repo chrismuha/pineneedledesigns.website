@@ -434,6 +434,9 @@ header {
 
 /* Image Slider */
 .image-slider {
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -447,6 +450,15 @@ header {
 
     /* Allow more page content to show on smaller screens */
     transition: height 240ms ease;
+}
+
+.image-slider.is-dragging {
+    cursor: grabbing;
+}
+
+.image-slider img {
+    -webkit-user-drag: none;
+    user-select: none;
 }
 
 #slider-container {

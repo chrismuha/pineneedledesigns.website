@@ -12,7 +12,9 @@
       @pointermove="moveDrag"
       @pointerup="endDrag"
       @pointercancel="cancelDrag"
-      @pointerleave="endDrag"
+      @pointerleave="cancelDrag"
+      @wheel="wheel"
+      @click.capture="clickCapture"
     >
       <div
         class="media-slider__track"
@@ -91,6 +93,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useSliderGestures } from '../composables/useSliderGestures'
 
 const props = defineProps({
   media: {
@@ -112,9 +115,6 @@ const props = defineProps({
 })
 
 const currentIndex = ref(0)
-const dragStartX = ref(0)
-const dragOffsetX = ref(0)
-const isDragging = ref(false)
 const loadedIndexes = ref(new Set([0]))
 const preloadedSources = new Set()
 
@@ -231,33 +231,16 @@ const previous = () => {
   goTo(currentIndex.value - 1)
 }
 
-const startDrag = (event) => {
-  if (!showControls.value) return
-  isDragging.value = true
-  dragStartX.value = event.clientX
-  dragOffsetX.value = 0
-  event.currentTarget.setPointerCapture?.(event.pointerId)
-}
-
-const moveDrag = (event) => {
-  if (!isDragging.value) return
-  dragOffsetX.value = event.clientX - dragStartX.value
-}
-
-const endDrag = () => {
-  if (!isDragging.value) return
-
-  const threshold = 48
-  if (dragOffsetX.value <= -threshold) next()
-  if (dragOffsetX.value >= threshold) previous()
-
-  cancelDrag()
-}
-
-const cancelDrag = () => {
-  isDragging.value = false
-  dragOffsetX.value = 0
-}
+const {
+  isDragging,
+  dragOffsetX,
+  pointerDown: startDrag,
+  pointerMove: moveDrag,
+  pointerUp: endDrag,
+  pointerCancel: cancelDrag,
+  wheel,
+  clickCapture,
+} = useSliderGestures({ next, previous, enabled: () => showControls.value })
 
 </script>
 

@@ -13,7 +13,17 @@
 
     <p class="collection-product-slider__description">{{ currentProduct.description }}</p>
 
-    <div class="collection-product-slider__stage" aria-live="polite">
+    <div
+      class="collection-product-slider__stage"
+      :class="{ 'collection-product-slider__stage--dragging': isDragging }"
+      aria-live="polite"
+      @pointerdown="pointerDown"
+      @pointermove="pointerMove"
+      @pointerup="pointerUp"
+      @pointercancel="pointerCancel"
+      @wheel="wheel"
+      @click.capture="clickCapture"
+    >
       <button
         v-if="products.length > 1"
         class="collection-product-slider__control collection-product-slider__control--previous"
@@ -80,6 +90,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useSliderGestures } from '../composables/useSliderGestures'
 
 const props = defineProps({
   collection: {
@@ -134,6 +145,11 @@ const goTo = (index) => {
 }
 const previous = () => goTo(currentIndex.value - 1)
 const next = () => goTo(currentIndex.value + 1)
+const { isDragging, pointerDown, pointerMove, pointerUp, pointerCancel, wheel, clickCapture } = useSliderGestures({
+  next,
+  previous,
+  enabled: () => products.value.length > 1,
+})
 const productPath = (product) => `${props.collection.path}#product-${product.id}`
 
 watch(
@@ -237,7 +253,12 @@ watch(
 
 .collection-product-slider__stage {
   position: relative;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
 }
+
+.collection-product-slider__stage--dragging { cursor: grabbing; }
 
 .collection-product-slider__product {
   display: grid;

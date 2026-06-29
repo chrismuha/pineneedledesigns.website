@@ -1,5 +1,15 @@
 <template>
-  <section class="image-slider" aria-label="Featured images">
+  <section
+    class="image-slider"
+    :class="{ 'is-dragging': isDragging }"
+    aria-label="Featured images"
+    @pointerdown="pointerDown"
+    @pointermove="pointerMove"
+    @pointerup="pointerUp"
+    @pointercancel="pointerCancel"
+    @wheel="wheel"
+    @click.capture="clickCapture"
+  >
     <button class="slider-btn prev-btn" type="button" aria-label="Previous featured image" @click="handlePrevSlide">←</button>
 
     <div id="slider-container" :class="slideClass">
@@ -15,6 +25,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { sliderSlides } from '../data/siteData'
+import { useSliderGestures } from '../composables/useSliderGestures'
 
 const currentIndex = ref(0)
 const currentSlide = computed(() => sliderSlides[currentIndex.value])
@@ -36,6 +47,12 @@ const nextSlide = () => {
 const prevSlide = () => {
   showSlide(currentIndex.value - 1)
 }
+
+const { isDragging, pointerDown, pointerMove, pointerUp, pointerCancel, wheel, clickCapture } = useSliderGestures({
+  next: () => handleNextSlide(),
+  previous: () => handlePrevSlide(),
+  enabled: () => sliderSlides.length > 1,
+})
 
 let interval
 const startAutoSlide = () => {
