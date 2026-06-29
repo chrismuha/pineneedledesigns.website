@@ -23,11 +23,12 @@ jobs:
           PAYPAL_BOOKING_DEPOSITS_ENABLED: ${{ secrets.PAYPAL_BOOKING_DEPOSITS_ENABLED }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM: ${{ vars.RESEND_FROM || 'orders@pineneedledesigns.store' }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          envs: NODE_ENV,PAYPAL_BOOKING_DEPOSITS_ENABLED,RESEND_API_KEY,RESEND_FROM
+          envs: NODE_ENV,PAYPAL_BOOKING_DEPOSITS_ENABLED,RESEND_API_KEY,RESEND_FROM,SESSION_SECRET
           script: |
             set -e
             cd ~/pineneedledesigns.website

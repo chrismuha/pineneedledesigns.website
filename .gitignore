@@ -36,7 +36,9 @@ coverage
 
 # Lock files
 yarn.lock
-package-lock.json
+
+# Runtime session data
+.sessions/
 
 # Ignore the legacy HTML folder
 legacy-html/

@@ -99,6 +99,10 @@ RESEND_FROM=orders@pineneedledesigns.store
 
 The sending domain must be verified in Resend before production messages can be delivered. `RESEND_API_KEY` belongs in GitHub Actions Secrets; never commit it or the local `.env` file.
 
+## Sessions
+
+Sessions are stored in the ignored `.sessions` directory so carts survive server restarts. Production requires a strong `SESSION_SECRET` stored in GitHub Actions Secrets. Local development uses a development-only fallback.
+
 ## Cart Features
 
 - **Session-Based**: Cart persists across page refreshes and browser sessions

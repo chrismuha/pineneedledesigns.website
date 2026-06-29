@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import session from 'express-session';
+import sessionFileStore from 'session-file-store';
 import nodemailer from 'nodemailer'
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -11,6 +12,7 @@ import * as paypal from '@paypal/paypal-server-sdk'
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const orderMap = new Map();
 const bookingDepositMap = new Map();
 const BOOKING_DEPOSITS_ENABLED = String(process.env.PAYPAL_BOOKING_DEPOSITS_ENABLED || '').toLowerCase() === 'true';
@@ -32,6 +34,7 @@ const BOOKING_DEPOSITS = Object.freeze({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const docsDir = path.join(__dirname, 'docs');
+const sessionDir = path.join(__dirname, '.sessions');
 const revalidateCacheControl = 'no-cache, must-revalidate';
 
 const setRevalidationHeaders = (res) => {
@@ -170,14 +173,32 @@ app.use(express.static(docsDir, {
   },
 }));
 
-// Session configuration
+// Persist sessions on disk so carts survive PM2 restarts on the single production server.
+const FileStore = sessionFileStore(session);
+const SESSION_SECRET = process.env.SESSION_SECRET || (IS_PRODUCTION ? '' : 'local-development-only');
+
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET is required in production.');
+}
+
+if (IS_PRODUCTION) {
+  app.set('trust proxy', 1);
+}
+
 app.use(session({
-  secret: 'pine-needle-designs-secret-key',
+  store: new FileStore({
+    path: sessionDir,
+    ttl: 24 * 60 * 60,
+    retries: 1,
+  }),
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // Set to true in production with HTTPS
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    secure: IS_PRODUCTION,
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000,
   }
 }));
 
