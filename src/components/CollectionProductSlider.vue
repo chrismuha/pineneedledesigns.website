@@ -7,7 +7,8 @@
     @keydown.right.prevent="next"
   >
     <div class="collection-product-slider__header">
-      <h3>{{ collection.title }}</h3>
+      <p class="collection-product-slider__eyebrow">{{ presentation.eyebrow }}</p>
+      <h3>{{ presentation.heading }}</h3>
     </div>
 
     <p class="collection-product-slider__description">{{ currentProduct.description }}</p>
@@ -34,7 +35,13 @@
         <div class="collection-product-slider__details">
           <p class="collection-product-slider__position">{{ currentIndex + 1 }} of {{ products.length }}</p>
           <h4>{{ currentProduct.title }}</h4>
-          <p class="collection-product-slider__price">{{ productPrice(currentProduct) }}</p>
+          <div class="collection-product-slider__facts">
+            <p v-for="(item, index) in productMeta(currentProduct)" :key="`meta-${index}`">{{ item }}</p>
+            <p v-if="currentProduct.maker"><strong>Maker:</strong> {{ currentProduct.maker }}</p>
+            <p v-for="option in currentProduct.options || []" :key="option.name">
+              <strong>{{ option.name }}:</strong> {{ option.values.join(', ') }}
+            </p>
+          </div>
           <span class="collection-product-slider__link">View this item <span aria-hidden="true">→</span></span>
         </div>
       </router-link>
@@ -83,8 +90,44 @@ const props = defineProps({
 })
 
 const currentIndex = ref(0)
+const collectionPresentations = {
+  shirts: {
+    eyebrow: 'Fresh Fits',
+    heading: 'Shirts with Attitude ✨',
+  },
+  jackets: {
+    eyebrow: 'Statement Layers',
+    heading: 'Jackets with Main-Character Energy 🧥',
+  },
+  'upcycled-logo': {
+    eyebrow: 'Reimagined Icons',
+    heading: 'Upcycled Logo, Made New Again ♻️',
+  },
+  'upcycled-collaboration': {
+    eyebrow: 'Creative Collaboration',
+    heading: 'Two Creative Worlds, One-of-a-Kind Magic 🤝✨',
+  },
+  'denim-and-lace': {
+    eyebrow: 'New Drop',
+    heading: 'Denim & Lace yes please ✨',
+  },
+}
+const presentation = computed(() => collectionPresentations[props.collection.slug] || {
+  eyebrow: 'Featured Collection',
+  heading: `${props.collection.title} ✨`,
+})
+const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isProductSold = (product) => {
+  if (product.sold || product.soldOut) return true
+  if (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim())) return true
+  if (typeof product.availability === 'string' && /^sold(?:\s*out)?$/i.test(product.availability.trim())) return true
+
+  return productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
+}
 const products = computed(() =>
-  props.collection.products.filter((product) => !product.placeholder && product.images?.length)
+  props.collection.products.filter((product) =>
+    !product.placeholder && product.images?.length && !isProductSold(product)
+  )
 )
 const currentProduct = computed(() => products.value[currentIndex.value])
 const goTo = (index) => {
@@ -93,11 +136,6 @@ const goTo = (index) => {
 const previous = () => goTo(currentIndex.value - 1)
 const next = () => goTo(currentIndex.value + 1)
 const productPath = (product) => `${props.collection.path}#product-${product.id}`
-const productPrice = (product) => {
-  const sold = product.meta?.some?.((item) => /^price:\s*sold/i.test(String(item).trim()))
-  if (sold) return 'Sold'
-  return Number.isFinite(product.price) ? `$${product.price.toFixed(2)}` : 'Price coming soon'
-}
 
 watch(
   () => props.collection.slug,
@@ -121,6 +159,20 @@ watch(
 
 .collection-product-slider__header {
   margin-bottom: 8px;
+}
+
+.collection-product-slider__eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  margin: 0 0 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--pale-blue-2);
+  color: var(--accent-2);
+  font-size: 9pt;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .collection-product-slider__header h3,
@@ -190,17 +242,18 @@ watch(
 
 .collection-product-slider__product {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(220px, .8fr);
-  min-height: 430px;
+  grid-template-columns: minmax(0, 1fr);
   overflow: hidden;
   border-radius: 18px;
-  background: var(--pale-blue-2);
+  background: var(--white);
   color: var(--ink);
 }
 
 .collection-product-slider__image {
+  display: block;
   width: 100%;
-  height: 100%;
+  height: clamp(430px, 58vw, 650px);
+  min-width: 0;
   min-height: 430px;
   object-fit: contain;
   background: var(--white);
@@ -213,6 +266,9 @@ watch(
   justify-content: center;
   gap: 12px;
   padding: clamp(26px, 5vw, 54px);
+  border-top: 1px solid var(--border);
+  background: var(--pale-blue-2);
+  overflow-wrap: anywhere;
 }
 
 .collection-product-slider__details h4 {
@@ -220,9 +276,15 @@ watch(
   line-height: 1.15;
 }
 
-.collection-product-slider__price {
-  font-size: 16pt;
-  font-weight: 700;
+.collection-product-slider__facts {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+
+.collection-product-slider__facts p {
+  margin: 0;
+  line-height: 1.5;
 }
 
 .collection-product-slider__link {
@@ -238,7 +300,7 @@ watch(
 
 .collection-product-slider__control {
   position: absolute;
-  top: 50%;
+  top: clamp(215px, 29vw, 325px);
   z-index: 2;
   display: grid;
   width: 48px;
@@ -291,6 +353,7 @@ watch(
   }
 
   .collection-product-slider__image {
+    height: auto;
     min-height: 0;
     aspect-ratio: 1 / 1;
   }
