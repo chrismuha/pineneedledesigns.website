@@ -78,16 +78,8 @@
       </div>
     </section>
 
-    <section class="home-product-collections" aria-labelledby="shop-real-collections-title">
+    <section class="home-product-collections" aria-label="Featured product collections">
       <div class="container">
-        <div class="section-head home-product-collections__heading">
-          <div>
-            <p class="eyebrow">Shop the actual pieces</p>
-            <h2 id="shop-real-collections-title">Featured Products</h2>
-          </div>
-          <p>Use the arrows to browse. Select any piece to see its full details.</p>
-        </div>
-
         <CollectionProductSlider
           v-for="collection in featuredProductCollections"
           :key="collection.slug"
@@ -147,29 +139,9 @@ onMounted(() => {
   background: linear-gradient(180deg, var(--pale-blue-2), var(--page-bg));
 }
 
-.home-product-collections__heading {
-  align-items: end;
-  gap: 24px;
-}
-
-.home-product-collections__heading h2,
-.home-product-collections__heading p {
-  margin: 0;
-}
-
-.home-product-collections__heading > p {
-  max-width: 460px;
-  color: var(--text-secondary);
-}
-
 @media (max-width: 640px) {
   .home-product-collections {
     padding: 42px 0 56px;
-  }
-
-  .home-product-collections__heading {
-    align-items: flex-start;
-    flex-direction: column;
   }
 }
 </style>
