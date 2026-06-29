@@ -30,7 +30,7 @@
             class="media-slider__media"
             :src="item.src"
             :poster="item.poster"
-            :aria-label="item.alt || label"
+            :aria-label="label"
             controls
             muted
             playsinline
@@ -40,7 +40,6 @@
             v-else-if="shouldLoad(index)"
             class="media-slider__media"
             :src="item.src"
-            :alt="item.alt || ''"
             :loading="imageLoading(index)"
             :fetchpriority="imagePriority(index)"
             decoding="async"
@@ -143,7 +142,6 @@ const normalizedMedia = computed(() =>
         return {
           src: item,
           type: typeFor(item),
-          alt: '',
           poster: '',
         }
       }
@@ -151,7 +149,6 @@ const normalizedMedia = computed(() =>
       return {
         src: item.src,
         type: typeFor(item),
-        alt: item.alt || '',
         poster: item.poster || '',
       }
     })

@@ -4,7 +4,7 @@
 
     <div id="slider-container" :class="slideClass">
       <div v-for="src in currentSlide.images" :key="src" class="slide-item">
-        <img :src="src" alt="" loading="lazy" decoding="async" />
+        <img :src="src" loading="lazy" decoding="async" />
       </div>
     </div>
 
@@ -29,16 +29,28 @@ const showSlide = (index) => {
   currentIndex.value = (index + sliderSlides.length) % sliderSlides.length
 }
 
-const nextSlide = () => showSlide(currentIndex.value + 1)
-const prevSlide = () => showSlide(currentIndex.value - 1)
+const nextSlide = () => {
+  showSlide(currentIndex.value + 1)
+}
+
+const prevSlide = () => {
+  showSlide(currentIndex.value - 1)
+}
 
 let interval
+const startAutoSlide = () => {
+  interval = setInterval(nextSlide, 5000)
+}
+const resetInterval = () => {
+  clearInterval(interval)
+  startAutoSlide()
+}
 
 onMounted(() => {
-  interval = window.setInterval(nextSlide, 5000)
+  startAutoSlide()
 })
 
 onBeforeUnmount(() => {
-  window.clearInterval(interval)
+  clearInterval(interval)
 })
 </script>

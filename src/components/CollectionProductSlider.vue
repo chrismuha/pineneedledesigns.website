@@ -28,7 +28,6 @@
         <img
           class="collection-product-slider__image"
           :src="currentProduct.images[0]"
-          :alt="currentProduct.title"
           loading="lazy"
           decoding="async"
         />

@@ -17,7 +17,7 @@
           <div v-for="item in cartStore.items" :key="cartLineId(item)" class="cart-item">
             <div class="item-row">
               <div class="item-image-wrap">
-                <img :src="itemImage(item)" alt="Cart item" class="item-image" />
+                <img :src="itemImage(item)" class="item-image" />
               </div>
               <div class="item-main">
                 <h3>{{ item.title || item.name || 'Item' }}</h3>

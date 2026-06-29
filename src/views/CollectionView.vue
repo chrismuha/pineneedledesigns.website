@@ -249,12 +249,10 @@ const productMedia = (product) => [
   ...(product.images || []).map((src) => ({
     src,
     type: 'image',
-    alt: displayTitle(product),
   })),
   ...(product.videos || []).map((src, index) => ({
     src,
     type: 'video',
-    alt: displayTitle(product),
     poster: videoPosterFor(product, index),
   })),
 ]
