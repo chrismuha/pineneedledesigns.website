@@ -15,6 +15,7 @@ const collectionNavLinks = [
   { label: 'Pooch Smooches', path: '/collections/pooch-smooches', slug: 'pooch-smooches' },
   { label: 'Purses', path: '/collections/purses', slug: 'purses' },
   { label: 'Shirts', path: '/collections/shirts', slug: 'shirts' },
+  { label: 'Shoes', path: '/collections/shoes', slug: 'shoes' },
   { label: 'Shorts', path: '/collections/shorts', slug: 'shorts' },
   { label: 'Summer/Fall', path: '/collections/summer-fall', slug: 'summer-fall' },
   { label: 'Upcycled Collaboration', path: '/collections/upcycled-collaboration', slug: 'upcycled-collaboration' },
@@ -27,7 +28,7 @@ const collectionNavLinks = [
 export const collectionCategoryOrder = [
   {
     title: 'Clothing Collections',
-    slugs: ['jackets', 'shirts', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
+    slugs: ['jackets', 'shirts', 'shoes', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
   },
   {
     title: 'Jewelry & Accessories',
@@ -46,19 +47,7 @@ export const collectionPages = [
     path: '/collections/adirondack-bridal',
     cardImage: '/images/comingsoon/adkbridalcomingsoon.webp',
     description: 'Hand-cut denim, luxe trims, and mountain-ready detailing designed for the bold bride who loves heritage craft and unexpected glamour.',
-    products: [
-      /*
-      {
-        id: 1,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'adirondack-chic',
@@ -90,19 +79,7 @@ export const collectionPages = [
     path: '/collections/boot-bands',
     cardImage: '/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp',
     description: 'Studded detail for every boot.',
-    products: [
-      /*
-      {
-        id: 4,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'bracelets',
@@ -110,19 +87,7 @@ export const collectionPages = [
     path: '/collections/bracelets',
     cardImage: '/images/comingsoon/comingsoon1.webp',
     description: 'Handwoven metals for texture.',
-    products: [
-      /*
-      {
-        id: 6,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'chic-jewelry',
@@ -130,19 +95,7 @@ export const collectionPages = [
     path: '/collections/chic-jewelry',
     cardImage: '/images/comingsoon/comingsoon2.webp',
     description: 'Mixed metals with delicate stones.',
-    products: [
-      /*
-      {
-        id: 8,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'cuffs',
@@ -150,19 +103,7 @@ export const collectionPages = [
     path: '/collections/cuffs',
     cardImage: '/images/comingsoon/comingsoon001.webp',
     description: 'Bold silhouette with tactile finish.',
-    products: [
-      /*
-      {
-        id: 14,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'earrings',
@@ -194,19 +135,7 @@ export const collectionPages = [
     path: '/collections/hat-bands',
     cardImage: '/images/comingsoon/comingsoon002.webp',
     description: 'Feather accents with beaded thread.',
-    products: [
-      /*
-      {
-        id: 16,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'jackets',
@@ -262,19 +191,7 @@ export const collectionPages = [
     path: '/collections/jeans',
     cardImage: '/images/comingsoon/comingsoon003.webp',
     description: 'Sculpted fit with vintage wash.',
-    products: [
-      /*
-      {
-        id: 18,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'limited-time',
@@ -291,19 +208,7 @@ export const collectionPages = [
     path: '/collections/necklaces',
     cardImage: '/images/comingsoon/comingsoon004.webp',
     description: 'Mix of chains and charms.',
-    products: [
-      /*
-      {
-        id: 20,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'pooch-smooches',
@@ -311,19 +216,7 @@ export const collectionPages = [
     path: '/collections/pooch-smooches',
     cardImage: '/images/poochsmooches/Polaris-and-Luna_1.webp',
     description: 'Bandanas, collars, and keepsakes made to celebrate the snuggly pals who are already obsessed with hugs.',
-    products: [
-      /*
-      {
-        id: 22,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'shirts',
@@ -551,19 +444,15 @@ export const collectionPages = [
     path: '/collections/purses',
     cardImage: '/images/comingsoon/comingsoon005.webp',
     description: 'Structured shape with mixed leather.',
-    products: [
-      /*
-      {
-        id: 25,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
+  },
+  {
+    slug: 'shoes',
+    title: 'Shoes',
+    path: '/collections/shoes',
+    cardImage: '/images/comingsoon/comingsoon016.webp',
+    description: 'One-of-a-kind footwear with handcrafted Pine Needle Designs style.',
+    products: [],
   },
   {
     slug: 'shorts',
@@ -571,19 +460,7 @@ export const collectionPages = [
     path: '/collections/shorts',
     cardImage: '/images/comingsoon/comingsoon006.webp',
     description: 'A-line shape with luxe hardware.',
-    products: [
-      /*
-      {
-        id: 29,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'denim-and-lace',
@@ -924,19 +801,7 @@ export const collectionPages = [
     path: '/collections/upcycled-denim',
     cardImage: '/images/comingsoon/comingsoon007.webp',
     description: 'One-of-a-kind patchwork silhouette.',
-    products: [
-      /*
-      {
-        id: 31,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'summer-fall',
@@ -944,30 +809,7 @@ export const collectionPages = [
     path: '/collections/summer-fall',
     cardImage: '/images/comingsoon/comingsoon008.webp',
     description: 'Warm-weather statement pieces and early-order seasonal favorites.',
-    products: [
-      {
-        id: 32,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon009.webp',
-      },
-      {
-        id: 33,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon010.webp',
-      },
-    ],
+    products: [],
   },
   {
     slug: 'vests',
@@ -975,19 +817,7 @@ export const collectionPages = [
     path: '/collections/vests',
     cardImage: '/images/comingsoon/comingsoon011.webp',
     description: 'Edgy layers with artisanal trim.',
-    products: [
-      /*
-      {
-        id: 33,
-        title: 'Placeholder Item',
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'placeholder',
-        imagePlaceholders: ['placeholder'],
-      },
-      */
-    ],
+    products: [],
   },
   {
     slug: 'winter-spring',
@@ -995,30 +825,7 @@ export const collectionPages = [
     path: '/collections/winter-spring',
     cardImage: '/images/comingsoon/comingsoon012.webp',
     description: "Cold-weather favorites and spring pieces we can't stop thinking about.",
-    products: [
-      {
-        id: 34,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon013.webp',
-      },
-      {
-        id: 35,
-        title: 'Placeholder Item',
-        placeholder: true,
-        price: 'TBD',
-        meta: ['Price: TBD', 'Size: TBD'],
-        description: 'Placeholder description.',
-        imageWrapper: 'image-frame',
-        imageCount: 1,
-        placeholderImage: '/images/comingsoon/comingsoon014.webp',
-      },
-    ],
+    products: [],
   },
 ]
 
@@ -1078,35 +885,13 @@ const allHomeSections = [
     id: 'adirondack-bridal',
     title: 'Adirondack Bridal Collection',
     path: '/collections/adirondack-bridal',
-    cards: [
-      /*
-      {
-        pill: 'Placeholder Item Card',
-        title: 'Placeholder Item',
-        meta: 'Price: TBD • Size: TBD',
-        price: 'TBD',
-        description: 'Brief Description',
-        image: '/images/comingsoon/comingsoon025.webp',
-      },
-      */
-    ],
+    cards: [],
   },
   {
     id: 'pooch-smooches',
     title: 'The Pooch Smooches Collection',
     path: '/collections/pooch-smooches',
-    cards: [
-      /*
-      {
-        pill: 'Placeholder Item Card',
-        title: 'Placeholder Item',
-        meta: 'Price: TBD • Size: TBD',
-        price: 'TBD',
-        description: 'Brief Description',
-        image: '/images/poochsmooches/Polaris-and-Luna_1.webp',
-      },
-      */
-    ],
+    cards: [],
   },
 ]
 
