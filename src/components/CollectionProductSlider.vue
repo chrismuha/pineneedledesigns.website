@@ -264,8 +264,8 @@ watch(
   align-items: flex-start;
   justify-content: center;
   gap: 12px;
+  margin-top: clamp(12px, 2vw, 18px);
   padding: clamp(26px, 5vw, 54px);
-  border-top: 1px solid var(--border);
   background: var(--pale-blue-2);
   overflow-wrap: anywhere;
 }
