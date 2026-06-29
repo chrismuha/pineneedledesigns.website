@@ -70,17 +70,25 @@
           loading="lazy"
           decoding="async"
         />
-        <div class="collection-product-slider__details">
-          <p class="collection-product-slider__position">{{ currentIndex + 1 }} of {{ products.length }}</p>
-          <h4>{{ currentProduct.title }}</h4>
-          <div class="collection-product-slider__facts">
-            <p v-for="(item, index) in productMeta(currentProduct)" :key="`meta-${index}`">{{ item }}</p>
-            <p v-if="currentProduct.maker"><strong>Maker:</strong> {{ currentProduct.maker }}</p>
-            <p v-for="option in currentProduct.options || []" :key="option.name">
-              <strong>{{ option.name }}:</strong> {{ option.values.join(', ') }}
-            </p>
+        <div class="collection-product-slider__details-stack">
+          <div
+            v-for="(product, productIndex) in products"
+            :key="`details-${product.id}`"
+            class="collection-product-slider__details"
+            :class="{ 'collection-product-slider__details--active': productIndex === currentIndex }"
+            :aria-hidden="productIndex !== currentIndex"
+          >
+            <p class="collection-product-slider__position">{{ productIndex + 1 }} of {{ products.length }}</p>
+            <h4>{{ product.title }}</h4>
+            <div class="collection-product-slider__facts">
+              <p v-for="(item, index) in productMeta(product)" :key="`meta-${index}`">{{ item }}</p>
+              <p v-if="product.maker"><strong>Maker:</strong> {{ product.maker }}</p>
+              <p v-for="option in product.options || []" :key="option.name">
+                <strong>{{ option.name }}:</strong> {{ option.values.join(', ') }}
+              </p>
+            </div>
+            <span class="collection-product-slider__link">View this item <span aria-hidden="true">→</span></span>
           </div>
-          <span class="collection-product-slider__link">View this item <span aria-hidden="true">→</span></span>
         </div>
       </router-link>
 
@@ -367,16 +375,25 @@ watch(
 }
 
 .collection-product-slider__details {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 12px;
-  margin-top: clamp(12px, 2vw, 18px);
-  min-height: 430px;
   padding: clamp(26px, 5vw, 54px);
-  background: var(--pale-blue-2);
   overflow-wrap: anywhere;
+  visibility: hidden;
+}
+
+.collection-product-slider__details-stack {
+  display: grid;
+  margin-top: clamp(12px, 2vw, 18px);
+  background: var(--pale-blue-2);
+}
+
+.collection-product-slider__details--active {
+  visibility: visible;
 }
 
 .collection-product-slider__details h4 {
@@ -484,7 +501,6 @@ watch(
   }
 
   .collection-product-slider__details {
-    min-height: 430px;
     padding: 24px 26px 30px;
   }
 
