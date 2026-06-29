@@ -240,12 +240,17 @@ watch(
   color: var(--white);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.collection-product-slider__quick-controls button:hover {
-  background: var(--accent);
-  transform: translateY(-2px);
+.collection-product-slider__quick-controls button:hover,
+.collection-product-slider__quick-controls button:active,
+.collection-product-slider__quick-controls button:focus {
+  background: var(--accent-2);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
+  transform: none;
 }
 
 .collection-product-slider__quick-controls button:focus-visible {
