@@ -7,11 +7,13 @@
     @keydown.right.prevent="next"
   >
     <div class="collection-product-slider__header">
-      <div>
-        <p class="collection-product-slider__count">{{ products.length }} {{ products.length === 1 ? 'piece' : 'pieces' }}</p>
+      <div class="collection-product-slider__intro">
         <h3>{{ collection.title }}</h3>
+        <p class="collection-product-slider__description">{{ collection.description }}</p>
       </div>
-      <router-link class="collection-product-slider__all" :to="collection.path">View full collection</router-link>
+      <router-link class="collection-product-slider__all" :to="collection.path">
+        View Full Collection <span aria-hidden="true">→</span>
+      </router-link>
     </div>
 
     <div class="collection-product-slider__stage" aria-live="polite">
@@ -135,7 +137,6 @@ watch(
   line-height: 1.1;
 }
 
-.collection-product-slider__count,
 .collection-product-slider__position {
   color: var(--text-secondary);
   font-size: 9pt;
@@ -144,11 +145,43 @@ watch(
   text-transform: uppercase;
 }
 
+.collection-product-slider__intro {
+  display: grid;
+  max-width: 720px;
+  gap: 8px;
+}
+
+.collection-product-slider__description {
+  color: var(--text-secondary);
+  font-size: clamp(11pt, 2vw, 13pt);
+  line-height: 1.55;
+}
+
 .collection-product-slider__all {
-  color: var(--accent-2);
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  background: var(--accent-2);
+  color: var(--white);
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.collection-product-slider__all:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.collection-product-slider__all:focus-visible {
+  outline: 3px solid var(--brand-red-45);
+  outline-offset: 3px;
 }
 
 .collection-product-slider__stage {
