@@ -11,7 +11,17 @@
       <h3>{{ presentation.heading }}</h3>
     </div>
 
-    <p class="collection-product-slider__description">{{ currentProduct.description }}</p>
+    <div class="collection-product-slider__descriptions" aria-live="polite">
+      <p
+        v-for="(product, index) in products"
+        :key="`description-${product.id}`"
+        class="collection-product-slider__description"
+        :class="{ 'collection-product-slider__description--active': index === currentIndex }"
+        :aria-hidden="index !== currentIndex"
+      >
+        {{ product.description }}
+      </p>
+    </div>
 
     <div
       class="collection-product-slider__stage"
@@ -211,11 +221,21 @@ watch(
 }
 
 .collection-product-slider__description {
+  grid-area: 1 / 1;
+  visibility: hidden;
   max-width: 900px;
   margin: 0 0 18px;
   color: var(--text-secondary);
   font-size: clamp(11pt, 2vw, 13pt);
   line-height: 1.55;
+}
+
+.collection-product-slider__descriptions {
+  display: grid;
+}
+
+.collection-product-slider__description--active {
+  visibility: visible;
 }
 
 .collection-product-slider__footer {
@@ -286,6 +306,7 @@ watch(
   justify-content: center;
   gap: 12px;
   margin-top: clamp(12px, 2vw, 18px);
+  min-height: 430px;
   padding: clamp(26px, 5vw, 54px);
   background: var(--pale-blue-2);
   overflow-wrap: anywhere;
@@ -379,6 +400,7 @@ watch(
   }
 
   .collection-product-slider__details {
+    min-height: 430px;
     padding: 24px 26px 30px;
   }
 
