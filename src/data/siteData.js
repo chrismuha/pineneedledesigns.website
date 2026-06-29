@@ -450,9 +450,23 @@ export const collectionPages = [
     slug: 'shoes',
     title: 'Shoes',
     path: '/collections/shoes',
-    cardImage: '/images/comingsoon/comingsoon016.webp',
+    cardImage: '/images/shoes/blush-satin-heels.webp',
     description: 'One-of-a-kind footwear with handcrafted Pine Needle Designs style.',
-    products: [],
+    products: [
+      {
+        id: 32,
+        title: 'Betsey Johnson Blush Satin Heels',
+        filters: ['Shoes'],
+        shoeTypes: ['Satin Heels'],
+        price: 129,
+        meta: ['Price: SOLD ($129)', 'Size: 9.5', 'Color: Blush Satin', 'Ankle strap and toe band'],
+        description: 'Stiletto block heel for a dressy look. Back zipper closure for easy wear.',
+        images: [
+          '/images/shoes/blush-satin-heels.webp',
+        ],
+        imageWrapper: 'image-frame',
+      },
+    ],
   },
   {
     slug: 'shorts',
