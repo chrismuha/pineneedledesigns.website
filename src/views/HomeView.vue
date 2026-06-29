@@ -98,12 +98,15 @@
       </div>
     </section>
 
+    <ImageSlider />
+
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 import CollectionProductSlider from '../components/CollectionProductSlider.vue'
+import ImageSlider from '../components/ImageSlider.vue'
 import { collectionPages, homeSections, otherCollections } from '../data/siteData'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 

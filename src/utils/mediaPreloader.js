@@ -45,8 +45,3 @@ export const firstVisibleProductMedia = (product) => [
   product.images?.[0],
   product.videoPosters?.[0],
 ].filter(Boolean)
-
-export const visibleCollectionMedia = (collection) => [
-  collection.cardImage,
-  ...collection.products.flatMap(firstVisibleProductMedia),
-]
