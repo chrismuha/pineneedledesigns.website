@@ -204,7 +204,7 @@ watch(
 
 .collection-product-slider__footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 18px;
 }
 
@@ -340,11 +340,11 @@ watch(
 
 @media (max-width: 720px) {
   .collection-product-slider__footer {
-    justify-content: stretch;
+    justify-content: center;
   }
 
   .collection-product-slider__all {
-    width: 100%;
+    width: auto;
   }
 
   .collection-product-slider__product {

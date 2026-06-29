@@ -1,6 +1,6 @@
 <template>
   <section class="image-slider" aria-label="Featured images">
-    <button class="slider-btn prev-btn" type="button" aria-label="Previous featured image" @click="prevSlide">←</button>
+    <button class="slider-btn prev-btn" type="button" aria-label="Previous featured image" @click="handlePrevSlide">←</button>
 
     <div id="slider-container" :class="slideClass">
       <div v-for="src in currentSlide.images" :key="src" class="slide-item">
@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <button class="slider-btn next-btn" type="button" aria-label="Next featured image" @click="nextSlide">→</button>
+    <button class="slider-btn next-btn" type="button" aria-label="Next featured image" @click="handleNextSlide">→</button>
   </section>
 </template>
 
@@ -44,6 +44,16 @@ const startAutoSlide = () => {
 const resetInterval = () => {
   clearInterval(interval)
   startAutoSlide()
+}
+
+const handleNextSlide = () => {
+  nextSlide()
+  resetInterval()
+}
+
+const handlePrevSlide = () => {
+  prevSlide()
+  resetInterval()
 }
 
 onMounted(() => {

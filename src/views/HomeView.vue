@@ -88,13 +88,11 @@
       </div>
     </section>
 
-    <section>
-      <div class="container about">
-        <div class="card">
-          <h2>One-of-a-kind designs</h2>
-          <p>From purses and bracelets to denim jackets with detachable trains, every piece is designed to make a statement. The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the USA and made for all sizes.</p>
-          <router-link class="btn" to="/about">About Us</router-link>
-        </div>
+    <section class="one-of-a-kind">
+      <div class="container one-of-a-kind__content">
+        <h2>One-of-a-kind designs</h2>
+        <p>From purses and bracelets to denim jackets with detachable trains, every piece is designed to make a statement. The vibe blends a little boho, a little country, and a whole lot of chic—crafted in the USA and made for all sizes.</p>
+        <router-link class="btn one-of-a-kind__button" to="/about">About Us</router-link>
       </div>
     </section>
 
@@ -140,6 +138,44 @@ onMounted(() => {
 .home-product-collections {
   padding: 60px 0 80px;
   background: linear-gradient(180deg, var(--pale-blue-2), var(--page-bg));
+}
+
+.one-of-a-kind {
+  padding: clamp(64px, 9vw, 112px) 0;
+  background: linear-gradient(120deg, var(--pale-blue), var(--pale-blue-2));
+}
+
+.one-of-a-kind__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.one-of-a-kind__content h2 {
+  margin: 0;
+  font-size: clamp(28pt, 5vw, 46pt);
+  line-height: 1.08;
+}
+
+.one-of-a-kind__content p {
+  max-width: 900px;
+  margin: 20px auto 28px;
+  font-size: clamp(12pt, 2vw, 15pt);
+  line-height: 1.7;
+}
+
+.one-of-a-kind__button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-3));
+  border-color: var(--accent-3);
+  box-shadow: 0 12px 25px var(--accent-3-50);
+  color: var(--white);
+}
+
+.one-of-a-kind__button:hover {
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px var(--accent-3-55);
 }
 
 @media (max-width: 640px) {
