@@ -46,7 +46,12 @@
     </div>
 
     <div v-if="filteredProducts.length" class="product-grid">
-      <article v-for="(product, productIndex) in filteredProducts" :key="product.title" class="product-card">
+      <article
+        v-for="(product, productIndex) in filteredProducts"
+        :id="`product-${product.id}`"
+        :key="product.title"
+        class="product-card"
+      >
         <header>
           <h3>{{ displayTitle(product) }}</h3>
           <div class="product-meta">

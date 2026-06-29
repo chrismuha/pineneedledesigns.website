@@ -78,149 +78,21 @@
       </div>
     </section>
 
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-column">
-          <article class="hero-card" aria-label="Hero — Denim & Lace">
-            <div class="copy">
-              <div class="eyebrow">New Drop</div>
-              <h1>Denim & Lace yes please ✨</h1>
-              <p>Limited-run upcycled pieces crafted to stand out.</p>
-              <div class="cta">
-                <router-link class="btn btn-accent" to="/collections/denim-and-lace">Shop Now</router-link>
-              </div>
-              <div class="hero-placeholder-stack">
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeature" />
-                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.denimFeatureAlt" />
-                </div>
-                <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCard" />
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimFirstCardAlt" />
-                </div>
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCard" />
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.denimSecondCardAlt" />
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="hero-card" aria-label="Winter/Spring Picks">
-            <div class="copy">
-              <div class="eyebrow">Curated</div>
-              <h2 style="margin:.2rem 0 1rem">Winter/Spring Favorites</h2>
-              <p>Shop the pieces we can't stop thinking about this season.</p>
-              <div class="cta">
-                <router-link class="btn btn-accent" to="/collections/winter-spring">Take me there</router-link>
-              </div>
-              <div class="hero-images hero-images--with-caption hero-images--boots">
-                <div class="hero-image-row">
-                  <img loading="lazy" decoding="async" class="hero-2" src="/images/adirondack-chic/seasonal-adirondack-chic/whitechristmasboots.webp" />
-                  <img loading="lazy" decoding="async" class="hero-2" src="/images/comingsoon/comingsoon015.webp" />
-                </div>
-                <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="limited-run-strip" aria-label="Limited Time Collection">
-            <div class="limited-run-copy">
-              <div class="eyebrow">Limited Run</div>
-              <h2>Limited-Time Collection</h2>
-              <p>Small-batch pieces landing here soon.</p>
-            </div>
-            <div class="limited-run-slider" aria-label="Limited-time image previews">
-              <div class="limited-run-main">
-                <div class="limited-run-frame" aria-live="polite">
-                  <button class="limited-run-control limited-run-control--previous" type="button" aria-label="Previous limited-time image" @click="previousLimitedTimeSlide">
-                    <i class="bi bi-chevron-left" aria-hidden="true"></i>
-                  </button>
-                  <img class="limited-run-image" :src="currentLimitedTimeSlide.src" :alt="currentLimitedTimeSlide.label" loading="lazy" decoding="async" />
-                  <button class="limited-run-control limited-run-control--next" type="button" aria-label="Next limited-time image" @click="nextLimitedTimeSlide">
-                    <i class="bi bi-chevron-right" aria-hidden="true"></i>
-                  </button>
-                </div>
-                <router-link class="btn btn-accent limited-run-preview" to="/collections/limited-time">Preview</router-link>
-                <div class="limited-run-dots" role="tablist" aria-label="Limited-time image navigation">
-                  <button
-                    v-for="(slide, slideIndex) in limitedTimeSlides"
-                    :key="slide.label"
-                    type="button"
-                    :class="['limited-run-dot', { 'limited-run-dot--active': slideIndex === limitedTimeSlideIndex }]"
-                    :aria-label="`Show limited-time image ${slideIndex + 1}`"
-                    :aria-selected="slideIndex === limitedTimeSlideIndex"
-                    role="tab"
-                    @click="setLimitedTimeSlide(slideIndex)"
-                  ></button>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="hero-column">
-          <article class="hero-card" aria-label="New Arrivals">
-            <div class="copy">
-              <div class="eyebrow">Fresh Picks</div>
-              <h2 style="margin:.2rem 0 1rem">New Arrivals</h2>
-              <p>Must-haves just in. Find your next statement piece.</p>
-              <div class="cta">
-                <a class="btn btn-accent" href="https://pineneedledesigns.store">Take me there</a>
-              </div>
-              <div class="hero-placeholder-stack">
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFeature" />
-                  <img loading="eager" decoding="async" class="hero-placeholder-inline hero-placeholder-inline--tall placeholder-image" :src="homePlaceholderImages.newArrivalsFeatureAlt" />
-                </div>
-                <p class="hero-hurry hero-hurry--inline hero-hurry--left">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCard" />
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsFirstCardAlt" />
-                </div>
-                <div class="hero-image-pair">
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCard" />
-                  <img loading="eager" decoding="async" class="hero-card__placeholder placeholder-image" :src="homePlaceholderImages.newArrivalsSecondCardAlt" />
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="hero-card" aria-label="Summer/Fall Picks">
-            <div class="copy">
-              <div class="eyebrow">Curated</div>
-              <h2 style="margin:.2rem 0 1rem">Summer/Fall Favorites</h2>
-              <p>Winter may be here now but order ahead and get discounts when you purchase ahead for the next seasons.</p>
-              <div class="cta">
-                <router-link class="btn btn-accent" to="/collections/summer-fall">Take me there</router-link>
-              </div>
-              <div class="hero-images hero-images--with-caption">
-                <img loading="lazy" decoding="async" class="hero-3" src="/images/comingsoon/comingsoon016.webp" />
-                <p class="hero-hurry hero-hurry--inline">LAST CHANCE, ONCE THEY SELL OUT, THEY ARE GONE FOREVER!</p>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container split shop-split">
-        <div class="tile">
-          <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.bottomsTile" />
-          <div class="copy">
-            <h3>Explore Bottoms</h3>
-            <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
+    <section class="home-product-collections" aria-labelledby="shop-real-collections-title">
+      <div class="container">
+        <div class="section-head home-product-collections__heading">
+          <div>
+            <p class="eyebrow">Shop the actual pieces</p>
+            <h2 id="shop-real-collections-title">Featured Products</h2>
           </div>
+          <p>Use the arrows to browse. Select any piece to see its full details.</p>
         </div>
-        <div class="tile">
-          <img loading="lazy" decoding="async" class="placeholder-image" :src="homePlaceholderImages.topsTile" />
-          <div class="copy">
-            <h3>Explore Tops</h3>
-            <a class="btn btn-accent" href="https://pineneedledesigns.store">Shop now</a>
-          </div>
-        </div>
+
+        <CollectionProductSlider
+          v-for="collection in featuredProductCollections"
+          :key="collection.slug"
+          :collection="collection"
+        />
       </div>
     </section>
 
@@ -234,50 +106,25 @@
       </div>
     </section>
 
-    <ImageSlider />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import ImageSlider from '../components/ImageSlider.vue'
-import { homeSections, otherCollections } from '../data/siteData'
+import { onMounted } from 'vue'
+import CollectionProductSlider from '../components/CollectionProductSlider.vue'
+import { collectionPages, homeSections, otherCollections } from '../data/siteData'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
-import comingSoon017 from '../../images/comingsoon/comingsoon017.webp'
-import comingSoon019 from '../../images/comingsoon/comingsoon019.webp'
-import comingSoon023 from '../../images/comingsoon/comingsoon023.webp'
-import comingSoon024 from '../../images/comingsoon/comingsoon024.webp'
-import comingSoon028 from '../../images/comingsoon/comingsoon028.webp'
 
-const limitedTimeSlides = [
-  { label: 'Limited-time coming soon image 1', src: comingSoon017 },
-  { label: 'Limited-time coming soon image 2', src: comingSoon028 },
-  { label: 'Limited-time coming soon image 3', src: comingSoon019 },
+const featuredCollectionSlugs = [
+  'shirts',
+  'jackets',
+  'upcycled-logo',
+  'upcycled-collaboration',
+  'denim-and-lace',
 ]
-const limitedTimeSlideIndex = ref(0)
-const currentLimitedTimeSlide = computed(() => limitedTimeSlides[limitedTimeSlideIndex.value])
-const setLimitedTimeSlide = (index) => {
-  limitedTimeSlideIndex.value = (index + limitedTimeSlides.length) % limitedTimeSlides.length
-}
-const previousLimitedTimeSlide = () => setLimitedTimeSlide(limitedTimeSlideIndex.value - 1)
-const nextLimitedTimeSlide = () => setLimitedTimeSlide(limitedTimeSlideIndex.value + 1)
-
-const homePlaceholderImages = {
-  denimFeature: '/images/whimsical-fairy/crownb.webp',
-  denimFeatureAlt: '/images/denimlace/brandybracelet/brandybracelet1.webp',
-  denimFirstCard: '/images/denimlace/adelinebracelet/adeline-bracelet-1.webp',
-  denimFirstCardAlt: '/images/jackets/america-she-beautiful/jacket1a.webp',
-  denimSecondCard: '/images/jackets/carmen/carmen.webp',
-  denimSecondCardAlt: '/images/ear-rings/ear-rings-1a.webp',
-  newArrivalsFeature: '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style2.webp',
-  newArrivalsFeatureAlt: '/images/upcycled-logo/upcycled-lv-canvas-pack/upcyled-canvas-pack2.webp',
-  newArrivalsFirstCard: '/images/upcycled-logo/lv-cowhide-western-bag/cowhide-bag2.webp',
-  newArrivalsFirstCardAlt: '/images/upcycled-collaboration/pink-tooled-leather-speedy-bag/pink-tooled-leather-speedy-bag1.webp',
-  newArrivalsSecondCard: '/images/upcycled-logo/brown-tooled-leather-backpack/brown-tooled-leather-backpack2.webp',
-  newArrivalsSecondCardAlt: '/images/upcycled-logo/cowhide-shoulder-bag/cowhide-shoulder-bag2.webp',
-  bottomsTile: comingSoon023,
-  topsTile: comingSoon024,
-}
+const featuredProductCollections = featuredCollectionSlugs
+  .map((slug) => collectionPages.find((collection) => collection.slug === slug))
+  .filter((collection) => collection?.products.some((product) => !product.placeholder && product.images?.length))
 
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
@@ -293,3 +140,36 @@ onMounted(() => {
   preloadImagesOnIdle(visibleImages.slice(4), 3)
 })
 </script>
+
+<style scoped>
+.home-product-collections {
+  padding: 60px 0 80px;
+  background: linear-gradient(180deg, var(--pale-blue-2), var(--page-bg));
+}
+
+.home-product-collections__heading {
+  align-items: end;
+  gap: 24px;
+}
+
+.home-product-collections__heading h2,
+.home-product-collections__heading p {
+  margin: 0;
+}
+
+.home-product-collections__heading > p {
+  max-width: 460px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .home-product-collections {
+    padding: 42px 0 56px;
+  }
+
+  .home-product-collections__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>

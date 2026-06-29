@@ -1,0 +1,272 @@
+<template>
+  <article
+    class="collection-product-slider"
+    :aria-label="`${collection.title} product slider`"
+    tabindex="0"
+    @keydown.left.prevent="previous"
+    @keydown.right.prevent="next"
+  >
+    <div class="collection-product-slider__header">
+      <div>
+        <p class="collection-product-slider__count">{{ products.length }} {{ products.length === 1 ? 'piece' : 'pieces' }}</p>
+        <h3>{{ collection.title }}</h3>
+      </div>
+      <router-link class="collection-product-slider__all" :to="collection.path">View full collection</router-link>
+    </div>
+
+    <div class="collection-product-slider__stage" aria-live="polite">
+      <button
+        v-if="products.length > 1"
+        class="collection-product-slider__control collection-product-slider__control--previous"
+        type="button"
+        :aria-label="`Previous ${collection.title} product`"
+        @click="previous"
+      >
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+
+      <router-link class="collection-product-slider__product" :to="productPath(currentProduct)">
+        <img
+          class="collection-product-slider__image"
+          :src="currentProduct.images[0]"
+          :alt="currentProduct.title"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="collection-product-slider__details">
+          <p class="collection-product-slider__position">{{ currentIndex + 1 }} of {{ products.length }}</p>
+          <h4>{{ currentProduct.title }}</h4>
+          <p class="collection-product-slider__price">{{ productPrice(currentProduct) }}</p>
+          <span class="collection-product-slider__link">View this item <span aria-hidden="true">→</span></span>
+        </div>
+      </router-link>
+
+      <button
+        v-if="products.length > 1"
+        class="collection-product-slider__control collection-product-slider__control--next"
+        type="button"
+        :aria-label="`Next ${collection.title} product`"
+        @click="next"
+      >
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div v-if="products.length > 1" class="collection-product-slider__dots" role="tablist" :aria-label="`${collection.title} product navigation`">
+      <button
+        v-for="(product, index) in products"
+        :key="product.id"
+        class="collection-product-slider__dot"
+        :class="{ 'collection-product-slider__dot--active': index === currentIndex }"
+        type="button"
+        role="tab"
+        :aria-selected="index === currentIndex"
+        :aria-label="`Show ${product.title}`"
+        @click="currentIndex = index"
+      ></button>
+    </div>
+  </article>
+</template>
+
+<script setup>
+import { computed, ref, watch } from 'vue'
+
+const props = defineProps({
+  collection: {
+    type: Object,
+    required: true,
+  },
+})
+
+const currentIndex = ref(0)
+const products = computed(() =>
+  props.collection.products.filter((product) => !product.placeholder && product.images?.length)
+)
+const currentProduct = computed(() => products.value[currentIndex.value])
+const goTo = (index) => {
+  currentIndex.value = (index + products.value.length) % products.value.length
+}
+const previous = () => goTo(currentIndex.value - 1)
+const next = () => goTo(currentIndex.value + 1)
+const productPath = (product) => `${props.collection.path}#product-${product.id}`
+const productPrice = (product) => {
+  const sold = product.meta?.some?.((item) => /^price:\s*sold/i.test(String(item).trim()))
+  if (sold) return 'Sold'
+  return Number.isFinite(product.price) ? `$${product.price.toFixed(2)}` : 'Price coming soon'
+}
+
+watch(
+  () => props.collection.slug,
+  () => { currentIndex.value = 0 }
+)
+</script>
+
+<style scoped>
+.collection-product-slider {
+  margin-top: 28px;
+  padding: clamp(18px, 3vw, 28px);
+  border-radius: 24px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.collection-product-slider:focus-visible {
+  outline: 3px solid var(--brand-red-45);
+  outline-offset: 4px;
+}
+
+.collection-product-slider__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.collection-product-slider__header h3,
+.collection-product-slider__header p,
+.collection-product-slider__details p,
+.collection-product-slider__details h4 {
+  margin: 0;
+}
+
+.collection-product-slider__header h3 {
+  font-size: clamp(20pt, 4vw, 30pt);
+  line-height: 1.1;
+}
+
+.collection-product-slider__count,
+.collection-product-slider__position {
+  color: var(--text-secondary);
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.collection-product-slider__all {
+  color: var(--accent-2);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.collection-product-slider__stage {
+  position: relative;
+}
+
+.collection-product-slider__product {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(220px, .8fr);
+  min-height: 430px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--pale-blue-2);
+  color: var(--ink);
+}
+
+.collection-product-slider__image {
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  object-fit: contain;
+  background: var(--white);
+}
+
+.collection-product-slider__details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  padding: clamp(26px, 5vw, 54px);
+}
+
+.collection-product-slider__details h4 {
+  font-size: clamp(18pt, 3.5vw, 28pt);
+  line-height: 1.15;
+}
+
+.collection-product-slider__price {
+  font-size: 16pt;
+  font-weight: 700;
+}
+
+.collection-product-slider__link {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: var(--accent-2);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.collection-product-slider__control {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white-95);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.collection-product-slider__control--previous { left: 14px; }
+.collection-product-slider__control--next { right: 14px; }
+
+.collection-product-slider__dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.collection-product-slider__dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--black-18);
+  cursor: pointer;
+}
+
+.collection-product-slider__dot--active { background: var(--accent-2); }
+
+@media (max-width: 720px) {
+  .collection-product-slider__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .collection-product-slider__product {
+    grid-template-columns: 1fr;
+  }
+
+  .collection-product-slider__image {
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  .collection-product-slider__details {
+    padding: 24px 26px 30px;
+  }
+
+  .collection-product-slider__control {
+    top: min(46vw, 210px);
+    width: 44px;
+    height: 44px;
+  }
+}
+</style>

@@ -117,6 +117,15 @@ const router = createRouter({
   routes,
 
   scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        top: 190,
+        left: 0,
+        behavior: 'smooth',
+      }
+    }
+
     if (to.meta.scrollTarget) {
       return {
         el: to.meta.scrollTarget,
