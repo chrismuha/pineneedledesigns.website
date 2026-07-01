@@ -51,6 +51,12 @@ const _isLocalApp = APP_BASE_URL.includes('localhost') || APP_BASE_URL.includes(
 const _paypalEnvironment = _isLocalApp ? paypal.Environment.Sandbox : paypal.Environment.Production;
 const _paypalClientId = _isLocalApp ? process.env.SANDBOX_PAYPAL_CLIENT_ID : process.env.PAYPAL_CLIENT_ID;
 const _paypalClientSecret = _isLocalApp ? process.env.SANDBOX_PAYPAL_CLIENT_SECRET : process.env.PAYPAL_CLIENT_SECRET;
+const PAYPAL_BOOKING_DEPOSITS_AVAILABLE = BOOKING_DEPOSITS_ENABLED
+  && Boolean(_paypalClientId && _paypalClientSecret);
+
+if (BOOKING_DEPOSITS_ENABLED && !PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
+  console.error('❌ PayPal booking deposits are enabled, but PayPal credentials are missing.');
+}
 
 // Email defaults and overrides
 const DEFAULT_PROD_EMAIL = 'onpinesandneedles@gmail.com';
@@ -203,12 +209,12 @@ app.use(session({
 }));
 
 app.get('/api/booking-deposit/config', (req, res) => {
-  res.json({ enabled: BOOKING_DEPOSITS_ENABLED });
+  res.json({ enabled: PAYPAL_BOOKING_DEPOSITS_AVAILABLE });
 });
 
 app.post('/api/booking-deposit', async (req, res) => {
   try {
-    if (!BOOKING_DEPOSITS_ENABLED) {
+    if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
       return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
     }
 
@@ -285,7 +291,7 @@ app.post('/api/booking-deposit', async (req, res) => {
 
 app.get('/api/booking-deposit/capture/:token', async (req, res) => {
   try {
-    if (!BOOKING_DEPOSITS_ENABLED) {
+    if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
       return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
     }
 

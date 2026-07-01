@@ -83,9 +83,11 @@ PayPal deposits for First Fittings and Bridal appointments are disabled by defau
 
 ```bash
 PAYPAL_BOOKING_DEPOSITS_ENABLED=true
+PAYPAL_CLIENT_ID=your_live_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_live_paypal_client_secret
 ```
 
-Any other value, or an omitted variable, keeps deposits disabled and sends customers directly to the corresponding Google Calendar booking page.
+Store all three values as GitHub Actions secrets for production deployment. An omitted flag or missing PayPal credential keeps deposits disabled and sends customers directly to the corresponding Google Calendar booking page.
 
 ## Order Email
 
