@@ -215,18 +215,20 @@ app.get('/api/booking-deposit/config', (req, res) => {
 app.post('/api/booking-deposit', async (req, res) => {
   try {
     if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
-      return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
+      return res.status(503).json({
+        error: 'PayPal checkout is temporarily unavailable. Please refresh the page or try again in a few minutes. You have not been charged.',
+      });
     }
 
     const { service, customer } = req.body || {};
     const booking = BOOKING_DEPOSITS[service];
 
     if (!booking) {
-      return res.status(400).json({ error: 'Unknown booking service.' });
+      return res.status(400).json({ error: 'We could not find that appointment type. Please return to the booking menu and choose an appointment again.' });
     }
 
     if (!customer?.name?.trim() || !customer?.email?.trim() || !customer?.phone?.trim()) {
-      return res.status(400).json({ error: 'Name, email, and phone are required.' });
+      return res.status(400).json({ error: 'Please enter your name, email address, and phone number before continuing to PayPal.' });
     }
 
     const order = await orders.createOrder({
@@ -285,14 +287,18 @@ app.post('/api/booking-deposit', async (req, res) => {
     res.json({ url: approvalLink.href });
   } catch (err) {
     console.error('Error creating booking deposit:', err);
-    res.status(500).json({ error: 'Unable to start the PayPal deposit. Please try again.' });
+    res.status(502).json({
+      error: 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.',
+    });
   }
 });
 
 app.get('/api/booking-deposit/capture/:token', async (req, res) => {
   try {
     if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
-      return res.status(403).json({ error: 'PayPal booking deposits are not enabled.' });
+      return res.status(503).json({
+        error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+      });
     }
 
     const { token } = req.params;
@@ -310,7 +316,9 @@ app.get('/api/booking-deposit/capture/:token', async (req, res) => {
       paid?.amount?.currency_code !== 'USD' ||
       paid?.amount?.value !== booking.amount
     ) {
-      return res.status(400).json({ error: 'The deposit payment could not be verified.' });
+      return res.status(400).json({
+        error: 'We could not confirm your deposit. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+      });
     }
 
     const deposit = bookingDepositMap.get(order.id);
@@ -339,7 +347,9 @@ app.get('/api/booking-deposit/capture/:token', async (req, res) => {
     });
   } catch (err) {
     console.error('Error capturing booking deposit:', err);
-    res.status(500).json({ error: 'Unable to verify the PayPal deposit.' });
+    res.status(502).json({
+      error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+    });
   }
 });
 // Cart API Routes

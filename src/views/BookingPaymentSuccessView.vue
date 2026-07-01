@@ -7,7 +7,7 @@
       </template>
 
       <template v-else-if="error">
-        <h1>We couldn’t verify the deposit</h1>
+        <h1>We couldn’t confirm your deposit</h1>
         <p class="error" role="alert">{{ error }}</p>
         <router-link to="/">Return home</router-link>
       </template>
@@ -33,19 +33,21 @@ const result = reactive({ amount: '', bookingUrl: '' })
 onMounted(async () => {
   const token = new URLSearchParams(window.location.search).get('token')
   if (!token) {
-    error.value = 'The PayPal confirmation token is missing.'
+    error.value = 'This confirmation link is incomplete. If you paid through PayPal, please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.'
     loading.value = false
     return
   }
 
   try {
     const response = await fetch(`/api/booking-deposit/capture/${encodeURIComponent(token)}`)
-    const data = await response.json()
-    if (!response.ok || !data.success) throw new Error(data.error || 'Payment verification failed.')
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.')
+    }
     result.amount = data.amount
     result.bookingUrl = data.bookingUrl
   } catch (err) {
-    error.value = err.message || 'Payment verification failed. Please contact Pine Needle Designs.'
+    error.value = err.message || 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.'
   } finally {
     loading.value = false
   }

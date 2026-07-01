@@ -22,7 +22,7 @@
         </label>
 
         <p v-if="cancelled" class="booking-notice">PayPal checkout was cancelled. No deposit was charged.</p>
-        <p v-if="error" class="booking-error" role="alert">{{ error }}</p>
+        <p v-if="error" class="booking-error" role="alert" aria-live="assertive">{{ error }}</p>
 
         <button type="submit" :disabled="loading">
           {{ loading ? 'Opening PayPal…' : `Pay $${details.amount} with PayPal` }}
@@ -83,12 +83,14 @@ const startPayment = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ service: props.service, customer }),
     })
-    const data = await response.json()
+    const data = await response.json().catch(() => ({}))
 
-    if (!response.ok || !data.url) throw new Error(data.error || 'Unable to open PayPal.')
+    if (!response.ok || !data.url) {
+      throw new Error(data.error || 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.')
+    }
     window.location.assign(data.url)
   } catch (err) {
-    error.value = err.message || 'Unable to open PayPal. Please try again.'
+    error.value = err.message || 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.'
     loading.value = false
   }
 }
