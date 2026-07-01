@@ -193,8 +193,32 @@ header {
     flex-wrap: wrap;
 }
 
-.brand-logos a {
+.brand-home-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+    touch-action: manipulation;
+}
+
+.brand-name,
+.designer-name {
     display: block;
+    line-height: 1.05;
+}
+
+.brand-name {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(18pt, 3vw, 24pt);
+    font-weight: 700;
+}
+
+.designer-name {
+    font-size: clamp(11pt, 1.8vw, 14pt);
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
 }
 
 .brand-logos img {
@@ -211,6 +235,10 @@ header {
 
     .brand-logos img {
         width: min(180px, 52vw);
+    }
+
+    .brand-home-link {
+        gap: 5px;
     }
 }
 
