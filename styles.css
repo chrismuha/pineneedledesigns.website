@@ -1,21 +1,12 @@
-/* Global */
+/* Shared design tokens */
 :root {
-    color-scheme: only light;
-    --bg: #ffffff;
     --white: #ffffff;
     --white-smoke: #f5f5f5;
     --black: #000000;
     --transparent: #00000000;
-    --page-bg: #d3d3d3;
-    --muted: #f6f6f6;
-    --ink: #161616;
-    --ink-2: #3b3b3b;
     --accent: #0f6c78;
     --accent-2: #03535d;
     --accent-3: #0b5360;
-    --border: #e8e8e8;
-    --line: #dddddd;
-    --soft-gray: #eeeeee;
     --success: #0a7c4a;
     --warning: #b86b00;
     --error: #a0002b;
@@ -30,8 +21,6 @@
     --disabled-bg: #f0f0f0;
     --disabled-ink: #8f8f8f;
     --button-disabled: #c0c6cf;
-    --pale-blue: #cfe9ee;
-    --pale-blue-2: #eef8fa;
     --pink: #ffc0cb;
     --slate-gray: #708090;
     --cart-muted: #666666;
@@ -89,7 +78,6 @@
     --accent-3-50: #0b536080;
     --accent-3-55: #0b53608c;
     --brand-green: #48a740;
-    --text-secondary: #666666;
     --error-red-bright: #ed2024;
     --limited-run-placeholder-start: #e7e7e7;
     --limited-run-placeholder-end: #b8b8b8;
@@ -101,6 +89,57 @@
     --divider-thickness: 1px;
     --qr-size-desktop: 250px;
     --qr-size-mobile: 250px;
+}
+
+/* Light theme (default). */
+:root,
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --page-bg: #d3d3d3;
+    --muted: #f6f6f6;
+    --ink: #161616;
+    --ink-2: #3b3b3b;
+    --border: #e8e8e8;
+    --line: #dddddd;
+    --soft-gray: #eeeeee;
+    --pale-blue: #cfe9ee;
+    --pale-blue-2: #eef8fa;
+    --text-secondary: #666666;
+}
+
+/* Dark theme. It intentionally matches the light palette for now. */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #ffffff;
+    --page-bg: #d3d3d3;
+    --muted: #f6f6f6;
+    --ink: #161616;
+    --ink-2: #3b3b3b;
+    --border: #e8e8e8;
+    --line: #dddddd;
+    --soft-gray: #eeeeee;
+    --pale-blue: #cfe9ee;
+    --pale-blue-2: #eef8fa;
+    --text-secondary: #666666;
+}
+
+/* Automatic dark theme. Its palette intentionally matches the light theme. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        color-scheme: dark;
+        --bg: #ffffff;
+        --page-bg: #d3d3d3;
+        --muted: #f6f6f6;
+        --ink: #161616;
+        --ink-2: #3b3b3b;
+        --border: #e8e8e8;
+        --line: #dddddd;
+        --soft-gray: #eeeeee;
+        --pale-blue: #cfe9ee;
+        --pale-blue-2: #eef8fa;
+        --text-secondary: #666666;
+    }
 }
 
 * {
