@@ -75,10 +75,10 @@
             <button class="calendar-menu__close" type="button" aria-label="Close calendar choices" @click="closeCalendarMenu">×</button>
           </div>
           <div class="repeat-customer-menu__actions">
-            <button type="button">DROP-OFF</button>
-            <button type="button">NEED A FIRST FITTING</button>
-            <button type="button">NEED AN ADDITIONAL FITTING</button>
-            <button type="button">PICK UP</button>
+            <a href="https://calendar.app.google/Q76KPgCnRv58EzvR6">DROP-OFF</a>
+            <a href="https://calendar.app.google/NgKQPiLaEjsMLJhz5">NEED A FIRST FITTING</a>
+            <a href="https://calendar.app.google/vZfduJLkRPzdqiwr5">NEED AN ADDITIONAL FITTING</a>
+            <a href="https://calendar.app.google/eNuJTecj26ngdJ6MA">PICK UP</a>
           </div>
         </div>
       </div>

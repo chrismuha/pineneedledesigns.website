@@ -1808,7 +1808,11 @@ section {
     gap: 10px;
 }
 
-.repeat-customer-menu__actions button {
+.repeat-customer-menu__actions button,
+.repeat-customer-menu__actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 58px;
     padding: 12px 18px;
     border: 0;
@@ -1821,17 +1825,22 @@ section {
     font-size: 10pt;
     font-weight: 700;
     letter-spacing: 0.05em;
+    text-align: center;
+    text-decoration: none;
 }
 
 .repeat-customer-menu__back:hover,
 .repeat-customer-menu__back:focus-visible,
 .repeat-customer-menu__actions button:hover,
-.repeat-customer-menu__actions button:focus-visible {
+.repeat-customer-menu__actions button:focus-visible,
+.repeat-customer-menu__actions a:hover,
+.repeat-customer-menu__actions a:focus-visible {
     color: var(--accent);
 }
 
 .repeat-customer-menu__back:focus-visible,
-.repeat-customer-menu__actions button:focus-visible {
+.repeat-customer-menu__actions button:focus-visible,
+.repeat-customer-menu__actions a:focus-visible {
     outline: 3px solid var(--brand-red-45);
     outline-offset: 3px;
 }
