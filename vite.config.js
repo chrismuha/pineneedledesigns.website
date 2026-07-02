@@ -16,11 +16,16 @@ export default defineConfig({
     outDir: 'docs',
     rollupOptions: {
       output: {
-        // Keep the main bundle tracked under one predictable filename. Vite's
-        // default content hash creates a new untracked file on every change,
-        // which makes it easy to commit index.html without its new bundle.
+        // Keep deploy-critical bundles under predictable filenames. Vite's
+        // default content hashes create new untracked files on every change,
+        // which makes it easy to commit index.html without the referenced
+        // JavaScript or stylesheet.
         entryFileNames: 'assets/index.js',
         chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: (assetInfo) =>
+          assetInfo.name?.endsWith('.css')
+            ? 'assets/index.css'
+            : 'assets/[name]-[hash][extname]',
       },
     },
   },
