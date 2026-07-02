@@ -119,7 +119,7 @@ const sendEmail = async ({ from: _from, to, ...message }) => {
 };
 
 if (emailProvider === 'resend') {
-  console.log('✅ Resend mailer configured (ready to send emails over HTTPS)');
+  console.log('✅ Email service ready');
 } else if (mailerConfigured) {
   transporter.verify()
     .then(() => console.log('✅ SMTP mailer verified (ready to send emails)'))

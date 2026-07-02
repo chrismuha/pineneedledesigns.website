@@ -1,7 +1,12 @@
 <template>
   <footer class="footer--temporary-booking">
     <div ref="bookingControl" class="temporary-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
-      <div v-if="calendarMenuOpen" id="calendar-menu" class="calendar-menu" aria-label="Choose calendar">
+      <div
+        v-if="calendarMenuOpen"
+        id="calendar-menu"
+        class="calendar-menu"
+        aria-label="Choose calendar"
+      >
         <div class="calendar-menu__header">
           <p class="calendar-menu__title">Choose Calendar</p>
           <button class="calendar-menu__close" type="button" aria-label="Close calendar choices" @click="closeCalendarMenu">×</button>
@@ -35,13 +40,46 @@
               <span>For bridal styling, gown details, and wedding appointments.</span>
             </span>
           </a>
-          <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" @click="closeCalendarMenu">
+          <button
+            class="calendar-choice"
+            type="button"
+            aria-haspopup="dialog"
+            :aria-expanded="String(repeatCustomerMenuOpen)"
+            @click="repeatCustomerMenuOpen = true"
+          >
             <span class="calendar-menu__emoji" aria-hidden="true">👚</span>
             <span class="calendar-choice__copy">
               <strong>Repeat Customers</strong>
               <span>For returning customers booking another fitting or follow-up.</span>
             </span>
-          </a>
+          </button>
+        </div>
+
+        <div
+          v-if="repeatCustomerMenuOpen"
+          class="repeat-customer-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="repeat-customer-menu-title"
+        >
+          <div class="calendar-menu__header">
+            <button
+              class="repeat-customer-menu__back"
+              type="button"
+              aria-label="Back to calendar choices"
+              @click="repeatCustomerMenuOpen = false"
+            >
+              ‹
+            </button>
+            <p id="repeat-customer-menu-title" class="calendar-menu__title">Repeat Customers</p>
+            <button class="calendar-menu__close" type="button" aria-label="Close calendar choices" @click="closeCalendarMenu">×</button>
+          </div>
+          <div class="repeat-customer-menu__actions">
+            <button type="button">DROP-OFF</button>
+            <button type="button">NEED A FIRST FITTING</button>
+            <button type="button">NEED AN ADDITIONAL FITTING</button>
+            <button type="button">PICK UP</button>
+          </div>
         </div>
       </div>
 
@@ -50,7 +88,7 @@
         type="button"
         :aria-expanded="String(calendarMenuOpen)"
         aria-controls="calendar-menu"
-        @click="calendarMenuOpen = !calendarMenuOpen"
+        @click="toggleCalendarMenu"
       >
         <span>Book Fitting Appointment</span>
       </button>
@@ -199,6 +237,7 @@ defineProps({
 const route = useRoute()
 const bookingDepositsEnabled = ref(false)
 const calendarMenuOpen = ref(false)
+const repeatCustomerMenuOpen = ref(false)
 const bookingControl = ref(null)
 const calendarLinks = {
   fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
@@ -234,6 +273,15 @@ const toggle = (id) => {
 
 const closeCalendarMenu = () => {
   calendarMenuOpen.value = false
+  repeatCustomerMenuOpen.value = false
+}
+
+const toggleCalendarMenu = () => {
+  if (calendarMenuOpen.value) {
+    closeCalendarMenu()
+    return
+  }
+  calendarMenuOpen.value = true
 }
 
 function handleOutsidePointerDown(event) {
@@ -242,7 +290,12 @@ function handleOutsidePointerDown(event) {
 }
 
 function handleEscape(event) {
-  if (event.key === 'Escape') closeCalendarMenu()
+  if (event.key !== 'Escape') return
+  if (repeatCustomerMenuOpen.value) {
+    repeatCustomerMenuOpen.value = false
+    return
+  }
+  closeCalendarMenu()
 }
 
 watch(
