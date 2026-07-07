@@ -14,7 +14,9 @@
     "start": "npm run start -w backend"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "nodemailer": "^8.0.10"
+
   }
   
 }
