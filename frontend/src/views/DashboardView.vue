@@ -40,7 +40,8 @@ const isActive = (path) => {
         :class="{ active: isActive(item.to) }"
       >
         {{ item.label }}
-      </RouterLink>
+      </RouterLink>3
+      
     </aside>
 
     <main class="content">
