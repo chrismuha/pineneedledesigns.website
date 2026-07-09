@@ -13,7 +13,7 @@ export const requireAuth = async (req, res, next) => {
     return res.status(401).json({ error: 'Authentication required.' });
   }
 
-  const authorized = await isAuthorizedEmail(email);
+  const authorized = await isAuthorizedEmail(email); 
 
   if (!authorized) {
     req.session.destroy(() => {});
@@ -23,3 +23,4 @@ export const requireAuth = async (req, res, next) => {
 
   return next();
 };
+

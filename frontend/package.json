@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp ../CNAME ../docs/CNAME && mkdir -p ../docs/images ../docs/videos && rsync -a --delete images/ ../docs/images/ && rsync -a --delete --include='*/' --include='*.webm' --exclude='*' ../videos/ ../docs/videos/ 2>/dev/null || true",
+    "build": "vite build && node ./scripts/postbuild.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
 import { AuthorizedUser } from '../models/AuthorizedUser.js';
 
 const INITIAL_AUTHORIZED_EMAILS = [
-  'Wendemalianidesigns@gmail.com',
+  'wendemalianidesigns@gmail.com',
   'alnabidrm@gmail.com',
   'muhachris297@gmail.com',
   'kevintavares0529@gmail.com',

@@ -137,8 +137,48 @@ const backfillProductSubcollectionIds = async () => {
   console.log(`ℹ️ Backfilled subCollectionId for ${updates.length} products.`);
 };
 
+const formatMongoConnectionError = (error) => {
+  const message = String(error?.message || error);
+  const hostname = (() => {
+    try {
+      const uri = config.mongoUri.replace(/^mongodb\+srv:/, 'https:').replace(/^mongodb:/, 'https:');
+      return new URL(uri).hostname;
+    } catch {
+      return '';
+    }
+  })();
+
+  if (error?.code === 'ENOTFOUND' || message.includes('querySrv')) {
+    return new Error(
+      [
+        'Could not resolve the MongoDB host in MONGODB_URI.',
+        hostname ? `Host: ${hostname}` : '',
+        'Copy the latest Public network connection string from DigitalOcean → Databases → your cluster → Connection details.',
+        'Also confirm the cluster is Online, your IP is allowed under Network Access, and VPN/DNS is not blocking mongo.ondigitalocean.com.',
+      ].filter(Boolean).join(' '),
+      { cause: error },
+    );
+  }
+
+  if (message.includes('Authentication failed') || message.includes('auth failed')) {
+    return new Error(
+      'MongoDB authentication failed. Verify the username, password, and authSource=admin in MONGODB_URI.',
+      { cause: error },
+    );
+  }
+
+  return error;
+};
+
 export const connectDatabase = async () => {
-  await mongoose.connect(config.mongoUri);
+  try {
+    await mongoose.connect(config.mongoUri, {
+      serverSelectionTimeoutMS: 10000,
+    });
+  } catch (error) {
+    throw formatMongoConnectionError(error);
+  }
+
   console.log('✅ MongoDB connected');
 
   const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });

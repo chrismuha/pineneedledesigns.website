@@ -30,23 +30,32 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { collectionCategoryOrder, visibleCollectionPages } from '../data/siteData'
+import { computed, onMounted } from 'vue'
+import { useCatalogStore } from '../stores/catalog.js'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
-const visibleBySlug = new Map(visibleCollectionPages.map((collection) => [collection.slug, collection]))
-const groupedSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))
+const catalogStore = useCatalogStore()
 
-const collectionGroups = [
-  ...collectionCategoryOrder.map((group) => ({
+const visibleBySlug = computed(() =>
+  new Map(catalogStore.visibleCollectionPages.map((collection) => [collection.slug, collection]))
+)
+
+const groupedSlugs = computed(() =>
+  new Set(catalogStore.collectionCategoryOrder.flatMap((group) => group.slugs))
+)
+
+const collectionGroups = computed(() => [
+  ...catalogStore.collectionCategoryOrder.map((group) => ({
     title: group.title,
-    collections: group.slugs.map((slug) => visibleBySlug.get(slug)).filter(Boolean),
+    collections: group.slugs.map((slug) => visibleBySlug.value.get(slug)).filter(Boolean),
   })),
   {
     title: 'Other Collections',
-    collections: visibleCollectionPages.filter((collection) => !groupedSlugs.has(collection.slug)),
+    collections: catalogStore.visibleCollectionPages.filter(
+      (collection) => !groupedSlugs.value.has(collection.slug),
+    ),
   },
-].filter((group) => group.collections.length > 0)
+].filter((group) => group.collections.length > 0))
 
 const collectionImageLoading = (groupIndex, collectionIndex) =>
   groupIndex === 0 && collectionIndex < 4 ? 'eager' : 'lazy'
@@ -59,7 +68,7 @@ const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
 
 onMounted(() => {
-  const visibleImages = collectionGroups.flatMap((group) =>
+  const visibleImages = collectionGroups.value.flatMap((group) =>
     group.collections.map((collection) => collection.cardImage)
   )
 

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import LoginDialog from '../components/LoginDialog.vue'
 import { useAuthStore } from '../stores/auth.js'
 
 const route = useRoute()
@@ -33,7 +34,18 @@ const isActive = (path) => {
 
 const handleLogout = async () => {
   await authStore.logout()
-  await router.push('/')
+  authReady.value = false
+  authStore.openLoginDialog(route.fullPath)
+}
+
+const handleLoginSuccess = () => {
+  authReady.value = true
+}
+
+const handleLoginCancel = async () => {
+  if (!authStore.isAuthenticated) {
+    await router.replace('/')
+  }
 }
 
 onMounted(async () => {
@@ -41,12 +53,6 @@ onMounted(async () => {
 
   if (!isAuthed) {
     authStore.openLoginDialog(route.fullPath)
-
-    await router.replace({
-      path: '/',
-      query: { redirect: route.fullPath },
-      hash: '#dashboard-signin',
-    })
     return
   }
 
@@ -81,7 +87,10 @@ onMounted(async () => {
       <RouterView />
     </main>
   </div>
+
   <p v-else class="dashboard-loading">Checking access...</p>
+
+  <LoginDialog required @success="handleLoginSuccess" @cancel="handleLoginCancel" />
 </template>
 
 <style scoped>

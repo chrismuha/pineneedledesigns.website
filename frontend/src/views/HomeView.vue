@@ -1,38 +1,17 @@
 <template>
   <div class="home-page">
-    <section id="dashboard-signin" class="dashboard-signin">
+    <!-- <section id="dashboard-access" class="dashboard-signin">
       <div class="container dashboard-signin__content">
-        <h2>Dashboard Access</h2>
-        <p v-if="redirectPath" class="dashboard-signin__hint">
-          Sign in with your authorized Gmail address to continue to the dashboard.
-        </p>
-        <p v-else class="dashboard-signin__hint">
-          Authorized team members must sign in with Gmail to manage products, collections, and orders.
+        <h2>Dashboard</h2>
+        <p class="dashboard-signin__hint">
+          Manage products, collections, and orders from the dashboard.
         </p>
 
-        <p v-if="authStore.isAuthenticated" class="dashboard-signin__status">
-          Signed in as {{ authStore.user.email }}
-        </p>
-
-        <button
-          v-if="!authStore.isAuthenticated"
-          type="button"
-          class="btn dashboard-signin__button"
-          @click="authStore.openLoginDialog(redirectPath)"
-        >
-          Sign In
-        </button>
-
-        <button
-          v-else
-          type="button"
-          class="btn dashboard-signin__button dashboard-signin__button--secondary"
-          @click="handleSignOut"
-        >
-          Sign Out
-        </button>
+        <router-link to="/dashboard" class="btn dashboard-signin__button">
+          Open Dashboard
+        </router-link>
       </div>
-    </section>
+    </section> -->
 
     <section v-if="homeSections.length" id="about">
       <div class="container">
@@ -136,25 +115,13 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import CollectionProductSlider from '../components/CollectionProductSlider.vue'
 import ImageSlider from '../components/ImageSlider.vue'
-import { useAuthStore } from '../stores/auth.js'
-import { collectionPages, homeSections, otherCollections } from '../data/siteData'
+import { homeSections } from '../data/siteData'
+import { useCatalogStore } from '../stores/catalog.js'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
-const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-
-const redirectPath = computed(() => (
-  typeof route.query.redirect === 'string' ? route.query.redirect : ''
-))
-
-const handleSignOut = async () => {
-  await authStore.logout()
-  await router.replace({ path: '/', hash: '#dashboard-signin' })
-}
+const catalogStore = useCatalogStore()
 
 const featuredCollectionSlugs = [
   'shirts',
@@ -163,9 +130,14 @@ const featuredCollectionSlugs = [
   'upcycled-collaboration',
   'denim-and-lace',
 ]
-const featuredProductCollections = featuredCollectionSlugs
-  .map((slug) => collectionPages.find((collection) => collection.slug === slug))
-  .filter((collection) => collection?.products.some((product) => !product.placeholder && product.images?.length))
+
+const featuredProductCollections = computed(() =>
+  featuredCollectionSlugs
+    .map((slug) => catalogStore.getCollectionBySlug(slug))
+    .filter((collection) => collection?.products.some((product) => !product.placeholder && product.images?.length))
+)
+
+const otherCollections = computed(() => catalogStore.otherCollections)
 
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
@@ -175,19 +147,8 @@ const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
 const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
 
-onMounted(async () => {
-  await authStore.initialize()
-
-  if (authStore.isAuthenticated && redirectPath.value) {
-    await router.replace(redirectPath.value)
-    return
-  }
-
-  if (!authStore.isAuthenticated && redirectPath.value) {
-    authStore.openLoginDialog(redirectPath.value)
-  }
-
-  const visibleImages = otherCollections.map((collection) => collection.cardImage)
+onMounted(() => {
+  const visibleImages = otherCollections.value.map((collection) => collection.cardImage)
   preloadImages(visibleImages.slice(0, 4))
   preloadImagesOnIdle(visibleImages.slice(4), 3)
 })
@@ -213,8 +174,7 @@ onMounted(async () => {
   font-size: clamp(20pt, 3.5vw, 28pt);
 }
 
-.dashboard-signin__hint,
-.dashboard-signin__status {
+.dashboard-signin__hint {
   max-width: 640px;
   margin: 0;
   color: #666;

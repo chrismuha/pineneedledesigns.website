@@ -1,5 +1,5 @@
 <template>
-  <section class="products" v-if="page">
+  <section v-if="page" class="products">
     <div class="products-header">
       <div class="product-actions">
         <router-link class="back-link" :to="previousPath">← Previous Collection</router-link>
@@ -7,31 +7,48 @@
       </div>
       <h2>{{ page.title }}</h2>
       <p>{{ page.description }}</p>
+
+      <p v-if="subcollectionsError" class="collection-status collection-status--error" role="alert">
+        {{ subcollectionsError }}
+        <button type="button" class="collection-status__retry" @click="loadSubcollections">Try again</button>
+      </p>
+
       <div
-        v-if="collectionFilters.length"
+        v-else-if="subcollectionsLoading"
+        class="collection-filters collection-filters--loading"
+        aria-label="Loading sub-collections"
+      >
+        <span class="collection-status">Loading sub-collections...</span>
+      </div>
+
+      <div
+        v-else-if="subcollections.length"
         class="collection-filters"
         :class="{ 'collection-filters--with-bag-types': showBagTypeFilter }"
-        aria-label="Product filters"
+        aria-label="Sub-collections"
       >
         <button
           type="button"
-          class="collection-filter"
-          :class="['collection-filter--filter-all', { 'collection-filter--active': activeFilter === allFilter }]"
-          :aria-pressed="activeFilter === allFilter"
-          @click="activeFilter = allFilter"
+          class="collection-filter collection-filter--filter-all"
+          :class="{ 'collection-filter--active': selectedSubcollectionId === null }"
+          :aria-pressed="selectedSubcollectionId === null"
+          @click="selectSubcollection(null)"
         >
           All
         </button>
         <button
-          v-for="filter in collectionFilters"
-          :key="filter"
+          v-for="subcollection in subcollections"
+          :key="subcollection._id"
           type="button"
           class="collection-filter"
-          :class="[filterClass(filter), { 'collection-filter--active': activeFilter === filter }]"
-          :aria-pressed="activeFilter === filter"
-          @click="activeFilter = filter"
+          :class="[
+            filterClass(subcollection.name),
+            { 'collection-filter--active': selectedSubcollectionId === subcollection._id },
+          ]"
+          :aria-pressed="selectedSubcollectionId === subcollection._id"
+          @click="selectSubcollection(subcollection._id)"
         >
-          {{ filter }}
+          {{ subcollection.name }}
         </button>
         <label v-if="showBagTypeFilter" class="collection-filter-select">
           <span class="visually-hidden">Bag type</span>
@@ -45,11 +62,20 @@
       </div>
     </div>
 
-    <div v-if="filteredProducts.length" class="product-grid">
+    <p v-if="productsError" class="collection-status collection-status--error" role="alert">
+      {{ productsError }}
+      <button type="button" class="collection-status__retry" @click="loadProducts(selectedSubcollectionId)">
+        Try again
+      </button>
+    </p>
+
+    <p v-else-if="productsLoading" class="collection-status">Loading products...</p>
+
+    <div v-else-if="filteredProducts.length" class="product-grid">
       <article
         v-for="(product, productIndex) in filteredProducts"
         :id="`product-${product.id}`"
-        :key="product.title"
+        :key="`${product.id}-${product.title}`"
         class="product-card"
       >
         <header>
@@ -88,13 +114,13 @@
               :key="index"
               :class="product.imageWrapper || 'placeholder'"
             >
-                <img
-                  class="placeholder-image"
-                  :src="placeholderImageFor(product, index)"
-                  :loading="placeholderImageLoading(productIndex, index)"
-                  :fetchpriority="placeholderImagePriority(productIndex, index)"
-                  decoding="async"
-                />
+              <img
+                class="placeholder-image"
+                :src="placeholderImageFor(product, index)"
+                :loading="placeholderImageLoading(productIndex, index)"
+                :fetchpriority="placeholderImagePriority(productIndex, index)"
+                decoding="async"
+              />
             </div>
           </template>
         </div>
@@ -104,7 +130,9 @@
         <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
     </div>
-    <p v-else class="subtle">{{ page.products.length ? 'No matching items' : 'Coming Soon' }}</p>
+    <p v-else-if="!productsLoading && !productsError" class="subtle">
+      {{ hasLoadedProducts ? 'No matching items' : 'Coming Soon' }}
+    </p>
   </section>
   <section v-else class="not-found">
     <p>Collection not found.</p>
@@ -115,7 +143,8 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import MediaSlider from '../components/MediaSlider.vue'
 import ProductOptionSelect from '../components/ProductOptionSelect.vue'
-import { collectionPages } from '../data/siteData'
+import { catalogApi } from '../api/catalog.js'
+import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
 import { firstVisibleProductMedia, preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
@@ -123,17 +152,22 @@ const props = defineProps({
   slug: String,
 })
 
+const catalogStore = useCatalogStore()
 const cartStore = useCartStore()
 const selectedOptions = ref({})
-const allFilter = 'All'
+const subcollections = ref([])
+const products = ref([])
+const selectedSubcollectionId = ref(null)
+const subcollectionsLoading = ref(false)
+const productsLoading = ref(false)
+const subcollectionsError = ref('')
+const productsError = ref('')
+const hasLoadedProducts = ref(false)
 const bagsFilter = 'Bags'
 const allBagTypes = 'All'
-const activeFilter = ref(allFilter)
 const activeBagType = ref(allBagTypes)
 
-const page = computed(() =>
-  collectionPages.find((item) => item.slug === props.slug)
-)
+const page = computed(() => catalogStore.getCollectionBySlug(props.slug))
 
 const previousPath = computed(() => {
   if (!page.value || !page.value.previous) return '/collections'
@@ -145,40 +179,105 @@ const nextPath = computed(() => {
   return `/collections/${page.value.next}`
 })
 
-const collectionFilters = computed(() => page.value?.filters || [])
+const selectedSubcollection = computed(() =>
+  subcollections.value.find((subcollection) => subcollection._id === selectedSubcollectionId.value) || null)
+
 const filterClass = (filter) =>
   `collection-filter--filter-${String(filter).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
-const productFilters = (product) => Array.isArray(product.filters) ? product.filters : [product.filters].filter(Boolean)
-const productBagTypes = (product) => Array.isArray(product.bagTypes) ? product.bagTypes : [product.bagTypes].filter(Boolean)
+
+const productBagTypes = (product) =>
+  Array.isArray(product.bagTypes) ? product.bagTypes : [product.bagTypes].filter(Boolean)
+
 const bagTypeOptions = computed(() => {
-  if (!page.value) return []
+  if (selectedSubcollection.value?.name !== bagsFilter) return []
 
   return [...new Set(
-    page.value.products
-      .filter((product) => productFilters(product).includes(bagsFilter))
-      .flatMap(productBagTypes)
-      .filter(Boolean)
+    products.value.flatMap(productBagTypes).filter(Boolean),
   )].sort((a, b) => a.localeCompare(b))
 })
+
 const showBagTypeFilter = computed(() =>
-  activeFilter.value === bagsFilter && bagTypeOptions.value.length > 0
+  selectedSubcollection.value?.name === bagsFilter && bagTypeOptions.value.length > 0
 )
+
 const filteredProducts = computed(() => {
-  if (!page.value) return []
-  if (activeFilter.value === allFilter) return page.value.products
+  if (!showBagTypeFilter.value || activeBagType.value === allBagTypes) {
+    return products.value
+  }
 
-  return page.value.products.filter((product) => {
-    if (!productFilters(product).includes(activeFilter.value)) return false
-    if (activeFilter.value !== bagsFilter || activeBagType.value === allBagTypes) return true
-
-    return productBagTypes(product).includes(activeBagType.value)
-  })
+  return products.value.filter((product) =>
+    productBagTypes(product).includes(activeBagType.value))
 })
+
+const loadSubcollections = async () => {
+  if (!props.slug) return
+
+  subcollectionsLoading.value = true
+  subcollectionsError.value = ''
+
+  try {
+    subcollections.value = await catalogApi.getSubcollections(props.slug)
+  } catch (error) {
+    subcollections.value = []
+    subcollectionsError.value = error.message || 'Failed to load sub-collections.'
+  } finally {
+    subcollectionsLoading.value = false
+  }
+}
+
+const loadProducts = async (subCollectionId = null) => {
+  if (!props.slug) return
+
+  productsLoading.value = true
+  productsError.value = ''
+
+  try {
+    products.value = await catalogApi.getProducts(props.slug, subCollectionId)
+    hasLoadedProducts.value = true
+    preloadPageMedia(products.value)
+  } catch (error) {
+    products.value = []
+    productsError.value = error.message || 'Failed to load products.'
+  } finally {
+    productsLoading.value = false
+  }
+}
+
+const selectSubcollection = async (subCollectionId) => {
+  if (selectedSubcollectionId.value === subCollectionId) return
+
+  selectedSubcollectionId.value = subCollectionId
+  activeBagType.value = allBagTypes
+  await loadProducts(subCollectionId)
+}
+
+const loadCollectionData = async () => {
+  if (!page.value || !props.slug) {
+    subcollections.value = []
+    products.value = []
+    subcollectionsError.value = ''
+    productsError.value = ''
+    subcollectionsLoading.value = false
+    productsLoading.value = false
+    hasLoadedProducts.value = false
+    return
+  }
+
+  selectedSubcollectionId.value = null
+  activeBagType.value = allBagTypes
+  hasLoadedProducts.value = false
+  products.value = []
+  await Promise.all([
+    loadSubcollections(),
+    loadProducts(null),
+  ])
+}
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
 const styleOptionName = 'Style'
 const blingStyle = 'Bling'
 const noBlingStyle = 'No Bling'
+
 const productSelections = (product) => {
   if (!product.options || !product.options.length) return {}
 
@@ -197,26 +296,32 @@ const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [p
 const selectedStyle = (product) => selectedOptions.value[optionKey(product, { name: styleOptionName })] || ''
 const hasBlingStyleOption = (product) =>
   product.options?.some((option) => option.name === styleOptionName && option.values?.includes(blingStyle))
+
 const cleanNonBlingTitle = (title) =>
   String(title)
     .replace(/\bblinged\s+out\b\s*/gi, '')
     .replace(/\bblinged\b\s*/gi, '')
     .replace(/\s{2,}/g, ' ')
     .trim()
+
 const displayTitle = (product) => {
   if (!hasBlingStyleOption(product)) return cleanNonBlingTitle(product.title)
   if (selectedStyle(product) === blingStyle) return product.title
   return cleanNonBlingTitle(product.title)
 }
+
 const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
+
 const productPrice = (product) => {
   if (isNoBlingSelected(product) && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice
   return product.price
 }
+
 const displayDescription = (product) => {
   if (isNoBlingSelected(product)) return product.noBlingDescription || product.description
   return product.description
 }
+
 const displayProductMeta = (product) => {
   const meta = productMeta(product)
   const price = productPrice(product)
@@ -233,6 +338,7 @@ const displayProductMeta = (product) => {
     return item
   })
 }
+
 const isProductSold = (product) => {
   if (product.sold || product.soldOut) return true
   if (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim())) return true
@@ -240,11 +346,16 @@ const isProductSold = (product) => {
 
   return productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
 }
-const canAddToCart = (product) => Number.isFinite(productPrice(product)) && !isProductSold(product) && hasRequiredOptions(product)
+
+const canAddToCart = (product) =>
+  Number.isFinite(productPrice(product)) && !isProductSold(product) && hasRequiredOptions(product)
+
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
+
 const videoPosterFor = (product, index) =>
   product.videoPosters?.[index] || product.images?.[0] || ''
+
 const productMedia = (product) => [
   ...(product.images || []).map((src) => ({
     src,
@@ -256,32 +367,33 @@ const productMedia = (product) => [
     poster: videoPosterFor(product, index),
   })),
 ]
+
 const defaultPlaceholderImage = '/images/comingsoon/comingsoon015.webp'
+
 const placeholderImageFor = (product, index) =>
   product.placeholderImages?.[index] || product.placeholderImage || defaultPlaceholderImage
+
 const placeholderImageLoading = (productIndex, imageIndex) =>
   productIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'
+
 const placeholderImagePriority = (productIndex, imageIndex) =>
   productIndex === 0 && imageIndex === 0 ? 'high' : 'auto'
 
-const pageVisibleMedia = (currentPage) => {
-  if (!currentPage) return []
-  return currentPage.products.flatMap(firstVisibleProductMedia)
-}
-
-const preloadPageMedia = (currentPage) => {
-  const media = pageVisibleMedia(currentPage)
+const preloadPageMedia = (currentProducts) => {
+  const media = currentProducts.flatMap(firstVisibleProductMedia)
   preloadImages(media.slice(0, 2))
   preloadImagesOnIdle(media.slice(2), 2)
 }
 
-onMounted(() => preloadPageMedia(page.value))
-watch(page, (currentPage) => {
-  activeFilter.value = allFilter
-  activeBagType.value = allBagTypes
-  preloadPageMedia(currentPage)
+onMounted(() => {
+  loadCollectionData()
 })
-watch(activeFilter, () => {
+
+watch(() => props.slug, () => {
+  loadCollectionData()
+})
+
+watch(selectedSubcollectionId, () => {
   activeBagType.value = allBagTypes
 })
 
@@ -305,3 +417,29 @@ const addToCart = async (product) => {
   await cartStore.addItem(selectedProduct)
 }
 </script>
+
+<style scoped>
+.collection-status {
+  margin: 12px 0 0;
+  color: #666;
+}
+
+.collection-status--error {
+  color: #b42318;
+}
+
+.collection-status__retry {
+  margin-left: 8px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.collection-filters--loading {
+  min-height: 42px;
+  align-items: center;
+}
+</style>

@@ -38,6 +38,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             git clean -fd
+            rm -f backend/.env
             npm ci --omit=dev --ignore-scripts
             pm2 startOrRestart ecosystem.config.cjs --update-env
             pm2 save

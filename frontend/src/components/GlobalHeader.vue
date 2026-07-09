@@ -62,14 +62,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { navLinks } from '../data/siteData'
+import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
 
 const menuOpen = ref(false)
 const route = useRoute()
 const cartStore = useCartStore()
+const catalogStore = useCatalogStore()
+
+const navLinks = computed(() => catalogStore.navLinks.length
+  ? catalogStore.navLinks
+  : [
+    { label: 'Home', path: '/' },
+    { label: 'All Collections', path: '/collections' },
+  ])
 
 defineProps({
   chromeDimmed: {

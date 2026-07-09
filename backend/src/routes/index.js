@@ -8,11 +8,13 @@ import healthRouter from './health.js';
 import dashboardRouter from './dashboard.js';
 import ordersRouter from './orders.js';
 import authRouter from './auth.js';
+import storefrontRouter from './storefront.js';
 import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
 router.use('/auth', authRouter);
+router.use('/storefront', storefrontRouter);
 router.use('/collections', requireAuth, collectionsRouter);
 router.use('/products', requireAuth, productsRouter);
 router.use('/cart', cartRouter);

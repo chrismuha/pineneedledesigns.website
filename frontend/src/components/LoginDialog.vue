@@ -8,9 +8,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  required: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['update:modelValue', 'success'])
+const emit = defineEmits(['update:modelValue', 'success', 'cancel'])
 
 const authStore = useAuthStore()
 
@@ -29,6 +33,11 @@ const isOpen = computed({
 })
 
 const close = () => {
+  if (props.required && !authStore.isAuthenticated) {
+    emit('cancel')
+    return
+  }
+
   isOpen.value = false
 }
 
@@ -52,7 +61,7 @@ const handleSubmit = async () => {
   try {
     await authStore.signInWithEmail(trimmedEmail)
     emit('success')
-    close()
+    isOpen.value = false
   } catch (err) {
     if (err.status === 403) {
       error.value = 'You are not authorized to access the dashboard.'
