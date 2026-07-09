@@ -252,6 +252,17 @@ const selectSubcollection = async (subCollectionId) => {
 }
 
 const loadCollectionData = async () => {
+  if (!page.value || !props.slug) {
+    subcollections.value = []
+    products.value = []
+    subcollectionsError.value = ''
+    productsError.value = ''
+    subcollectionsLoading.value = false
+    productsLoading.value = false
+    hasLoadedProducts.value = false
+    return
+  }
+
   selectedSubcollectionId.value = null
   activeBagType.value = allBagTypes
   hasLoadedProducts.value = false
@@ -375,9 +386,7 @@ const preloadPageMedia = (currentProducts) => {
 }
 
 onMounted(() => {
-  if (page.value) {
-    loadCollectionData()
-  }
+  loadCollectionData()
 })
 
 watch(() => props.slug, () => {
