@@ -4,6 +4,7 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { seedAuthorizedUsers } from '../services/authorizedUsers.js';
+import { seedCatalog } from '../services/catalogSeed.js';
 
 const inferSubcollectionName = (productName, subcollectionNames) => {
   const name = String(productName || '').toLowerCase();
@@ -139,7 +140,7 @@ const backfillProductSubcollectionIds = async () => {
 
 export const connectDatabase = async () => {
   await mongoose.connect(config.mongoUri);
-  console.log('✅ MongoDB connected');
+  console.log('✅ MongoDB connected!!!!');
 
   const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
   if (!uncategorized) {
@@ -156,4 +157,5 @@ export const connectDatabase = async () => {
   await backfillProductSubcollectionIds();
   await seedAuthorizedUsers();
   console.log('ℹ️ Ensured authorized dashboard users exist');
+  await seedCatalog();
 };

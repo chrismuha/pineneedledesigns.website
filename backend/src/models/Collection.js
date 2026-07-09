@@ -21,6 +21,28 @@ const collectionSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  description: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  cardImage: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  hidden: {
+    type: Boolean,
+    default: false,
+  },
+  showWhenEmpty: {
+    type: Boolean,
+    default: false,
+  },
+  cardImageFromProduct: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
 });

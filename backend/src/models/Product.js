@@ -60,11 +60,64 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  legacyId: {
+    type: Number,
+    default: null,
+  },
+  meta: {
+    type: [String],
+    default: [],
+  },
+  videos: {
+    type: [String],
+    default: [],
+  },
+  videoPosters: {
+    type: [String],
+    default: [],
+  },
+  noBlingPrice: {
+    type: Number,
+    default: null,
+  },
+  noBlingDescription: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  maker: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  bagTypes: {
+    type: [String],
+    default: [],
+  },
+  filters: {
+    type: [String],
+    default: [],
+  },
+  shoeTypes: {
+    type: [String],
+    default: [],
+  },
+  imageWrapper: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  optionPlaceholders: {
+    type: Map,
+    of: String,
+    default: undefined,
+  },
 }, {
   timestamps: true,
 });
 
 productSchema.index({ collectionId: 1, sortOrder: 1 });
 productSchema.index({ subCollectionId: 1 });
+productSchema.index({ legacyId: 1 }, { unique: true, sparse: true });
 
 export const Product = mongoose.model('Product', productSchema);
