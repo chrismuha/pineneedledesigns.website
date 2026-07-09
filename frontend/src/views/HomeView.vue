@@ -1,6 +1,6 @@
 <template>
   <div class="home-page">
-    <section id="dashboard-access" class="dashboard-signin">
+    <!-- <section id="dashboard-access" class="dashboard-signin">
       <div class="container dashboard-signin__content">
         <h2>Dashboard</h2>
         <p class="dashboard-signin__hint">
@@ -11,7 +11,7 @@
           Open Dashboard
         </router-link>
       </div>
-    </section>
+    </section> -->
 
     <section v-if="homeSections.length" id="about">
       <div class="container">

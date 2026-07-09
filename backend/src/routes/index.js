@@ -9,18 +9,19 @@ import dashboardRouter from './dashboard.js';
 import ordersRouter from './orders.js';
 import authRouter from './auth.js';
 import storefrontRouter from './storefront.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
 router.use('/auth', authRouter);
 router.use('/storefront', storefrontRouter);
-router.use('/collections', collectionsRouter);
-router.use('/products', productsRouter);
+router.use('/collections', requireAuth, collectionsRouter);
+router.use('/products', requireAuth, productsRouter);
 router.use('/cart', cartRouter);
 router.use('/checkout', checkoutRouter);
 router.use('/booking-deposit', bookingRouter);
 router.use('/health', healthRouter);
-router.use('/dashboard', dashboardRouter);
-router.use('/orders', ordersRouter);
+router.use('/dashboard', requireAuth, dashboardRouter);
+router.use('/orders', requireAuth, ordersRouter);
 
 export default router;

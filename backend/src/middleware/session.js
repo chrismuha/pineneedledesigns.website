@@ -9,6 +9,8 @@ export const createSessionMiddleware = () => {
     throw new Error('SESSION_SECRET is required in production.');
   }
 
+  const useSecureCookie = config.isProduction && config.appBaseUrl.startsWith('https://');
+
   return session({
     store: new FileStore({
       path: config.sessionDir,
@@ -19,7 +21,7 @@ export const createSessionMiddleware = () => {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: config.isProduction,
+      secure: useSecureCookie,
       httpOnly: true,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
