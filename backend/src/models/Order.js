@@ -48,6 +48,13 @@ const orderSchema = new mongoose.Schema({
   discountCode: { type: String, default: '' },
   items: { type: [mongoose.Schema.Types.Mixed], default: [] },
   lineItems: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  inventoryLines: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  resolution: {
+    type: String,
+    enum: ['active', 'canceled', 'refunded'],
+    default: 'active',
+  },
+  inventoryReturnedAt: { type: Date, default: null },
   summary: {
     subtotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },

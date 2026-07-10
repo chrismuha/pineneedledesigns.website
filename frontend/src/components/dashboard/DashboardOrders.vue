@@ -125,6 +125,21 @@ const updateStatus = async (order, status) => {
   }
 }
 
+const resolveOrder = async (order, resolution) => {
+  const verb = resolution === 'refunded' ? 'refund' : 'cancel'
+  if (!window.confirm(`Confirm ${verb} for ${orderLabel(order)}? This will return its inventory exactly once.`)) return
+  savingOrderId.value = order._id
+  error.value = ''
+  try {
+    const updated = await dashboardApi.resolveOrder(order._id, resolution)
+    orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
+}
+
 onMounted(loadOrders)
 watch(
   () => route.fullPath,
@@ -315,6 +330,9 @@ watch(
           </p>
 
           <div class="order-actions">
+            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="resolveOrder(order, 'canceled')">Cancel &amp; Restock</button>
+            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="resolveOrder(order, 'refunded')">Refund &amp; Restock</button>
+            <span v-else class="badge badge-closed">Inventory returned</span>
             <button
               v-if="order.status === 'open'"
               type="button"

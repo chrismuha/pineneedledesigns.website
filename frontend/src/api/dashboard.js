@@ -34,6 +34,10 @@ export const dashboardApi = {
     method: 'PATCH',
     body: JSON.stringify({ status }),
   }),
+  resolveOrder: (id, resolution) => request(`/api/orders/${id}/resolve`, {
+    method: 'POST',
+    body: JSON.stringify({ resolution }),
+  }),
   getGroupedProducts: () => request('/api/products/grouped'),
   getProducts: (params = {}) => {
     const search = new URLSearchParams()

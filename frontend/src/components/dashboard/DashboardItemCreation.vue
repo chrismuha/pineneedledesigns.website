@@ -1,12 +1,13 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const router = useRouter()
+const route = useRoute()
 const collections = ref([])
 const pageLoading = ref(true)
 const loading = ref(false)
@@ -160,7 +161,9 @@ const buildProductFormData = () => {
 
 const loadCollections = async () => {
   collections.value = await dashboardApi.getCollections()
-  if (!form.collectionId) {
+  if (route.query.collection && collections.value.some((collection) => String(collection._id) === String(route.query.collection))) {
+    form.collectionId = String(route.query.collection)
+  } else if (!form.collectionId) {
     form.collectionId = collections.value.find((collection) => !collection.isSystem)?._id
       || collections.value[0]?._id
       || ''

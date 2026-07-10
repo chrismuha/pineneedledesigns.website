@@ -40,6 +40,11 @@ const selectedChoice = (color, index) => {
   if (customRows.value.has(index)) return CUSTOM_VALUE
   return shirtColorTemplates.includes(color) ? color : ''
 }
+const optionAvailable = (option, index) => (
+  option.value === CUSTOM_VALUE
+  || selectedChoice(normalizeRows(props.modelValue)[index], index) === option.value
+  || !normalizeRows(props.modelValue).includes(option.value)
+)
 
 const updateRows = (rows) => emit('update:modelValue', normalizeRows(rows))
 
@@ -92,7 +97,7 @@ const removeColor = (index) => {
           @change="selectChoice(index, $event.target.value)"
         >
           <option value="">Select a shirt color</option>
-          <option v-for="option in dropdownOptions" :key="option.value" :value="option.value">
+          <option v-for="option in dropdownOptions.filter((option) => optionAvailable(option, index))" :key="option.value" :value="option.value">
             {{ option.label }}
           </option>
         </select>

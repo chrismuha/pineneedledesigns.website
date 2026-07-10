@@ -46,9 +46,10 @@ onMounted(loadStats)
   <div class="dashboard-home dashboard-page">
     <div class="page-header">
       <h1>Dashboard</h1>
-      <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">
-        Add New Item
-      </RouterLink>
+      <div class="header-actions">
+        <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">Add New Item</RouterLink>
+        <RouterLink class="new-item-btn btn-primary" to="/dashboard/items">Edit Items</RouterLink>
+      </div>
     </div>
 
     <p v-if="error" class="error-banner">{{ error }}</p>
@@ -112,7 +113,7 @@ onMounted(loadStats)
       </p>
 
       <div v-else class="recent-list">
-        <article v-for="product in stats.recentProducts" :key="product._id" class="recent-card">
+        <RouterLink v-for="product in stats.recentProducts" :key="product._id" class="recent-card recent-card-link" :to="{ path: '/dashboard/items', query: { item: product._id } }">
           <img
             v-if="product.photos?.[0]"
             :src="product.photos[0]"
@@ -124,7 +125,7 @@ onMounted(loadStats)
             <p>${{ Number(product.price).toFixed(2) }}</p>
             <p class="recent-date">{{ formatDate(product.createdAt) }}</p>
           </div>
-        </article>
+        </RouterLink>
       </div>
     </section>
   </div>
@@ -196,6 +197,8 @@ onMounted(loadStats)
   border: 1px solid #e5e5e5;
   border-radius: 10px;
 }
+.recent-card-link { color: inherit; text-decoration: none; }
+.recent-card-link:hover { border-color: var(--dashboard-green); }
 
 .recent-photo {
   width: 72px;

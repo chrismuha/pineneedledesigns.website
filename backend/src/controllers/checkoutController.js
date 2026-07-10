@@ -211,6 +211,7 @@ export const captureOrder = async (req, res) => {
         discountCode,
         items,
         lineItems,
+        inventoryLines: storedOrder.inventoryLines,
         summary,
         tax: storedOrder.tax || {},
       });

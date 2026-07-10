@@ -29,6 +29,7 @@ const previewFilter = ref('all')
 const subcollectionsByCollectionId = ref({})
 const subcollectionsLoadingMap = ref({})
 const collectionFilters = ref({})
+const collectionDetails = ref([])
 
 const {
   subcollections: managerSubcollections,
@@ -525,7 +526,9 @@ const saveProduct = async () => {
 }
 
 const removeProduct = async (productId) => {
-  if (!window.confirm('Remove this item?')) return
+  const product = groupedCollections.value.flatMap((collection) => collection.products).find((item) => item._id === productId)
+  if (!window.confirm(`Delete "${product?.name || 'this item'}"?`)) return
+  if (!window.confirm('Final confirmation: permanently delete this item? This action cannot be undone.')) return
 
   try {
     await dashboardApi.deleteProduct(productId)
@@ -660,6 +663,17 @@ const collectionLabel = (collection) => {
   return collection.name
 }
 
+const setAllCollectionsOpen = (open) => {
+  collectionDetails.value.forEach((details) => { if (details) details.open = open })
+}
+
+const sortedProperties = (properties = []) => [...properties].sort((left, right) => (
+  left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' })
+))
+const sortedOptions = (options = []) => [...options].sort((left, right) => (
+  left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
+))
+
 onMounted(loadItems)
 watch(
   () => route.fullPath,
@@ -677,6 +691,8 @@ watch(
       <h1>Items</h1>
 
       <div class="header-actions">
+        <button type="button" class="btn-outline" @click="setAllCollectionsOpen(false)">Collapse All</button>
+        <button type="button" class="btn-outline" @click="setAllCollectionsOpen(true)">Expand All</button>
         <RouterLink to="/dashboard/create" class="create-btn btn-primary">
           Create New Item
         </RouterLink>
@@ -693,7 +709,7 @@ watch(
     <details
       v-for="collection in groupedCollections"
       :key="collection._id"
-      open
+      ref="collectionDetails"
       class="collection"
       @toggle="onCollectionToggle(collection, $event)"
     >
@@ -719,6 +735,7 @@ watch(
           Loading sub-collections...
         </p>
         <div class="collection-header-actions">
+          <RouterLink :to="{ path: '/dashboard/create', query: { collection: collection._id } }" class="btn-primary">Add New Item</RouterLink>
           <button type="button" class="edit-btn btn-primary" @click="openEditCollectionManager(collection)">
             Rename Collection
           </button>
@@ -823,10 +840,10 @@ watch(
           <div v-if="product.customProperties?.length" class="custom-properties">
             <h4>Custom Properties</h4>
 
-            <div v-for="property in product.customProperties" :key="property.name" class="property">
+            <div v-for="property in sortedProperties(product.customProperties)" :key="property.name" class="property">
               <strong>{{ property.name }}{{ property.required ? ' *' : '' }}</strong>
               <ul>
-                <li v-for="option in property.options" :key="option">{{ option }}</li>
+                <li v-for="option in sortedOptions(property.options)" :key="option">{{ option }}</li>
               </ul>
             </div>
           </div>
@@ -874,7 +891,7 @@ watch(
             class="collection-row"
           >
             <div class="collection-row-main">
-              <span>{{ collection.name }}</span>
+              <RouterLink :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
               <span v-if="collection.subcollections?.length" class="collection-meta">
                 {{ collection.subcollections.length }} subcollections
               </span>

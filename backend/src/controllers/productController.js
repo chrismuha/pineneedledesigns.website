@@ -63,9 +63,11 @@ const normalizeCustomProperties = (properties) => {
       required: Boolean(property?.required),
       options: Array.isArray(property?.options)
         ? property.options.map((option) => String(option || '').trim()).filter(Boolean)
+          .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }))
         : [],
     }))
-    .filter((property) => property.name);
+    .filter((property) => property.name)
+    .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' }));
 };
 
 const parseBooleanField = (value) => {
@@ -194,7 +196,8 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   const body = parseRequestBody(req.body);
-  const uploadedPhotos = (req.files || []).map((file) => `/uploads/${file.filename}`);
+  const uploadedPhotos = (req.files?.photos || []).map((file) => `/uploads/${file.filename}`);
+  const uploadedVideos = (req.files?.videos || []).map((file) => `/uploads/${file.filename}`);
 
   if (!uploadedPhotos.length) {
     return res.status(400).json({ error: 'At least one photo is required.' });
@@ -240,6 +243,7 @@ export const createProduct = async (req, res) => {
     outOfStock: data.quantity === 0 || data.outOfStock,
     quantity: data.quantity ?? 1,
     sortOrder: (maxSort?.sortOrder ?? -1) + 1,
+    videos: uploadedVideos,
   });
 
   const populated = await product.populate(productPopulatePaths);
@@ -255,7 +259,8 @@ export const updateProduct = async (req, res) => {
 
   const body = parseRequestBody(req.body);
   const previousPhotos = [...(product.photos || [])];
-  const uploadedPhotos = (req.files || []).map((file) => `/uploads/${file.filename}`);
+  const uploadedPhotos = (req.files?.photos || []).map((file) => `/uploads/${file.filename}`);
+  const uploadedVideos = (req.files?.videos || []).map((file) => `/uploads/${file.filename}`);
   const { errors, data } = validateProductPayload(body, { requireAll: false });
   if (errors.length) {
     return res.status(400).json({ error: errors.join(' ') });
@@ -280,6 +285,7 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ error: 'A maximum of 20 photos is allowed.' });
     }
   }
+  if (uploadedVideos.length) product.videos = [...(product.videos || []), ...uploadedVideos];
   if (req.body?.price !== undefined) product.price = data.price;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;

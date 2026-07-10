@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import upload from '../middleware/upload.js';
+import upload, { convertUploadedMedia } from '../middleware/upload.js';
 
 import {
   listProducts,
@@ -14,11 +14,11 @@ import {
 const router = Router();
 
 const handlePhotoUpload = (req, res, next) => {
-  upload.array('photos', 20)(req, res, (err) => {
+  upload.fields([{ name: 'photos', maxCount: 20 }, { name: 'videos', maxCount: 10 }])(req, res, (err) => {
     if (err) {
       return res.status(400).json({ error: err.message || 'Photo upload failed.' });
     }
-    return next();
+    return convertUploadedMedia(req, res, next);
   });
 };
 

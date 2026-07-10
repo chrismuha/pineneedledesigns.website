@@ -29,6 +29,7 @@ export const persistCapturedOrder = async ({
   discountCode,
   items,
   lineItems,
+  inventoryLines,
   summary,
   tax,
 }) => {
@@ -39,6 +40,7 @@ export const persistCapturedOrder = async ({
     discountCode: discountCode || '',
     items: Array.isArray(items) ? items : [],
     lineItems: Array.isArray(lineItems) ? lineItems : [],
+    inventoryLines: Array.isArray(inventoryLines) ? inventoryLines : [],
     summary: normalizeSummary(summary),
     tax: tax || {},
   };
