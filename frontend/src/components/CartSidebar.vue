@@ -30,7 +30,12 @@
                   <div class="item-controls">
                     <button class="qty-btn" type="button" @click="updateQuantity(cartLineId(item), Math.max(1, item.quantity - 1))">-</button>
                     <span class="quantity">{{ item.quantity }}</span>
-                    <button class="qty-btn" type="button" @click="updateQuantity(cartLineId(item), item.quantity + 1)">+</button>
+                    <button
+                      class="qty-btn"
+                      type="button"
+                      :disabled="Number.isInteger(item.availableQuantity) && item.quantity >= item.availableQuantity"
+                      @click="updateQuantity(cartLineId(item), item.quantity + 1)"
+                    >+</button>
                   </div>
                   <button class="remove-button" type="button" @click="removeItem(cartLineId(item))" aria-label="Remove item">×</button>
                 </div>

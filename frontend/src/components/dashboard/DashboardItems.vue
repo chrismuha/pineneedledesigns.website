@@ -458,6 +458,10 @@ const handleEditCollectionChange = async () => {
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
 
+const handleEditQuantityChange = () => {
+  if (Number(editingProduct.value?.quantity) === 0) editingProduct.value.outOfStock = true
+}
+
 const saveProduct = async () => {
   if (!editingProduct.value) return
 
@@ -505,6 +509,7 @@ const saveProduct = async () => {
     formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
     formData.append('freeShipping', String(editingProduct.value.freeShipping))
     formData.append('outOfStock', String(editingProduct.value.outOfStock))
+    formData.append('quantity', String(editingProduct.value.quantity ?? 1))
     formData.append('customProperties', JSON.stringify(customProperties))
     formData.append('photos', JSON.stringify(editingProduct.value.photos || []))
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
@@ -807,6 +812,7 @@ watch(
             <strong>Subcollection:</strong> {{ productSubcollectionLabel(product) }}
           </p>
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
+          <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
           <p>
@@ -1081,8 +1087,21 @@ watch(
         </div>
 
         <div class="field">
+          <label>Quantity Available</label>
+          <input
+            v-model.number="editingProduct.quantity"
+            type="number"
+            min="0"
+            step="1"
+            required
+            @input="handleEditQuantityChange"
+          >
+          <p class="hint">Setting quantity to 0 automatically marks the item Out Of Stock.</p>
+        </div>
+
+        <div class="field">
           <label>
-            <input v-model="editingProduct.outOfStock" type="checkbox">
+            <input v-model="editingProduct.outOfStock" type="checkbox" :disabled="Number(editingProduct.quantity) === 0">
             Out Of Stock
           </label>
         </div>

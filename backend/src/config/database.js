@@ -161,6 +161,20 @@ const repairLegacyProductIndex = async () => {
   }
 };
 
+const backfillProductQuantities = async () => {
+  const result = await Product.updateMany(
+    { quantity: { $exists: false } },
+    { $set: { quantity: 1 } },
+  );
+  if (result.modifiedCount) {
+    console.log(`ℹ️ Initialized inventory quantity to 1 for ${result.modifiedCount} products.`);
+  }
+  await Product.updateMany(
+    { quantity: 0, outOfStock: { $ne: true } },
+    { $set: { outOfStock: true } },
+  );
+};
+
 const formatMongoConnectionError = (error) => {
   const message = String(error?.message || error);
   const hostname = (() => {
@@ -220,6 +234,7 @@ export const connectDatabase = async () => {
 
   await migrateLegacySubcollectionFields();
   await repairLegacyProductIndex();
+  await backfillProductQuantities();
   await backfillProductSubcollectionIds();
   await seedAuthorizedUsers();
   console.log('ℹ️ Ensured authorized dashboard users exist');

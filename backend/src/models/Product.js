@@ -55,6 +55,15 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  quantity: {
+    type: Number,
+    default: 1,
+    min: 0,
+    validate: {
+      validator: Number.isInteger,
+      message: 'Quantity must be a whole number.',
+    },
+  },
   sortOrder: {
     type: Number,
     default: 0,

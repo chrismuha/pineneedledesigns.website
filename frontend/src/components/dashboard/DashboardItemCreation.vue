@@ -33,6 +33,7 @@ const form = reactive({
   shippingCost: '',
   freeShipping: false,
   outOfStock: false,
+  quantity: 1,
   customProperties: [],
   subCollectionId: '',
 })
@@ -110,6 +111,7 @@ const resetForm = () => {
   form.shippingCost = ''
   form.freeShipping = false
   form.outOfStock = false
+  form.quantity = 1
   form.customProperties = []
   form.subCollectionId = ''
   clearPhotos()
@@ -145,6 +147,7 @@ const buildProductFormData = () => {
   formData.append('shippingCost', String(form.shippingCost || 0))
   formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
+  formData.append('quantity', String(form.quantity))
   formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
 
@@ -225,6 +228,13 @@ watch(
     } catch (err) {
       error.value = err.message
     }
+  },
+)
+
+watch(
+  () => form.quantity,
+  (quantity) => {
+    if (Number(quantity) === 0) form.outOfStock = true
   },
 )
 </script>
@@ -402,8 +412,14 @@ watch(
       <section class="card">
         <div class="section-header"><h2>Inventory</h2></div>
 
+        <div class="field">
+          <label>Quantity Available *</label>
+          <input v-model.number="form.quantity" type="number" min="0" step="1" required>
+          <p class="hint">Setting quantity to 0 automatically marks the item Out Of Stock.</p>
+        </div>
+
         <label class="checkbox-row">
-          <input v-model="form.outOfStock" type="checkbox">
+          <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
           Out Of Stock
         </label>
       </section>

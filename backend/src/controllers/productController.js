@@ -106,6 +106,9 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   if (requireAll && !collectionId) errors.push('Collection is required.');
   if (body?.price !== undefined && Number(body.price) < 0) errors.push('Price must be zero or greater.');
   if (body?.shippingCost !== undefined && Number(body.shippingCost) < 0) errors.push('Shipping cost must be zero or greater.');
+  if (body?.quantity !== undefined && (!Number.isInteger(Number(body.quantity)) || Number(body.quantity) < 0)) {
+    errors.push('Quantity must be a whole number of zero or greater.');
+  }
 
   return {
     errors,
@@ -121,6 +124,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       shippingCost: body?.shippingCost !== undefined ? Number(body.shippingCost) : undefined,
       freeShipping: Boolean(body?.freeShipping),
       outOfStock: Boolean(body?.outOfStock),
+      quantity: body?.quantity !== undefined ? Number(body.quantity) : undefined,
     },
   };
 };
@@ -233,7 +237,8 @@ export const createProduct = async (req, res) => {
     price: data.price,
     shippingCost: data.shippingCost ?? 0,
     freeShipping: data.freeShipping,
-    outOfStock: data.outOfStock,
+    outOfStock: data.quantity === 0 || data.outOfStock,
+    quantity: data.quantity ?? 1,
     sortOrder: (maxSort?.sortOrder ?? -1) + 1,
   });
 
@@ -278,7 +283,9 @@ export const updateProduct = async (req, res) => {
   if (req.body?.price !== undefined) product.price = data.price;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;
+  if (req.body?.quantity !== undefined) product.quantity = data.quantity;
   if (req.body?.outOfStock !== undefined) product.outOfStock = data.outOfStock;
+  if (product.quantity === 0) product.outOfStock = true;
 
   if (data.collectionId) {
     if (!validId(String(data.collectionId))) return res.status(400).json({ error: 'Invalid collection ID.' });

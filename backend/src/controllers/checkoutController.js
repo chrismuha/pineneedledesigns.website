@@ -3,8 +3,59 @@ import { config } from '../config/index.js';
 import { ordersController, paypal } from '../services/paypal.js';
 import { getEmailRecipients, getEmailSender, mailerConfigured, sendEmail } from '../services/mailer.js';
 import { persistCapturedOrder } from '../services/orderPersistence.js';
+import { Product } from '../models/Product.js';
+import { isValidObjectId, Types } from 'mongoose';
 
 const orderMap = new Map();
+
+const findProductByStorefrontId = async (id) => {
+  const value = String(id || '').trim();
+  const filters = [];
+  if (isValidObjectId(value)) filters.push({ _id: Types.ObjectId.createFromHexString(value) });
+  if (/^\d+$/.test(value)) filters.push({ legacyId: Number(value) });
+  return filters.length ? Product.findOne({ $or: filters }) : null;
+};
+
+const validateCartInventory = async (cart) => {
+  const requestedByProduct = new Map();
+  for (const item of cart) {
+    const id = String(item.id || '');
+    requestedByProduct.set(id, (requestedByProduct.get(id) || 0) + Number(item.quantity || 0));
+  }
+
+  const inventoryLines = [];
+  for (const [id, requestedQuantity] of requestedByProduct) {
+    const product = await findProductByStorefrontId(id);
+    if (!product) return { error: 'An item in your cart is no longer available.' };
+    const availableQuantity = Number.isInteger(product.quantity) ? product.quantity : 1;
+    if (product.outOfStock || requestedQuantity > availableQuantity) {
+      return {
+        error: `${product.name} has only ${availableQuantity} available. Please update your cart.`,
+      };
+    }
+    inventoryLines.push({ productId: product._id, quantity: requestedQuantity });
+  }
+
+  return { inventoryLines };
+};
+
+const deductCapturedInventory = async (inventoryLines = []) => {
+  for (const line of inventoryLines) {
+    const product = await Product.findOneAndUpdate(
+      { _id: line.productId, quantity: { $gte: line.quantity } },
+      { $inc: { quantity: -line.quantity } },
+      { new: true },
+    );
+    if (!product) {
+      console.error(`Inventory deduction failed for product ${line.productId}.`);
+      continue;
+    }
+    if (product.quantity === 0 && !product.outOfStock) {
+      product.outOfStock = true;
+      await product.save();
+    }
+  }
+};
 
 const getDiscountAmount = (total, code) => {
   if (!code || typeof code !== 'string') return 0;
@@ -23,6 +74,15 @@ export const createCheckout = async (req, res) => {
   try {
     const { code, customer, billingAddress, shippingAddress } = req.body || {};
     const cart = req.session.cart || [];
+
+    if (!cart.length) {
+      return res.status(400).json({ error: 'Your cart is empty.' });
+    }
+
+    const inventoryCheck = await validateCartInventory(cart);
+    if (inventoryCheck.error) {
+      return res.status(409).json({ error: inventoryCheck.error });
+    }
 
     if (!customer?.email || !customer?.phone || !customer?.type) {
       return res.status(400).json({ error: 'Customer email, phone, and type are required for checkout.' });
@@ -109,6 +169,7 @@ export const createCheckout = async (req, res) => {
       summary: req.body.summary,
       lineItems: req.body.lineItems,
       tax: req.body.tax,
+      inventoryLines: inventoryCheck.inventoryLines,
     });
 
     res.json({ url: link });
@@ -135,6 +196,8 @@ export const captureOrder = async (req, res) => {
     const {
       items, customer, billingAddress, shippingAddress, discountCode,
     } = storedOrder;
+    await deductCapturedInventory(storedOrder.inventoryLines);
+    orderMap.delete(order.id);
     const money = (value) => `$${Number(value || 0).toFixed(2)}`;
     const summary = storedOrder.summary || {};
     const lineItems = storedOrder.lineItems || [];
