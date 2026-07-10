@@ -1,9 +1,22 @@
-export const slugify = (value) => value
-  .toLowerCase()
-  .trim()
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-+/, '')
-  .replace(/-+$/, '');
+export const slugify = (value) => {
+  let result = '';
+  let separatorPending = false;
+
+  for (const character of String(value).toLowerCase().trim()) {
+    const code = character.charCodeAt(0);
+    const isLetter = code >= 97 && code <= 122;
+    const isNumber = code >= 48 && code <= 57;
+    if (isLetter || isNumber) {
+      if (separatorPending && result) result += '-';
+      result += character;
+      separatorPending = false;
+    } else if (result) {
+      separatorPending = true;
+    }
+  }
+
+  return result;
+};
 
 export const createUniqueSlug = async (Model, name, excludeId = null) => {
   const base = slugify(name) || 'collection';

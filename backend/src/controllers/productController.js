@@ -1,9 +1,10 @@
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
+const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
 
 const normalizeSubCollectionId = (value) => {
   if (value === null || value === undefined || value === '') {
@@ -25,8 +26,14 @@ const resolveSubCollectionId = async (collectionId, subCollectionId, { requireWh
   if (!id) {
     return { id: null, error: null };
   }
+  if (!validId(id)) {
+    return { id: null, error: 'Subcollection is invalid for this collection.' };
+  }
 
-  const subcollection = await Subcollection.findOne({ _id: id, collectionId }).select('_id');
+  const subcollection = await Subcollection.findOne({
+    _id: objectId(id),
+    collectionId,
+  }).select('_id');
   if (!subcollection) {
     return { id: null, error: 'Subcollection is invalid for this collection.' };
   }
@@ -137,11 +144,11 @@ export const listProducts = async (req, res) => {
   const filter = {};
   if (req.query.collectionId) {
     if (!validId(req.query.collectionId)) return res.status(400).json({ error: 'Invalid collection ID.' });
-    filter.collectionId = req.query.collectionId;
+    filter.collectionId = objectId(req.query.collectionId);
   }
   if (req.query.subCollectionId) {
     if (!validId(req.query.subCollectionId)) return res.status(400).json({ error: 'Invalid subcollection ID.' });
-    filter.subCollectionId = req.query.subCollectionId;
+    filter.subCollectionId = objectId(req.query.subCollectionId);
   }
 
   const products = await Product.find(filter)
@@ -155,7 +162,7 @@ export const listProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid product ID.' });
-  const product = await Product.findById(req.params.id)
+  const product = await Product.findById(objectId(req.params.id))
     .populate('collectionId', 'name slug isSystem')
     .populate('subCollectionId', 'name slug sortOrder collectionId')
     .lean();
@@ -185,7 +192,7 @@ export const createProduct = async (req, res) => {
   }
   if (!validId(String(data.collectionId))) return res.status(400).json({ error: 'Invalid collection ID.' });
 
-  const collection = await Collection.findById(data.collectionId);
+  const collection = await Collection.findById(objectId(data.collectionId));
   if (!collection) {
     return res.status(400).json({ error: 'Collection not found.' });
   }
@@ -223,7 +230,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid product ID.' });
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(objectId(req.params.id));
   if (!product) {
     return res.status(404).json({ error: 'Product not found.' });
   }
@@ -250,7 +257,7 @@ export const updateProduct = async (req, res) => {
 
   if (data.collectionId) {
     if (!validId(String(data.collectionId))) return res.status(400).json({ error: 'Invalid collection ID.' });
-    const collection = await Collection.findById(data.collectionId);
+    const collection = await Collection.findById(objectId(data.collectionId));
     if (!collection) {
       return res.status(400).json({ error: 'Collection not found.' });
     }
@@ -286,7 +293,7 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid product ID.' });
-  const product = await Product.findByIdAndDelete(req.params.id);
+  const product = await Product.findByIdAndDelete(objectId(req.params.id));
   if (!product) {
     return res.status(404).json({ error: 'Product not found.' });
   }
@@ -304,15 +311,17 @@ export const reorderProducts = async (req, res) => {
   if (!validId(String(collectionId)) || orderedIds.some((id) => !validId(String(id)))) {
     return res.status(400).json({ error: 'Invalid product ordering IDs.' });
   }
+  const safeCollectionId = objectId(collectionId);
+  const safeOrderedIds = orderedIds.map(objectId);
 
-  const updates = orderedIds.map((id, index) => Product.updateOne(
-    { _id: id, collectionId },
+  const updates = safeOrderedIds.map((id, index) => Product.updateOne(
+    { _id: id, collectionId: safeCollectionId },
     { $set: { sortOrder: index } },
   ));
 
   await Promise.all(updates);
 
-  const products = await Product.find({ collectionId })
+  const products = await Product.find({ collectionId: safeCollectionId })
     .populate('collectionId', 'name slug isSystem')
     .populate('subCollectionId', 'name slug sortOrder')
     .sort({ sortOrder: 1, name: 1 })

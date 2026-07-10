@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { installCsrfFetch } from './api/csrf.js'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
@@ -21,4 +22,5 @@ const bootstrap = async () => {
   app.mount('#app')
 }
 
+installCsrfFetch()
 bootstrap()
