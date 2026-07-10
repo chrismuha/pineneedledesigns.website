@@ -842,9 +842,11 @@ watch(
 
     <div v-if="showCollectionManager" class="modal-overlay">
       <section class="modal-card modal-card--wide collection-manager-modal">
-        <div class="modal-header">
+        <div class="modal-header collection-manager-header">
           <h2>Manage Collections</h2>
-          <button type="button" class="clear-btn btn-outline" @click="closeCollectionManager">Close</button>
+          <button type="button" class="collection-close-button" @click="closeCollectionManager">
+            Close
+          </button>
         </div>
 
         <p v-if="modalError" class="error-banner">{{ modalError }}</p>
@@ -1383,6 +1385,29 @@ watch(
 .collection-manager-modal {
   max-height: calc(100dvh - 32px);
 }
+
+.collection-manager-header {
+  position: sticky;
+  top: -18px;
+  z-index: 5;
+  margin: -18px -2px 18px;
+  padding: 18px 2px 14px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #fff;
+}
+
+.collection-close-button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: var(--dashboard-red);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.collection-close-button:hover { filter: brightness(.92); }
 
 .field { margin-bottom: 16px; align-items: center; }
 /* .field label { display: block; margin-bottom: 8px; } */
