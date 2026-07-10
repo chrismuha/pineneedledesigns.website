@@ -107,7 +107,7 @@ const removeSize = (index) => {
           @input="setCustomSize(index, $event.target.value)"
         >
       </div>
-      <button type="button" class="remove-size" :disabled="disabled" @click="removeSize(index)">Remove</button>
+      <button v-if="normalizeRows(modelValue).length > 1 || size" type="button" class="remove-size" :disabled="disabled" @click="removeSize(index)">Remove</button>
     </div>
     <button type="button" class="add-size" :disabled="disabled" @click="addSize">+ Add Size</button>
     <p class="size-hint">Choose a shirt size template or select Custom to enter another size.</p>

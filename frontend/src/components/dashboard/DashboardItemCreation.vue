@@ -428,10 +428,6 @@ watch(
       </section>
 
       <div class="actions">
-        <button type="button" class="btn-ghost" @click="resetForm">
-          Clear
-        </button>
-
         <button type="submit" class="btn-primary" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length">
           {{ loading ? 'Creating...' : 'Create Item' }}
         </button>
@@ -612,6 +608,8 @@ textarea {
 }
 
 @media (max-width: 768px) {
+  .item-form { gap: 14px; }
+  .card { padding: 18px 16px; border-radius: 12px; }
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -620,5 +618,10 @@ textarea {
     flex-direction: column;
     align-items: stretch;
   }
+  .option-row { flex-direction: column; }
+  .option-row button { align-self: flex-start; }
+  .actions { position: sticky; bottom: 68px; z-index: 20; padding: 10px 0; background: rgba(255, 255, 255, .96); }
+  .actions .btn-primary { width: 100%; min-height: 48px; }
+  input, select, textarea { min-height: 48px; font-size: 16px; }
 }
 </style>

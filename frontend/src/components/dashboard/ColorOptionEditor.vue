@@ -113,7 +113,7 @@ const removeColor = (index) => {
         >
       </div>
 
-      <button type="button" class="remove-color" :disabled="disabled" @click="removeColor(index)">
+      <button v-if="normalizeRows(modelValue).length > 1 || color" type="button" class="remove-color" :disabled="disabled" @click="removeColor(index)">
         Remove
       </button>
     </div>

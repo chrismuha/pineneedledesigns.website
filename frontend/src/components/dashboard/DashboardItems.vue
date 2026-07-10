@@ -1697,14 +1697,20 @@ watch(
     align-items: stretch;
   }
 
-  .modal-overlay { padding: 10px; }
-  .modal-card { padding: 18px; }
-  .collection-manager-modal { max-height: calc(100dvh - 20px); }
+  .modal-overlay { padding: max(10px, env(safe-area-inset-top)) 10px calc(78px + env(safe-area-inset-bottom)); overflow-y: auto; }
+  .modal-card { padding: 18px 14px; max-height: none; overflow: visible; }
+  .collection-manager-modal { max-height: none; }
   .row-actions { width: 100%; justify-content: stretch; }
   .row-actions button { flex: 1 1 140px; }
   .add-photos-control { padding: 15px; }
   .confirmation-actions { flex-direction: column-reverse; }
   .confirmation-actions button { width: 100%; min-width: 0; }
+  .modal-header { position: sticky; top: 0; z-index: 10; margin: -18px -14px 16px; padding: 16px 14px; background: #fff; border-bottom: 1px solid #e6e6e6; }
+  .inline-field, .edit-section-header, .edit-property-header, .edit-option-row { flex-direction: column; align-items: stretch; width: 100%; }
+  .inline-field > *, .edit-section-header > *, .edit-property-header > *, .edit-option-row > * { width: 100%; box-sizing: border-box; }
+  .item-header { align-items: flex-start; }
+  .item-card .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .item-card .actions button { min-height: 44px; }
 }
 
 @media (max-width: 850px) {

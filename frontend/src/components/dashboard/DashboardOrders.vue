@@ -540,5 +540,11 @@ watch(
   .info-grid {
     grid-template-columns: 1fr;
   }
+  .order-summary { align-items: flex-start; }
+  .order-content { padding: 16px 12px; }
+  .order-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .items-table { min-width: 680px; }
+  .order-actions { flex-direction: column; align-items: stretch; }
+  .order-actions button { width: 100%; min-height: 46px; }
 }
 </style>

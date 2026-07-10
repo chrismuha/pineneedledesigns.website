@@ -195,8 +195,8 @@ const isActive = (path) => {
   }
 
   .content {
-    padding: 16px;
-    padding-bottom: 80px; /* space for bottom nav */
+    padding: 14px 12px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
 
   .bottom-nav {
@@ -205,12 +205,12 @@ const isActive = (path) => {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 64px;
+    min-height: 64px;
     background: #fff;
     border-top: 1px solid #e6e6e6;
     z-index: 1000;
     gap: 4px;
-    padding: 8px 12px;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     justify-content: space-between;
     align-items: center;
   }
