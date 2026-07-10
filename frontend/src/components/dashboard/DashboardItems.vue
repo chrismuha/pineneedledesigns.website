@@ -709,13 +709,12 @@ watch(
             Rename Collection
           </button>
           <button
-            v-if="!collection.products.length"
             type="button"
             class="delete-btn btn-danger"
             :disabled="saving"
             @click="deleteCollection(collection)"
           >
-            Delete Empty Collection
+            Delete Collection
           </button>
         </div>
         <div
