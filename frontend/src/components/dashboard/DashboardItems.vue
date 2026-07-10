@@ -841,7 +841,7 @@ watch(
     </details>
 
     <div v-if="showCollectionManager" class="modal-overlay">
-      <section class="modal-card modal-card--wide">
+      <section class="modal-card modal-card--wide collection-manager-modal">
         <div class="modal-header">
           <h2>Manage Collections</h2>
           <button type="button" class="clear-btn btn-outline" @click="closeCollectionManager">Close</button>
@@ -1380,6 +1380,10 @@ watch(
   max-width: 860px;
 }
 
+.collection-manager-modal {
+  max-height: calc(100dvh - 32px);
+}
+
 .field { margin-bottom: 16px; align-items: center; }
 /* .field label { display: block; margin-bottom: 8px; } */
 
@@ -1631,6 +1635,7 @@ watch(
 
   .modal-overlay { padding: 10px; }
   .modal-card { padding: 18px; }
+  .collection-manager-modal { max-height: calc(100dvh - 20px); }
   .row-actions { width: 100%; justify-content: stretch; }
   .row-actions button { flex: 1 1 140px; }
   .add-photos-control { padding: 15px; }
