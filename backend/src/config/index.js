@@ -2,20 +2,27 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
-dotenv.config({
-  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.env'),
-  override: true,
-});
+const envPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.env');
+dotenv.config({ path: envPath });
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '../../..');
 
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pineneedledesigns';
+
+if (process.env.NODE_ENV === 'production' && (!process.env.MONGODB_URI || mongoUri.includes('127.0.0.1') || mongoUri.includes('localhost'))) {
+  throw new Error(
+    'Production requires MONGODB_URI pointing to DigitalOcean MongoDB. '
+    + 'Set the GitHub Actions secret MONGODB_URI and redeploy.',
+  );
+}
+
 export const config = {
   port: Number(process.env.PORT) || 3001,
   isProduction: process.env.NODE_ENV === 'production',
-  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pineneedledesigns',
+  mongoUri,
   sessionSecret: process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'local-development-only'),
   appBaseUrl: process.env.APP_BASE_URL || (process.env.NODE_ENV === 'production'
     ? 'https://pineneedledesigns.store'
