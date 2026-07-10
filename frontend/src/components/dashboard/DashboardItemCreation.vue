@@ -120,8 +120,12 @@ const createCollection = async () => {
   collectionError.value = ''
   try {
     const collection = await dashboardApi.createCollection(name)
-    await loadCollections()
-    form.collectionId = String(collection._id)
+    collections.value = await dashboardApi.getCollections()
+    const createdCollection = collections.value.find((item) => String(item._id) === String(collection._id))
+    if (!createdCollection) {
+      throw new Error('The collection was created but could not be selected. Please reload and try again.')
+    }
+    form.collectionId = String(createdCollection._id)
     form.subCollectionId = ''
     await loadSubcollections(form.collectionId)
     showCreateCollection.value = false
@@ -484,7 +488,7 @@ watch(
     </form>
 
     <div v-if="showCreateCollection" class="modal-overlay" @click.self="closeCreateCollection">
-      <section class="modal-card create-collection-modal" role="dialog" aria-modal="true" aria-labelledby="create-collection-title">
+      <section class="modal-card modal-card--fullscreen create-collection-modal" role="dialog" aria-modal="true" aria-labelledby="create-collection-title">
         <div class="modal-header">
           <h2 id="create-collection-title">Create New Collection</h2>
           <button type="button" class="clear-btn" :disabled="creatingCollection" @click="closeCreateCollection">Cancel</button>
@@ -679,9 +683,7 @@ textarea {
   cursor: pointer;
 }
 
-.create-collection-modal {
-  width: min(480px, 100%);
-}
+.create-collection-modal form { max-width: 680px; }
 
 .file-selector-style::file-selector-button {
   background: var(--dashboard-green);

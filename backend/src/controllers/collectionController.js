@@ -12,21 +12,29 @@ export const listCollections = async (_req, res) => {
 };
 
 export const createCollection = async (req, res) => {
-  const name = String(req.body?.name || '').trim();
-  if (!name) {
-    return res.status(400).json({ error: 'Collection name is required.' });
+  try {
+    const name = String(req.body?.name || '').trim();
+    if (!name) {
+      return res.status(400).json({ error: 'Collection name is required.' });
+    }
+
+    const maxSort = await Collection.findOne({ isSystem: false }).sort({ sortOrder: -1 }).select('sortOrder');
+    const slug = await createUniqueSlug(Collection, name);
+
+    const collection = await Collection.create({
+      name,
+      slug,
+      sortOrder: (maxSort?.sortOrder ?? -1) + 1,
+    });
+
+    return res.status(201).json(collection);
+  } catch (err) {
+    if (err?.code === 11000) {
+      return res.status(409).json({ error: 'A collection with that name already exists.' });
+    }
+    console.error('Failed to create collection:', err);
+    return res.status(500).json({ error: 'Failed to create collection.' });
   }
-
-  const maxSort = await Collection.findOne({ isSystem: false }).sort({ sortOrder: -1 }).select('sortOrder');
-  const slug = await createUniqueSlug(Collection, name);
-
-  const collection = await Collection.create({
-    name,
-    slug,
-    sortOrder: (maxSort?.sortOrder ?? -1) + 1,
-  });
-
-  res.status(201).json(collection);
 };
 
 export const updateCollection = async (req, res) => {
