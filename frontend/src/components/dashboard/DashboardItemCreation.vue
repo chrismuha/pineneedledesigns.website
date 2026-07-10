@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
+import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const router = useRouter()
 const collections = ref([])
@@ -26,7 +27,7 @@ const form = reactive({
   name: '',
   collectionId: '',
   colors: [''],
-  size: '',
+  sizes: [''],
   importantNotes: '',
   description: '',
   price: '',
@@ -94,7 +95,7 @@ const resetForm = () => {
     || collections.value[0]?._id
     || ''
   form.colors = ['']
-  form.size = ''
+  form.sizes = ['']
   form.importantNotes = ''
   form.description = ''
   form.price = ''
@@ -111,22 +112,26 @@ const resetForm = () => {
 const buildProductFormData = () => {
   const formData = new FormData()
   const colors = form.colors.map((color) => color.trim()).filter(Boolean)
+  const sizes = form.sizes.map((size) => size.trim()).filter(Boolean)
   const customProperties = form.customProperties
     .map((property) => ({
       name: property.name.trim(),
       required: property.required,
       options: property.options.map((option) => option.trim()).filter(Boolean),
     }))
-    .filter((property) => property.name && property.name.toLowerCase() !== 'color')
+    .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
 
   if (colors.length) {
     customProperties.unshift({ name: 'Color', required: true, options: colors })
+  }
+  if (sizes.length) {
+    customProperties.push({ name: 'Size', required: true, options: sizes })
   }
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
-  formData.append('size', form.size.trim())
+  formData.append('size', sizes.join(', '))
   formData.append('importantNotes', form.importantNotes.trim())
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
@@ -284,8 +289,9 @@ watch(
           </div>
 
           <div class="field">
-            <label>Size</label>
-            <input v-model="form.size" type="text" placeholder="S, M, L, XL">
+            <label>Sizes</label>
+            <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
+            <p class="hint">Each size becomes an option in one Size dropdown on the item page.</p>
           </div>
         </div>
 

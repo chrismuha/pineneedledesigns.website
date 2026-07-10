@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
+import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const route = useRoute()
 const groupedCollections = ref([])
@@ -353,12 +354,19 @@ const openEditModal = async (product) => {
   const colors = colorProperty?.options?.length
     ? [...colorProperty.options]
     : String(product.color || '').split(',').map((color) => color.trim()).filter(Boolean)
+  const sizeProperty = customProperties.find(
+    (property) => String(property.name).toLowerCase() === 'size',
+  )
+  const sizes = sizeProperty?.options?.length
+    ? [...sizeProperty.options]
+    : String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)
 
   editingProduct.value = {
     ...product,
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
     colors: colors.length ? colors : [''],
+    sizes: sizes.length ? sizes : [''],
     customProperties,
   }
   editModalError.value = ''
@@ -415,11 +423,15 @@ const saveProduct = async () => {
 
   try {
     const colors = editingProduct.value.colors.map((color) => color.trim()).filter(Boolean)
+    const sizes = editingProduct.value.sizes.map((size) => size.trim()).filter(Boolean)
     const customProperties = editingProduct.value.customProperties.filter(
-      (property) => String(property.name).toLowerCase() !== 'color',
+      (property) => !['color', 'size'].includes(String(property.name).toLowerCase()),
     )
     if (colors.length) {
       customProperties.unshift({ name: 'Color', required: true, options: colors })
+    }
+    if (sizes.length) {
+      customProperties.push({ name: 'Size', required: true, options: sizes })
     }
 
     await dashboardApi.updateProduct(editingProduct.value._id, {
@@ -427,7 +439,7 @@ const saveProduct = async () => {
       collectionId: editingProduct.value.collectionId,
       subCollectionId: editingProduct.value.subCollectionId || null,
       color: colors.join(', '),
-      size: editingProduct.value.size,
+      size: sizes.join(', '),
       importantNotes: editingProduct.value.importantNotes,
       description: editingProduct.value.description,
       price: Number(editingProduct.value.price),
@@ -855,8 +867,9 @@ watch(
         </div>
 
         <div class="field">
-          <label>Size</label>
-          <input v-model="editingProduct.size" type="text">
+          <label>Sizes</label>
+          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
+          <p class="hint">These appear together in one Size dropdown.</p>
         </div>
 
         <div class="field">
