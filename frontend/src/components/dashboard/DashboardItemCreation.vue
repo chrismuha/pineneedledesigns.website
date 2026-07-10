@@ -16,6 +16,10 @@ const fieldErrors = reactive({
   subCollectionId: '',
 })
 const photoFiles = ref([])
+const showCreateCollection = ref(false)
+const newCollectionName = ref('')
+const collectionError = ref('')
+const creatingCollection = ref(false)
 
 const {
   subcollections,
@@ -50,6 +54,10 @@ const sortedCollections = computed(() => [...collections.value].sort((left, righ
 const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
   left.name.localeCompare(right.name, undefined, { numeric: true })
 )))
+const isReservedPropertyName = (name) => ['color', 'size'].includes(String(name || '').trim().toLowerCase())
+const hasReservedCustomProperty = computed(() => form.customProperties.some(
+  (property) => isReservedPropertyName(property.name),
+))
 
 const revokePhotoPreview = (photo) => {
   if (photo?.previewUrl) {
@@ -86,6 +94,43 @@ const addProperty = () => {
     required: false,
     options: [''],
   })
+}
+
+const openCreateCollection = () => {
+  newCollectionName.value = ''
+  collectionError.value = ''
+  showCreateCollection.value = true
+}
+
+const closeCreateCollection = () => {
+  if (creatingCollection.value) return
+  showCreateCollection.value = false
+  newCollectionName.value = ''
+  collectionError.value = ''
+}
+
+const createCollection = async () => {
+  const name = newCollectionName.value.trim()
+  if (!name) {
+    collectionError.value = 'Collection name is required.'
+    return
+  }
+
+  creatingCollection.value = true
+  collectionError.value = ''
+  try {
+    const collection = await dashboardApi.createCollection(name)
+    await loadCollections()
+    form.collectionId = String(collection._id)
+    form.subCollectionId = ''
+    await loadSubcollections(form.collectionId)
+    showCreateCollection.value = false
+    newCollectionName.value = ''
+  } catch (err) {
+    collectionError.value = err.message
+  } finally {
+    creatingCollection.value = false
+  }
 }
 
 const removeProperty = (index) => {
@@ -132,13 +177,6 @@ const buildProductFormData = () => {
     }))
     .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
 
-  if (colors.length) {
-    customProperties.unshift({ name: 'Color', required: true, options: colors })
-  }
-  if (sizes.length) {
-    customProperties.push({ name: 'Size', required: true, options: sizes })
-  }
-
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
@@ -180,6 +218,11 @@ const handleCollectionChange = async () => {
 
 const submitForm = async () => {
   fieldErrors.subCollectionId = ''
+
+  if (hasReservedCustomProperty.value) {
+    error.value = 'Color and Size are built-in properties and cannot be added as custom properties.'
+    return
+  }
 
   if (requiresSubcollection.value && !form.subCollectionId) {
     fieldErrors.subCollectionId = 'Please select a subcollection for this collection.'
@@ -275,6 +318,9 @@ watch(
                 {{ collection.isSystem ? 'Uncategorized' : collection.name }}
               </option>
             </select>
+            <button type="button" class="collection-create-trigger" @click="openCreateCollection">
+              + Create new collection
+            </button>
           </div>
 
           <div v-if="requiresSubcollection || subcollectionsLoading" class="field field--full">
@@ -330,7 +376,7 @@ watch(
         </div>
 
         <p v-if="!form.customProperties.length" class="hint">
-          Add dropdown properties like color or print position.
+          Add dropdown properties like print position or material. Color and Size are managed above.
         </p>
 
         <div
@@ -342,8 +388,11 @@ watch(
             <input
               v-model="property.name"
               type="text"
-              placeholder="Property Name (e.g. Color)"
+              placeholder="Property Name (e.g. Material)"
             >
+            <p v-if="isReservedPropertyName(property.name)" class="field-error">
+              Color and Size are built-in properties. Use the fields above.
+            </p>
 
             <label class="checkbox-row">
               <input v-model="property.required" type="checkbox">
@@ -428,11 +477,33 @@ watch(
       </section>
 
       <div class="actions">
-        <button type="submit" class="btn-primary" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length">
+        <button type="submit" class="btn-primary" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length || hasReservedCustomProperty">
           {{ loading ? 'Creating...' : 'Create Item' }}
         </button>
       </div>
     </form>
+
+    <div v-if="showCreateCollection" class="modal-overlay" @click.self="closeCreateCollection">
+      <section class="modal-card create-collection-modal" role="dialog" aria-modal="true" aria-labelledby="create-collection-title">
+        <div class="modal-header">
+          <h2 id="create-collection-title">Create New Collection</h2>
+          <button type="button" class="clear-btn" :disabled="creatingCollection" @click="closeCreateCollection">Cancel</button>
+        </div>
+        <p class="hint">Create a collection for this item. Existing collections are managed from the Items page.</p>
+        <p v-if="collectionError" class="error-banner" role="alert">{{ collectionError }}</p>
+        <form @submit.prevent="createCollection">
+          <div class="field">
+            <label for="new-collection-name">Collection name</label>
+            <input id="new-collection-name" v-model="newCollectionName" type="text" autocomplete="off" autofocus>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn-primary" :disabled="creatingCollection || !newCollectionName.trim()">
+              {{ creatingCollection ? 'Creating...' : 'Create Collection' }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -595,6 +666,21 @@ textarea {
 
 .vertical-grid {
   grid-template-columns: 1fr;
+}
+
+.collection-create-trigger {
+  align-self: flex-start;
+  border: 0;
+  padding: 2px 0;
+  background: transparent;
+  color: var(--dashboard-green);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.create-collection-modal {
+  width: min(480px, 100%);
 }
 
 .file-selector-style::file-selector-button {

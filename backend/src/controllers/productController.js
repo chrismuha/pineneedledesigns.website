@@ -66,7 +66,7 @@ const normalizeCustomProperties = (properties) => {
           .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }))
         : [],
     }))
-    .filter((property) => property.name)
+    .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
     .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' }));
 };
 

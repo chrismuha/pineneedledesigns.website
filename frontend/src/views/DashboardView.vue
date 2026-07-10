@@ -93,7 +93,7 @@ const isActive = (path) => {
 <style scoped>
 .dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .sidebar {
@@ -195,8 +195,10 @@ const isActive = (path) => {
   }
 
   .content {
+    box-sizing: border-box;
     padding: 14px 12px;
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    min-height: 100dvh;
   }
 
   .bottom-nav {

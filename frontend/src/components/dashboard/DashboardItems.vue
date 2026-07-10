@@ -475,6 +475,13 @@ const handleEditQuantityChange = () => {
 const saveProduct = async () => {
   if (!editingProduct.value) return
 
+  if (editingProduct.value.customProperties.some((property) => (
+    ['color', 'size'].includes(String(property.name || '').trim().toLowerCase())
+  ))) {
+    editModalError.value = 'Color and Size are built-in properties and cannot be added as custom properties.'
+    return
+  }
+
   if (
     collectionRequiresSubcollection(editingProduct.value.collectionId)
     && !editingProduct.value.subCollectionId
@@ -501,13 +508,6 @@ const saveProduct = async () => {
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
       .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
-    if (colors.length) {
-      customProperties.unshift({ name: 'Color', required: true, options: colors })
-    }
-    if (sizes.length) {
-      customProperties.push({ name: 'Size', required: true, options: sizes })
-    }
-
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
@@ -648,6 +648,7 @@ const sortedProperties = (properties = []) => [...properties].sort((left, right)
 const sortedOptions = (options = []) => [...options].sort((left, right) => (
   left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 ))
+const isReservedPropertyName = (name) => ['color', 'size'].includes(String(name || '').trim().toLowerCase())
 
 onMounted(loadItems)
 watch(
@@ -984,6 +985,9 @@ watch(
           >
             <div class="edit-property-header">
               <input v-model="property.name" type="text" placeholder="Property name">
+              <p v-if="isReservedPropertyName(property.name)" class="field-error">
+                Color and Size are built-in properties. Use the fields above.
+              </p>
               <label class="edit-checkbox">
                 <input v-model="property.required" type="checkbox">
                 Required

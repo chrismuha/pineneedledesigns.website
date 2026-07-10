@@ -9,11 +9,20 @@ const mapProductToStorefront = (product) => {
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
 
-  const options = (product.customProperties || []).map((property) => ({
-    name: property.name,
-    values: property.options || [],
-    placeholder: placeholders[property.name] || `Select ${String(property.name).toLowerCase()}`,
-  }));
+  const customOptions = (product.customProperties || [])
+    .filter((property) => !['color', 'size'].includes(String(property.name).toLowerCase()))
+    .map((property) => ({
+      name: property.name,
+      values: property.options || [],
+      placeholder: placeholders[property.name] || `Select ${String(property.name).toLowerCase()}`,
+    }));
+  const colors = String(product.color || '').split(',').map((value) => value.trim()).filter(Boolean);
+  const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
+  const options = [
+    ...(colors.length ? [{ name: 'Color', values: colors, placeholder: placeholders.Color || 'Select color' }] : []),
+    ...(sizes.length ? [{ name: 'Size', values: sizes, placeholder: placeholders.Size || 'Select size' }] : []),
+    ...customOptions,
+  ];
 
   const filters = (product.filters || []).filter(Boolean);
 
