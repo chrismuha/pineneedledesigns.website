@@ -1,24 +1,53 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
-const mobileNavReleased = ref(true)
-const releaseMobileNav = () => { mobileNavReleased.value = true }
+const router = useRouter()
+const dragTarget = ref('')
+const navDrag = ref(null)
+const suppressNextNavClick = ref(false)
 
-onMounted(() => {
-  window.addEventListener('touchend', releaseMobileNav, { passive: true })
-  window.addEventListener('touchcancel', releaseMobileNav, { passive: true })
-  window.addEventListener('pointerup', releaseMobileNav, { passive: true })
-  window.addEventListener('blur', releaseMobileNav)
-})
+const tabAtPoint = (x, y) => document.elementFromPoint(x, y)?.closest?.('[data-nav-path]')?.dataset.navPath || ''
 
-onBeforeUnmount(() => {
-  window.removeEventListener('touchend', releaseMobileNav)
-  window.removeEventListener('touchcancel', releaseMobileNav)
-  window.removeEventListener('pointerup', releaseMobileNav)
-  window.removeEventListener('blur', releaseMobileNav)
-})
+const startNavDrag = (event) => {
+  if (event.pointerType === 'mouse' && event.button !== 0) return
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  navDrag.value = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, moved: false }
+  dragTarget.value = tabAtPoint(event.clientX, event.clientY)
+}
+
+const moveNavDrag = (event) => {
+  if (!navDrag.value || navDrag.value.pointerId !== event.pointerId) return
+  const distance = Math.hypot(event.clientX - navDrag.value.startX, event.clientY - navDrag.value.startY)
+  if (distance > 8) navDrag.value.moved = true
+  const target = tabAtPoint(event.clientX, event.clientY)
+  if (target) dragTarget.value = target
+}
+
+const finishNavDrag = (event) => {
+  if (!navDrag.value || navDrag.value.pointerId !== event.pointerId) return
+  const { moved } = navDrag.value
+  const target = tabAtPoint(event.clientX, event.clientY) || dragTarget.value
+  navDrag.value = null
+  dragTarget.value = ''
+  if (moved && target) {
+    suppressNextNavClick.value = true
+    void router.push(target)
+  }
+}
+
+const cancelNavDrag = () => {
+  navDrag.value = null
+  dragTarget.value = ''
+}
+
+const handleNavClick = (event) => {
+  if (!suppressNextNavClick.value) return
+  event.preventDefault()
+  event.stopPropagation()
+  suppressNextNavClick.value = false
+}
 
 const menuItems = [
   {
@@ -83,24 +112,27 @@ const isActive = (path) => {
         </div>
       </aside>
 
-      <main
-        class="content"
-        @touchstart.passive="mobileNavReleased = false"
-        @touchend.passive="releaseMobileNav"
-        @touchcancel.passive="releaseMobileNav"
-      >
+      <main class="content">
         <RouterView />
       </main>
     </div>
 
     <!-- Mobile bottom nav for widths below 850px -->
-    <nav class="bottom-nav" :class="{ 'bottom-nav--swiping': !mobileNavReleased }">
+    <nav
+      class="bottom-nav"
+      @pointerdown="startNavDrag"
+      @pointermove="moveNavDrag"
+      @pointerup="finishNavDrag"
+      @pointercancel="cancelNavDrag"
+      @click.capture="handleNavClick"
+    >
       <RouterLink
         v-for="item in menuItems"
         :key="item.to"
         :to="item.to"
+        :data-nav-path="item.to"
         class="bottom-tab"
-        :class="{ active: isActive(item.to) }"
+        :class="{ active: dragTarget ? dragTarget === item.to : isActive(item.to), 'drag-preview': dragTarget === item.to }"
       >
         <i :class="['bi', item.icon, 'menu-icon']" aria-hidden="true"></i>
         <span class="label">{{ item.label }}</span>
@@ -261,13 +293,7 @@ const isActive = (path) => {
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     justify-content: space-between;
     align-items: center;
-    transition: transform 180ms ease-out;
-    will-change: transform;
-    touch-action: manipulation;
-  }
-
-  .bottom-nav--swiping {
-    transform: translateY(6px);
+    touch-action: none;
   }
 
   .bottom-tab {
@@ -304,6 +330,11 @@ const isActive = (path) => {
 
   .bottom-tab.active {
     background: #d0d0d0;
+  }
+
+  .bottom-tab.drag-preview {
+    transform: scale(.96);
+    transition: transform 90ms ease-out, background 90ms ease-out;
   }
 
   .logout-tab * {
