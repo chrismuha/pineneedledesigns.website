@@ -864,7 +864,7 @@ watch(
                 </button>
                 <button type="button" class="delete-btn btn-danger icon-button" :disabled="saving" @click="deleteCollection(collection)">
                   <i class="bi bi-trash" aria-hidden="true"></i>
-                  <span class="button-text">Delete</span>
+                  <span class="button-text">Delete Collection</span>
                 </button>
               </div>
             </div>
@@ -987,12 +987,20 @@ watch(
         <div class="field edit-section">
           <label>Photos *</label>
           <input
+            id="edit-photo-upload"
+            class="visually-hidden-file"
             type="file"
             multiple
             accept="image/*"
             :disabled="saving"
             @change="handleEditPhotoUpload"
           >
+          <label for="edit-photo-upload" class="add-photos-button" :class="{ disabled: saving }">
+            + Add Photos
+          </label>
+          <p v-if="editPhotoFiles.length" class="selected-photo-count">
+            {{ editPhotoFiles.length }} new photo{{ editPhotoFiles.length === 1 ? '' : 's' }} selected
+          </p>
           <p class="hint">Add or remove photos. At least one and no more than 20 are required.</p>
           <div class="edit-photo-grid">
             <div v-for="(photo, index) in editingProduct.photos" :key="photo" class="edit-photo-card">
@@ -1277,6 +1285,8 @@ watch(
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .modal-card--wide {
@@ -1293,6 +1303,7 @@ watch(
   padding: 10px;
   border: 1px solid #d0d0d0;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .modal-actions,
@@ -1336,6 +1347,10 @@ watch(
 .edit-photo-card { position: relative; display: flex; flex-direction: column; gap: 8px; }
 .edit-photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
 .new-photo-badge { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 999px; background: var(--dashboard-green); color: #fff; font-size: .75rem; font-weight: 700; }
+.visually-hidden-file { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0 !important; }
+.add-photos-button { display: inline-flex; width: fit-content; align-items: center; justify-content: center; padding: 11px 16px; border-radius: 8px; background: var(--dashboard-green); color: #fff; cursor: pointer; font-weight: 700; }
+.add-photos-button.disabled { pointer-events: none; opacity: .55; }
+.selected-photo-count { margin: 0; color: #1f7a3d; font-weight: 600; }
 
 .modal-header {
   justify-content: space-between;
@@ -1354,6 +1369,8 @@ watch(
   padding: 8px 12px;
   cursor: pointer;
 }
+
+.row-actions { flex-wrap: wrap; justify-content: flex-end; }
 
 .row-actions button:disabled,
 .continue-btn:disabled,
@@ -1509,7 +1526,11 @@ watch(
     align-items: stretch;
   }
 
-  .row-actions { justify-content: flex-end; }
+  .modal-overlay { padding: 10px; }
+  .modal-card { padding: 18px; }
+  .row-actions { width: 100%; justify-content: stretch; }
+  .row-actions button { flex: 1 1 140px; }
+  .add-photos-button { width: 100%; box-sizing: border-box; }
 }
 
 @media (max-width: 850px) {
