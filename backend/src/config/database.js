@@ -137,6 +137,30 @@ const backfillProductSubcollectionIds = async () => {
   console.log(`ℹ️ Backfilled subCollectionId for ${updates.length} products.`);
 };
 
+const repairLegacyProductIndex = async () => {
+  await Product.updateMany({ legacyId: null }, { $unset: { legacyId: '' } });
+
+  const indexes = await Product.collection.indexes();
+  const legacyIndex = indexes.find((index) => index.name === 'legacyId_1');
+  const hasCorrectFilter = legacyIndex?.partialFilterExpression?.legacyId?.$type === 'number';
+
+  if (legacyIndex && !hasCorrectFilter) {
+    await Product.collection.dropIndex('legacyId_1');
+  }
+
+  if (!legacyIndex || !hasCorrectFilter) {
+    await Product.collection.createIndex(
+      { legacyId: 1 },
+      {
+        name: 'legacyId_1',
+        unique: true,
+        partialFilterExpression: { legacyId: { $type: 'number' } },
+      },
+    );
+    console.log('ℹ️ Repaired the legacy product ID index for dashboard-created items.');
+  }
+};
+
 const formatMongoConnectionError = (error) => {
   const message = String(error?.message || error);
   const hostname = (() => {
@@ -195,6 +219,7 @@ export const connectDatabase = async () => {
   }
 
   await migrateLegacySubcollectionFields();
+  await repairLegacyProductIndex();
   await backfillProductSubcollectionIds();
   await seedAuthorizedUsers();
   console.log('ℹ️ Ensured authorized dashboard users exist');

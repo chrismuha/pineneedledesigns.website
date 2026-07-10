@@ -1,9 +1,10 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
+import { config } from '../config/index.js';
 import { createUniqueSlug } from '../utils/slug.js';
-
-const getUncategorizedCollection = async () => Collection.findOne({ isSystem: true, slug: 'uncategorized' });
 
 export const listCollections = async (_req, res) => {
   const collections = await Collection.find().sort({ sortOrder: 1, name: 1 }).lean();
@@ -75,8 +76,6 @@ export const reorderCollections = async (req, res) => {
 };
 
 export const deleteCollection = async (req, res) => {
-  // console.log("delte collection")
-  // console.log(req.params.id)
   const collection = await Collection.findById(req.params.id);
   if (!collection) {
     return res.status(404).json({ error: 'Collection not found.' });
@@ -86,24 +85,33 @@ export const deleteCollection = async (req, res) => {
     return res.status(400).json({ error: 'System collections cannot be deleted.' });
   }
 
-  const uncategorized = await getUncategorizedCollection();
-  if (!uncategorized) {
-    return res.status(500).json({ error: 'Uncategorized collection is missing.' });
+  if (req.body?.confirmDelete !== true || req.body?.confirmName !== collection.name) {
+    return res.status(400).json({
+      error: 'Collection deletion must be confirmed with the exact collection name.',
+    });
   }
 
-  const products = await Product.find({ collectionId: collection._id }).sort({ sortOrder: 1 });
-  const uncategorizedCount = await Product.countDocuments({ collectionId: uncategorized._id });
-  const moveUpdates = products.map((product, index) => Product.updateOne(
-    { _id: product._id },
-    {
-      $set: { collectionId: uncategorized._id, sortOrder: uncategorizedCount + index },
-      $unset: { subCollectionId: '' },
-    },
-  ));
+  const products = await Product.find({ collectionId: collection._id }).select('photos').lean();
+  const productIds = products.map((product) => product._id);
+  const uploadedPhotos = products
+    .flatMap((product) => product.photos || [])
+    .filter((photo) => String(photo).startsWith('/uploads/'));
 
-  await Promise.all(moveUpdates);
+  await Product.deleteMany({ _id: { $in: productIds } });
   await Subcollection.deleteMany({ collectionId: collection._id });
   await collection.deleteOne();
 
-  res.json({ success: true, movedProducts: products.length });
+  const remainingPhotoReferences = new Set(
+    (await Product.find({ photos: { $in: uploadedPhotos } }).select('photos').lean())
+      .flatMap((product) => product.photos || []),
+  );
+  await Promise.all(uploadedPhotos
+    .filter((photo) => !remainingPhotoReferences.has(photo))
+    .map((photo) => fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch((error) => {
+      if (error?.code !== 'ENOENT') {
+        console.error(`Failed to remove deleted product photo ${photo}:`, error);
+      }
+    })));
+
+  res.json({ success: true, deletedProducts: products.length });
 };
