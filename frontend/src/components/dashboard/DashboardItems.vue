@@ -17,6 +17,7 @@ const editModalError = ref('')
 const showCollectionManager = ref(false)
 const showEditModal = ref(false)
 const editingProduct = ref(null)
+const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
@@ -35,6 +36,31 @@ const subcollectionsByCollectionId = ref({})
 const subcollectionsLoadingMap = ref({})
 const collectionFilters = ref({})
 const collectionDetails = ref([])
+
+const editSnapshot = (product) => JSON.stringify({
+  name: String(product?.name || ''),
+  collectionId: String(product?.collectionId || ''),
+  subCollectionId: String(product?.subCollectionId || ''),
+  colors: (product?.colors || []).map((value) => String(value)),
+  sizes: (product?.sizes || []).map((value) => String(value)),
+  customProperties: (product?.customProperties || []).map((property) => ({
+    name: String(property.name || ''),
+    required: Boolean(property.required),
+    options: (property.options || []).map((value) => String(value)),
+  })),
+  photos: (product?.photos || []).map((value) => String(value)),
+  description: String(product?.description || ''),
+  price: String(product?.price ?? ''),
+  shippingCost: String(product?.shippingCost ?? ''),
+  freeShipping: Boolean(product?.freeShipping),
+  outOfStock: Boolean(product?.outOfStock),
+  quantity: String(product?.quantity ?? ''),
+})
+
+const editIsDirty = computed(() => Boolean(
+  editingProduct.value
+  && (editPhotoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
+))
 
 const {
   subcollections: managerSubcollections,
@@ -366,6 +392,7 @@ const openEditModal = async (product) => {
   }
   editModalError.value = ''
   editPhotoFiles.value = []
+  editInitialSnapshot.value = editSnapshot(editingProduct.value)
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
@@ -375,6 +402,7 @@ const closeEditModal = async () => {
   editPhotoFiles.value = []
   showEditModal.value = false
   editingProduct.value = null
+  editInitialSnapshot.value = ''
   editModalError.value = ''
   resetEditSubcollections()
   editCancellationStep.value = 0
@@ -385,7 +413,11 @@ const closeEditModal = async () => {
   }
 }
 
-const requestEditCancellation = () => {
+const requestEditCancellation = async () => {
+  if (!editIsDirty.value) {
+    await closeEditModal()
+    return
+  }
   editCancellationStep.value = 1
 }
 
