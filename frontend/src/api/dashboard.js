@@ -52,8 +52,9 @@ export const dashboardApi = {
     method: 'PUT',
     body: JSON.stringify({ name }),
   }),
-  deleteCollection: (id) => request(`/api/collections/${id}`, {
+  deleteCollection: (id, confirmName) => request(`/api/collections/${id}`, {
     method: 'DELETE',
+    body: JSON.stringify({ confirmDelete: true, confirmName }),
   }),
   reorderCollections: (orderedIds) => request('/api/collections/reorder', {
     method: 'PUT',

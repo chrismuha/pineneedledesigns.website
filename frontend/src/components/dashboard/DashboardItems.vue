@@ -343,17 +343,39 @@ const moveSubcollection = async (index, direction) => {
 }
 
 const openEditModal = async (product) => {
+  const customProperties = product.customProperties?.length
+    ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
+    : []
+  const colorProperty = customProperties.find(
+    (property) => String(property.name).toLowerCase() === 'color',
+  )
+  const colors = colorProperty?.options?.length
+    ? [...colorProperty.options]
+    : String(product.color || '').split(',').map((color) => color.trim()).filter(Boolean)
+
   editingProduct.value = {
     ...product,
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
-    customProperties: product.customProperties?.length
-      ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
-      : [],
+    colors: colors.length ? colors : [''],
+    customProperties,
   }
   editModalError.value = ''
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
+}
+
+const addEditColor = () => {
+  editingProduct.value?.colors.push('')
+}
+
+const removeEditColor = (index) => {
+  if (!editingProduct.value) return
+  if (editingProduct.value.colors.length === 1) {
+    editingProduct.value.colors[0] = ''
+    return
+  }
+  editingProduct.value.colors.splice(index, 1)
 }
 
 const closeEditModal = () => {
@@ -404,11 +426,19 @@ const saveProduct = async () => {
   editModalError.value = ''
 
   try {
+    const colors = editingProduct.value.colors.map((color) => color.trim()).filter(Boolean)
+    const customProperties = editingProduct.value.customProperties.filter(
+      (property) => String(property.name).toLowerCase() !== 'color',
+    )
+    if (colors.length) {
+      customProperties.unshift({ name: 'Color', required: true, options: colors })
+    }
+
     await dashboardApi.updateProduct(editingProduct.value._id, {
       name: editingProduct.value.name,
       collectionId: editingProduct.value.collectionId,
       subCollectionId: editingProduct.value.subCollectionId || null,
-      color: editingProduct.value.color,
+      color: colors.join(', '),
       size: editingProduct.value.size,
       importantNotes: editingProduct.value.importantNotes,
       description: editingProduct.value.description,
@@ -416,7 +446,7 @@ const saveProduct = async () => {
       shippingCost: Number(editingProduct.value.shippingCost || 0),
       freeShipping: editingProduct.value.freeShipping,
       outOfStock: editingProduct.value.outOfStock,
-      customProperties: editingProduct.value.customProperties,
+      customProperties,
       photos: editingProduct.value.photos,
     })
     closeEditModal()
@@ -472,17 +502,30 @@ const startEditCollection = (collection) => {
 }
 
 const deleteCollection = async (collection) => {
-  if (!window.confirm(`Delete "${collection.name}"? Items will move to Uncategorized.`)) return
+  const itemCount = collection.products?.length || 0
+  const firstConfirmation = window.confirm(
+    `Delete the "${collection.name}" collection?\n\nThis will permanently delete ${itemCount} item${itemCount === 1 ? '' : 's'} in this collection. This cannot be undone.\n\nChoose OK for Yes or Cancel for No.`,
+  )
+  if (!firstConfirmation) return
 
+  const secondConfirmation = window.confirm(
+    `FINAL CONFIRMATION\n\nYes, permanently delete "${collection.name}" and all ${itemCount} of its items?\n\nChoose OK for Yes or Cancel for No.`,
+  )
+  if (!secondConfirmation) return
+
+  saving.value = true
+  modalError.value = ''
   try {
-    await dashboardApi.deleteCollection(collection._id)
+    await dashboardApi.deleteCollection(collection._id, collection.name)
     if (String(managingSubcollectionsFor.value?._id) === String(collection._id)) {
       managingSubcollectionsFor.value = null
       resetSubcollectionForm()
     }
     await loadItems()
   } catch (err) {
-    error.value = err.message
+    modalError.value = err.message
+  } finally {
+    saving.value = false
   }
 }
 
@@ -757,7 +800,7 @@ watch(
               >
                  Subcollections
               </button>
-                <button type="button" class="delete-btn btn-danger" @click="deleteCollection(collection)">Delete</button>
+                <button type="button" class="delete-btn btn-danger" :disabled="saving" @click="deleteCollection(collection)">Delete</button>
             </div>
           </div>
         </div>
@@ -818,8 +861,13 @@ watch(
         </div>
 
         <div class="field">
-          <label>Color</label>
-          <input v-model="editingProduct.color" type="text">
+          <label>Colors</label>
+          <div v-for="(_color, index) in editingProduct.colors" :key="index" class="inline-field">
+            <input v-model="editingProduct.colors[index]" type="text" placeholder="Color">
+            <button type="button" class="danger-btn" @click="removeEditColor(index)">Remove</button>
+          </div>
+          <button type="button" class="continue-btn" @click="addEditColor">+ Add Color</button>
+          <p class="hint">These appear together in one Color dropdown.</p>
         </div>
 
         <div class="field">

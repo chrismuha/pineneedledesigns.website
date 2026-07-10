@@ -62,7 +62,7 @@ const productSchema = new mongoose.Schema({
   },
   legacyId: {
     type: Number,
-    default: null,
+    default: undefined,
   },
   meta: {
     type: [String],
@@ -118,6 +118,12 @@ const productSchema = new mongoose.Schema({
 
 productSchema.index({ collectionId: 1, sortOrder: 1 });
 productSchema.index({ subCollectionId: 1 });
-productSchema.index({ legacyId: 1 }, { unique: true, sparse: true });
+productSchema.index(
+  { legacyId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { legacyId: { $type: 'number' } },
+  },
+);
 
 export const Product = mongoose.model('Product', productSchema);

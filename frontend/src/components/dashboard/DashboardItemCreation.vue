@@ -24,7 +24,7 @@ const {
 const form = reactive({
   name: '',
   collectionId: '',
-  color: '',
+  colors: [''],
   size: '',
   importantNotes: '',
   description: '',
@@ -87,12 +87,24 @@ const removeOption = (propertyIndex, optionIndex) => {
   form.customProperties[propertyIndex].options.splice(optionIndex, 1)
 }
 
+const addColor = () => {
+  form.colors.push('')
+}
+
+const removeColor = (index) => {
+  if (form.colors.length === 1) {
+    form.colors[0] = ''
+    return
+  }
+  form.colors.splice(index, 1)
+}
+
 const resetForm = () => {
   form.name = ''
   form.collectionId = collections.value.find((collection) => !collection.isSystem)?._id
     || collections.value[0]?._id
     || ''
-  form.color = ''
+  form.colors = ['']
   form.size = ''
   form.importantNotes = ''
   form.description = ''
@@ -109,9 +121,22 @@ const resetForm = () => {
 
 const buildProductFormData = () => {
   const formData = new FormData()
+  const colors = form.colors.map((color) => color.trim()).filter(Boolean)
+  const customProperties = form.customProperties
+    .map((property) => ({
+      name: property.name.trim(),
+      required: property.required,
+      options: property.options.map((option) => option.trim()).filter(Boolean),
+    }))
+    .filter((property) => property.name && property.name.toLowerCase() !== 'color')
+
+  if (colors.length) {
+    customProperties.unshift({ name: 'Color', required: true, options: colors })
+  }
+
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
-  formData.append('color', form.color.trim())
+  formData.append('color', colors.join(', '))
   formData.append('size', form.size.trim())
   formData.append('importantNotes', form.importantNotes.trim())
   formData.append('description', form.description.trim())
@@ -119,15 +144,7 @@ const buildProductFormData = () => {
   formData.append('shippingCost', String(form.shippingCost || 0))
   formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
-  formData.append('customProperties', JSON.stringify(
-    form.customProperties
-      .map((property) => ({
-        name: property.name.trim(),
-        required: property.required,
-        options: property.options.map((option) => option.trim()).filter(Boolean),
-      }))
-      .filter((property) => property.name),
-  ))
+  formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
 
   photoFiles.value.forEach(({ file }) => {
@@ -271,9 +288,16 @@ watch(
             </p>
           </div>
 
-          <div class="field">
-            <label>Color</label>
-            <input v-model="form.color" type="text" placeholder="Black">
+          <div class="field field--full">
+            <label>Colors</label>
+            <div v-for="(_color, index) in form.colors" :key="index" class="option-row">
+              <input v-model="form.colors[index]" type="text" :placeholder="index === 0 ? 'Black' : 'Another color'">
+              <button type="button" class="btn-danger" @click="removeColor(index)">Remove</button>
+            </div>
+            <button type="button" class="btn-primary add-color-button" @click="addColor">
+              + Add Color
+            </button>
+            <p class="hint">Each color becomes an option in one Color dropdown on the item page.</p>
           </div>
 
           <div class="field">
@@ -509,6 +533,10 @@ textarea {
 
 .option-row input {
   flex: 1;
+}
+
+.add-color-button {
+  width: fit-content;
 }
 
 .photo-grid {
