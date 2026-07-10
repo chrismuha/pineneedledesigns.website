@@ -70,6 +70,7 @@ jobs:
               > backend/.env
 
             npm ci --omit=dev --ignore-scripts
+            npm run seed -w backend
             pm2 startOrRestart ecosystem.config.cjs --update-env
             pm2 save
             pm2 status

@@ -66,6 +66,12 @@ npm run build
 npm run preview
 ```
 
+### Production Catalog Seeding
+
+Every push to `main` runs the catalog seed during the production deployment. Products defined in
+`frontend/src/data/siteData.js` are added to or updated in MongoDB before the application restarts.
+Products created only through the dashboard are not removed or written back to GitHub.
+
 ## API Endpoints
 
 The backend provides the following cart API endpoints:

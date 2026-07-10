@@ -39,6 +39,7 @@ coverage
 *.tsbuildinfo
 
 # Lock files
+package-lock.json
 yarn.lock
 
 # Runtime session data
