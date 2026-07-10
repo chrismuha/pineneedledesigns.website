@@ -44,6 +44,9 @@ const {
 } = useSubcollections()
 
 const nonSystemCollections = computed(() => groupedCollections.value.filter((collection) => !collection.isSystem))
+const dropdownCollections = computed(() => [...groupedCollections.value].sort((left, right) => (
+  collectionLabel(left).localeCompare(collectionLabel(right), undefined, { numeric: true })
+)))
 
 const managingSubcollectionList = computed(() => {
   if (!managingSubcollectionsFor.value) return []
@@ -395,6 +398,12 @@ const subcollectionsForCollection = (collectionId) => {
   )
   return collection?.subcollections || []
 }
+
+const sortedSubcollectionsForCollection = (collectionId) => (
+  [...subcollectionsForCollection(collectionId)].sort((left, right) => (
+    left.name.localeCompare(right.name, undefined, { numeric: true })
+  ))
+)
 
 const collectionRequiresSubcollection = (collectionId) => (
   subcollectionsForCollection(collectionId).length > 0
@@ -827,7 +836,7 @@ watch(
           <label>Collection</label>
           <select v-model="editingProduct.collectionId" @change="handleEditCollectionChange">
             <option
-              v-for="collection in groupedCollections"
+              v-for="collection in dropdownCollections"
               :key="collection._id"
               :value="String(collection._id)"
             >
@@ -850,7 +859,7 @@ watch(
               {{ editSubcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
             </option>
             <option
-              v-for="subcollection in subcollectionsForCollection(editingProduct.collectionId)"
+              v-for="subcollection in sortedSubcollectionsForCollection(editingProduct.collectionId)"
               :key="subcollection._id"
               :value="String(subcollection._id)"
             >

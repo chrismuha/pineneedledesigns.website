@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { shirtColorTemplates } from '../../data/siteData.js'
 
 const CUSTOM_VALUE = '__custom__'
@@ -17,6 +17,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 const customRows = ref(new Set())
+const dropdownOptions = computed(() => [
+  ...shirtColorTemplates.map((color) => ({ label: color, value: color })),
+  { label: 'Custom…', value: CUSTOM_VALUE },
+].sort((left, right) => left.label.localeCompare(right.label, undefined, { numeric: true })))
 
 const normalizeRows = (colors) => (colors?.length ? colors.map((color) => String(color || '')) : [''])
 
@@ -88,10 +92,9 @@ const removeColor = (index) => {
           @change="selectChoice(index, $event.target.value)"
         >
           <option value="">Select a shirt color</option>
-          <option v-for="templateColor in shirtColorTemplates" :key="templateColor" :value="templateColor">
-            {{ templateColor }}
+          <option v-for="option in dropdownOptions" :key="option.value" :value="option.value">
+            {{ option.label }}
           </option>
-          <option :value="CUSTOM_VALUE">Custom…</option>
         </select>
 
         <input

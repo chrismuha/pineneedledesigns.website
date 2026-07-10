@@ -39,6 +39,16 @@ const form = reactive({
 })
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
+const sortedCollections = computed(() => [...collections.value].sort((left, right) => (
+  (left.isSystem ? 'Uncategorized' : left.name).localeCompare(
+    right.isSystem ? 'Uncategorized' : right.name,
+    undefined,
+    { numeric: true },
+  )
+)))
+const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
+  left.name.localeCompare(right.name, undefined, { numeric: true })
+)))
 
 const revokePhotoPreview = (photo) => {
   if (photo?.previewUrl) {
@@ -248,7 +258,7 @@ watch(
             <label>Collection *</label>
             <select v-model="form.collectionId" required @change="handleCollectionChange">
               <option
-                v-for="collection in collections"
+                v-for="collection in sortedCollections"
                 :key="collection._id"
                 :value="collection._id"
               >
@@ -268,7 +278,7 @@ watch(
                 {{ subcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
               </option>
               <option
-                v-for="subcollection in subcollections"
+                v-for="subcollection in sortedSubcollections"
                 :key="subcollection._id"
                 :value="subcollection._id"
               >

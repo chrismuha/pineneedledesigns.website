@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { shirtSizeTemplates } from '../../data/siteData.js'
 
 const CUSTOM_VALUE = '__custom__'
@@ -17,6 +17,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 const customRows = ref(new Set())
+const dropdownOptions = computed(() => [
+  ...shirtSizeTemplates.map((size) => ({ label: size, value: size })),
+  { label: 'Custom…', value: CUSTOM_VALUE },
+].sort((left, right) => left.label.localeCompare(right.label, undefined, { numeric: true })))
 const normalizeRows = (sizes) => (sizes?.length ? sizes.map((size) => String(size || '')) : [''])
 
 watch(
@@ -84,10 +88,9 @@ const removeSize = (index) => {
           @change="selectChoice(index, $event.target.value)"
         >
           <option value="">Select a shirt size</option>
-          <option v-for="templateSize in shirtSizeTemplates" :key="templateSize" :value="templateSize">
-            {{ templateSize }}
+          <option v-for="option in dropdownOptions" :key="option.value" :value="option.value">
+            {{ option.label }}
           </option>
-          <option :value="CUSTOM_VALUE">Custom…</option>
         </select>
         <input
           v-if="customRows.has(index)"
