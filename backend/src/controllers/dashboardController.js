@@ -10,7 +10,7 @@ export const getDashboardStats = async (_req, res) => {
     Order.countDocuments({ status: 'closed' }),
     Product.find()
       .sort({ createdAt: -1 })
-      .limit(5)
+      .limit(6)
       .select('name price photos createdAt')
       .lean(),
     Order.find()

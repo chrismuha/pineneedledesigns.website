@@ -1,7 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const route = useRoute()
+const mobileNavReleased = ref(true)
+const releaseMobileNav = () => { mobileNavReleased.value = true }
 
 const menuItems = [
   {
@@ -66,13 +69,18 @@ const isActive = (path) => {
         </div>
       </aside>
 
-      <main class="content">
+      <main
+        class="content"
+        @touchstart.passive="mobileNavReleased = false"
+        @touchend.passive="releaseMobileNav"
+        @touchcancel.passive="releaseMobileNav"
+      >
         <RouterView />
       </main>
     </div>
 
     <!-- Mobile bottom nav for widths below 850px -->
-    <nav class="bottom-nav">
+    <nav class="bottom-nav" :class="{ 'bottom-nav--swiping': !mobileNavReleased }">
       <RouterLink
         v-for="item in menuItems"
         :key="item.to"
@@ -191,8 +199,8 @@ const isActive = (path) => {
 
 @media (max-width: 850px) {
   .dashboard-shell {
-    width: 100%;
-    height: 100dvh;
+    position: fixed;
+    inset: 0;
     overflow: hidden;
     overscroll-behavior: none;
   }
@@ -221,7 +229,7 @@ const isActive = (path) => {
 
   .bottom-nav {
     display: flex;
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
@@ -233,6 +241,12 @@ const isActive = (path) => {
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     justify-content: space-between;
     align-items: center;
+    transition: transform 180ms ease-out;
+    will-change: transform;
+  }
+
+  .bottom-nav--swiping {
+    transform: translateY(calc(100% - 10px));
   }
 
   .bottom-tab {

@@ -11,6 +11,9 @@ const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
 const pendingResolution = ref(null)
+const routeStatus = () => ['open', 'closed'].includes(String(route.query.status))
+  ? String(route.query.status)
+  : 'all'
 
 const filterOptions = [
   { label: 'All', value: 'all' },
@@ -147,11 +150,15 @@ const confirmResolution = async () => {
   pendingResolution.value = null
 }
 
-onMounted(loadOrders)
+onMounted(() => {
+  statusFilter.value = routeStatus()
+  loadOrders()
+})
 watch(
-  () => route.fullPath,
-  (path) => {
-    if (path === '/dashboard/orders') {
+  () => route.query.status,
+  () => {
+    statusFilter.value = routeStatus()
+    if (route.path === '/dashboard/orders') {
       loadOrders()
     }
   },

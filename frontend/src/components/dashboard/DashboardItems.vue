@@ -36,6 +36,9 @@ const subcollectionsByCollectionId = ref({})
 const subcollectionsLoadingMap = ref({})
 const collectionFilters = ref({})
 const collectionDetails = ref([])
+const showQuickCollection = ref(false)
+const quickCollectionName = ref('')
+const quickCollectionError = ref('')
 
 const editSnapshot = (product) => JSON.stringify({
   name: String(product?.name || ''),
@@ -500,6 +503,39 @@ const handleEditCollectionChange = async () => {
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
 
+const openQuickCollection = () => {
+  quickCollectionName.value = ''
+  quickCollectionError.value = ''
+  showQuickCollection.value = true
+}
+
+const closeQuickCollection = () => {
+  if (saving.value) return
+  showQuickCollection.value = false
+  quickCollectionName.value = ''
+  quickCollectionError.value = ''
+}
+
+const createQuickCollection = async () => {
+  const name = quickCollectionName.value.trim()
+  if (!name || !editingProduct.value) return
+  saving.value = true
+  quickCollectionError.value = ''
+  try {
+    const created = await dashboardApi.createCollection(name)
+    await loadItems()
+    editingProduct.value.collectionId = String(created._id)
+    editingProduct.value.subCollectionId = ''
+    await loadEditSubcollections(created._id)
+    showQuickCollection.value = false
+    quickCollectionName.value = ''
+  } catch (err) {
+    quickCollectionError.value = err.message
+  } finally {
+    saving.value = false
+  }
+}
+
 const handleEditQuantityChange = () => {
   if (Number(editingProduct.value?.quantity) === 0) editingProduct.value.outOfStock = true
 }
@@ -620,6 +656,12 @@ const startEditCollection = (collection) => {
   modalError.value = ''
   resetSubcollectionForm()
   resetManagerSubcollections()
+}
+
+const cancelEditCollection = () => {
+  editingCollection.value = null
+  collectionForm.value = { name: '' }
+  modalError.value = ''
 }
 
 const openEditCollectionManager = (collection) => {
@@ -880,12 +922,12 @@ watch(
 
         <p v-if="modalError" class="error-banner">{{ modalError }}</p>
 
-        <div class="field">
-          <label>{{ editingCollection ? 'Rename Collection' : 'New Collection' }}</label>
+        <div v-if="!editingCollection" class="field">
+          <label>New Collection</label>
             <div class="inline-field">
             <input v-model="collectionForm.name" type="text" placeholder="Collection name">
             <button type="button" class="continue-btn btn-primary" :disabled="saving" @click="saveCollection">
-              {{ editingCollection ? 'Save Name' : 'Add Collection' }}
+              Add Collection
             </button>
           </div>
         </div>
@@ -897,7 +939,12 @@ watch(
             class="collection-row"
           >
             <div class="collection-row-main">
-              <RouterLink :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
+              <div v-if="editingCollection?._id === collection._id" class="inline-field collection-inline-rename">
+                <input v-model="collectionForm.name" type="text" :aria-label="`Rename ${collection.name}`" @keyup.enter="saveCollection">
+                <button type="button" class="btn-primary" :disabled="saving || !collectionForm.name.trim()" @click="saveCollection">Save</button>
+                <button type="button" class="btn-outline" :disabled="saving" @click="cancelEditCollection">Cancel</button>
+              </div>
+              <RouterLink v-else :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
               <span v-if="collection.subcollections?.length" class="collection-meta">
                 {{ collection.subcollections.length }} subcollections
               </span>
@@ -914,7 +961,7 @@ watch(
               </div>
 
               <div class="row-actions">
-                <button type="button" class="edit-btn icon-button" @click="startEditCollection(collection)">
+                <button v-if="editingCollection?._id !== collection._id" type="button" class="edit-btn icon-button" @click="startEditCollection(collection)">
                   <i class="bi bi-pencil" aria-hidden="true"></i>
                   <span class="button-text">Rename</span>
                 </button>
@@ -962,6 +1009,9 @@ watch(
               {{ collectionLabel(collection) }}
             </option>
           </select>
+          <button type="button" class="collection-create-trigger" :disabled="saving" @click="openQuickCollection">
+            + Create new collection
+          </button>
         </div>
 
         <div
@@ -1135,6 +1185,26 @@ watch(
             {{ saving ? 'Saving...' : 'Save Changes' }}
           </button>
         </div>
+      </section>
+    </div>
+
+    <div v-if="showQuickCollection" class="modal-overlay quick-collection-overlay" @click.self="closeQuickCollection">
+      <section class="modal-card modal-card--fullscreen" role="dialog" aria-modal="true" aria-labelledby="quick-collection-title">
+        <div class="modal-header">
+          <h2 id="quick-collection-title">Create New Collection</h2>
+          <button type="button" class="clear-btn" :disabled="saving" @click="closeQuickCollection">Cancel</button>
+        </div>
+        <p>Create a collection for this item. Existing collections are managed separately.</p>
+        <p v-if="quickCollectionError" class="error-banner" role="alert">{{ quickCollectionError }}</p>
+        <form class="quick-collection-form" @submit.prevent="createQuickCollection">
+          <div class="field">
+            <label for="quick-collection-name">Collection name</label>
+            <input id="quick-collection-name" v-model="quickCollectionName" type="text" autocomplete="off" autofocus>
+          </div>
+          <button type="submit" class="btn-primary" :disabled="saving || !quickCollectionName.trim()">
+            {{ saving ? 'Creating...' : 'Create Collection' }}
+          </button>
+        </form>
       </section>
     </div>
 
@@ -1729,6 +1799,25 @@ watch(
   color: #8a1f1f;
   font-size: 0.9rem;
 }
+
+.collection-create-trigger {
+  align-self: flex-start;
+  border: 0;
+  padding: 2px 0;
+  background: transparent;
+  color: var(--dashboard-green);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.collection-inline-rename,
+.quick-collection-form {
+  max-width: 680px;
+}
+
+.collection-inline-rename input { min-width: min(320px, 45vw); }
+.quick-collection-overlay { z-index: 1200; }
 
 .status-text,
 .empty-collection {

@@ -61,20 +61,20 @@ onMounted(loadStats)
         <p>Total Items</p>
       </article>
 
-      <article class="stat-card">
+      <RouterLink to="/dashboard/items" class="stat-card stat-card-link">
         <h2>{{ stats.collectionCount }}</h2>
         <p>Collections</p>
-      </article>
+      </RouterLink>
 
-      <RouterLink to="/dashboard/orders" class="stat-card stat-card-link">
+      <RouterLink :to="{ path: '/dashboard/orders', query: { status: 'open' } }" class="stat-card stat-card-link">
         <h2>{{ stats.openOrderCount }}</h2>
         <p>Open Orders</p>
       </RouterLink>
 
-      <article class="stat-card">
+      <RouterLink :to="{ path: '/dashboard/orders', query: { status: 'closed' } }" class="stat-card stat-card-link">
         <h2>{{ stats.closedOrderCount }}</h2>
         <p>Closed Orders</p>
-      </article>
+      </RouterLink>
     </section>
 
     <section v-if="!loading" class="recent-section">
