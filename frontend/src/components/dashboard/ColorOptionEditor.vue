@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { shirtColorTemplates } from '../../data/siteData.js'
+import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 
 const CUSTOM_VALUE = '__custom__'
 
@@ -17,6 +18,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 const customRows = ref(new Set())
+const pendingRemovalIndex = ref(null)
 const dropdownOptions = computed(() => [
   ...shirtColorTemplates.map((color) => ({ label: color, value: color })),
   { label: 'Custom…', value: CUSTOM_VALUE },
@@ -73,7 +75,6 @@ const setCustomColor = (index, color) => {
 const addColor = () => updateRows([...normalizeRows(props.modelValue), ''])
 
 const removeColor = (index) => {
-  if (!window.confirm('Remove this color?')) return
   const rows = normalizeRows(props.modelValue)
   rows.splice(index, 1)
 
@@ -84,6 +85,12 @@ const removeColor = (index) => {
   })
   customRows.value = nextCustomRows
   updateRows(rows)
+}
+const requestColorRemoval = (index) => { pendingRemovalIndex.value = index }
+const confirmColorRemoval = () => {
+  if (pendingRemovalIndex.value === null) return
+  removeColor(pendingRemovalIndex.value)
+  pendingRemovalIndex.value = null
 }
 </script>
 
@@ -114,7 +121,7 @@ const removeColor = (index) => {
         >
       </div>
 
-      <button v-if="normalizeRows(modelValue).length > 1 || color" type="button" class="remove-color" :disabled="disabled" @click="removeColor(index)">
+      <button v-if="normalizeRows(modelValue).length > 1 || color" type="button" class="remove-color" :disabled="disabled" @click="requestColorRemoval(index)">
         Remove
       </button>
     </div>
@@ -123,6 +130,7 @@ const removeColor = (index) => {
       + Add Color
     </button>
     <p class="color-hint">Choose a shirt color template or select Custom to enter another color.</p>
+    <DashboardConfirmDialog :open="pendingRemovalIndex !== null" title="Remove color?" message="This color will be removed from the item." confirm-label="Remove Color" cancel-label="Keep Color" @confirm="confirmColorRemoval" @cancel="pendingRemovalIndex = null" />
   </div>
 </template>
 

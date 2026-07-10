@@ -89,11 +89,4 @@ export const dashboardApi = {
       method: 'DELETE',
     },
   ),
-  reorderSubcollections: (collectionId, orderedIds) => request(
-    `/api/collections/${collectionId}/subcollections/reorder`,
-    {
-      method: 'PUT',
-      body: JSON.stringify({ orderedIds }),
-    },
-  ),
 };

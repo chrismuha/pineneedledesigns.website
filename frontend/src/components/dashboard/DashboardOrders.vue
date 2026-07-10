@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
+import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 
 const route = useRoute()
 const orders = ref([])
@@ -9,6 +10,7 @@ const loading = ref(true)
 const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
+const pendingResolution = ref(null)
 
 const filterOptions = [
   { label: 'All', value: 'all' },
@@ -126,8 +128,6 @@ const updateStatus = async (order, status) => {
 }
 
 const resolveOrder = async (order, resolution) => {
-  const verb = resolution === 'refunded' ? 'refund' : 'cancel'
-  if (!window.confirm(`Confirm ${verb} for ${orderLabel(order)}? This will return its inventory exactly once.`)) return
   savingOrderId.value = order._id
   error.value = ''
   try {
@@ -138,6 +138,13 @@ const resolveOrder = async (order, resolution) => {
   } finally {
     savingOrderId.value = ''
   }
+}
+const requestResolution = (order, resolution) => { pendingResolution.value = { order, resolution } }
+const confirmResolution = async () => {
+  if (!pendingResolution.value) return
+  const { order, resolution } = pendingResolution.value
+  await resolveOrder(order, resolution)
+  pendingResolution.value = null
 }
 
 onMounted(loadOrders)
@@ -330,8 +337,8 @@ watch(
           </p>
 
           <div class="order-actions">
-            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="resolveOrder(order, 'canceled')">Cancel &amp; Restock</button>
-            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="resolveOrder(order, 'refunded')">Refund &amp; Restock</button>
+            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="requestResolution(order, 'canceled')">Cancel &amp; Restock</button>
+            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="requestResolution(order, 'refunded')">Refund &amp; Restock</button>
             <span v-else class="badge badge-closed">Inventory returned</span>
             <button
               v-if="order.status === 'open'"
@@ -356,6 +363,15 @@ watch(
         </div>
       </details>
     </div>
+    <DashboardConfirmDialog
+      :open="Boolean(pendingResolution)"
+      :title="pendingResolution?.resolution === 'refunded' ? 'Refund and restock order?' : 'Cancel and restock order?'"
+      :message="`${pendingResolution ? orderLabel(pendingResolution.order) : 'This order'} will have its inventory returned exactly once.`"
+      :confirm-label="pendingResolution?.resolution === 'refunded' ? 'Refund & Restock' : 'Cancel & Restock'"
+      :busy="Boolean(savingOrderId)"
+      @confirm="confirmResolution"
+      @cancel="pendingResolution = null"
+    />
   </div>
 </template>
 

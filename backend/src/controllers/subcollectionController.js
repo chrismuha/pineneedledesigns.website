@@ -133,26 +133,3 @@ export const deleteSubcollection = async (req, res) => {
 
   res.json({ success: true });
 };
-
-export const reorderSubcollections = async (req, res) => {
-  const collection = await getCollectionOr404(req.params.collectionId, res);
-  if (!collection) return;
-
-  const orderedIds = Array.isArray(req.body?.orderedIds) ? req.body.orderedIds : [];
-  if (!orderedIds.length) {
-    return res.status(400).json({ error: 'orderedIds array is required.' });
-  }
-
-  const updates = orderedIds.map((id, index) => Subcollection.updateOne(
-    { _id: id, collectionId: collection._id },
-    { $set: { sortOrder: index } },
-  ));
-
-  await Promise.all(updates);
-
-  const subcollections = await Subcollection.find({ collectionId: collection._id })
-    .sort({ sortOrder: 1, name: 1 })
-    .lean();
-
-  res.json(subcollections);
-};

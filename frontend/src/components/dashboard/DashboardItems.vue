@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
+import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +21,9 @@ const editPhotoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
 const editCancellationStep = ref(0)
+const pendingSubcollectionDelete = ref(null)
+const pendingProductDelete = ref(null)
+const productDeleteStep = ref(0)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
@@ -27,7 +31,6 @@ const managingSubcollectionsFor = ref(null)
 const subcollectionForm = ref({ name: '' })
 const subcollectionFieldError = ref('')
 const editingSubcollection = ref(null)
-const previewFilter = ref('all')
 const subcollectionsByCollectionId = ref({})
 const subcollectionsLoadingMap = ref({})
 const collectionFilters = ref({})
@@ -49,20 +52,30 @@ const {
   resetSubcollections: resetEditSubcollections,
 } = useSubcollections()
 
-const nonSystemCollections = computed(() => groupedCollections.value.filter((collection) => !collection.isSystem))
+const nonSystemCollections = computed(() => groupedCollections.value
+  .filter((collection) => !collection.isSystem)
+  .sort((left, right) => left.name.localeCompare(
+    right.name,
+    undefined,
+    { numeric: true, sensitivity: 'base' },
+  )))
 const dropdownCollections = computed(() => [...groupedCollections.value].sort((left, right) => (
   collectionLabel(left).localeCompare(collectionLabel(right), undefined, { numeric: true })
 )))
 
 const managingSubcollectionList = computed(() => {
   if (!managingSubcollectionsFor.value) return []
-  if (managerSubcollections.value.length) {
-    return managerSubcollections.value
-  }
   const collection = groupedCollections.value.find(
     (item) => String(item._id) === String(managingSubcollectionsFor.value._id),
   )
-  return collection?.subcollections || []
+  const items = managerSubcollections.value.length
+    ? managerSubcollections.value
+    : (collection?.subcollections || [])
+  return [...items].sort((left, right) => left.name.localeCompare(
+    right.name,
+    undefined,
+    { numeric: true, sensitivity: 'base' },
+  ))
 })
 
 const loadItems = async () => {
@@ -209,7 +222,6 @@ const openCollectionManager = () => {
   modalError.value = ''
   resetSubcollectionForm()
   resetManagerSubcollections()
-  previewFilter.value = 'all'
 }
 
 const closeCollectionManager = () => {
@@ -220,14 +232,12 @@ const closeCollectionManager = () => {
   modalError.value = ''
   resetSubcollectionForm()
   resetManagerSubcollections()
-  previewFilter.value = 'all'
 }
 
 const openSubcollectionManager = async (collection) => {
   managingSubcollectionsFor.value = collection
   modalError.value = ''
   resetSubcollectionForm()
-  previewFilter.value = 'all'
   await loadManagerSubcollections(collection._id)
 }
 
@@ -235,7 +245,6 @@ const closeSubcollectionManager = () => {
   managingSubcollectionsFor.value = null
   resetSubcollectionForm()
   resetManagerSubcollections()
-  previewFilter.value = 'all'
 }
 
 const saveSubcollection = async () => {
@@ -292,9 +301,6 @@ const cancelSubcollectionEdit = () => {
 
 const deleteSubcollection = async (subcollection) => {
   if (!managingSubcollectionsFor.value) return
-  if (!window.confirm(`Delete "${subcollection.name}"? Products in this subcollection will become unassigned.`)) {
-    return
-  }
 
   saving.value = true
   modalError.value = ''
@@ -323,41 +329,12 @@ const deleteSubcollection = async (subcollection) => {
     saving.value = false
   }
 }
-
-const moveSubcollection = async (index, direction) => {
-  if (!managingSubcollectionsFor.value) return
-
-  const items = [...managingSubcollectionList.value]
-  const targetIndex = index + direction
-  if (targetIndex < 0 || targetIndex >= items.length) return
-
-  const reordered = [...items]
-  const [moved] = reordered.splice(index, 1)
-  reordered.splice(targetIndex, 0, moved)
-
-  saving.value = true
-  modalError.value = ''
-
-  try {
-    await dashboardApi.reorderSubcollections(
-      managingSubcollectionsFor.value._id,
-      reordered.map((item) => item._id),
-    )
-    await loadItems()
-    await loadManagerSubcollections(managingSubcollectionsFor.value._id)
-    await fetchCollectionSubcollections(managingSubcollectionsFor.value._id)
-
-    const refreshed = groupedCollections.value.find(
-      (item) => String(item._id) === String(managingSubcollectionsFor.value._id),
-    )
-    if (refreshed) {
-      managingSubcollectionsFor.value = refreshed
-    }
-  } catch (err) {
-    modalError.value = err.message
-  } finally {
-    saving.value = false
-  }
+const requestSubcollectionDeletion = (subcollection) => { pendingSubcollectionDelete.value = subcollection }
+const confirmSubcollectionDeletion = async () => {
+  if (!pendingSubcollectionDelete.value) return
+  const subcollection = pendingSubcollectionDelete.value
+  pendingSubcollectionDelete.value = null
+  await deleteSubcollection(subcollection)
 }
 
 const openEditModal = async (product) => {
@@ -558,16 +535,27 @@ const saveProduct = async () => {
 }
 
 const removeProduct = async (productId) => {
-  const product = groupedCollections.value.flatMap((collection) => collection.products).find((item) => item._id === productId)
-  if (!window.confirm(`Delete "${product?.name || 'this item'}"?`)) return
-  if (!window.confirm('Final confirmation: permanently delete this item? This action cannot be undone.')) return
-
   try {
     await dashboardApi.deleteProduct(productId)
     await loadItems()
   } catch (err) {
     error.value = err.message
   }
+}
+const requestProductDeletion = (product) => {
+  pendingProductDelete.value = product
+  productDeleteStep.value = 1
+}
+const continueProductDeletion = () => { productDeleteStep.value = 2 }
+const cancelProductDeletion = () => {
+  pendingProductDelete.value = null
+  productDeleteStep.value = 0
+}
+const confirmProductDeletion = async () => {
+  const product = pendingProductDelete.value
+  if (!product) return
+  cancelProductDeletion()
+  await removeProduct(product._id)
 }
 
 const saveCollection = async () => {
@@ -841,7 +829,7 @@ watch(
             Edit
           </button>
 
-          <button class="delete-btn btn-danger" type="button" @click="removeProduct(product._id)">
+          <button class="delete-btn btn-danger" type="button" @click="requestProductDeletion(product)">
             Remove
           </button>
         </div>
@@ -1157,29 +1145,6 @@ watch(
         <p v-if="subcollectionsError" class="error-banner">{{ subcollectionsError }}</p>
         <p v-if="subcollectionsLoading" class="status-text">Loading subcollections...</p>
 
-        <div class="storefront-preview">
-          <div class="collection-filters">
-            <button
-              type="button"
-              class="collection-filter"
-              :class="{ 'collection-filter--active': previewFilter === 'all' }"
-              @click="previewFilter = 'all'"
-            >
-              All
-            </button>
-            <button
-              v-for="subcollection in managingSubcollectionList"
-              :key="subcollection._id"
-              type="button"
-              class="collection-filter"
-              :class="{ 'collection-filter--active': previewFilter === subcollection._id }"
-              @click="previewFilter = subcollection._id"
-            >
-              {{ subcollection.name }}
-            </button>
-          </div>
-        </div>
-
         <div class="field">
           <label>{{ editingSubcollection ? 'Rename Subcollection' : 'New Subcollection' }}</label>
           <div class="inline-field">
@@ -1217,54 +1182,49 @@ watch(
 
         <div v-else class="subcollection-list">
           <article
-            v-for="(subcollection, subcollectionIndex) in managingSubcollectionList"
+            v-for="subcollection in managingSubcollectionList"
             :key="subcollection._id"
             class="subcollection-row"
             :class="{ 'subcollection-row--editing': editingSubcollection?._id === subcollection._id }"
           >
             <div class="subcollection-main">
-              <span class="subcollection-chip">{{ subcollection.name }}</span>
+              <div class="subcollection-action-chip">
+                <button type="button" class="subcollection-chip-name" :disabled="saving" @click="startEditSubcollection(subcollection)">
+                  <i class="bi bi-pencil" aria-hidden="true"></i>
+                  {{ subcollection.name }}
+                </button>
+                <button type="button" class="subcollection-chip-delete" :disabled="saving" :aria-label="`Delete ${subcollection.name}`" @click="requestSubcollectionDeletion(subcollection)">×</button>
+              </div>
               <span class="subcollection-meta">
                 {{ productCountForSubcollection(managingSubcollectionsFor._id, subcollection._id) }} items
               </span>
-            </div>
-
-            <div class="row-actions">
-              <button
-                type="button"
-                :disabled="saving || subcollectionIndex === 0"
-                @click="moveSubcollection(subcollectionIndex, -1)"
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                :disabled="saving || subcollectionIndex === managingSubcollectionList.length - 1"
-                @click="moveSubcollection(subcollectionIndex, 1)"
-              >
-                ↓
-              </button>
-              <button
-                type="button"
-                class="edit-btn btn-primary"
-                :disabled="saving"
-                @click="startEditSubcollection(subcollection)"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                class="delete-btn btn-danger"
-                :disabled="saving"
-                @click="deleteSubcollection(subcollection)"
-              >
-                Delete
-              </button>
             </div>
           </article>
         </div>
       </section>
     </div>
+
+    <DashboardConfirmDialog
+      :open="Boolean(pendingSubcollectionDelete)"
+      title="Delete subcollection?"
+      :message="`Products in ${pendingSubcollectionDelete?.name || 'this subcollection'} will become unassigned.`"
+      confirm-label="Delete Subcollection"
+      cancel-label="Keep Subcollection"
+      :busy="saving"
+      @confirm="confirmSubcollectionDeletion"
+      @cancel="pendingSubcollectionDelete = null"
+    />
+
+    <DashboardConfirmDialog
+      :open="Boolean(pendingProductDelete)"
+      :step-label="`Confirmation ${productDeleteStep} of 2`"
+      :title="productDeleteStep === 1 ? `Delete ${pendingProductDelete?.name || 'item'}?` : 'Permanently delete this item?'"
+      :message="productDeleteStep === 1 ? 'The item will be removed from the store.' : 'This action cannot be undone.'"
+      :confirm-label="productDeleteStep === 1 ? 'Continue' : 'Delete Item'"
+      :cancel-label="productDeleteStep === 1 ? 'Keep Item' : 'Go Back'"
+      @confirm="productDeleteStep === 1 ? continueProductDeletion() : confirmProductDeletion()"
+      @cancel="productDeleteStep === 1 ? cancelProductDeletion() : productDeleteStep = 1"
+    />
 
     <div v-if="collectionPendingDelete" class="modal-overlay destructive-confirmation-overlay">
       <section class="modal-card destructive-confirmation" role="alertdialog" aria-modal="true">
@@ -1696,6 +1656,16 @@ watch(
   background: #fff;
   font-weight: 600;
 }
+
+.subcollection-action-chip { display: inline-grid; grid-template-columns: auto 40px; gap: 0; }
+.subcollection-chip-name,
+.subcollection-chip-delete { min-height: 42px; border: 1px solid var(--dashboard-green); background: #fff; font: inherit; cursor: pointer; }
+.subcollection-chip-name { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px 0 0 999px; color: #185f30; font-weight: 700; }
+.subcollection-chip-delete { margin-left: -1px; border-radius: 0 999px 999px 0; color: var(--dashboard-red); font-size: 1.5rem; line-height: 1; }
+.subcollection-chip-name:hover { background: #edf8f0; }
+.subcollection-chip-delete:hover { border-color: var(--dashboard-red); background: var(--dashboard-red); color: #fff; }
+.subcollection-chip-name:disabled,
+.subcollection-chip-delete:disabled { cursor: not-allowed; opacity: .55; }
 
   .collection-actions {
     display: flex;
