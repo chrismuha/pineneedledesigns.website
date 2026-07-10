@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
+import ColorOptionEditor from './ColorOptionEditor.vue'
 
 const route = useRoute()
 const groupedCollections = ref([])
@@ -363,19 +364,6 @@ const openEditModal = async (product) => {
   editModalError.value = ''
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
-}
-
-const addEditColor = () => {
-  editingProduct.value?.colors.push('')
-}
-
-const removeEditColor = (index) => {
-  if (!editingProduct.value) return
-  if (editingProduct.value.colors.length === 1) {
-    editingProduct.value.colors[0] = ''
-    return
-  }
-  editingProduct.value.colors.splice(index, 1)
 }
 
 const closeEditModal = () => {
@@ -862,11 +850,7 @@ watch(
 
         <div class="field">
           <label>Colors</label>
-          <div v-for="(_color, index) in editingProduct.colors" :key="index" class="inline-field">
-            <input v-model="editingProduct.colors[index]" type="text" placeholder="Color">
-            <button type="button" class="danger-btn" @click="removeEditColor(index)">Remove</button>
-          </div>
-          <button type="button" class="continue-btn" @click="addEditColor">+ Add Color</button>
+          <ColorOptionEditor v-model="editingProduct.colors" :disabled="saving" />
           <p class="hint">These appear together in one Color dropdown.</p>
         </div>
 

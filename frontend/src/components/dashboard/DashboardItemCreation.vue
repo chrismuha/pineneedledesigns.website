@@ -3,6 +3,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
+import ColorOptionEditor from './ColorOptionEditor.vue'
 
 const router = useRouter()
 const collections = ref([])
@@ -85,18 +86,6 @@ const addOption = (propertyIndex) => {
 
 const removeOption = (propertyIndex, optionIndex) => {
   form.customProperties[propertyIndex].options.splice(optionIndex, 1)
-}
-
-const addColor = () => {
-  form.colors.push('')
-}
-
-const removeColor = (index) => {
-  if (form.colors.length === 1) {
-    form.colors[0] = ''
-    return
-  }
-  form.colors.splice(index, 1)
 }
 
 const resetForm = () => {
@@ -290,13 +279,7 @@ watch(
 
           <div class="field field--full">
             <label>Colors</label>
-            <div v-for="(_color, index) in form.colors" :key="index" class="option-row">
-              <input v-model="form.colors[index]" type="text" :placeholder="index === 0 ? 'Black' : 'Another color'">
-              <button type="button" class="btn-danger" @click="removeColor(index)">Remove</button>
-            </div>
-            <button type="button" class="btn-primary add-color-button" @click="addColor">
-              + Add Color
-            </button>
+            <ColorOptionEditor v-model="form.colors" :disabled="loading" />
             <p class="hint">Each color becomes an option in one Color dropdown on the item page.</p>
           </div>
 
@@ -533,10 +516,6 @@ textarea {
 
 .option-row input {
   flex: 1;
-}
-
-.add-color-button {
-  width: fit-content;
 }
 
 .photo-grid {

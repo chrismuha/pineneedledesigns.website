@@ -852,6 +852,13 @@ collectionPages.forEach((page) => {
 })
 
 export const visibleCollectionPages = collectionPages.filter((page) => (page.count > 0 || page.showWhenEmpty) && !page.hidden)
+
+export const shirtColorTemplates = [...new Set(
+  (collectionPages.find((page) => page.slug === 'shirts')?.products || [])
+    .flatMap((product) => product.options || [])
+    .filter((option) => String(option.name).toLowerCase() === 'color')
+    .flatMap((option) => option.values || []),
+)].sort((left, right) => left.localeCompare(right))
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
 const visibleCollectionBySlug = new Map(visibleCollectionPages.map((page) => [page.slug, page]))
 const groupedCollectionSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))
