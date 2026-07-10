@@ -2,6 +2,7 @@ import { collectionCategoryOrder } from '../../../frontend/src/data/siteData.js'
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
+import { isValidObjectId } from 'mongoose';
 
 const mapProductToStorefront = (product) => {
   const placeholders = product.optionPlaceholders instanceof Map
@@ -166,6 +167,7 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   const filter = { collectionId: collection._id };
 
   if (subCollectionId) {
+    if (!isValidObjectId(subCollectionId)) return [];
     const subcollection = await Subcollection.findOne({
       _id: subCollectionId,
       collectionId: collection._id,

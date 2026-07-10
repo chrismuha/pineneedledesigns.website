@@ -2,7 +2,8 @@ export const slugify = (value) => value
   .toLowerCase()
   .trim()
   .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-+|-+$/g, '');
+  .replace(/^-+/, '')
+  .replace(/-+$/, '');
 
 export const createUniqueSlug = async (Model, name, excludeId = null) => {
   const base = slugify(name) || 'collection';
