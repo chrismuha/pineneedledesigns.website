@@ -560,6 +560,11 @@ const startEditCollection = (collection) => {
   resetManagerSubcollections()
 }
 
+const openEditCollectionManager = (collection) => {
+  openCollectionManager()
+  startEditCollection(collection)
+}
+
 const deleteCollection = async (collection) => {
   const itemCount = collection.products?.length || 0
   const firstConfirmation = window.confirm(
@@ -583,6 +588,7 @@ const deleteCollection = async (collection) => {
     await loadItems()
   } catch (err) {
     modalError.value = err.message
+    error.value = err.message
   } finally {
     saving.value = false
   }
@@ -698,7 +704,20 @@ watch(
         <p v-if="isSubcollectionsLoading(collection._id)" class="collection-subtitle">
           Loading sub-collections...
         </p>
-             <button type="button" class="edit-btn btn-primary" @click="startEditCollection(collection)">Rename</button>
+        <div class="collection-header-actions">
+          <button type="button" class="edit-btn btn-primary" @click="openEditCollectionManager(collection)">
+            Rename Collection
+          </button>
+          <button
+            v-if="!collection.products.length"
+            type="button"
+            class="delete-btn btn-danger"
+            :disabled="saving"
+            @click="deleteCollection(collection)"
+          >
+            Delete Empty Collection
+          </button>
+        </div>
         <div
           v-if="getSubcollectionsForCollection(collection).length"
           class="collection-filters"
@@ -862,7 +881,13 @@ watch(
                   <i class="bi bi-pencil" aria-hidden="true"></i>
                   <span class="button-text">Rename</span>
                 </button>
-                <button type="button" class="delete-btn btn-danger icon-button" :disabled="saving" @click="deleteCollection(collection)">
+                <button
+                  type="button"
+                  class="delete-btn btn-danger icon-button collection-delete-button"
+                  :disabled="saving"
+                  :aria-label="`Delete ${collection.name} collection`"
+                  @click="deleteCollection(collection)"
+                >
                   <i class="bi bi-trash" aria-hidden="true"></i>
                   <span class="button-text">Delete Collection</span>
                 </button>
@@ -1201,6 +1226,13 @@ watch(
   padding: 20px 20px 8px;
   border-bottom: 1px solid #f0f0f0;
   background: #fafafa;
+}
+
+.collection-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .collection-title {
@@ -1615,6 +1647,15 @@ watch(
   .collection-row .icon-button .button-text {
     display: none;
     width: fit-content;
+  }
+
+  .collection-row .collection-delete-button .button-text {
+    display: inline;
+  }
+
+  .collection-row .collection-delete-button {
+    flex: 1 1 100%;
+    width: 100%;
   }
 }
 @media screen and (max-width: 720px) {
