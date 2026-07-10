@@ -1483,10 +1483,10 @@ watch(
   align-items: center;
   justify-content: center;
   padding: 24px;
-  z-index: 1000;
+  z-index: 2000;
 }
 
-.destructive-confirmation-overlay { z-index: 1200; }
+.destructive-confirmation-overlay { z-index: 2200; }
 .destructive-confirmation { max-width: 520px; text-align: center; }
 .destructive-icon { display: grid; width: 58px; height: 58px; margin: 0 auto 12px; place-items: center; border-radius: 50%; background: var(--dashboard-red-bg); color: var(--dashboard-red); font-size: 1.7rem; }
 .confirmation-step { margin: 0 0 6px; color: #666; font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
@@ -1644,12 +1644,30 @@ watch(
     align-items: stretch;
   }
 
-  .row-actions {
+  .collection-actions {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
+  }
+
+  .collection-row .row-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .collection-row .row-actions button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .collection-row .row-actions .edit-btn,
+  .collection-row .row-actions .delete-btn {
+    grid-column: 1 / -1;
   }
 
   .subcollection-actions {
@@ -1663,7 +1681,7 @@ watch(
   }
 
   .collection-row .icon-button {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
@@ -1694,32 +1712,7 @@ watch(
   }
 }
 @media screen and (max-width: 600px) {
-  .collection-actions {
-    flex-direction: column;
-  }
-  .row-actions {
-    width: 100%;
-  }
-  .row-actions .icon-button {
-    flex: 1;
-    width: 44px;
-    min-width: 44px;
-  }
-}
-@media screen and (max-width: 470px) {
-  .collection-row .icon-button .button-text {
-    display: none;
-    width: fit-content;
-  }
-
-  .collection-row .collection-delete-button .button-text {
-    display: inline;
-  }
-
-  .collection-row .collection-delete-button {
-    flex: 1 1 100%;
-    width: 100%;
-  }
+  .collection-row .icon-button .button-text { display: inline; }
 }
 @media screen and (max-width: 720px) {
   .subcollection-row .row-actions .edit-btn, 
