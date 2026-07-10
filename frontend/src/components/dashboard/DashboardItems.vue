@@ -995,8 +995,12 @@ watch(
             :disabled="saving"
             @change="handleEditPhotoUpload"
           >
-          <label for="edit-photo-upload" class="add-photos-button" :class="{ disabled: saving }">
-            + Add Photos
+          <label for="edit-photo-upload" class="add-photos-control" :class="{ disabled: saving }">
+            <i class="bi bi-images" aria-hidden="true"></i>
+            <span>
+              <strong>Add Photos</strong>
+              <small>Choose one or more images</small>
+            </span>
           </label>
           <p v-if="editPhotoFiles.length" class="selected-photo-count">
             {{ editPhotoFiles.length }} new photo{{ editPhotoFiles.length === 1 ? '' : 's' }} selected
@@ -1348,8 +1352,14 @@ watch(
 .edit-photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
 .new-photo-badge { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 999px; background: var(--dashboard-green); color: #fff; font-size: .75rem; font-weight: 700; }
 .visually-hidden-file { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0 !important; }
-.add-photos-button { display: inline-flex; width: fit-content; align-items: center; justify-content: center; padding: 11px 16px; border-radius: 8px; background: var(--dashboard-green); color: #fff; cursor: pointer; font-weight: 700; }
-.add-photos-button.disabled { pointer-events: none; opacity: .55; }
+.add-photos-control { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: center; gap: 12px; padding: 18px; border: 2px dashed #83b990; border-radius: 12px; background: #f4fbf6; color: #185f30; cursor: pointer; text-align: left; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.add-photos-control:hover { border-color: var(--dashboard-green); background: #e9f7ed; transform: translateY(-1px); }
+.add-photos-control:focus-within { outline: 3px solid rgba(46, 164, 79, .2); outline-offset: 2px; }
+.add-photos-control i { font-size: 1.65rem; }
+.add-photos-control span { display: flex; flex-direction: column; gap: 2px; }
+.add-photos-control strong { font-size: 1rem; }
+.add-photos-control small { color: #58715e; font-size: .84rem; font-weight: 400; }
+.add-photos-control.disabled { pointer-events: none; opacity: .55; }
 .selected-photo-count { margin: 0; color: #1f7a3d; font-weight: 600; }
 
 .modal-header {
@@ -1530,7 +1540,7 @@ watch(
   .modal-card { padding: 18px; }
   .row-actions { width: 100%; justify-content: stretch; }
   .row-actions button { flex: 1 1 140px; }
-  .add-photos-button { width: 100%; box-sizing: border-box; }
+  .add-photos-control { padding: 15px; }
 }
 
 @media (max-width: 850px) {
