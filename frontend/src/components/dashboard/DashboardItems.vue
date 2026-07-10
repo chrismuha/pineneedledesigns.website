@@ -987,10 +987,18 @@ watch(
     </div>
 
     <div v-if="showEditModal && editingProduct" class="modal-overlay">
-      <section class="modal-card modal-card--fullscreen">
+      <section class="modal-card modal-card--fullscreen edit-item-modal">
         <div class="modal-header">
           <h2>Edit Item</h2>
-          <button type="button" class="clear-btn" @click="requestEditCancellation">Cancel</button>
+          <button
+            type="button"
+            class="modal-close-button"
+            aria-label="Cancel editing item"
+            title="Cancel"
+            @click="requestEditCancellation"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
 
         <p v-if="editModalError" class="error-banner">{{ editModalError }}</p>
@@ -1836,6 +1844,34 @@ watch(
 .collection-inline-rename input { min-width: min(320px, 45vw); }
 .quick-collection-overlay { z-index: 1200; }
 
+.modal-close-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f1f1;
+  color: #222;
+  cursor: pointer;
+  font: inherit;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.modal-close-button:hover,
+.modal-close-button:focus-visible {
+  background: #e1e1e1;
+  outline: 2px solid var(--dashboard-green);
+  outline-offset: 2px;
+}
+
+.edit-item-modal {
+  scroll-padding-bottom: calc(120px + env(safe-area-inset-bottom));
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+}
+
 .status-text,
 .empty-collection {
   color: #666;
@@ -1860,6 +1896,10 @@ watch(
   .modal-header { position: sticky; top: 0; z-index: 30; margin: 0 -14px 16px; padding: 14px; background: #fff; border-bottom: 1px solid #d9e0da; box-shadow: 0 3px 8px rgba(0, 0, 0, .08); }
   .modal-overlay:has(.modal-card--fullscreen) { padding: 0; }
   .modal-card.modal-card--fullscreen { width: 100vw; height: 100dvh; max-height: 100dvh !important; padding: 0 14px 24px; border-radius: 0; }
+  .modal-card.modal-card--fullscreen.edit-item-modal {
+    padding-bottom: calc(140px + env(safe-area-inset-bottom));
+    scroll-padding-bottom: calc(140px + env(safe-area-inset-bottom));
+  }
   .modal-card--fullscreen > .modal-header { margin: 0 -14px 16px; padding: max(14px, env(safe-area-inset-top)) 14px 14px; }
   .inline-field, .edit-section-header, .edit-property-header, .edit-option-row { flex-direction: column; align-items: stretch; width: 100%; }
   .inline-field > *, .edit-section-header > *, .edit-property-header > *, .edit-option-row > * { width: 100%; box-sizing: border-box; }
