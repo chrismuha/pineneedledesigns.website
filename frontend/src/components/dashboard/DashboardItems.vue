@@ -16,6 +16,8 @@ const showCollectionManager = ref(false)
 const showEditModal = ref(false)
 const editingProduct = ref(null)
 const editPhotoFiles = ref([])
+const collectionPendingDelete = ref(null)
+const deleteConfirmationStep = ref(1)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
@@ -565,17 +567,23 @@ const openEditCollectionManager = (collection) => {
   startEditCollection(collection)
 }
 
-const deleteCollection = async (collection) => {
-  const itemCount = collection.products?.length || 0
-  const firstConfirmation = window.confirm(
-    `Delete the "${collection.name}" collection?\n\nThis will permanently delete ${itemCount} item${itemCount === 1 ? '' : 's'} in this collection. This cannot be undone.\n\nChoose OK for Yes or Cancel for No.`,
-  )
-  if (!firstConfirmation) return
+const requestCollectionDeletion = (collection) => {
+  collectionPendingDelete.value = collection
+  deleteConfirmationStep.value = 1
+}
 
-  const secondConfirmation = window.confirm(
-    `FINAL CONFIRMATION\n\nYes, permanently delete "${collection.name}" and all ${itemCount} of its items?\n\nChoose OK for Yes or Cancel for No.`,
-  )
-  if (!secondConfirmation) return
+const cancelCollectionDeletion = () => {
+  collectionPendingDelete.value = null
+  deleteConfirmationStep.value = 1
+}
+
+const continueCollectionDeletion = () => {
+  deleteConfirmationStep.value = 2
+}
+
+const deleteCollection = async () => {
+  const collection = collectionPendingDelete.value
+  if (!collection || deleteConfirmationStep.value !== 2) return
 
   saving.value = true
   modalError.value = ''
@@ -586,6 +594,7 @@ const deleteCollection = async (collection) => {
       resetSubcollectionForm()
     }
     await loadItems()
+    cancelCollectionDeletion()
   } catch (err) {
     modalError.value = err.message
     error.value = err.message
@@ -712,7 +721,7 @@ watch(
             type="button"
             class="delete-btn btn-danger"
             :disabled="saving"
-            @click="deleteCollection(collection)"
+            @click="requestCollectionDeletion(collection)"
           >
             Delete Collection
           </button>
@@ -885,7 +894,7 @@ watch(
                   class="delete-btn btn-danger icon-button collection-delete-button"
                   :disabled="saving"
                   :aria-label="`Delete ${collection.name} collection`"
-                  @click="deleteCollection(collection)"
+                  @click="requestCollectionDeletion(collection)"
                 >
                   <i class="bi bi-trash" aria-hidden="true"></i>
                   <span class="button-text">Delete Collection</span>
@@ -1207,6 +1216,49 @@ watch(
         </div>
       </section>
     </div>
+
+    <div v-if="collectionPendingDelete" class="modal-overlay destructive-confirmation-overlay">
+      <section class="modal-card destructive-confirmation" role="alertdialog" aria-modal="true">
+        <div class="destructive-icon" aria-hidden="true">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+
+        <template v-if="deleteConfirmationStep === 1">
+          <p class="confirmation-step">Confirmation 1 of 2</p>
+          <h2>Delete {{ collectionPendingDelete.name }}?</h2>
+          <p>
+            This will permanently delete
+            <strong>{{ collectionPendingDelete.products?.length || 0 }} item{{ (collectionPendingDelete.products?.length || 0) === 1 ? '' : 's' }}</strong>
+            and all subcollections inside this collection.
+          </p>
+          <p class="destructive-warning">This action cannot be undone.</p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" :disabled="saving" @click="cancelCollectionDeletion">
+              No, Keep Collection
+            </button>
+            <button type="button" class="btn-danger" :disabled="saving" @click="continueCollectionDeletion">
+              Yes, Continue
+            </button>
+          </div>
+        </template>
+
+        <template v-else>
+          <p class="confirmation-step">Final confirmation 2 of 2</p>
+          <h2>Are you absolutely sure?</h2>
+          <p>
+            Permanently delete <strong>{{ collectionPendingDelete.name }}</strong> and everything contained in it?
+          </p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" :disabled="saving" @click="cancelCollectionDeletion">
+              No, Cancel
+            </button>
+            <button type="button" class="btn-danger" :disabled="saving" @click="deleteCollection">
+              {{ saving ? 'Deleting...' : 'Yes, Permanently Delete' }}
+            </button>
+          </div>
+        </template>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -1434,6 +1486,16 @@ watch(
   z-index: 1000;
 }
 
+.destructive-confirmation-overlay { z-index: 1200; }
+.destructive-confirmation { max-width: 520px; text-align: center; }
+.destructive-icon { display: grid; width: 58px; height: 58px; margin: 0 auto 12px; place-items: center; border-radius: 50%; background: var(--dashboard-red-bg); color: var(--dashboard-red); font-size: 1.7rem; }
+.confirmation-step { margin: 0 0 6px; color: #666; font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.destructive-confirmation h2 { margin: 0 0 12px; color: #711525; }
+.destructive-confirmation p { line-height: 1.55; }
+.destructive-warning { color: #8a1f1f; font-weight: 700; }
+.confirmation-actions { display: flex; justify-content: center; gap: 12px; margin-top: 22px; }
+.confirmation-actions button { min-width: 170px; }
+
 .collection-list,
 .subcollection-list {
   display: flex;
@@ -1572,6 +1634,8 @@ watch(
   .row-actions { width: 100%; justify-content: stretch; }
   .row-actions button { flex: 1 1 140px; }
   .add-photos-control { padding: 15px; }
+  .confirmation-actions { flex-direction: column-reverse; }
+  .confirmation-actions button { width: 100%; min-width: 0; }
 }
 
 @media (max-width: 850px) {
