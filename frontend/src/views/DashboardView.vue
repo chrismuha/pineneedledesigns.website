@@ -1,10 +1,24 @@
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const route = useRoute()
 const mobileNavReleased = ref(true)
 const releaseMobileNav = () => { mobileNavReleased.value = true }
+
+onMounted(() => {
+  window.addEventListener('touchend', releaseMobileNav, { passive: true })
+  window.addEventListener('touchcancel', releaseMobileNav, { passive: true })
+  window.addEventListener('pointerup', releaseMobileNav, { passive: true })
+  window.addEventListener('blur', releaseMobileNav)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('touchend', releaseMobileNav)
+  window.removeEventListener('touchcancel', releaseMobileNav)
+  window.removeEventListener('pointerup', releaseMobileNav)
+  window.removeEventListener('blur', releaseMobileNav)
+})
 
 const menuItems = [
   {
@@ -207,7 +221,9 @@ const isActive = (path) => {
   }
 
   .dashboard-layout {
-    height: calc(100dvh - var(--mobile-nav-height));
+    position: absolute;
+    inset: 0 0 var(--mobile-nav-height);
+    height: auto;
     min-height: 0;
     overflow: hidden;
   }
@@ -230,7 +246,7 @@ const isActive = (path) => {
 
   .bottom-nav {
     display: flex;
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
@@ -244,10 +260,11 @@ const isActive = (path) => {
     align-items: center;
     transition: transform 180ms ease-out;
     will-change: transform;
+    touch-action: manipulation;
   }
 
   .bottom-nav--swiping {
-    transform: translateY(calc(100% - 10px));
+    transform: translateY(6px);
   }
 
   .bottom-tab {
