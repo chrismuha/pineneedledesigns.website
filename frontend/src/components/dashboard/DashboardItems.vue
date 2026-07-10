@@ -1348,13 +1348,16 @@ watch(
   padding: 5px 10px;
   border-radius: 999px;
   font-size: .85rem;
+  border: 1px solid transparent;
+  opacity: 1;
+  font-weight: 700;
 }
 
-.green { background: var(--dashboard-green-bg); }
-.blue { background: var(--dashboard-blue-bg); }
-.red { background: var(--dashboard-red-bg); }
-.purple { background: var(--dashboard-purple-bg); }
-.orange { background: var(--dashboard-orange-bg); color: #8a4b00; }
+.item-card .badge.green { background: #218838; border-color: #196c2c; color: #fff; }
+.item-card .badge.blue { background: #1676a3; border-color: #105d81; color: #fff; }
+.item-card .badge.red { background: #c91f42; border-color: #a31735; color: #fff; }
+.item-card .badge.purple { background: #7651a8; border-color: #5e3f87; color: #fff; }
+.item-card .badge.orange { background: #b85c00; border-color: #914900; color: #fff; }
 
 .custom-properties { margin-top: 20px; }
 
