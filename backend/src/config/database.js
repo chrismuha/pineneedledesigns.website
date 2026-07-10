@@ -179,7 +179,9 @@ export const connectDatabase = async () => {
     throw formatMongoConnectionError(error);
   }
 
-  console.log('✅ MongoDB connected');
+  const connectedDb = mongoose.connection.name || '(unknown)';
+  const connectedHost = mongoose.connection.host || '(unknown)';
+  console.log(`✅ MongoDB connected (host=${connectedHost}, db=${connectedDb})`);
 
   const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
   if (!uncategorized) {

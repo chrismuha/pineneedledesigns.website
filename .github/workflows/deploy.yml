@@ -20,6 +20,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           NODE_ENV: production
+          PORT: 3001
+          APP_BASE_URL: https://pineneedledesigns.store
           PAYPAL_BOOKING_DEPOSITS_ENABLED: ${{ secrets.PAYPAL_BOOKING_DEPOSITS_ENABLED }}
           PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID }}
           PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_CLIENT_SECRET }}
@@ -31,14 +33,52 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          envs: NODE_ENV,PAYPAL_BOOKING_DEPOSITS_ENABLED,PAYPAL_CLIENT_ID,PAYPAL_CLIENT_SECRET,RESEND_API_KEY,RESEND_FROM,SESSION_SECRET,MONGODB_URI
+          envs: NODE_ENV,PORT,APP_BASE_URL,PAYPAL_BOOKING_DEPOSITS_ENABLED,PAYPAL_CLIENT_ID,PAYPAL_CLIENT_SECRET,RESEND_API_KEY,RESEND_FROM,SESSION_SECRET,MONGODB_URI
           script: |
-            set -e
+            set -euo pipefail
             cd ~/pineneedledesigns.website
             git fetch origin main
             git reset --hard origin/main
             git clean -fd
-            rm -f backend/.env
+
+            if [ -z "${MONGODB_URI:-}" ]; then
+              echo "ERROR: MONGODB_URI secret is empty. Set GitHub Actions secret MONGODB_URI to your DigitalOcean MongoDB connection string."
+              exit 1
+            fi
+
+            if [ -z "${SESSION_SECRET:-}" ]; then
+              echo "ERROR: SESSION_SECRET secret is empty. Set GitHub Actions secret SESSION_SECRET."
+              exit 1
+            fi
+
+            # Write production env file so the app always loads DigitalOcean MongoDB
+            umask 077
+            printf '%s\n' \
+              "NODE_ENV=production" \
+              "PORT=3001" \
+              "APP_BASE_URL=https://pineneedledesigns.store" \
+              "MONGODB_URI=${MONGODB_URI}" \
+              "SESSION_SECRET=${SESSION_SECRET}" \
+              "RESEND_API_KEY=${RESEND_API_KEY:-}" \
+              "RESEND_FROM=${RESEND_FROM:-orders@pineneedledesigns.store}" \
+              "PAYPAL_BOOKING_DEPOSITS_ENABLED=${PAYPAL_BOOKING_DEPOSITS_ENABLED:-false}" \
+              "PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-}" \
+              "PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-}" \
+              > backend/.env
+
             npm ci --omit=dev --ignore-scripts
             pm2 startOrRestart ecosystem.config.cjs --update-env
             pm2 save
+            pm2 status
+
+            node -e "
+              const uri = process.env.MONGODB_URI || '';
+              if (!uri) {
+                console.error('ERROR: MONGODB_URI is missing in the deploy shell environment.');
+                process.exit(1);
+              }
+              const host = uri.replace(/^mongodb(\\+srv)?:\\/\\//, '').replace(/^[^@]+@/, '').split('/')[0];
+              const db = (uri.split('/').pop() || '').split('?')[0] || '(missing)';
+              console.log('Deployed MongoDB host:', host);
+              console.log('Deployed MongoDB database:', db);
+            "
