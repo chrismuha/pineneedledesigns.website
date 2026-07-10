@@ -71,7 +71,28 @@ jobs:
 
             npm ci --omit=dev --ignore-scripts
             npm run seed -w backend
-            pm2 startOrRestart ecosystem.config.cjs --update-env
+
+            # Replace any legacy PM2 definition so it cannot keep an obsolete script path.
+            pm2 delete server 2>/dev/null || true
+            pm2 start ecosystem.config.cjs --update-env
+
+            # Do not report a successful deployment until the backend is actually serving traffic.
+            healthy=false
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent --show-error http://127.0.0.1:3001/api/health; then
+                healthy=true
+                break
+              fi
+              sleep 1
+            done
+
+            if [ "$healthy" != "true" ]; then
+              echo "ERROR: Backend failed its health check after 30 seconds."
+              pm2 status
+              pm2 logs server --lines 100 --nostream || true
+              exit 1
+            fi
+
             pm2 save
             pm2 status
 

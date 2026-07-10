@@ -1,7 +1,10 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
+import { config } from '../config/index.js';
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
@@ -71,11 +74,23 @@ const parseBooleanField = (value) => {
   return Boolean(value);
 };
 
+const normalizePhotos = (photos) => {
+  if (typeof photos === 'string') {
+    try {
+      return normalizePhotos(JSON.parse(photos));
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(photos) ? photos.map((photo) => String(photo || '').trim()).filter(Boolean) : [];
+};
+
 const parseRequestBody = (body) => ({
   ...body,
   freeShipping: parseBooleanField(body?.freeShipping),
   outOfStock: parseBooleanField(body?.outOfStock),
   customProperties: normalizeCustomProperties(body?.customProperties),
+  photos: body?.photos !== undefined ? normalizePhotos(body.photos) : undefined,
   subCollectionId: body?.subCollectionId !== undefined
     ? normalizeSubCollectionId(body.subCollectionId)
     : undefined,
@@ -100,7 +115,6 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       collectionId,
       color: String(body?.color || '').trim(),
       size: String(body?.size || '').trim(),
-      importantNotes: String(body?.importantNotes || '').trim(),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -214,7 +228,6 @@ export const createProduct = async (req, res) => {
     subCollectionId: subcollectionResult.id,
     color: data.color,
     size: data.size,
-    importantNotes: data.importantNotes,
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
@@ -236,6 +249,8 @@ export const updateProduct = async (req, res) => {
   }
 
   const body = parseRequestBody(req.body);
+  const previousPhotos = [...(product.photos || [])];
+  const uploadedPhotos = (req.files || []).map((file) => `/uploads/${file.filename}`);
   const { errors, data } = validateProductPayload(body, { requireAll: false });
   if (errors.length) {
     return res.status(400).json({ error: errors.join(' ') });
@@ -245,11 +260,21 @@ export const updateProduct = async (req, res) => {
   if (data.description) product.description = data.description;
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
-  if (req.body?.importantNotes !== undefined) product.importantNotes = data.importantNotes;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;
   }
-  if (req.body?.photos !== undefined) product.photos = data.photos;
+  if (req.body?.photos !== undefined || uploadedPhotos.length) {
+    product.photos = [...(data.photos || []), ...uploadedPhotos];
+    if (!product.photos.length) {
+      return res.status(400).json({ error: 'At least one photo is required.' });
+    }
+    if (product.photos.length > 20) {
+      await Promise.all(uploadedPhotos.map((photo) => (
+        fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch(() => {})
+      )));
+      return res.status(400).json({ error: 'A maximum of 20 photos is allowed.' });
+    }
+  }
   if (req.body?.price !== undefined) product.price = data.price;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;
@@ -287,6 +312,22 @@ export const updateProduct = async (req, res) => {
   }
 
   await product.save();
+
+  const removedPhotos = previousPhotos.filter(
+    (photo) => String(photo).startsWith('/uploads/') && !product.photos.includes(photo),
+  );
+  if (removedPhotos.length) {
+    const stillReferenced = new Set(
+      (await Product.find({ photos: { $in: removedPhotos } }).select('photos').lean())
+        .flatMap((otherProduct) => otherProduct.photos || []),
+    );
+    await Promise.all(removedPhotos
+      .filter((photo) => !stillReferenced.has(photo))
+      .map((photo) => fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch((error) => {
+        if (error?.code !== 'ENOENT') console.error(`Failed to remove product photo ${photo}:`, error);
+      })));
+  }
+
   const populated = await product.populate(productPopulatePaths);
   res.json(populated);
 };

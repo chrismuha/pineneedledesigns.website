@@ -27,7 +27,7 @@ router.put('/reorder', reorderProducts);
 router.get('/', listProducts);
 router.get('/:id', getProduct);
 router.post('/', handlePhotoUpload, createProduct);
-router.put('/:id', updateProduct);
+router.put('/:id', handlePhotoUpload, updateProduct);
 router.delete('/:id', deleteProduct);
 
 export default router;

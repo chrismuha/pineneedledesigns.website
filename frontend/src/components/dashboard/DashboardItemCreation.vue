@@ -3,6 +3,8 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
+import ColorOptionEditor from './ColorOptionEditor.vue'
+import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const router = useRouter()
 const collections = ref([])
@@ -24,9 +26,8 @@ const {
 const form = reactive({
   name: '',
   collectionId: '',
-  color: '',
-  size: '',
-  importantNotes: '',
+  colors: [''],
+  sizes: [''],
   description: '',
   price: '',
   shippingCost: '',
@@ -37,6 +38,16 @@ const form = reactive({
 })
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
+const sortedCollections = computed(() => [...collections.value].sort((left, right) => (
+  (left.isSystem ? 'Uncategorized' : left.name).localeCompare(
+    right.isSystem ? 'Uncategorized' : right.name,
+    undefined,
+    { numeric: true },
+  )
+)))
+const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
+  left.name.localeCompare(right.name, undefined, { numeric: true })
+)))
 
 const revokePhotoPreview = (photo) => {
   if (photo?.previewUrl) {
@@ -92,9 +103,8 @@ const resetForm = () => {
   form.collectionId = collections.value.find((collection) => !collection.isSystem)?._id
     || collections.value[0]?._id
     || ''
-  form.color = ''
-  form.size = ''
-  form.importantNotes = ''
+  form.colors = ['']
+  form.sizes = ['']
   form.description = ''
   form.price = ''
   form.shippingCost = ''
@@ -109,25 +119,33 @@ const resetForm = () => {
 
 const buildProductFormData = () => {
   const formData = new FormData()
+  const colors = form.colors.map((color) => color.trim()).filter(Boolean)
+  const sizes = form.sizes.map((size) => size.trim()).filter(Boolean)
+  const customProperties = form.customProperties
+    .map((property) => ({
+      name: property.name.trim(),
+      required: property.required,
+      options: property.options.map((option) => option.trim()).filter(Boolean),
+    }))
+    .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
+
+  if (colors.length) {
+    customProperties.unshift({ name: 'Color', required: true, options: colors })
+  }
+  if (sizes.length) {
+    customProperties.push({ name: 'Size', required: true, options: sizes })
+  }
+
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
-  formData.append('color', form.color.trim())
-  formData.append('size', form.size.trim())
-  formData.append('importantNotes', form.importantNotes.trim())
+  formData.append('color', colors.join(', '))
+  formData.append('size', sizes.join(', '))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
   formData.append('shippingCost', String(form.shippingCost || 0))
   formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
-  formData.append('customProperties', JSON.stringify(
-    form.customProperties
-      .map((property) => ({
-        name: property.name.trim(),
-        required: property.required,
-        options: property.options.map((option) => option.trim()).filter(Boolean),
-      }))
-      .filter((property) => property.name),
-  ))
+  formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
 
   photoFiles.value.forEach(({ file }) => {
@@ -237,7 +255,7 @@ watch(
             <label>Collection *</label>
             <select v-model="form.collectionId" required @change="handleCollectionChange">
               <option
-                v-for="collection in collections"
+                v-for="collection in sortedCollections"
                 :key="collection._id"
                 :value="collection._id"
               >
@@ -257,7 +275,7 @@ watch(
                 {{ subcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
               </option>
               <option
-                v-for="subcollection in subcollections"
+                v-for="subcollection in sortedSubcollections"
                 :key="subcollection._id"
                 :value="subcollection._id"
               >
@@ -271,20 +289,17 @@ watch(
             </p>
           </div>
 
-          <div class="field">
-            <label>Color</label>
-            <input v-model="form.color" type="text" placeholder="Black">
+          <div class="field field--full">
+            <label>Colors</label>
+            <ColorOptionEditor v-model="form.colors" :disabled="loading" />
+            <p class="hint">Each color becomes an option in one Color dropdown on the item page.</p>
           </div>
 
           <div class="field">
-            <label>Size</label>
-            <input v-model="form.size" type="text" placeholder="S, M, L, XL">
+            <label>Sizes</label>
+            <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
+            <p class="hint">Each size becomes an option in one Size dropdown on the item page.</p>
           </div>
-        </div>
-
-        <div class="field">
-          <label>Important Notes</label>
-          <textarea v-model="form.importantNotes" rows="4" />
         </div>
 
         <div class="field">

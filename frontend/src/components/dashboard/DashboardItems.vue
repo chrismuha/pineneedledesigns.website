@@ -3,6 +3,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
+import ColorOptionEditor from './ColorOptionEditor.vue'
+import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const route = useRoute()
 const groupedCollections = ref([])
@@ -13,6 +15,7 @@ const editModalError = ref('')
 const showCollectionManager = ref(false)
 const showEditModal = ref(false)
 const editingProduct = ref(null)
+const editPhotoFiles = ref([])
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
@@ -42,6 +45,9 @@ const {
 } = useSubcollections()
 
 const nonSystemCollections = computed(() => groupedCollections.value.filter((collection) => !collection.isSystem))
+const dropdownCollections = computed(() => [...groupedCollections.value].sort((left, right) => (
+  collectionLabel(left).localeCompare(collectionLabel(right), undefined, { numeric: true })
+)))
 
 const managingSubcollectionList = computed(() => {
   if (!managingSubcollectionsFor.value) return []
@@ -343,25 +349,80 @@ const moveSubcollection = async (index, direction) => {
 }
 
 const openEditModal = async (product) => {
+  const customProperties = product.customProperties?.length
+    ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
+    : []
+  const colorProperty = customProperties.find(
+    (property) => String(property.name).toLowerCase() === 'color',
+  )
+  const colors = colorProperty?.options?.length
+    ? [...colorProperty.options]
+    : String(product.color || '').split(',').map((color) => color.trim()).filter(Boolean)
+  const sizeProperty = customProperties.find(
+    (property) => String(property.name).toLowerCase() === 'size',
+  )
+  const sizes = sizeProperty?.options?.length
+    ? [...sizeProperty.options]
+    : String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)
+
   editingProduct.value = {
     ...product,
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
-    customProperties: product.customProperties?.length
-      ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
-      : [],
+    colors: colors.length ? colors : [''],
+    sizes: sizes.length ? sizes : [''],
+    customProperties: customProperties.filter(
+      (property) => !['color', 'size'].includes(String(property.name).toLowerCase()),
+    ),
   }
   editModalError.value = ''
+  editPhotoFiles.value = []
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
 
 const closeEditModal = () => {
+  editPhotoFiles.value.forEach((photo) => URL.revokeObjectURL(photo.previewUrl))
+  editPhotoFiles.value = []
   showEditModal.value = false
   editingProduct.value = null
   editModalError.value = ''
   resetEditSubcollections()
 }
+
+const handleEditPhotoUpload = (event) => {
+  const files = Array.from(event.target.files || [])
+  const currentCount = (editingProduct.value?.photos?.length || 0) + editPhotoFiles.value.length
+  const availableSlots = Math.max(0, 20 - currentCount)
+  if (files.length > availableSlots) {
+    editModalError.value = `A maximum of 20 photos is allowed. You can add ${availableSlots} more.`
+  }
+  editPhotoFiles.value.push(...files.slice(0, availableSlots).map((file) => ({
+    file,
+    previewUrl: URL.createObjectURL(file),
+  })))
+  event.target.value = ''
+}
+
+const removeExistingEditPhoto = (index) => {
+  editingProduct.value?.photos.splice(index, 1)
+}
+
+const removeNewEditPhoto = (index) => {
+  URL.revokeObjectURL(editPhotoFiles.value[index].previewUrl)
+  editPhotoFiles.value.splice(index, 1)
+}
+
+const addEditProperty = () => editingProduct.value?.customProperties.push({
+  name: '',
+  required: false,
+  options: [''],
+})
+const removeEditProperty = (index) => editingProduct.value?.customProperties.splice(index, 1)
+const addEditPropertyOption = (index) => editingProduct.value?.customProperties[index].options.push('')
+const removeEditPropertyOption = (propertyIndex, optionIndex) => (
+  editingProduct.value?.customProperties[propertyIndex].options.splice(optionIndex, 1)
+)
 
 const subcollectionsForCollection = (collectionId) => {
   if (
@@ -377,6 +438,12 @@ const subcollectionsForCollection = (collectionId) => {
   )
   return collection?.subcollections || []
 }
+
+const sortedSubcollectionsForCollection = (collectionId) => (
+  [...subcollectionsForCollection(collectionId)].sort((left, right) => (
+    left.name.localeCompare(right.name, undefined, { numeric: true })
+  ))
+)
 
 const collectionRequiresSubcollection = (collectionId) => (
   subcollectionsForCollection(collectionId).length > 0
@@ -400,25 +467,47 @@ const saveProduct = async () => {
     return
   }
 
+  if (!(editingProduct.value.photos?.length || editPhotoFiles.value.length)) {
+    editModalError.value = 'At least one photo is required.'
+    return
+  }
+
   saving.value = true
   editModalError.value = ''
 
   try {
-    await dashboardApi.updateProduct(editingProduct.value._id, {
-      name: editingProduct.value.name,
-      collectionId: editingProduct.value.collectionId,
-      subCollectionId: editingProduct.value.subCollectionId || null,
-      color: editingProduct.value.color,
-      size: editingProduct.value.size,
-      importantNotes: editingProduct.value.importantNotes,
-      description: editingProduct.value.description,
-      price: Number(editingProduct.value.price),
-      shippingCost: Number(editingProduct.value.shippingCost || 0),
-      freeShipping: editingProduct.value.freeShipping,
-      outOfStock: editingProduct.value.outOfStock,
-      customProperties: editingProduct.value.customProperties,
-      photos: editingProduct.value.photos,
-    })
+    const colors = editingProduct.value.colors.map((color) => color.trim()).filter(Boolean)
+    const sizes = editingProduct.value.sizes.map((size) => size.trim()).filter(Boolean)
+    const customProperties = editingProduct.value.customProperties
+      .map((property) => ({
+        name: String(property.name || '').trim(),
+        required: Boolean(property.required),
+        options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
+      }))
+      .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
+    if (colors.length) {
+      customProperties.unshift({ name: 'Color', required: true, options: colors })
+    }
+    if (sizes.length) {
+      customProperties.push({ name: 'Size', required: true, options: sizes })
+    }
+
+    const formData = new FormData()
+    formData.append('name', editingProduct.value.name)
+    formData.append('collectionId', editingProduct.value.collectionId)
+    formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
+    formData.append('color', colors.join(', '))
+    formData.append('size', sizes.join(', '))
+    formData.append('description', editingProduct.value.description)
+    formData.append('price', String(Number(editingProduct.value.price)))
+    formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
+    formData.append('freeShipping', String(editingProduct.value.freeShipping))
+    formData.append('outOfStock', String(editingProduct.value.outOfStock))
+    formData.append('customProperties', JSON.stringify(customProperties))
+    formData.append('photos', JSON.stringify(editingProduct.value.photos || []))
+    editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
+
+    await dashboardApi.updateProduct(editingProduct.value._id, formData)
     closeEditModal()
     await loadItems()
   } catch (err) {
@@ -472,17 +561,30 @@ const startEditCollection = (collection) => {
 }
 
 const deleteCollection = async (collection) => {
-  if (!window.confirm(`Delete "${collection.name}"? Items will move to Uncategorized.`)) return
+  const itemCount = collection.products?.length || 0
+  const firstConfirmation = window.confirm(
+    `Delete the "${collection.name}" collection?\n\nThis will permanently delete ${itemCount} item${itemCount === 1 ? '' : 's'} in this collection. This cannot be undone.\n\nChoose OK for Yes or Cancel for No.`,
+  )
+  if (!firstConfirmation) return
 
+  const secondConfirmation = window.confirm(
+    `FINAL CONFIRMATION\n\nYes, permanently delete "${collection.name}" and all ${itemCount} of its items?\n\nChoose OK for Yes or Cancel for No.`,
+  )
+  if (!secondConfirmation) return
+
+  saving.value = true
+  modalError.value = ''
   try {
-    await dashboardApi.deleteCollection(collection._id)
+    await dashboardApi.deleteCollection(collection._id, collection.name)
     if (String(managingSubcollectionsFor.value?._id) === String(collection._id)) {
       managingSubcollectionsFor.value = null
       resetSubcollectionForm()
     }
     await loadItems()
   } catch (err) {
-    error.value = err.message
+    modalError.value = err.message
+  } finally {
+    saving.value = false
   }
 }
 
@@ -680,10 +782,6 @@ watch(
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
-          <p v-if="product.importantNotes">
-            <strong>Important Notes:</strong><br>
-            {{ product.importantNotes }}
-          </p>
           <p>
             <strong>Description:</strong><br>
             {{ product.description }}
@@ -746,7 +844,6 @@ watch(
                 {{ collection.subcollections.length }} subcollections
               </span>
             </div>
-
             <div class="collection-actions">
               <div class="subcollection-actions">
                 <button
@@ -765,7 +862,7 @@ watch(
                   <i class="bi bi-pencil" aria-hidden="true"></i>
                   <span class="button-text">Rename</span>
                 </button>
-                <button type="button" class="delete-btn btn-danger icon-button" @click="deleteCollection(collection)">
+                <button type="button" class="delete-btn btn-danger icon-button" :disabled="saving" @click="deleteCollection(collection)">
                   <i class="bi bi-trash" aria-hidden="true"></i>
                   <span class="button-text">Delete</span>
                 </button>
@@ -796,7 +893,7 @@ watch(
           <label>Collection</label>
           <select v-model="editingProduct.collectionId" @change="handleEditCollectionChange">
             <option
-              v-for="collection in groupedCollections"
+              v-for="collection in dropdownCollections"
               :key="collection._id"
               :value="String(collection._id)"
             >
@@ -819,7 +916,7 @@ watch(
               {{ editSubcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
             </option>
             <option
-              v-for="subcollection in subcollectionsForCollection(editingProduct.collectionId)"
+              v-for="subcollection in sortedSubcollectionsForCollection(editingProduct.collectionId)"
               :key="subcollection._id"
               :value="String(subcollection._id)"
             >
@@ -830,18 +927,88 @@ watch(
         </div>
 
         <div class="field">
-          <label>Color</label>
-          <input v-model="editingProduct.color" type="text">
+          <label>Colors</label>
+          <ColorOptionEditor v-model="editingProduct.colors" :disabled="saving" />
+          <p class="hint">These appear together in one Color dropdown.</p>
         </div>
 
         <div class="field">
-          <label>Size</label>
-          <input v-model="editingProduct.size" type="text">
+          <label>Sizes</label>
+          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
+          <p class="hint">These appear together in one Size dropdown.</p>
         </div>
 
-        <div class="field">
-          <label>Important Notes</label>
-          <textarea v-model="editingProduct.importantNotes" rows="3" />
+        <div class="field edit-section">
+          <div class="edit-section-header">
+            <label>Custom Properties</label>
+            <button type="button" class="continue-btn" :disabled="saving" @click="addEditProperty">
+              + Add Property
+            </button>
+          </div>
+          <p v-if="!editingProduct.customProperties.length" class="hint">
+            Add dropdown properties like print position or material.
+          </p>
+          <div
+            v-for="(property, propertyIndex) in editingProduct.customProperties"
+            :key="propertyIndex"
+            class="edit-property-card"
+          >
+            <div class="edit-property-header">
+              <input v-model="property.name" type="text" placeholder="Property name">
+              <label class="edit-checkbox">
+                <input v-model="property.required" type="checkbox">
+                Required
+              </label>
+              <button type="button" class="danger-btn" :disabled="saving" @click="removeEditProperty(propertyIndex)">
+                Remove Property
+              </button>
+            </div>
+            <div
+              v-for="(_option, optionIndex) in property.options"
+              :key="optionIndex"
+              class="edit-option-row"
+            >
+              <input v-model="property.options[optionIndex]" type="text" placeholder="Dropdown option">
+              <button
+                type="button"
+                class="danger-btn"
+                :disabled="saving"
+                @click="removeEditPropertyOption(propertyIndex, optionIndex)"
+              >
+                Remove
+              </button>
+            </div>
+            <button type="button" class="continue-btn" :disabled="saving" @click="addEditPropertyOption(propertyIndex)">
+              + Add Option
+            </button>
+          </div>
+        </div>
+
+        <div class="field edit-section">
+          <label>Photos *</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            :disabled="saving"
+            @change="handleEditPhotoUpload"
+          >
+          <p class="hint">Add or remove photos. At least one and no more than 20 are required.</p>
+          <div class="edit-photo-grid">
+            <div v-for="(photo, index) in editingProduct.photos" :key="photo" class="edit-photo-card">
+              <img :src="photo" :alt="`Existing photo ${index + 1}`">
+              <button type="button" class="danger-btn" :disabled="saving" @click="removeExistingEditPhoto(index)">
+                Remove
+              </button>
+            </div>
+            <div v-for="(photo, index) in editPhotoFiles" :key="photo.previewUrl" class="edit-photo-card">
+              <img :src="photo.previewUrl" :alt="`New photo ${index + 1}`">
+              <span class="new-photo-badge">New</span>
+              <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditPhoto(index)">
+                Remove
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="field">
@@ -1136,6 +1303,39 @@ watch(
   display: flex;
   gap: 10px;
 }
+
+.edit-section {
+  align-items: stretch;
+  border-top: 1px solid #e3ebe4;
+  padding-top: 18px;
+}
+
+.edit-section-header,
+.edit-property-header,
+.edit-option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-section-header { justify-content: space-between; }
+.edit-property-card { margin-top: 12px; padding: 14px; border: 1px solid #d9e8dc; border-radius: 10px; }
+.edit-property-header { margin-bottom: 12px; }
+.edit-property-header > input, .edit-option-row > input { flex: 1; }
+.edit-option-row { margin-bottom: 10px; }
+.edit-checkbox { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.edit-checkbox input { width: auto; }
+
+.edit-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.edit-photo-card { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.edit-photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+.new-photo-badge { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 999px; background: var(--dashboard-green); color: #fff; font-size: .75rem; font-weight: 700; }
 
 .modal-header {
   justify-content: space-between;
