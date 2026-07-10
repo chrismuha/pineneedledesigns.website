@@ -708,7 +708,7 @@ textarea {
   }
   .option-row { flex-direction: column; }
   .option-row button { align-self: flex-start; }
-  .actions { position: sticky; bottom: 0; z-index: 20; padding: 10px 0; background: #fff; }
+  .actions { position: static; padding: 10px 0; background: #fff; }
   .actions .btn-primary { width: 100%; min-height: 48px; }
   input, select, textarea { min-height: 48px; font-size: 16px; }
 }

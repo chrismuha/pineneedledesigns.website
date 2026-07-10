@@ -218,6 +218,7 @@ const isActive = (path) => {
     inset: 0;
     overflow: hidden;
     overscroll-behavior: none;
+    background: #fff;
   }
 
   .dashboard-layout {
@@ -226,6 +227,7 @@ const isActive = (path) => {
     height: auto;
     min-height: 0;
     overflow: hidden;
+    background: #fff;
   }
 
   .sidebar {
@@ -240,6 +242,7 @@ const isActive = (path) => {
     overflow-y: auto;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
+    background: #fff;
     padding: 14px 12px;
     padding-bottom: 14px;
   }

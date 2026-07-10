@@ -764,10 +764,12 @@ watch(
       @toggle="onCollectionToggle(collection, $event)"
     >
       <summary>
-        {{ collectionLabel(collection) }}
-        <span class="collection-count">({{ collection.products.length }} Items)</span>
-        <span v-if="getSubcollectionsForCollection(collection).length" class="collection-count">
-          · {{ getSubcollectionsForCollection(collection).length }} Subcollections
+        <span class="collection-summary-content">
+          <span class="collection-summary-title">{{ collectionLabel(collection) }}</span>
+          <span class="collection-count">{{ collection.products.length }} Items</span>
+          <span v-if="getSubcollectionsForCollection(collection).length" class="collection-count">
+            {{ getSubcollectionsForCollection(collection).length }} Subcollections
+          </span>
         </span>
       </summary>
 
@@ -1419,9 +1421,24 @@ watch(
   font-weight: 600;
 }
 
+.collection-summary-content {
+  display: inline-flex;
+  max-width: calc(100% - 28px);
+  margin-left: 8px;
+  vertical-align: top;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.collection-summary-title {
+  color: #111;
+  overflow-wrap: anywhere;
+}
+
 .collection-count {
+  display: block;
   color: #666;
-  margin-left: 10px;
+  margin-left: 0;
 }
 
 .item-card {
