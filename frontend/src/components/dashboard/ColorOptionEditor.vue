@@ -73,6 +73,7 @@ const setCustomColor = (index, color) => {
 const addColor = () => updateRows([...normalizeRows(props.modelValue), ''])
 
 const removeColor = (index) => {
+  if (!window.confirm('Remove this color?')) return
   const rows = normalizeRows(props.modelValue)
   rows.splice(index, 1)
 

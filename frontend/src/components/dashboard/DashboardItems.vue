@@ -19,6 +19,7 @@ const editingProduct = ref(null)
 const editPhotoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
+const editCancellationStep = ref(0)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
@@ -71,14 +72,14 @@ const loadItems = async () => {
   try {
     groupedCollections.value = await dashboardApi.getGroupedProducts()
     syncSubcollectionsFromGrouped()
-    await prefetchCollectionSubcollections()
     const requestedItemId = String(route.query.item || '')
     if (requestedItemId && !showEditModal.value) {
       const requestedProduct = groupedCollections.value
         .flatMap((collection) => collection.products || [])
         .find((product) => String(product._id) === requestedItemId)
-      if (requestedProduct) await openEditModal(requestedProduct)
+      if (requestedProduct) void openEditModal(requestedProduct)
     }
+    void prefetchCollectionSubcollections()
   } catch (err) {
     error.value = err.message
   } finally {
@@ -399,11 +400,29 @@ const closeEditModal = async () => {
   editingProduct.value = null
   editModalError.value = ''
   resetEditSubcollections()
+  editCancellationStep.value = 0
   if (route.query.item) {
     const nextQuery = { ...route.query }
     delete nextQuery.item
     await router.replace({ path: '/dashboard/items', query: nextQuery })
   }
+}
+
+const requestEditCancellation = () => {
+  editCancellationStep.value = 1
+}
+
+const continueEditCancellation = () => {
+  editCancellationStep.value = 2
+}
+
+const cancelEditCancellation = () => {
+  editCancellationStep.value = 0
+}
+
+const confirmEditCancellation = async () => {
+  editCancellationStep.value = 0
+  await closeEditModal()
 }
 
 const handleEditPhotoUpload = (event) => {
@@ -830,7 +849,7 @@ watch(
     </details>
 
     <div v-if="showCollectionManager" class="modal-overlay">
-      <section class="modal-card modal-card--wide collection-manager-modal">
+      <section class="modal-card modal-card--wide modal-card--fullscreen collection-manager-modal">
         <div class="modal-header collection-manager-header">
           <h2>Manage Collections</h2>
           <button type="button" class="collection-close-button" @click="closeCollectionManager">
@@ -898,10 +917,10 @@ watch(
     </div>
 
     <div v-if="showEditModal && editingProduct" class="modal-overlay">
-      <section class="modal-card">
+      <section class="modal-card modal-card--fullscreen">
         <div class="modal-header">
           <h2>Edit Item</h2>
-          <button type="button" class="clear-btn" @click="closeEditModal">Cancel</button>
+          <button type="button" class="clear-btn" @click="requestEditCancellation">Cancel</button>
         </div>
 
         <p v-if="editModalError" class="error-banner">{{ editModalError }}</p>
@@ -1095,9 +1114,37 @@ watch(
       </section>
     </div>
 
+    <div v-if="editCancellationStep" class="modal-overlay destructive-confirmation-overlay">
+      <section class="modal-card destructive-confirmation" role="alertdialog" aria-modal="true">
+        <div class="destructive-icon" aria-hidden="true">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+
+        <template v-if="editCancellationStep === 1">
+          <p class="confirmation-step">Confirmation 1 of 2</p>
+          <h2>Cancel item changes?</h2>
+          <p>Any changes made in the item editor will be discarded.</p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" @click="cancelEditCancellation">Keep Editing</button>
+            <button type="button" class="btn-danger" @click="continueEditCancellation">Continue</button>
+          </div>
+        </template>
+
+        <template v-else>
+          <p class="confirmation-step">Confirmation 2 of 2</p>
+          <h2>Discard all changes?</h2>
+          <p class="destructive-warning">This cannot be undone.</p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" @click="cancelEditCancellation">Go Back</button>
+            <button type="button" class="btn-danger" @click="confirmEditCancellation">Discard Changes</button>
+          </div>
+        </template>
+      </section>
+    </div>
+
     <!-- standalone subcollections modal -->
     <div v-if="managingSubcollectionsFor" class="modal-overlay">
-      <section class="modal-card modal-card--wide">
+      <section class="modal-card modal-card--wide modal-card--fullscreen">
         <div class="modal-header">
           <h2>Subcollections for {{ managingSubcollectionsFor.name }}</h2>
           <button type="button" class="clear-btn" @click="closeSubcollectionManager">Done</button>
@@ -1385,6 +1432,35 @@ watch(
   max-width: 860px;
 }
 
+.modal-card--fullscreen {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.modal-overlay:has(.modal-card--fullscreen) {
+  align-items: stretch;
+  padding: 0;
+}
+
+.modal-card--fullscreen > .modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  margin: -24px -24px 20px;
+  padding: 18px 24px;
+  border-bottom: 1px solid #d9e0da;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .08);
+}
+
 .collection-manager-modal {
   max-height: calc(100dvh - 32px);
 }
@@ -1670,6 +1746,9 @@ watch(
   .confirmation-actions { flex-direction: column-reverse; }
   .confirmation-actions button { width: 100%; min-width: 0; }
   .modal-header { position: sticky; top: 0; z-index: 30; margin: 0 -14px 16px; padding: 14px; background: #fff; border-bottom: 1px solid #d9e0da; box-shadow: 0 3px 8px rgba(0, 0, 0, .08); }
+  .modal-overlay:has(.modal-card--fullscreen) { padding: 0; }
+  .modal-card.modal-card--fullscreen { width: 100vw; height: 100dvh; max-height: 100dvh !important; padding: 0 14px 24px; border-radius: 0; }
+  .modal-card--fullscreen > .modal-header { margin: 0 -14px 16px; padding: max(14px, env(safe-area-inset-top)) 14px 14px; }
   .inline-field, .edit-section-header, .edit-property-header, .edit-option-row { flex-direction: column; align-items: stretch; width: 100%; }
   .inline-field > *, .edit-section-header > *, .edit-property-header > *, .edit-option-row > * { width: 100%; box-sizing: border-box; }
   .item-header { align-items: flex-start; }
