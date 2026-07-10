@@ -11,7 +11,7 @@ const authReady = ref(false)
 
 const menuItems = [
   {
-    label: 'Dashboard',
+    label: 'Home',
     to: '/dashboard',
     icon: 'bi-house',
   },
@@ -296,19 +296,20 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 6px;
+    padding: 8px 0px;
     margin: 0 4px;
     border-radius: 8px;
     background: transparent;
     border: none;
     text-decoration: none;
     color: inherit;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 
   .menu-icon {
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1;
+    color: var(--dashboard-green);
   }
 
   /* icon spacing for sidebar (row) */
@@ -322,11 +323,10 @@ onMounted(async () => {
   }
 
   .bottom-tab.active {
-    background: #f3f4f6;
-    font-weight: 600;
+    background: #d0d0d0;
   }
 
-  .logout-tab {
+  .logout-tab * {
     color: var(--dashboard-red);
   }
 }

@@ -746,18 +746,30 @@ watch(
                 {{ collection.subcollections.length }} subcollections
               </span>
             </div>
-            <div class="row-actions">
-              <button type="button" @click="moveCollection(index, -1)">↑</button>
-              <button type="button" @click="moveCollection(index, 1)">↓</button>
-              <button type="button" class="edit-btn" @click="startEditCollection(collection)">Rename</button>
-              <button
-                type="button"
-                class="manage-btn"
-                @click="openSubcollectionManager(collection)"
-              >
-                 Subcollections
-              </button>
-                <button type="button" class="delete-btn btn-danger" @click="deleteCollection(collection)">Delete</button>
+
+            <div class="collection-actions">
+              <div class="subcollection-actions">
+                <button
+                  type="button"
+                  class="manage-btn subcollection-btn"
+                  @click="openSubcollectionManager(collection)"
+                >
+                  Subcollections
+                </button>
+              </div>
+
+              <div class="row-actions">
+                <button type="button" @click="moveCollection(index, -1)">↑</button>
+                <button type="button" @click="moveCollection(index, 1)">↓</button>
+                <button type="button" class="edit-btn icon-button" @click="startEditCollection(collection)">
+                  <i class="bi bi-pencil" aria-hidden="true"></i>
+                  <span class="button-text">Rename</span>
+                </button>
+                <button type="button" class="delete-btn btn-danger icon-button" @click="deleteCollection(collection)">
+                  <i class="bi bi-trash" aria-hidden="true"></i>
+                  <span class="button-text">Delete</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1096,7 +1108,7 @@ watch(
   background: white;
   max-width: 720px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-y: auto;
 }
 
@@ -1257,24 +1269,26 @@ watch(
   font-weight: 600;
 }
 
-.empty-subcollections {
-  margin: 16px 0 0;
-  padding: 16px;
-  border: 1px dashed #d0d0d0;
-  border-radius: 8px;
-  color: #666;
-  background: #fafafa;
-}
+  .collection-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-.inline-field input { flex: 1; }
+  .subcollection-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.error-banner {
-  background: #ffe2e2;
-  color: #8a1f1f;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-}
+  .subcollection-btn {
+    white-space: nowrap;
+  }
+
+  .icon-button {
+    display: flex;
+    gap: 0.5rem;
+  }
 
 .field-error {
   margin: 8px 0 0;
@@ -1296,5 +1310,86 @@ watch(
   }
 
   .row-actions { justify-content: flex-end; }
+}
+
+@media (max-width: 850px) {
+  .collection-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .subcollection-actions {
+    width: 100%;
+    margin-bottom: 10px;
+    flex: 1;
+  }
+
+  .subcollection-actions .subcollection-btn {
+    width: 100%;
+  }
+
+  .collection-row .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 8px;
+    height: 44px;
+  }
+
+  .collection-row .icon-button i {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  div.field {
+    flex-direction: column;
+    align-items: start;
+  }
+  .row-actions {
+    justify-content: space-between;
+  }
+  .row-actions .icon-button {
+    flex: 2;
+  }
+
+  .subcollection-actions {
+    margin: 0;
+  }
+}
+@media screen and (max-width: 600px) {
+  .collection-actions {
+    flex-direction: column;
+  }
+  .row-actions {
+    width: 100%;
+  }
+  .row-actions .icon-button {
+    flex: 1;
+    width: 44px;
+    min-width: 44px;
+  }
+}
+@media screen and (max-width: 470px) {
+  .collection-row .icon-button .button-text {
+    display: none;
+    width: fit-content;
+  }
+}
+@media screen and (max-width: 720px) {
+  .subcollection-row .row-actions .edit-btn, 
+  .subcollection-row .row-actions .delete-btn {
+    flex: 1;
+  }
 }
 </style>
