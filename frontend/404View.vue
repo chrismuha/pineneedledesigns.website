@@ -4,7 +4,7 @@
             <div class="page-header-design" id="rectangle1"></div>
             <div id="rectangle2">
                 <div class="logo-container">
-                    <img src="/404images/MCRwhiteNred.webp"></img>
+                    <img src="/404images/MCRwhiteNred.png" alt="Muha Computer Repair">
                 </div>
             </div>
         </header>
