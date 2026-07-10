@@ -43,10 +43,10 @@ onMounted(loadStats)
 </script>
 
 <template>
-  <div class="dashboard-home">
+  <div class="dashboard-home dashboard-page">
     <div class="page-header">
       <h1>Dashboard</h1>
-      <RouterLink class="new-item-btn" to="/dashboard/create">
+      <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">
         Add New Item
       </RouterLink>
     </div>
@@ -79,7 +79,7 @@ onMounted(loadStats)
     <section v-if="!loading" class="recent-section">
       <div class="section-header">
         <h2>Recent Orders</h2>
-        <RouterLink to="/dashboard/orders">View all orders</RouterLink>
+        <RouterLink class="btn-primary" to="/dashboard/orders">View all orders</RouterLink>
       </div>
 
       <p v-if="!stats.recentOrders?.length" class="status-text">
@@ -104,7 +104,7 @@ onMounted(loadStats)
     <section v-if="!loading" class="recent-section">
       <div class="section-header">
         <h2>Recent Items</h2>
-        <RouterLink to="/dashboard/items">View all items</RouterLink>
+        <RouterLink class="btn-primary" to="/dashboard/items">View all items</RouterLink>
       </div>
 
       <p v-if="!stats.recentProducts.length" class="status-text">
@@ -130,14 +130,9 @@ onMounted(loadStats)
   </div>
 </template>
 
-<style scoped>
-.dashboard-home {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px;
-}
+<style src="../../styles/dashboard.css"></style>
 
-.page-header,
+<style scoped>
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -145,19 +140,12 @@ onMounted(loadStats)
   gap: 16px;
 }
 
-.new-item-btn {
-  padding: 12px 18px;
-  background: #2ea44f;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-}
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
-  margin: 24px 0;
+  margin: 0;
+  padding: 0;
 }
 
 .stat-card-link {
@@ -167,7 +155,7 @@ onMounted(loadStats)
 }
 
 .stat-card-link:hover {
-  border-color: #2ea44f;
+  border-color: var(--dashboard-green);
 }
 
 .stat-card,
@@ -227,7 +215,7 @@ onMounted(loadStats)
   border-radius: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

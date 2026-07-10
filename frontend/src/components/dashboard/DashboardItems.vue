@@ -550,16 +550,16 @@ watch(
 </script>
 
 <template>
-  <div class="items-page">
+  <div class="items-page dashboard-page">
     <div class="page-header">
       <h1>Items</h1>
 
       <div class="header-actions">
-        <RouterLink to="/dashboard/create" class="create-btn">
+        <RouterLink to="/dashboard/create" class="create-btn btn-primary">
           Create New Item
         </RouterLink>
 
-        <button class="manage-btn" type="button" @click="openCollectionManager">
+        <button class="manage-btn btn-outline" type="button" @click="openCollectionManager">
           Manage Collections
         </button>
       </div>
@@ -596,9 +596,9 @@ watch(
         <p v-if="isSubcollectionsLoading(collection._id)" class="collection-subtitle">
           Loading sub-collections...
         </p>
-
+             <button type="button" class="edit-btn btn-primary" @click="startEditCollection(collection)">Rename</button>
         <div
-          v-else-if="getSubcollectionsForCollection(collection).length"
+          v-if="getSubcollectionsForCollection(collection).length"
           class="collection-filters"
           aria-label="Sub-collection filters"
         >
@@ -708,7 +708,7 @@ watch(
             Edit
           </button>
 
-          <button class="delete-btn" type="button" @click="removeProduct(product._id)">
+          <button class="delete-btn btn-danger" type="button" @click="removeProduct(product._id)">
             Remove
           </button>
         </div>
@@ -719,16 +719,16 @@ watch(
       <section class="modal-card modal-card--wide">
         <div class="modal-header">
           <h2>Manage Collections</h2>
-          <button type="button" class="clear-btn" @click="closeCollectionManager">Close</button>
+          <button type="button" class="clear-btn btn-outline" @click="closeCollectionManager">Close</button>
         </div>
 
         <p v-if="modalError" class="error-banner">{{ modalError }}</p>
 
         <div class="field">
           <label>{{ editingCollection ? 'Rename Collection' : 'New Collection' }}</label>
-          <div class="inline-field">
+            <div class="inline-field">
             <input v-model="collectionForm.name" type="text" placeholder="Collection name">
-            <button type="button" class="continue-btn" :disabled="saving" @click="saveCollection">
+            <button type="button" class="continue-btn btn-primary" :disabled="saving" @click="saveCollection">
               {{ editingCollection ? 'Save Name' : 'Add Collection' }}
             </button>
           </div>
@@ -755,133 +755,14 @@ watch(
                 class="manage-btn"
                 @click="openSubcollectionManager(collection)"
               >
-                Subcollections
+                 Subcollections
               </button>
-              <button type="button" class="delete-btn" @click="deleteCollection(collection)">Delete</button>
+                <button type="button" class="delete-btn btn-danger" @click="deleteCollection(collection)">Delete</button>
             </div>
           </div>
         </div>
 
-        <div v-if="managingSubcollectionsFor" class="subcollection-panel">
-          <div class="modal-header">
-            <h3>Subcollections for {{ managingSubcollectionsFor.name }}</h3>
-            <button type="button" class="clear-btn" @click="closeSubcollectionManager">Done</button>
-          </div>
-
-          <p class="hint">
-            These appear as filter chips on the storefront collection page.
-          </p>
-
-          <p v-if="subcollectionsError" class="error-banner">{{ subcollectionsError }}</p>
-          <p v-if="subcollectionsLoading" class="status-text">Loading subcollections...</p>
-
-          <div class="storefront-preview">
-            <div class="collection-filters">
-              <button
-                type="button"
-                class="collection-filter"
-                :class="{ 'collection-filter--active': previewFilter === 'all' }"
-                @click="previewFilter = 'all'"
-              >
-                All
-              </button>
-              <button
-                v-for="subcollection in managingSubcollectionList"
-                :key="subcollection._id"
-                type="button"
-                class="collection-filter"
-                :class="{ 'collection-filter--active': previewFilter === subcollection._id }"
-                @click="previewFilter = subcollection._id"
-              >
-                {{ subcollection.name }}
-              </button>
-            </div>
-          </div>
-
-          <div class="field">
-            <label>{{ editingSubcollection ? 'Rename Subcollection' : 'New Subcollection' }}</label>
-            <div class="inline-field">
-              <input
-                v-model="subcollectionForm.name"
-                type="text"
-                placeholder="e.g. Vests"
-                :disabled="saving"
-                @keyup.enter="saveSubcollection"
-              >
-              <button
-                type="button"
-                class="continue-btn"
-                :disabled="saving || !subcollectionForm.name.trim()"
-                @click="saveSubcollection"
-              >
-                {{ saving ? 'Saving...' : (editingSubcollection ? 'Save Name' : 'Add Subcollection') }}
-              </button>
-              <button
-                v-if="editingSubcollection"
-                type="button"
-                class="clear-btn"
-                :disabled="saving"
-                @click="cancelSubcollectionEdit"
-              >
-                Cancel
-              </button>
-            </div>
-            <p v-if="subcollectionFieldError" class="field-error">{{ subcollectionFieldError }}</p>
-          </div>
-
-          <p v-if="!subcollectionsLoading && !managingSubcollectionList.length" class="empty-subcollections">
-            No subcollections yet. Add one above to create chips like “Vests” or “Bracelets”.
-          </p>
-
-          <div v-else class="subcollection-list">
-            <article
-              v-for="(subcollection, subcollectionIndex) in managingSubcollectionList"
-              :key="subcollection._id"
-              class="subcollection-row"
-              :class="{ 'subcollection-row--editing': editingSubcollection?._id === subcollection._id }"
-            >
-              <div class="subcollection-main">
-                <span class="subcollection-chip">{{ subcollection.name }}</span>
-                <span class="subcollection-meta">
-                  {{ productCountForSubcollection(managingSubcollectionsFor._id, subcollection._id) }} items
-                </span>
-              </div>
-
-              <div class="row-actions">
-                <button
-                  type="button"
-                  :disabled="saving || subcollectionIndex === 0"
-                  @click="moveSubcollection(subcollectionIndex, -1)"
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  :disabled="saving || subcollectionIndex === managingSubcollectionList.length - 1"
-                  @click="moveSubcollection(subcollectionIndex, 1)"
-                >
-                  ↓
-                </button>
-                <button
-                  type="button"
-                  class="edit-btn"
-                  :disabled="saving"
-                  @click="startEditSubcollection(subcollection)"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  class="delete-btn"
-                  :disabled="saving"
-                  @click="deleteSubcollection(subcollection)"
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-          </div>
-        </div>
+        <!-- subcollections moved to a standalone modal (opens when managingSubcollectionsFor is set) -->
       </section>
     </div>
 
@@ -987,31 +868,136 @@ watch(
         </div>
       </section>
     </div>
+
+    <!-- standalone subcollections modal -->
+    <div v-if="managingSubcollectionsFor" class="modal-overlay">
+      <section class="modal-card modal-card--wide">
+        <div class="modal-header">
+          <h2>Subcollections for {{ managingSubcollectionsFor.name }}</h2>
+          <button type="button" class="clear-btn" @click="closeSubcollectionManager">Done</button>
+        </div>
+
+        <p class="hint">
+          These appear as filter chips on the storefront collection page.
+        </p>
+
+        <p v-if="subcollectionsError" class="error-banner">{{ subcollectionsError }}</p>
+        <p v-if="subcollectionsLoading" class="status-text">Loading subcollections...</p>
+
+        <div class="storefront-preview">
+          <div class="collection-filters">
+            <button
+              type="button"
+              class="collection-filter"
+              :class="{ 'collection-filter--active': previewFilter === 'all' }"
+              @click="previewFilter = 'all'"
+            >
+              All
+            </button>
+            <button
+              v-for="subcollection in managingSubcollectionList"
+              :key="subcollection._id"
+              type="button"
+              class="collection-filter"
+              :class="{ 'collection-filter--active': previewFilter === subcollection._id }"
+              @click="previewFilter = subcollection._id"
+            >
+              {{ subcollection.name }}
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>{{ editingSubcollection ? 'Rename Subcollection' : 'New Subcollection' }}</label>
+          <div class="inline-field">
+            <input
+              v-model="subcollectionForm.name"
+              type="text"
+              placeholder="e.g. Vests"
+              :disabled="saving"
+              @keyup.enter="saveSubcollection"
+            >
+            <button
+              type="button"
+              class="continue-btn btn-primary"
+              :disabled="saving || !subcollectionForm.name.trim()"
+              @click="saveSubcollection"
+            >
+              {{ saving ? 'Saving...' : (editingSubcollection ? 'Save Name' : 'Add Subcollection') }}
+            </button>
+            <button
+              v-if="editingSubcollection"
+              type="button"
+              class="clear-btn btn-outline"
+              :disabled="saving"
+              @click="cancelSubcollectionEdit"
+            >
+              Cancel
+            </button>
+          </div>
+          <p v-if="subcollectionFieldError" class="field-error">{{ subcollectionFieldError }}</p>
+        </div>
+
+        <p v-if="!subcollectionsLoading && !managingSubcollectionList.length" class="empty-subcollections">
+          No subcollections yet. Add one above to create chips like “Vests” or “Bracelets”.
+        </p>
+
+        <div v-else class="subcollection-list">
+          <article
+            v-for="(subcollection, subcollectionIndex) in managingSubcollectionList"
+            :key="subcollection._id"
+            class="subcollection-row"
+            :class="{ 'subcollection-row--editing': editingSubcollection?._id === subcollection._id }"
+          >
+            <div class="subcollection-main">
+              <span class="subcollection-chip">{{ subcollection.name }}</span>
+              <span class="subcollection-meta">
+                {{ productCountForSubcollection(managingSubcollectionsFor._id, subcollection._id) }} items
+              </span>
+            </div>
+
+            <div class="row-actions">
+              <button
+                type="button"
+                :disabled="saving || subcollectionIndex === 0"
+                @click="moveSubcollection(subcollectionIndex, -1)"
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                :disabled="saving || subcollectionIndex === managingSubcollectionList.length - 1"
+                @click="moveSubcollection(subcollectionIndex, 1)"
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                class="edit-btn btn-primary"
+                :disabled="saving"
+                @click="startEditSubcollection(subcollection)"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                class="delete-btn btn-danger"
+                :disabled="saving"
+                @click="deleteSubcollection(subcollection)"
+              >
+                Delete
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
+<style src="../../styles/dashboard.css"></style>
+
 <style scoped>
-.items-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.create-btn {
-  background: #2ea44f;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  text-decoration: none;
-}
-
 .collection {
   margin-bottom: 20px;
   border: 1px solid #d9e8dc;
@@ -1088,11 +1074,11 @@ watch(
   font-size: .85rem;
 }
 
-.green { background: #dff6e5; }
-.blue { background: #ddefff; }
-.red { background: #ffe2e2; }
-.purple { background: #efe6ff; }
-.orange { background: #ffe8cc; color: #8a4b00; }
+.green { background: var(--dashboard-green-bg); }
+.blue { background: var(--dashboard-blue-bg); }
+.red { background: var(--dashboard-red-bg); }
+.purple { background: var(--dashboard-purple-bg); }
+.orange { background: var(--dashboard-orange-bg); color: #8a4b00; }
 
 .custom-properties { margin-top: 20px; }
 
@@ -1102,21 +1088,6 @@ watch(
   margin-top: 20px;
 }
 
-.edit-btn {
-  background: #2ea44f;
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
-
-.delete-btn {
-  background: #d9534f;
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
 
 .modal-card {
   border: 1px solid #d9e8dc;
@@ -1133,8 +1104,8 @@ watch(
   max-width: 860px;
 }
 
-.field { margin-bottom: 16px; }
-.field label { display: block; margin-bottom: 8px; }
+.field { margin-bottom: 16px; align-items: center; }
+/* .field label { display: block; margin-bottom: 8px; } */
 
 .field input,
 .field select,
@@ -1159,25 +1130,10 @@ watch(
   align-items: center;
 }
 
-.continue-btn {
-  background: #2ea44f;
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
 
 .header-actions { gap: 12px; }
 
-.manage-btn,
-.clear-btn {
-  background: white;
-  border: 1px solid #2ea44f;
-  color: #2ea44f;
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+/* header and shared button styles moved to frontend/src/styles/dashboard.css */
 
 .row-actions button {
   border: 1px solid #d0d0d0;
@@ -1279,7 +1235,7 @@ watch(
 }
 
 .subcollection-row--editing {
-  border-color: #2ea44f;
+  border-color: var(--dashboard-green);
   background: #f3faf4;
 }
 

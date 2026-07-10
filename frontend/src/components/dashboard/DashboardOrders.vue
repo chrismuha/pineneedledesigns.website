@@ -137,7 +137,7 @@ watch(
 </script>
 
 <template>
-  <div class="orders-page">
+  <div class="orders-page dashboard-page">
     <div class="page-header">
       <div>
         <h1>Orders</h1>
@@ -145,7 +145,7 @@ watch(
           {{ openCount }} open · {{ closedCount }} closed
         </p>
       </div>
-      <button type="button" class="refresh-btn" :disabled="loading" @click="loadOrders">
+      <button type="button" class="btn-outline" :disabled="loading" @click="loadOrders">
         Refresh
       </button>
     </div>
@@ -318,7 +318,7 @@ watch(
             <button
               v-if="order.status === 'open'"
               type="button"
-              class="close-btn"
+              class="btn-danger"
               :disabled="savingOrderId === order._id"
               @click="updateStatus(order, 'closed')"
             >
@@ -328,7 +328,7 @@ watch(
             <button
               v-else
               type="button"
-              class="reopen-btn"
+              class="btn-primary"
               :disabled="savingOrderId === order._id"
               @click="updateStatus(order, 'open')"
             >
@@ -341,20 +341,9 @@ watch(
   </div>
 </template>
 
+<style src="../../styles/dashboard.css"></style>
+
 <style scoped>
-.orders-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
 .page-subtitle {
   color: #666;
   margin: 4px 0 0;
@@ -376,17 +365,17 @@ watch(
 }
 
 .filter-tab.active {
-  background: #2ea44f;
-  border-color: #2ea44f;
+  background: var(--dashboard-green);
+  border-color: var(--dashboard-green);
   color: white;
 }
 
-.refresh-btn {
+.filter-tab {
   background: white;
-  border: 1px solid #2ea44f;
-  color: #2ea44f;
-  padding: 10px 16px;
-  border-radius: 8px;
+  border: 1px solid #d8eadb;
+  color: #1f7a3d;
+  padding: 8px 14px;
+  border-radius: 999px;
   cursor: pointer;
 }
 
@@ -426,7 +415,7 @@ watch(
 }
 
 .order-section h3 {
-  color: #2ea44f;
+  color: var(--dashboard-green);
   margin-bottom: 12px;
 }
 
@@ -503,11 +492,11 @@ watch(
 }
 
 .close-btn {
-  background: #d9534f;
+  background: var(--dashboard-red);
 }
 
 .reopen-btn {
-  background: #2ea44f;
+  background: var(--dashboard-green);
 }
 
 .same-address,

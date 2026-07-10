@@ -212,10 +212,10 @@ watch(
 </script>
 
 <template>
-  <div class="create-item-page">
+  <div class="create-item-page dashboard-page">
     <div class="page-header">
       <h1>Create Item</h1>
-      <RouterLink to="/dashboard/items" class="view-items-btn">
+      <RouterLink to="/dashboard/items" class="btn-primary">
         View All Items
       </RouterLink>
     </div>
@@ -225,7 +225,7 @@ watch(
 
     <form v-else class="item-form" @submit.prevent="submitForm">
       <section class="card">
-        <h2>Basic Information</h2>
+        <div class="section-header"><h2>Basic Information</h2></div>
 
         <div class="form-grid">
           <div class="field">
@@ -296,7 +296,7 @@ watch(
       <section class="card">
         <div class="section-header">
           <h2>Custom Properties</h2>
-          <button type="button" class="green-btn" @click="addProperty">
+          <button type="button" class="btn-primary" @click="addProperty">
             + Add Property
           </button>
         </div>
@@ -322,7 +322,7 @@ watch(
               Required
             </label>
 
-            <button type="button" class="danger-btn" @click="removeProperty(propertyIndex)">
+            <button type="button" class="btn-danger" @click="removeProperty(propertyIndex)">
               Remove
             </button>
           </div>
@@ -336,10 +336,10 @@ watch(
               class="option-row"
             >
               <input v-model="property.options[optionIndex]" type="text" placeholder="Option">
-              <button type="button" @click="removeOption(propertyIndex, optionIndex)">Remove</button>
+              <button type="button" class="btn-danger" @click="removeOption(propertyIndex, optionIndex)">Remove</button>
             </div>
 
-            <button type="button" class="green-btn" @click="addOption(propertyIndex)">
+            <button type="button" class="btn-primary" @click="addOption(propertyIndex)">
               + Add Option
             </button>
           </div>
@@ -347,9 +347,9 @@ watch(
       </section>
 
       <section class="card">
-        <h2>Photos *</h2>
+        <div class="section-header"><h2>Photos *</h2></div>
 
-        <input type="file" multiple accept="image/*" @change="handlePhotoUpload">
+        <input type="file" class="file-selector-style" multiple accept="image/*" @change="handlePhotoUpload">
 
         <p class="hint">
           Upload as many photos as needed.
@@ -364,9 +364,9 @@ watch(
       </section>
 
       <section class="card">
-        <h2>Pricing & Shipping</h2>
+        <div class="section-header"><h2>Pricing & Shipping</h2></div>
 
-        <div class="form-grid">
+        <div class="vertical-grid form-grid">
           <div class="field">
             <label>Price (USD) *</label>
             <input v-model="form.price" type="number" min="0" step="0.01" placeholder="49.99" required>
@@ -385,7 +385,7 @@ watch(
       </section>
 
       <section class="card">
-        <h2>Inventory</h2>
+        <div class="section-header"><h2>Inventory</h2></div>
 
         <label class="checkbox-row">
           <input v-model="form.outOfStock" type="checkbox">
@@ -394,11 +394,11 @@ watch(
       </section>
 
       <div class="actions">
-        <button type="button" class="clear-btn" @click="resetForm">
+        <button type="button" class="btn-ghost" @click="resetForm">
           Clear
         </button>
 
-        <button type="submit" class="submit-btn" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length">
+        <button type="submit" class="btn-primary" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length">
           {{ loading ? 'Creating...' : 'Create Item' }}
         </button>
       </div>
@@ -406,28 +406,9 @@ watch(
   </div>
 </template>
 
+<style src="../../styles/dashboard.css"></style>
+
 <style scoped>
-.create-item-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.page-header h1 {
-  margin: 0;
-}
-
-.view-items-btn {
-  text-decoration: none;
-}
-
 .item-form {
   display: flex;
   flex-direction: column;
@@ -486,7 +467,11 @@ textarea {
 .checkbox-row {
   display: flex;
   align-items: center;
+  width: fit-content;
   gap: 10px;
+}
+.checkbox-row > * {
+  width: fit-content;
 }
 
 .section-header {
@@ -547,31 +532,7 @@ textarea {
   border: 2px dashed #c7d9ca;
 }
 
-.green-btn,
-.submit-btn {
-  background: #2ea44f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  cursor: pointer;
-}
-
-.clear-btn {
-  background: #f3f3f3;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  cursor: pointer;
-}
-
-.danger-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-}
+/* button utilities are provided by frontend/src/styles/dashboard.css */
 
 .actions {
   display: flex;
@@ -600,6 +561,20 @@ textarea {
   margin: 8px 0 0;
   color: #8a1f1f;
   font-size: 0.9rem;
+}
+
+.vertical-grid {
+  grid-template-columns: 1fr;
+}
+
+.file-selector-style::file-selector-button {
+  background: var(--dashboard-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  margin-right: 1rem;
 }
 
 @media (max-width: 768px) {
