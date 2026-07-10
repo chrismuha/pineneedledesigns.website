@@ -28,7 +28,6 @@ const form = reactive({
   collectionId: '',
   colors: [''],
   sizes: [''],
-  importantNotes: '',
   description: '',
   price: '',
   shippingCost: '',
@@ -106,7 +105,6 @@ const resetForm = () => {
     || ''
   form.colors = ['']
   form.sizes = ['']
-  form.importantNotes = ''
   form.description = ''
   form.price = ''
   form.shippingCost = ''
@@ -142,7 +140,6 @@ const buildProductFormData = () => {
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
   formData.append('size', sizes.join(', '))
-  formData.append('importantNotes', form.importantNotes.trim())
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
   formData.append('shippingCost', String(form.shippingCost || 0))
@@ -303,11 +300,6 @@ watch(
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
             <p class="hint">Each size becomes an option in one Size dropdown on the item page.</p>
           </div>
-        </div>
-
-        <div class="field">
-          <label>Important Notes</label>
-          <textarea v-model="form.importantNotes" rows="4" />
         </div>
 
         <div class="field">

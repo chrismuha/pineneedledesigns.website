@@ -115,7 +115,6 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       collectionId,
       color: String(body?.color || '').trim(),
       size: String(body?.size || '').trim(),
-      importantNotes: String(body?.importantNotes || '').trim(),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -229,7 +228,6 @@ export const createProduct = async (req, res) => {
     subCollectionId: subcollectionResult.id,
     color: data.color,
     size: data.size,
-    importantNotes: data.importantNotes,
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
@@ -262,7 +260,6 @@ export const updateProduct = async (req, res) => {
   if (data.description) product.description = data.description;
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
-  if (req.body?.importantNotes !== undefined) product.importantNotes = data.importantNotes;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;
   }

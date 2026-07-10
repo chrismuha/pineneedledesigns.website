@@ -498,7 +498,6 @@ const saveProduct = async () => {
     formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
     formData.append('color', colors.join(', '))
     formData.append('size', sizes.join(', '))
-    formData.append('importantNotes', editingProduct.value.importantNotes || '')
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
     formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
@@ -783,10 +782,6 @@ watch(
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
-          <p v-if="product.importantNotes">
-            <strong>Important Notes:</strong><br>
-            {{ product.importantNotes }}
-          </p>
           <p>
             <strong>Description:</strong><br>
             {{ product.description }}
@@ -1003,11 +998,6 @@ watch(
               </button>
             </div>
           </div>
-        </div>
-
-        <div class="field">
-          <label>Important Notes</label>
-          <textarea v-model="editingProduct.importantNotes" rows="3" />
         </div>
 
         <div class="field">
