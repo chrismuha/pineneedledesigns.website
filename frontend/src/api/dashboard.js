@@ -66,7 +66,7 @@ export const dashboardApi = {
   }),
   updateProduct: (id, payload) => request(`/api/products/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: payload instanceof FormData ? payload : JSON.stringify(payload),
   }),
   deleteProduct: (id) => request(`/api/products/${id}`, {
     method: 'DELETE',
