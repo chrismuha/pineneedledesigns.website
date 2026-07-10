@@ -59,22 +59,6 @@ export const updateCollection = async (req, res) => {
   }
 };
 
-export const reorderCollections = async (req, res) => {
-  const orderedIds = Array.isArray(req.body?.orderedIds) ? req.body.orderedIds : [];
-  if (!orderedIds.length) {
-    return res.status(400).json({ error: 'orderedIds array is required.' });
-  }
-
-  const updates = orderedIds.map((id, index) => Collection.updateOne(
-    { _id: id, isSystem: false },
-    { $set: { sortOrder: index } },
-  ));
-
-  await Promise.all(updates);
-  const collections = await Collection.find().sort({ sortOrder: 1, name: 1 }).lean();
-  res.json(collections);
-};
-
 export const deleteCollection = async (req, res) => {
   const collection = await Collection.findById(req.params.id);
   if (!collection) {

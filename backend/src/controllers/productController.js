@@ -354,32 +354,3 @@ export const deleteProduct = async (req, res) => {
 
   res.json({ success: true });
 };
-
-export const reorderProducts = async (req, res) => {
-  const collectionId = req.body?.collectionId;
-  const orderedIds = Array.isArray(req.body?.orderedIds) ? req.body.orderedIds : [];
-
-  if (!collectionId || !orderedIds.length) {
-    return res.status(400).json({ error: 'collectionId and orderedIds are required.' });
-  }
-  if (!validId(String(collectionId)) || orderedIds.some((id) => !validId(String(id)))) {
-    return res.status(400).json({ error: 'Invalid product ordering IDs.' });
-  }
-  const safeCollectionId = objectId(collectionId);
-  const safeOrderedIds = orderedIds.map(objectId);
-
-  const updates = safeOrderedIds.map((id, index) => Product.updateOne(
-    { _id: id, collectionId: safeCollectionId },
-    { $set: { sortOrder: index } },
-  ));
-
-  await Promise.all(updates);
-
-  const products = await Product.find({ collectionId: safeCollectionId })
-    .populate('collectionId', 'name slug isSystem')
-    .populate('subCollectionId', 'name slug sortOrder')
-    .sort({ sortOrder: 1, name: 1 })
-    .lean();
-
-  res.json(products);
-};

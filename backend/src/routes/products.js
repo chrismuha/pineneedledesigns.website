@@ -8,7 +8,6 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  reorderProducts,
 } from '../controllers/productController.js';
 
 const router = Router();
@@ -23,7 +22,6 @@ const handlePhotoUpload = (req, res, next) => {
 };
 
 router.get('/grouped', listProductsGrouped);
-router.put('/reorder', reorderProducts);
 router.get('/', listProducts);
 router.get('/:id', getProduct);
 router.post('/', handlePhotoUpload, createProduct);

@@ -1,12 +1,13 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 
 const route = useRoute()
+const router = useRouter()
 const groupedCollections = ref([])
 const loading = ref(true)
 const error = ref('')
@@ -71,6 +72,13 @@ const loadItems = async () => {
     groupedCollections.value = await dashboardApi.getGroupedProducts()
     syncSubcollectionsFromGrouped()
     await prefetchCollectionSubcollections()
+    const requestedItemId = String(route.query.item || '')
+    if (requestedItemId && !showEditModal.value) {
+      const requestedProduct = groupedCollections.value
+        .flatMap((collection) => collection.products || [])
+        .find((product) => String(product._id) === requestedItemId)
+      if (requestedProduct) await openEditModal(requestedProduct)
+    }
   } catch (err) {
     error.value = err.message
   } finally {
@@ -384,13 +392,18 @@ const openEditModal = async (product) => {
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
 
-const closeEditModal = () => {
+const closeEditModal = async () => {
   editPhotoFiles.value.forEach((photo) => URL.revokeObjectURL(photo.previewUrl))
   editPhotoFiles.value = []
   showEditModal.value = false
   editingProduct.value = null
   editModalError.value = ''
   resetEditSubcollections()
+  if (route.query.item) {
+    const nextQuery = { ...route.query }
+    delete nextQuery.item
+    await router.replace({ path: '/dashboard/items', query: nextQuery })
+  }
 }
 
 const handleEditPhotoUpload = (event) => {
@@ -516,7 +529,7 @@ const saveProduct = async () => {
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
 
     await dashboardApi.updateProduct(editingProduct.value._id, formData)
-    closeEditModal()
+    await closeEditModal()
     await loadItems()
   } catch (err) {
     editModalError.value = err.message
@@ -608,51 +621,6 @@ const deleteCollection = async () => {
     error.value = err.message
   } finally {
     saving.value = false
-  }
-}
-
-const moveCollection = async (index, direction) => {
-  const collections = [...nonSystemCollections.value]
-  const targetIndex = index + direction
-  if (targetIndex < 0 || targetIndex >= collections.length) return
-
-  const reordered = [...collections]
-  const [moved] = reordered.splice(index, 1)
-  reordered.splice(targetIndex, 0, moved)
-
-  try {
-    const uncategorized = groupedCollections.value.find((collection) => collection.isSystem)
-    const orderedIds = [
-      ...reordered.map((collection) => collection._id),
-      ...(uncategorized ? [uncategorized._id] : []),
-    ]
-    await dashboardApi.reorderCollections(orderedIds)
-    await loadItems()
-  } catch (err) {
-    error.value = err.message
-  }
-}
-
-const moveProduct = async (collection, product, direction) => {
-  const products = [...collection.products]
-  const index = products.findIndex((item) => String(item._id) === String(product._id))
-  if (index === -1) return
-
-  const targetIndex = index + direction
-  if (targetIndex < 0 || targetIndex >= products.length) return
-
-  const reordered = [...products]
-  const [moved] = reordered.splice(index, 1)
-  reordered.splice(targetIndex, 0, moved)
-
-  try {
-    await dashboardApi.reorderProducts(
-      collection._id,
-      reordered.map((product) => product._id),
-    )
-    await loadItems()
-  } catch (err) {
-    error.value = err.message
   }
 }
 
@@ -850,8 +818,6 @@ watch(
         </div>
 
         <div class="actions">
-          <button type="button" @click="moveProduct(collection, product, -1)">↑</button>
-          <button type="button" @click="moveProduct(collection, product, 1)">↓</button>
           <button class="edit-btn" type="button" @click="openEditModal(product)">
             Edit
           </button>
@@ -886,7 +852,7 @@ watch(
 
         <div class="collection-list">
           <div
-            v-for="(collection, index) in nonSystemCollections"
+            v-for="collection in nonSystemCollections"
             :key="collection._id"
             class="collection-row"
           >
@@ -908,8 +874,6 @@ watch(
               </div>
 
               <div class="row-actions">
-                <button type="button" @click="moveCollection(index, -1)">↑</button>
-                <button type="button" @click="moveCollection(index, 1)">↓</button>
                 <button type="button" class="edit-btn icon-button" @click="startEditCollection(collection)">
                   <i class="bi bi-pencil" aria-hidden="true"></i>
                   <span class="button-text">Rename</span>
@@ -1697,15 +1661,15 @@ watch(
     align-items: stretch;
   }
 
-  .modal-overlay { padding: max(10px, env(safe-area-inset-top)) 10px calc(78px + env(safe-area-inset-bottom)); overflow-y: auto; }
-  .modal-card { padding: 18px 14px; max-height: none; overflow: visible; }
-  .collection-manager-modal { max-height: none; }
+  .modal-overlay { padding: 0 10px calc(72px + env(safe-area-inset-bottom)); overflow: hidden; }
+  .modal-card { padding: 0 14px 18px; overflow-x: hidden; overflow-y: auto; }
+  .collection-manager-modal { max-height: calc(100dvh - 72px - env(safe-area-inset-bottom)); }
   .row-actions { width: 100%; justify-content: stretch; }
   .row-actions button { flex: 1 1 140px; }
   .add-photos-control { padding: 15px; }
   .confirmation-actions { flex-direction: column-reverse; }
   .confirmation-actions button { width: 100%; min-width: 0; }
-  .modal-header { position: sticky; top: 0; z-index: 10; margin: -18px -14px 16px; padding: 16px 14px; background: #fff; border-bottom: 1px solid #e6e6e6; }
+  .modal-header { position: sticky; top: 0; z-index: 30; margin: 0 -14px 16px; padding: 14px; background: #fff; border-bottom: 1px solid #d9e0da; box-shadow: 0 3px 8px rgba(0, 0, 0, .08); }
   .inline-field, .edit-section-header, .edit-property-header, .edit-option-row { flex-direction: column; align-items: stretch; width: 100%; }
   .inline-field > *, .edit-section-header > *, .edit-property-header > *, .edit-option-row > * { width: 100%; box-sizing: border-box; }
   .item-header { align-items: flex-start; }

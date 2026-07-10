@@ -60,10 +60,6 @@ export const dashboardApi = {
     method: 'DELETE',
     body: JSON.stringify({ confirmDelete: true, confirmName }),
   }),
-  reorderCollections: (orderedIds) => request('/api/collections/reorder', {
-    method: 'PUT',
-    body: JSON.stringify({ orderedIds }),
-  }),
   createProduct: (formData) => request('/api/products', {
     method: 'POST',
     body: formData,
@@ -74,10 +70,6 @@ export const dashboardApi = {
   }),
   deleteProduct: (id) => request(`/api/products/${id}`, {
     method: 'DELETE',
-  }),
-  reorderProducts: (collectionId, orderedIds) => request('/api/products/reorder', {
-    method: 'PUT',
-    body: JSON.stringify({ collectionId, orderedIds }),
   }),
   getSubcollections: (collectionId) => request(`/api/collections/${collectionId}/subcollections`),
   createSubcollection: (collectionId, name) => request(`/api/collections/${collectionId}/subcollections`, {

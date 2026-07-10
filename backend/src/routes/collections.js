@@ -4,7 +4,6 @@ import {
   createCollection,
   updateCollection,
   deleteCollection,
-  reorderCollections,
 } from '../controllers/collectionController.js';
 import {
   listSubcollections,
@@ -18,7 +17,6 @@ const router = Router();
 
 router.get('/', listCollections);
 router.post('/', createCollection);
-router.put('/reorder', reorderCollections);
 router.get('/:collectionId/subcollections', listSubcollections);
 router.post('/:collectionId/subcollections', createSubcollection);
 router.put('/:collectionId/subcollections/reorder', reorderSubcollections);
