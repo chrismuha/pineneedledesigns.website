@@ -3,7 +3,6 @@ import { config } from './index.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
-import { seedAuthorizedUsers } from '../services/authorizedUsers.js';
 
 const inferSubcollectionName = (productName, subcollectionNames) => {
   const name = String(productName || '').toLowerCase();
@@ -236,6 +235,4 @@ export const connectDatabase = async () => {
   await repairLegacyProductIndex();
   await backfillProductQuantities();
   await backfillProductSubcollectionIds();
-  await seedAuthorizedUsers();
-  console.log('ℹ️ Ensured authorized dashboard users exist');
 };

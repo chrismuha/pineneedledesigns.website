@@ -1,13 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
-import LoginDialog from '../components/LoginDialog.vue'
-import { useAuthStore } from '../stores/auth.js'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-const authReady = ref(false)
 
 const menuItems = [
   {
@@ -40,37 +34,11 @@ const isActive = (path) => {
   return route.path.startsWith(path)
 }
 
-const handleLogout = async () => {
-  await authStore.logout()
-  authReady.value = false
-  authStore.openLoginDialog(route.fullPath)
-}
-
-const handleLoginSuccess = () => {
-  authReady.value = true
-}
-
-const handleLoginCancel = async () => {
-  if (!authStore.isAuthenticated) {
-    await router.replace('/')
-  }
-}
-
-onMounted(async () => {
-  const isAuthed = await authStore.verifySession()
-
-  if (!isAuthed) {
-    authStore.openLoginDialog(route.fullPath)
-    return
-  }
-
-  authReady.value = true
-})
 </script>
 
 <template>
   <div>
-    <div v-if="authReady" class="dashboard-layout">
+    <div class="dashboard-layout">
       <aside class="sidebar">
         <div class="sidebar-content">
 
@@ -94,11 +62,6 @@ onMounted(async () => {
               </a>
             </h2>
 
-            <p v-if="authStore.user?.email" class="user-email">{{ authStore.user.email }}</p>
-            <button type="button" class="logout-btn" @click="handleLogout">
-              <i class="bi bi-box-arrow-right menu-icon" aria-hidden="true"></i>
-              Sign Out
-            </button>
           </div>
         </div>
       </aside>
@@ -108,12 +71,8 @@ onMounted(async () => {
       </main>
     </div>
 
-    <p v-else class="dashboard-loading">Checking access...</p>
-
-    <LoginDialog required @success="handleLoginSuccess" @cancel="handleLoginCancel" />
-
     <!-- Mobile bottom nav for widths below 850px -->
-    <nav class="bottom-nav" v-if="authReady">
+    <nav class="bottom-nav">
       <RouterLink
         v-for="item in menuItems"
         :key="item.to"
@@ -125,10 +84,6 @@ onMounted(async () => {
         <span class="label">{{ item.label }}</span>
       </RouterLink>
 
-      <button type="button" class="bottom-tab logout-tab" @click="handleLogout">
-        <i class="bi bi-box-arrow-right menu-icon" aria-hidden="true"></i>
-        <span class="label">Sign out</span>
-      </button>
     </nav>
   </div>
 </template>
@@ -222,42 +177,12 @@ onMounted(async () => {
   /* border-top: 1px solid #e5e5e5; */
 }
 
-.user-email {
-  margin: 0 0 12px;
-  font-size: 0.85rem;
-  color: #666;
-  word-break: break-word;
-}
-
-
-.logout-btn {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--dashboard-red);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-  background: #f7f7f7;
-  color: var(--dashboard-red);
-}
-
-.logout-btn:hover {
-  background: var(--dashboard-red);
-  color: white;
-}
 
 .content {
   flex: 1;
   padding: 24px;
 }
 
-.dashboard-loading {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  margin: 0;
-  color: #666;
-}
 
 /* Mobile bottom navigation (visible under 850px) */
 .bottom-nav {
