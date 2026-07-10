@@ -199,6 +199,7 @@ const isActive = (path) => {
 
 @media (max-width: 850px) {
   .dashboard-shell {
+    --mobile-nav-height: calc(80px + env(safe-area-inset-bottom));
     position: fixed;
     inset: 0;
     overflow: hidden;
@@ -206,7 +207,7 @@ const isActive = (path) => {
   }
 
   .dashboard-layout {
-    height: 100dvh;
+    height: calc(100dvh - var(--mobile-nav-height));
     min-height: 0;
     overflow: hidden;
   }
@@ -224,7 +225,7 @@ const isActive = (path) => {
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
     padding: 14px 12px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding-bottom: 14px;
   }
 
   .bottom-nav {
