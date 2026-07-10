@@ -665,7 +665,7 @@ const deleteCollection = async () => {
 
 const collectionLabel = (collection) => {
   if (collection.isSystem) {
-    return 'Uncategorized (These items have no collection.)'
+    return 'Uncategorized'
   }
   return collection.name
 }

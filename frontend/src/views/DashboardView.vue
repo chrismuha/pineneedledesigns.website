@@ -37,7 +37,7 @@ const isActive = (path) => {
 </script>
 
 <template>
-  <div>
+  <div class="dashboard-shell">
     <div class="dashboard-layout">
       <aside class="sidebar">
         <div class="sidebar-content">
@@ -190,15 +190,33 @@ const isActive = (path) => {
 }
 
 @media (max-width: 850px) {
+  .dashboard-shell {
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .dashboard-layout {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .sidebar {
     display: none;
   }
 
   .content {
     box-sizing: border-box;
+    height: 100%;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 14px 12px;
     padding-bottom: calc(80px + env(safe-area-inset-bottom));
-    min-height: 100dvh;
   }
 
   .bottom-nav {
