@@ -43,7 +43,6 @@ const routes = [
     name: 'collection',
     component: CollectionView,
     props: true,
-    meta: { scrollTarget: '.products-header', scrollOffset: 190 },
   },
 
   {

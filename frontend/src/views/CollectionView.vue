@@ -79,7 +79,9 @@
         class="product-card"
       >
         <header>
-          <h3>{{ displayTitle(product) }}</h3>
+          <h3 :ref="productIndex === 0 ? setFirstProductTitle : undefined">
+            {{ displayTitle(product) }}
+          </h3>
           <div class="product-meta">
             <div v-for="(item, index) in displayProductMeta(product)" :key="index">{{ item }}</div>
             <div v-if="product.maker" class="product-maker">{{ product.maker }}</div>
@@ -140,7 +142,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import MediaSlider from '../components/MediaSlider.vue'
 import ProductOptionSelect from '../components/ProductOptionSelect.vue'
 import { catalogApi } from '../api/catalog.js'
@@ -163,6 +165,7 @@ const productsLoading = ref(false)
 const subcollectionsError = ref('')
 const productsError = ref('')
 const hasLoadedProducts = ref(false)
+const firstProductTitle = ref(null)
 const bagsFilter = 'Bags'
 const allBagTypes = 'All'
 const activeBagType = ref(allBagTypes)
@@ -271,6 +274,13 @@ const loadCollectionData = async () => {
     loadSubcollections(),
     loadProducts(null),
   ])
+
+  await nextTick()
+  firstProductTitle.value?.scrollIntoView({ block: 'start', behavior: 'instant' })
+}
+
+const setFirstProductTitle = (element) => {
+  firstProductTitle.value = element
 }
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
@@ -441,5 +451,9 @@ const addToCart = async (product) => {
 .collection-filters--loading {
   min-height: 42px;
   align-items: center;
+}
+
+.product-card:first-child h3 {
+  scroll-margin-top: 190px;
 }
 </style>
