@@ -219,5 +219,8 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
     .sort({ sortOrder: 1, name: 1 })
     .lean();
 
-  return products.map(mapProductToStorefront);
+  // Pass only the product. Array#map also supplies the item index as the second
+  // argument, which mapProductToStorefront would otherwise treat as an iterable
+  // list of category filters and throw while building the response.
+  return products.map((product) => mapProductToStorefront(product));
 };
