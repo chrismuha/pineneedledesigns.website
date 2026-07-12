@@ -5,6 +5,7 @@ import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
+import { sortSizeOptions } from '../utils/sizeOptions.js';
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
@@ -66,7 +67,7 @@ const normalizeCustomProperties = (properties) => {
           .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }))
         : [],
     }))
-    .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
     .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' }));
 };
 
@@ -150,7 +151,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       description,
       collectionId,
       color: String(body?.color || '').trim(),
-      size: String(body?.size || '').trim(),
+      size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -180,6 +181,12 @@ const productPopulatePaths = [
   { path: 'subCollectionId', select: 'name slug sortOrder collectionId' },
 ];
 
+const formatProductForDashboard = (product) => ({
+  ...product,
+  size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
+  customProperties: normalizeCustomProperties(product.customProperties),
+});
+
 export const listProductsGrouped = async (_req, res) => {
   const collections = await Collection.find().sort({ sortOrder: 1, name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
@@ -197,7 +204,7 @@ export const listProductsGrouped = async (_req, res) => {
     products: products
       .filter((product) => String(product.collectionId?._id || product.collectionId) === String(collection._id))
       .map((product) => ({
-        ...product,
+        ...formatProductForDashboard(product),
         collectionName: collection.name,
       })),
   }));
@@ -221,7 +228,7 @@ export const listProducts = async (req, res) => {
     .sort({ sortOrder: 1, name: 1 })
     .lean();
 
-  res.json(products);
+  res.json(products.map(formatProductForDashboard));
 };
 
 export const getProduct = async (req, res) => {
@@ -235,7 +242,7 @@ export const getProduct = async (req, res) => {
     return res.status(404).json({ error: 'Product not found.' });
   }
 
-  res.json(product);
+  res.json(formatProductForDashboard(product));
 };
 
 export const createProduct = async (req, res) => {

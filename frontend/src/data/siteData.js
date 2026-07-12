@@ -860,12 +860,7 @@ export const shirtColorTemplates = [...new Set(
     .flatMap((option) => option.values || []),
 )].sort((left, right) => left.localeCompare(right))
 
-export const shirtSizeTemplates = [...new Set(
-  (collectionPages.find((page) => page.slug === 'shirts')?.products || [])
-    .flatMap((product) => product.options || [])
-    .filter((option) => String(option.name).toLowerCase() === 'size')
-    .flatMap((option) => option.values || []),
-)]
+export const shirtSizeTemplates = ['Small', 'Medium', 'Large', 'XL', '2X', '3X']
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
 const visibleCollectionBySlug = new Map(visibleCollectionPages.map((page) => [page.slug, page]))
 const groupedCollectionSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))

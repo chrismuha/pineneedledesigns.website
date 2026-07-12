@@ -3,6 +3,7 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
+import { sortSizeOptions } from '../utils/sizeOptions.js';
 
 const mapProductToStorefront = (product, categoryFilters = []) => {
   const placeholders = product.optionPlaceholders instanceof Map
@@ -14,7 +15,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'style'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -23,9 +24,8 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
   const colors = String(product.color || '').split(',').map((value) => value.trim()).filter(Boolean);
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
   const colorOptions = colors.length ? colors : propertyValues('Color');
-  const sizeOptions = sizes.length ? sizes : propertyValues('Size');
-  const hasStyleOption = customOptions.some((option) => option.name.toLowerCase() === 'style');
-  const blingOptions = product.noBlingPrice != null && !hasStyleOption
+  const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
+  const blingOptions = product.noBlingPrice != null
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
   const options = [

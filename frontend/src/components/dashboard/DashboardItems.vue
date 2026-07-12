@@ -6,6 +6,7 @@ import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
+import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -387,9 +388,9 @@ const openEditModal = async (product) => {
   const sizeProperty = customProperties.find(
     (property) => String(property.name).toLowerCase() === 'size',
   )
-  const sizes = sizeProperty?.options?.length
+  const sizes = sortSizeOptions(sizeProperty?.options?.length
     ? [...sizeProperty.options]
-    : String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)
+    : String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean))
 
   editingProduct.value = {
     ...product,
@@ -398,7 +399,7 @@ const openEditModal = async (product) => {
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
     customProperties: customProperties.filter(
-      (property) => !['color', 'size'].includes(String(property.name).toLowerCase()),
+      (property) => !['color', 'size', 'style'].includes(String(property.name).toLowerCase()),
     ),
     meta: (product.meta || []).join('\n'), bagTypes: (product.bagTypes || []).join('\n'),
     filters: (product.filters || []).join('\n'), shoeTypes: (product.shoeTypes || []).join('\n'),
@@ -575,9 +576,9 @@ const saveProduct = async () => {
   if (!editingProduct.value) return
 
   if (editingProduct.value.customProperties.some((property) => (
-    ['color', 'size'].includes(String(property.name || '').trim().toLowerCase())
+    ['color', 'size', 'style'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color and Size are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Size, and Style are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -599,14 +600,14 @@ const saveProduct = async () => {
 
   try {
     const colors = editingProduct.value.colors.map((color) => color.trim()).filter(Boolean)
-    const sizes = editingProduct.value.sizes.map((size) => size.trim()).filter(Boolean)
+    const sizes = sortSizeOptions(editingProduct.value.sizes.map((size) => size.trim()).filter(Boolean))
     const customProperties = editingProduct.value.customProperties
       .map((property) => ({
         name: String(property.name || '').trim(),
         required: Boolean(property.required),
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
-      .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
+      .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
@@ -762,7 +763,10 @@ const sortedProperties = (properties = []) => [...properties].sort((left, right)
 const sortedOptions = (options = []) => [...options].sort((left, right) => (
   left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 ))
-const isReservedPropertyName = (name) => ['color', 'size'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'style'].includes(String(name || '').trim().toLowerCase())
+const customPropertiesForDisplay = (properties = []) => sortedProperties(properties).filter(
+  (property) => !isReservedPropertyName(property.name),
+)
 
 onMounted(loadItems)
 watch(
@@ -923,6 +927,7 @@ watch(
           </p>
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
           <p v-if="product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
+          <p v-if="product.noBlingPrice != null"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
@@ -931,10 +936,10 @@ watch(
             {{ product.description }}
           </p>
 
-          <div v-if="product.customProperties?.length" class="custom-properties">
+          <div v-if="customPropertiesForDisplay(product.customProperties).length" class="custom-properties">
             <h4>Custom Properties</h4>
 
-            <div v-for="property in sortedProperties(product.customProperties)" :key="property.name" class="property">
+            <div v-for="property in customPropertiesForDisplay(product.customProperties)" :key="property.name" class="property">
               <strong>{{ property.name }}{{ property.required ? ' *' : '' }}</strong>
               <ul>
                 <li v-for="option in sortedOptions(property.options)" :key="option">{{ option }}</li>
@@ -1120,7 +1125,7 @@ watch(
             <div class="edit-property-header">
               <input v-model="property.name" type="text" placeholder="Property name">
               <p v-if="isReservedPropertyName(property.name)" class="field-error">
-                Color and Size are built-in properties. Use the fields above.
+                Color, Size, and Style are built-in properties. Use their dedicated fields.
               </p>
               <label class="edit-checkbox">
                 <input v-model="property.required" type="checkbox">
@@ -1221,6 +1226,12 @@ watch(
           <label>Price without Bling (USD)</label>
           <input v-model="editingProduct.noBlingPrice" type="number" min="0" step="0.01" placeholder="Leave blank if this item has no no-bling version">
           <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
+        </div>
+
+        <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
+          <label>Style</label>
+          <input value="Bling, No Bling" readonly aria-label="Styles">
+          <p class="hint">Style is a built-in property with Bling and No Bling choices.</p>
         </div>
 
         <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">

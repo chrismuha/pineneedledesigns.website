@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
+import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -59,7 +60,7 @@ const sortedCollections = computed(() => [...collections.value].sort((left, righ
 const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
   left.name.localeCompare(right.name, undefined, { numeric: true })
 )))
-const isReservedPropertyName = (name) => ['color', 'size'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'style'].includes(String(name || '').trim().toLowerCase())
 const hasReservedCustomProperty = computed(() => form.customProperties.some(
   (property) => isReservedPropertyName(property.name),
 ))
@@ -195,14 +196,14 @@ const resetForm = () => {
 const buildProductFormData = () => {
   const formData = new FormData()
   const colors = form.colors.map((color) => color.trim()).filter(Boolean)
-  const sizes = form.sizes.map((size) => size.trim()).filter(Boolean)
+  const sizes = sortSizeOptions(form.sizes.map((size) => size.trim()).filter(Boolean))
   const customProperties = form.customProperties
     .map((property) => ({
       name: property.name.trim(),
       required: property.required,
       options: property.options.map((option) => option.trim()).filter(Boolean),
     }))
-    .filter((property) => property.name && !['color', 'size'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
@@ -256,7 +257,7 @@ const submitForm = async () => {
   fieldErrors.subCollectionId = ''
 
   if (hasReservedCustomProperty.value) {
-    error.value = 'Color and Size are built-in properties and cannot be added as custom properties.'
+    error.value = 'Color, Size, and Style are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -424,7 +425,7 @@ watch(
         </div>
 
         <p v-if="!form.customProperties.length" class="hint">
-          Add dropdown properties like print position or material. Color and Size are managed above.
+          Add dropdown properties like print position or material. Color, Size, and Style are managed separately.
         </p>
 
         <div
@@ -439,7 +440,7 @@ watch(
               placeholder="Property Name (e.g. Material)"
             >
             <p v-if="isReservedPropertyName(property.name)" class="field-error">
-              Color and Size are built-in properties. Use the fields above.
+              Color, Size, and Style are built-in properties. Use their dedicated fields.
             </p>
 
             <label class="checkbox-row">
@@ -501,6 +502,12 @@ watch(
             <label>Price without Bling (USD)</label>
             <input v-model="form.noBlingPrice" type="number" min="0" step="0.01" placeholder="28.00">
             <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
+          </div>
+
+          <div v-if="form.noBlingPrice !== ''" class="field">
+            <label>Style</label>
+            <input value="Bling, No Bling" readonly aria-label="Styles">
+            <p class="hint">Style is a built-in property with Bling and No Bling choices.</p>
           </div>
 
           <div v-if="form.noBlingPrice !== ''" class="field field--full">

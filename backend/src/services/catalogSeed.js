@@ -3,6 +3,7 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { slugify } from '../utils/slug.js';
+import { sortSizeOptions } from '../utils/sizeOptions.js';
 
 const freeShippingMeta = 'Free shipping';
 
@@ -22,7 +23,7 @@ const mapOptionsToCustomProperties = (options) => {
         ? option.values.map((value) => String(value || '').trim()).filter(Boolean)
         : [],
     }))
-    .filter((option) => option.name);
+    .filter((option) => option.name && !['color', 'size', 'style'].includes(option.name.toLowerCase()));
 };
 
 const mapOptionPlaceholders = (options) => {
@@ -39,6 +40,10 @@ const mapOptionPlaceholders = (options) => {
 
   return placeholders.size ? placeholders : undefined;
 };
+
+const optionValues = (options, name) => (Array.isArray(options) ? options : [])
+  .find((option) => String(option?.name || '').trim().toLowerCase() === name.toLowerCase())
+  ?.values?.map((value) => String(value || '').trim()).filter(Boolean) || [];
 
 const resolveSubcollectionName = (productFilters, collectionFilters) => {
   const filters = Array.isArray(productFilters) ? productFilters : [productFilters].filter(Boolean);
@@ -122,6 +127,8 @@ export const seedCatalog = async () => {
             legacyId: Number.isFinite(legacyId) ? legacyId : undefined,
             name: product.title,
             description: product.description || '',
+            color: optionValues(product.options, 'Color').join(', '),
+            size: sortSizeOptions(optionValues(product.options, 'Size')).join(', '),
             collectionId: collection._id,
             subCollectionId,
             photos: Array.isArray(product.images) ? product.images : [],
