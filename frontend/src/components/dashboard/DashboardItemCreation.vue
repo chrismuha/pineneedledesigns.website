@@ -35,6 +35,8 @@ const form = reactive({
   sizes: [''],
   description: '',
   price: '',
+  noBlingPrice: '',
+  noBlingDescription: '',
   shippingCost: '',
   freeShipping: false,
   outOfStock: false,
@@ -158,6 +160,8 @@ const resetForm = () => {
   form.sizes = ['']
   form.description = ''
   form.price = ''
+  form.noBlingPrice = ''
+  form.noBlingDescription = ''
   form.shippingCost = ''
   form.freeShipping = false
   form.outOfStock = false
@@ -187,6 +191,8 @@ const buildProductFormData = () => {
   formData.append('size', sizes.join(', '))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
+  formData.append('noBlingPrice', String(form.noBlingPrice))
+  formData.append('noBlingDescription', form.noBlingDescription.trim())
   formData.append('shippingCost', String(form.shippingCost || 0))
   formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
@@ -449,8 +455,19 @@ watch(
 
         <div class="vertical-grid form-grid">
           <div class="field">
-            <label>Price (USD) *</label>
-            <input v-model="form.price" type="number" min="0" step="0.01" placeholder="49.99" required>
+            <label>Price with Bling (USD) *</label>
+            <input v-model="form.price" type="number" min="0" step="0.01" placeholder="38.00" required>
+          </div>
+
+          <div class="field">
+            <label>Price without Bling (USD)</label>
+            <input v-model="form.noBlingPrice" type="number" min="0" step="0.01" placeholder="28.00">
+            <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
+          </div>
+
+          <div v-if="form.noBlingPrice !== ''" class="field field--full">
+            <label>Description without Bling</label>
+            <textarea v-model="form.noBlingDescription" rows="4" placeholder="Optional description shown when No Bling is selected." />
           </div>
 
           <div class="field">

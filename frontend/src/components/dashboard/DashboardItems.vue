@@ -54,6 +54,8 @@ const editSnapshot = (product) => JSON.stringify({
   photos: (product?.photos || []).map((value) => String(value)),
   description: String(product?.description || ''),
   price: String(product?.price ?? ''),
+  noBlingPrice: String(product?.noBlingPrice ?? ''),
+  noBlingDescription: String(product?.noBlingDescription || ''),
   shippingCost: String(product?.shippingCost ?? ''),
   freeShipping: Boolean(product?.freeShipping),
   outOfStock: Boolean(product?.outOfStock),
@@ -584,6 +586,8 @@ const saveProduct = async () => {
     formData.append('size', sizes.join(', '))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
+    formData.append('noBlingPrice', editingProduct.value.noBlingPrice == null ? '' : String(editingProduct.value.noBlingPrice))
+    formData.append('noBlingDescription', String(editingProduct.value.noBlingDescription || '').trim())
     formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
     formData.append('freeShipping', String(editingProduct.value.freeShipping))
     formData.append('outOfStock', String(editingProduct.value.outOfStock))
@@ -881,6 +885,7 @@ watch(
             <strong>Subcollection:</strong> {{ productSubcollectionLabel(product) }}
           </p>
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
+          <p v-if="product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
@@ -1154,8 +1159,19 @@ watch(
         </div>
 
         <div class="field">
-          <label>Price (USD)</label>
+          <label>Price with Bling (USD)</label>
           <input v-model.number="editingProduct.price" type="number" min="0" step="0.01">
+        </div>
+
+        <div class="field">
+          <label>Price without Bling (USD)</label>
+          <input v-model="editingProduct.noBlingPrice" type="number" min="0" step="0.01" placeholder="Leave blank if this item has no no-bling version">
+          <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
+        </div>
+
+        <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
+          <label>Description without Bling</label>
+          <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Optional description shown when No Bling is selected." />
         </div>
 
         <div class="field">
