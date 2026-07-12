@@ -418,9 +418,15 @@ export const collectionPages = [
         title: 'Happy Girls are the PRETTIEST! Blinged Out T-Shirt',
         filters: ['T-Shirts'],
         price: 38,
+        noBlingPrice: 28,
         meta: ['Price: $38', 'Available in White, Gray, Sand, Peach, and Natural.'],
         description: 'Is that Audrey Hepburn blowing a blue bubble? From the Bubble Blower Collection! Added is a touch of highlights of bling. Priced the same for all sizes and colors listed. Perfect for your Bubble Blower T-shirt Collection. And... there are more Bubble Blowers listed in my shop. Go Look!',
         options: [
+          {
+            name: 'Style',
+            values: ['Bling', 'No Bling'],
+            placeholder: 'Select style',
+          },
           {
             name: 'Size',
             values: ['Small', 'Medium', 'Large', 'XL', '2X', '3X'],
