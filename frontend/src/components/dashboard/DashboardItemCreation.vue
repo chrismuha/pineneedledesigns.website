@@ -14,10 +14,9 @@ const loading = ref(false)
 const error = ref('')
 const fieldErrors = reactive({
   subCollectionId: '',
-  meta: '', maker: '', bagTypes: '', filters: '', shoeTypes: '', videos: '', videoPosters: '',
-  imageWrapper: '', optionPlaceholders: '{}',
 })
 const photoFiles = ref([])
+const videoFiles = ref([])
 const showCreateCollection = ref(false)
 const newCollectionName = ref('')
 const collectionError = ref('')
@@ -45,6 +44,8 @@ const form = reactive({
   quantity: 1,
   customProperties: [],
   subCollectionId: '',
+  meta: '', maker: '', bagTypes: '', filters: '', shoeTypes: '', videos: '', videoPosters: '',
+  imageWrapper: '', optionPlaceholders: '{}',
 })
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
@@ -90,6 +91,18 @@ const handlePhotoUpload = (event) => {
 const removePhoto = (index) => {
   revokePhotoPreview(photoFiles.value[index])
   photoFiles.value.splice(index, 1)
+}
+
+const handleVideoUpload = (event) => {
+  videoFiles.value.push(...Array.from(event.target.files || []).map((file) => ({
+    file,
+    previewUrl: URL.createObjectURL(file),
+  })))
+  event.target.value = ''
+}
+const removeVideo = (index) => {
+  URL.revokeObjectURL(videoFiles.value[index].previewUrl)
+  videoFiles.value.splice(index, 1)
 }
 
 const addProperty = () => {
@@ -173,6 +186,8 @@ const resetForm = () => {
   form.meta = ''; form.maker = ''; form.bagTypes = ''; form.filters = ''; form.shoeTypes = ''
   form.videos = ''; form.videoPosters = ''; form.imageWrapper = ''; form.optionPlaceholders = '{}'
   clearPhotos()
+  videoFiles.value.forEach((video) => URL.revokeObjectURL(video.previewUrl))
+  videoFiles.value = []
   fieldErrors.subCollectionId = ''
   error.value = ''
 }
@@ -213,6 +228,7 @@ const buildProductFormData = () => {
   photoFiles.value.forEach(({ file }) => {
     formData.append('photos', file)
   })
+  videoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
   return formData
 }
@@ -384,6 +400,18 @@ watch(
         <div class="field">
           <label>Description *</label>
           <textarea v-model="form.description" rows="8" required />
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header"><h2>Videos</h2></div>
+        <input type="file" class="file-selector-style" multiple accept="video/*" @change="handleVideoUpload">
+        <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
+        <div v-if="videoFiles.length" class="photo-grid">
+          <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
+            <video :src="video.previewUrl" controls />
+            <button type="button" class="danger-btn" @click="removeVideo(index)">Remove</button>
+          </div>
         </div>
       </section>
 

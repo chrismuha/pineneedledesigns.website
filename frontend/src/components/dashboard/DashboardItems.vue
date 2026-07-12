@@ -19,6 +19,7 @@ const showEditModal = ref(false)
 const editingProduct = ref(null)
 const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
+const editVideoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
 const editCancellationStep = ref(0)
@@ -69,7 +70,7 @@ const editSnapshot = (product) => JSON.stringify({
 
 const editIsDirty = computed(() => Boolean(
   editingProduct.value
-  && (editPhotoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
+  && (editPhotoFiles.value.length > 0 || editVideoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
 ))
 
 const {
@@ -406,6 +407,7 @@ const openEditModal = async (product) => {
   }
   editModalError.value = ''
   editPhotoFiles.value = []
+  editVideoFiles.value = []
   editInitialSnapshot.value = editSnapshot(editingProduct.value)
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
@@ -414,6 +416,8 @@ const openEditModal = async (product) => {
 const closeEditModal = async () => {
   editPhotoFiles.value.forEach((photo) => URL.revokeObjectURL(photo.previewUrl))
   editPhotoFiles.value = []
+  editVideoFiles.value.forEach((video) => URL.revokeObjectURL(video.previewUrl))
+  editVideoFiles.value = []
   showEditModal.value = false
   editingProduct.value = null
   editInitialSnapshot.value = ''
@@ -469,6 +473,22 @@ const removeExistingEditPhoto = (index) => {
 const removeNewEditPhoto = (index) => {
   URL.revokeObjectURL(editPhotoFiles.value[index].previewUrl)
   editPhotoFiles.value.splice(index, 1)
+}
+const handleEditVideoUpload = (event) => {
+  editVideoFiles.value.push(...Array.from(event.target.files || []).map((file) => ({
+    file,
+    previewUrl: URL.createObjectURL(file),
+  })))
+  event.target.value = ''
+}
+const removeNewEditVideo = (index) => {
+  URL.revokeObjectURL(editVideoFiles.value[index].previewUrl)
+  editVideoFiles.value.splice(index, 1)
+}
+const removeExistingEditVideo = (index) => {
+  const videos = String(editingProduct.value.videos || '').split('\n').filter(Boolean)
+  videos.splice(index, 1)
+  editingProduct.value.videos = videos.join('\n')
 }
 
 const addEditProperty = () => editingProduct.value?.customProperties.push({
@@ -610,6 +630,7 @@ const saveProduct = async () => {
     formData.append('imageWrapper', String(editingProduct.value.imageWrapper || '').trim())
     formData.append('optionPlaceholders', String(editingProduct.value.optionPlaceholders || '{}'))
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
+    editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
     await dashboardApi.updateProduct(editingProduct.value._id, formData)
     await closeEditModal()
@@ -819,6 +840,7 @@ watch(
             Delete Collection
           </button>
         </div>
+
         <div
           v-if="getSubcollectionsForCollection(collection).length"
           class="collection-filters"
@@ -1164,6 +1186,23 @@ watch(
               <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditPhoto(index)">
                 Remove
               </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field edit-section">
+          <label>Video Files</label>
+          <input type="file" multiple accept="video/*" :disabled="saving" @change="handleEditVideoUpload">
+          <p class="hint">Uploaded videos are converted and stored in the managed uploads folder.</p>
+          <div class="edit-photo-grid">
+            <div v-for="(video, index) in String(editingProduct.videos || '').split('\n').filter(Boolean)" :key="video" class="edit-photo-card">
+              <video :src="video" controls />
+              <button type="button" class="danger-btn" :disabled="saving" @click="removeExistingEditVideo(index)">Remove</button>
+            </div>
+            <div v-for="(video, index) in editVideoFiles" :key="video.previewUrl" class="edit-photo-card">
+              <video :src="video.previewUrl" controls />
+              <span class="new-photo-badge">New</span>
+              <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditVideo(index)">Remove</button>
             </div>
           </div>
         </div>
