@@ -194,8 +194,13 @@ Premium heavyweight hoodie designed for comfort and durability.
         </div>
 
         <div class="field">
-          <label>Price (USD)</label>
-          <input type="number" value="49.99">
+          <label>Price with Bling (USD)</label>
+          <input type="number" min="0" step="0.01" value="38.00">
+        </div>
+
+        <div class="field">
+          <label>Price without Bling (USD)</label>
+          <input type="number" min="0" step="0.01" value="28.00">
         </div>
 
         <div class="field">

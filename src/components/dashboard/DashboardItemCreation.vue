@@ -133,8 +133,13 @@
 
         <div class="form-grid">
           <div class="field">
-            <label>Price (USD) *</label>
-            <input type="number" placeholder="49.99">
+            <label>Price with Bling (USD) *</label>
+            <input type="number" min="0" step="0.01" placeholder="38.00">
+          </div>
+
+          <div class="field">
+            <label>Price without Bling (USD)</label>
+            <input type="number" min="0" step="0.01" placeholder="28.00">
           </div>
 
           <div class="field">
@@ -142,6 +147,10 @@
             <input type="number" placeholder="5.00">
           </div>
         </div>
+
+        <p class="hint">
+          When both prices are entered, customers can choose Bling or No Bling on the product page.
+        </p>
 
         <label class="checkbox-row">
           <input type="checkbox">
