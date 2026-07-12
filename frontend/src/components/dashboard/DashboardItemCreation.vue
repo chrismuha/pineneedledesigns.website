@@ -399,8 +399,8 @@ watch(
         </div>
 
         <div class="field">
-          <label>Description *</label>
-          <textarea v-model="form.description" rows="8" required />
+          <label>{{ form.noBlingPrice !== '' ? 'Description with Bling *' : 'Description *' }}</label>
+          <textarea v-model="form.description" rows="8" :placeholder="form.noBlingPrice !== '' ? 'Description shown when Bling is selected.' : ''" required />
         </div>
       </section>
 
@@ -511,8 +511,8 @@ watch(
           </div>
 
           <div v-if="form.noBlingPrice !== ''" class="field field--full">
-            <label>Description without Bling</label>
-            <textarea v-model="form.noBlingDescription" rows="4" placeholder="Optional description shown when No Bling is selected." />
+            <label>Description without Bling *</label>
+            <textarea v-model="form.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
           </div>
 
           <div class="field">

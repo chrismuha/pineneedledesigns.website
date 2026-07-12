@@ -575,6 +575,15 @@ const handleEditQuantityChange = () => {
 const saveProduct = async () => {
   if (!editingProduct.value) return
 
+  if (
+    editingProduct.value.noBlingPrice !== ''
+    && editingProduct.value.noBlingPrice != null
+    && !String(editingProduct.value.noBlingDescription || '').trim()
+  ) {
+    editModalError.value = 'Description without Bling is required when the item has a No Bling style.'
+    return
+  }
+
   if (editingProduct.value.customProperties.some((property) => (
     ['color', 'size', 'style'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
@@ -932,8 +941,12 @@ watch(
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
           <p>
-            <strong>Description:</strong><br>
+            <strong>{{ product.noBlingPrice != null ? 'Description with Bling:' : 'Description:' }}</strong><br>
             {{ product.description }}
+          </p>
+          <p v-if="product.noBlingPrice != null">
+            <strong>Description without Bling:</strong><br>
+            {{ product.noBlingDescription }}
           </p>
 
           <div v-if="customPropertiesForDisplay(product.customProperties).length" class="custom-properties">
@@ -1213,8 +1226,8 @@ watch(
         </div>
 
         <div class="field">
-          <label>Description</label>
-          <textarea v-model="editingProduct.description" rows="6" />
+          <label>{{ editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description with Bling' : 'Description' }}</label>
+          <textarea v-model="editingProduct.description" rows="6" :placeholder="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description shown when Bling is selected.' : ''" />
         </div>
 
         <div class="field">
@@ -1235,8 +1248,8 @@ watch(
         </div>
 
         <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
-          <label>Description without Bling</label>
-          <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Optional description shown when No Bling is selected." />
+          <label>Description without Bling *</label>
+          <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
         </div>
 
         <div class="field">

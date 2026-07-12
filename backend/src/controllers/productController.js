@@ -140,6 +140,9 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   if (body?.noBlingPrice !== undefined && body.noBlingPrice !== '' && Number(body.noBlingPrice) < 0) {
     errors.push('Price without bling must be zero or greater.');
   }
+  if (body?.noBlingPrice !== undefined && body.noBlingPrice !== '' && !String(body?.noBlingDescription || '').trim()) {
+    errors.push('Description without Bling is required when the item has a No Bling style.');
+  }
   if (body?.quantity !== undefined && (!Number.isInteger(Number(body.quantity)) || Number(body.quantity) < 0)) {
     errors.push('Quantity must be a whole number of zero or greater.');
   }
