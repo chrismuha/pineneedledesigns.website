@@ -9,7 +9,11 @@ const mapProductToStorefront = (product) => {
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
 
-  const customOptions = (product.customProperties || [])
+  const customProperties = product.customProperties || [];
+  const propertyValues = (name) => customProperties
+    .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
+    ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
+  const customOptions = customProperties
     .filter((property) => !['color', 'size'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
@@ -18,9 +22,16 @@ const mapProductToStorefront = (product) => {
     }));
   const colors = String(product.color || '').split(',').map((value) => value.trim()).filter(Boolean);
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
+  const colorOptions = colors.length ? colors : propertyValues('Color');
+  const sizeOptions = sizes.length ? sizes : propertyValues('Size');
+  const hasStyleOption = customOptions.some((option) => option.name.toLowerCase() === 'style');
+  const blingOptions = product.noBlingPrice != null && !hasStyleOption
+    ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
+    : [];
   const options = [
-    ...(colors.length ? [{ name: 'Color', values: colors, placeholder: placeholders.Color || 'Select color' }] : []),
-    ...(sizes.length ? [{ name: 'Size', values: sizes, placeholder: placeholders.Size || 'Select size' }] : []),
+    ...blingOptions,
+    ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
+    ...(sizeOptions.length ? [{ name: 'Size', values: sizeOptions, placeholder: placeholders.Size || 'Select size' }] : []),
     ...customOptions,
   ];
 
