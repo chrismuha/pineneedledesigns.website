@@ -87,12 +87,40 @@ const normalizePhotos = (photos) => {
   return Array.isArray(photos) ? photos.map((photo) => String(photo || '').trim()).filter(Boolean) : [];
 };
 
+const normalizeStringList = (value) => {
+  if (Array.isArray(value)) return value.map((item) => String(item || '').trim()).filter(Boolean);
+  if (typeof value !== 'string') return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return normalizeStringList(parsed);
+  } catch {}
+  return value.split(/[\n,]+/).map((item) => item.trim()).filter(Boolean);
+};
+
+const normalizePlaceholders = (value) => {
+  if (!value) return {};
+  if (typeof value === 'object' && !Array.isArray(value)) return value;
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+};
+
 const parseRequestBody = (body) => ({
   ...body,
   freeShipping: parseBooleanField(body?.freeShipping),
   outOfStock: parseBooleanField(body?.outOfStock),
   customProperties: normalizeCustomProperties(body?.customProperties),
   photos: body?.photos !== undefined ? normalizePhotos(body.photos) : undefined,
+  meta: body?.meta !== undefined ? normalizeStringList(body.meta) : undefined,
+  videos: body?.videos !== undefined ? normalizeStringList(body.videos) : undefined,
+  videoPosters: body?.videoPosters !== undefined ? normalizeStringList(body.videoPosters) : undefined,
+  bagTypes: body?.bagTypes !== undefined ? normalizeStringList(body.bagTypes) : undefined,
+  filters: body?.filters !== undefined ? normalizeStringList(body.filters) : undefined,
+  shoeTypes: body?.shoeTypes !== undefined ? normalizeStringList(body.shoeTypes) : undefined,
+  optionPlaceholders: body?.optionPlaceholders !== undefined ? normalizePlaceholders(body.optionPlaceholders) : undefined,
   subCollectionId: body?.subCollectionId !== undefined
     ? normalizeSubCollectionId(body.subCollectionId)
     : undefined,
@@ -134,6 +162,15 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       freeShipping: Boolean(body?.freeShipping),
       outOfStock: Boolean(body?.outOfStock),
       quantity: body?.quantity !== undefined ? Number(body.quantity) : undefined,
+      meta: body?.meta,
+      videos: body?.videos,
+      videoPosters: body?.videoPosters,
+      maker: String(body?.maker || '').trim(),
+      bagTypes: body?.bagTypes,
+      filters: body?.filters,
+      shoeTypes: body?.shoeTypes,
+      imageWrapper: String(body?.imageWrapper || '').trim(),
+      optionPlaceholders: body?.optionPlaceholders,
     },
   };
 };
@@ -252,7 +289,15 @@ export const createProduct = async (req, res) => {
     outOfStock: data.quantity === 0 || data.outOfStock,
     quantity: data.quantity ?? 1,
     sortOrder: (maxSort?.sortOrder ?? -1) + 1,
-    videos: uploadedVideos,
+    videos: [...(data.videos || []), ...uploadedVideos],
+    videoPosters: data.videoPosters || [],
+    meta: data.meta || [],
+    maker: data.maker,
+    bagTypes: data.bagTypes || [],
+    filters: data.filters || [],
+    shoeTypes: data.shoeTypes || [],
+    imageWrapper: data.imageWrapper,
+    optionPlaceholders: data.optionPlaceholders,
   });
 
   const populated = await product.populate(productPopulatePaths);
@@ -294,7 +339,15 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ error: 'A maximum of 20 photos is allowed.' });
     }
   }
-  if (uploadedVideos.length) product.videos = [...(product.videos || []), ...uploadedVideos];
+  if (req.body?.videos !== undefined || uploadedVideos.length) product.videos = [...(data.videos || []), ...uploadedVideos];
+  if (req.body?.videoPosters !== undefined) product.videoPosters = data.videoPosters;
+  if (req.body?.meta !== undefined) product.meta = data.meta;
+  if (req.body?.maker !== undefined) product.maker = data.maker;
+  if (req.body?.bagTypes !== undefined) product.bagTypes = data.bagTypes;
+  if (req.body?.filters !== undefined) product.filters = data.filters;
+  if (req.body?.shoeTypes !== undefined) product.shoeTypes = data.shoeTypes;
+  if (req.body?.imageWrapper !== undefined) product.imageWrapper = data.imageWrapper;
+  if (req.body?.optionPlaceholders !== undefined) product.optionPlaceholders = data.optionPlaceholders;
   if (req.body?.price !== undefined) product.price = data.price;
   if (req.body?.noBlingPrice !== undefined) product.noBlingPrice = data.noBlingPrice;
   if (req.body?.noBlingDescription !== undefined) product.noBlingDescription = data.noBlingDescription;

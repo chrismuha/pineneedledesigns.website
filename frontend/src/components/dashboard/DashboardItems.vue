@@ -60,6 +60,11 @@ const editSnapshot = (product) => JSON.stringify({
   freeShipping: Boolean(product?.freeShipping),
   outOfStock: Boolean(product?.outOfStock),
   quantity: String(product?.quantity ?? ''),
+  meta: (product?.meta || []).join('\n'), maker: String(product?.maker || ''),
+  bagTypes: (product?.bagTypes || []).join('\n'), filters: (product?.filters || []).join('\n'),
+  shoeTypes: (product?.shoeTypes || []).join('\n'), videos: (product?.videos || []).join('\n'),
+  videoPosters: (product?.videoPosters || []).join('\n'), imageWrapper: String(product?.imageWrapper || ''),
+  optionPlaceholders: JSON.stringify(product?.optionPlaceholders || {}),
 })
 
 const editIsDirty = computed(() => Boolean(
@@ -394,6 +399,10 @@ const openEditModal = async (product) => {
     customProperties: customProperties.filter(
       (property) => !['color', 'size'].includes(String(property.name).toLowerCase()),
     ),
+    meta: (product.meta || []).join('\n'), bagTypes: (product.bagTypes || []).join('\n'),
+    filters: (product.filters || []).join('\n'), shoeTypes: (product.shoeTypes || []).join('\n'),
+    videos: (product.videos || []).join('\n'), videoPosters: (product.videoPosters || []).join('\n'),
+    optionPlaceholders: JSON.stringify(product.optionPlaceholders || {}, null, 2),
   }
   editModalError.value = ''
   editPhotoFiles.value = []
@@ -594,6 +603,12 @@ const saveProduct = async () => {
     formData.append('quantity', String(editingProduct.value.quantity ?? 1))
     formData.append('customProperties', JSON.stringify(customProperties))
     formData.append('photos', JSON.stringify(editingProduct.value.photos || []))
+    ;['meta', 'bagTypes', 'filters', 'shoeTypes', 'videos', 'videoPosters'].forEach((field) => {
+      formData.append(field, JSON.stringify(String(editingProduct.value[field] || '').split(/[\n,]+/).map((value) => value.trim()).filter(Boolean)))
+    })
+    formData.append('maker', String(editingProduct.value.maker || '').trim())
+    formData.append('imageWrapper', String(editingProduct.value.imageWrapper || '').trim())
+    formData.append('optionPlaceholders', String(editingProduct.value.optionPlaceholders || '{}'))
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
 
     await dashboardApi.updateProduct(editingProduct.value._id, formData)
@@ -1178,6 +1193,20 @@ watch(
           <label>Shipping Cost (USD)</label>
           <input v-model.number="editingProduct.shippingCost" type="number" min="0" step="0.01">
         </div>
+
+        <details class="advanced-fields">
+          <summary>Advanced Storefront Details</summary>
+          <p class="hint">Use one value per line for list fields.</p>
+          <div class="field"><label>Maker</label><input v-model="editingProduct.maker" type="text"></div>
+          <div class="field"><label>Product metadata</label><textarea v-model="editingProduct.meta" rows="3" /></div>
+          <div class="field"><label>Filters</label><textarea v-model="editingProduct.filters" rows="3" /></div>
+          <div class="field"><label>Bag types</label><textarea v-model="editingProduct.bagTypes" rows="3" /></div>
+          <div class="field"><label>Shoe types</label><textarea v-model="editingProduct.shoeTypes" rows="3" /></div>
+          <div class="field"><label>Video URLs</label><textarea v-model="editingProduct.videos" rows="3" /></div>
+          <div class="field"><label>Video poster URLs</label><textarea v-model="editingProduct.videoPosters" rows="3" /></div>
+          <div class="field"><label>Image wrapper class</label><input v-model="editingProduct.imageWrapper" type="text"></div>
+          <div class="field"><label>Option placeholders (JSON)</label><textarea v-model="editingProduct.optionPlaceholders" rows="4" /></div>
+        </details>
 
         <div class="field">
           <label>

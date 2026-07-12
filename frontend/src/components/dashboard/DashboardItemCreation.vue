@@ -14,6 +14,8 @@ const loading = ref(false)
 const error = ref('')
 const fieldErrors = reactive({
   subCollectionId: '',
+  meta: '', maker: '', bagTypes: '', filters: '', shoeTypes: '', videos: '', videoPosters: '',
+  imageWrapper: '', optionPlaceholders: '{}',
 })
 const photoFiles = ref([])
 const showCreateCollection = ref(false)
@@ -168,6 +170,8 @@ const resetForm = () => {
   form.quantity = 1
   form.customProperties = []
   form.subCollectionId = ''
+  form.meta = ''; form.maker = ''; form.bagTypes = ''; form.filters = ''; form.shoeTypes = ''
+  form.videos = ''; form.videoPosters = ''; form.imageWrapper = ''; form.optionPlaceholders = '{}'
   clearPhotos()
   fieldErrors.subCollectionId = ''
   error.value = ''
@@ -199,6 +203,12 @@ const buildProductFormData = () => {
   formData.append('quantity', String(form.quantity))
   formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
+  ;['meta', 'bagTypes', 'filters', 'shoeTypes', 'videos', 'videoPosters'].forEach((field) => {
+    formData.append(field, JSON.stringify(form[field].split(/[\n,]+/).map((value) => value.trim()).filter(Boolean)))
+  })
+  formData.append('maker', form.maker.trim())
+  formData.append('imageWrapper', form.imageWrapper.trim())
+  formData.append('optionPlaceholders', form.optionPlaceholders.trim() || '{}')
 
   photoFiles.value.forEach(({ file }) => {
     formData.append('photos', file)
@@ -495,6 +505,22 @@ watch(
           <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
           Out Of Stock
         </label>
+      </section>
+
+      <section class="card">
+        <div class="section-header"><h2>Advanced Storefront Details</h2></div>
+        <p class="hint">Use one value per line for list fields. These values are shown and filtered by the live storefront.</p>
+        <div class="form-grid">
+          <div class="field"><label>Maker</label><input v-model="form.maker" type="text"></div>
+          <div class="field"><label>Product metadata</label><textarea v-model="form.meta" rows="3" placeholder="One line per detail" /></div>
+          <div class="field"><label>Filters</label><textarea v-model="form.filters" rows="3" /></div>
+          <div class="field"><label>Bag types</label><textarea v-model="form.bagTypes" rows="3" /></div>
+          <div class="field"><label>Shoe types</label><textarea v-model="form.shoeTypes" rows="3" /></div>
+          <div class="field"><label>Video URLs</label><textarea v-model="form.videos" rows="3" /></div>
+          <div class="field"><label>Video poster URLs</label><textarea v-model="form.videoPosters" rows="3" /></div>
+          <div class="field"><label>Image wrapper class</label><input v-model="form.imageWrapper" type="text"></div>
+          <div class="field field--full"><label>Option placeholders (JSON)</label><textarea v-model="form.optionPlaceholders" rows="3" placeholder='{"Color":"Select color"}' /></div>
+        </div>
       </section>
 
       <div class="actions">
