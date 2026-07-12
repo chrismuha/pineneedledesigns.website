@@ -180,6 +180,14 @@
         </div>
 
         <div class="field">
+          <label for="edit-item-style">Style</label>
+          <select id="edit-item-style" name="style">
+            <option value="Bling" selected>Bling</option>
+            <option value="No Bling">No Bling</option>
+          </select>
+        </div>
+
+        <div class="field">
           <label>Important Notes</label>
           <textarea rows="3">
 Ships within 2 business days.

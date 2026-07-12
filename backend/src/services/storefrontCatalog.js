@@ -4,7 +4,7 @@ import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 
-const mapProductToStorefront = (product) => {
+const mapProductToStorefront = (product, categoryFilters = []) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
@@ -35,7 +35,7 @@ const mapProductToStorefront = (product) => {
     ...customOptions,
   ];
 
-  const filters = (product.filters || []).filter(Boolean);
+  const filters = [...new Set([...(product.filters || []), ...categoryFilters].filter(Boolean))];
 
   return {
     id: product.legacyId ?? product._id,
@@ -62,7 +62,17 @@ const mapProductToStorefront = (product) => {
 
 const buildCollectionPage = (collection, subcollections, products) => {
   const filters = subcollections.map((subcollection) => subcollection.name);
-  const storefrontProducts = products.map((product) => mapProductToStorefront(product));
+  const subcollectionNames = new Map(
+    subcollections.map((subcollection) => [String(subcollection._id), subcollection.name]),
+  );
+  const storefrontProducts = products.map((product) => {
+    const subcollectionName = subcollectionNames.get(String(product.subCollectionId));
+    const categoryFilters = subcollectionName === 'Boa'
+      ? ['Boa', 'T-Shirts']
+      : [subcollectionName].filter(Boolean);
+
+    return mapProductToStorefront(product, categoryFilters);
+  });
 
   const count = storefrontProducts.length;
   let cardImage = collection.cardImage || '';

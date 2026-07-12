@@ -38,6 +38,15 @@
             <label>Size</label>
             <input type="text" placeholder="S, M, L, XL">
           </div>
+
+          <div class="field">
+            <label for="item-style">Style *</label>
+            <select id="item-style" name="style" required>
+              <option value="" disabled selected>Select style</option>
+              <option value="Bling">Bling</option>
+              <option value="No Bling">No Bling</option>
+            </select>
+          </div>
         </div>
 
         <div class="field">
