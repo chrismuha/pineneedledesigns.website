@@ -128,6 +128,10 @@ const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
 
 onMounted(() => {
+  // Keep the home page at the true top; collection pages intentionally jump
+  // to their product headers through the router's collection-only metadata.
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
   const visibleImages = otherCollections.map((collection) => collection.cardImage)
   preloadImages(visibleImages.slice(0, 4))
   preloadImagesOnIdle(visibleImages.slice(4), 3)

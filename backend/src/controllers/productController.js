@@ -108,6 +108,9 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   if (requireAll && !collectionId) errors.push('Collection is required.');
   if (body?.price !== undefined && Number(body.price) < 0) errors.push('Price must be zero or greater.');
   if (body?.shippingCost !== undefined && Number(body.shippingCost) < 0) errors.push('Shipping cost must be zero or greater.');
+  if (body?.noBlingPrice !== undefined && body.noBlingPrice !== '' && Number(body.noBlingPrice) < 0) {
+    errors.push('Price without bling must be zero or greater.');
+  }
   if (body?.quantity !== undefined && (!Number.isInteger(Number(body.quantity)) || Number(body.quantity) < 0)) {
     errors.push('Quantity must be a whole number of zero or greater.');
   }
@@ -123,6 +126,10 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
+      noBlingPrice: body?.noBlingPrice !== undefined && body.noBlingPrice !== ''
+        ? Number(body.noBlingPrice)
+        : null,
+      noBlingDescription: String(body?.noBlingDescription || '').trim(),
       shippingCost: body?.shippingCost !== undefined ? Number(body.shippingCost) : undefined,
       freeShipping: Boolean(body?.freeShipping),
       outOfStock: Boolean(body?.outOfStock),
@@ -238,6 +245,8 @@ export const createProduct = async (req, res) => {
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
+    noBlingPrice: data.noBlingPrice,
+    noBlingDescription: data.noBlingDescription,
     shippingCost: data.shippingCost ?? 0,
     freeShipping: data.freeShipping,
     outOfStock: data.quantity === 0 || data.outOfStock,
@@ -287,6 +296,8 @@ export const updateProduct = async (req, res) => {
   }
   if (uploadedVideos.length) product.videos = [...(product.videos || []), ...uploadedVideos];
   if (req.body?.price !== undefined) product.price = data.price;
+  if (req.body?.noBlingPrice !== undefined) product.noBlingPrice = data.noBlingPrice;
+  if (req.body?.noBlingDescription !== undefined) product.noBlingDescription = data.noBlingDescription;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;
   if (req.body?.quantity !== undefined) product.quantity = data.quantity;
