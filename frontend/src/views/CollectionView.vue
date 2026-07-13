@@ -315,9 +315,9 @@ const cleanNonBlingTitle = (title) =>
     .trim()
 
 const displayTitle = (product) => {
-  if (!hasBlingStyleOption(product)) return cleanNonBlingTitle(product.title)
-  if (selectedStyle(product) === blingStyle) return product.title
-  return cleanNonBlingTitle(product.title)
+  if (!hasBlingStyleOption(product)) return product.title
+  if (isNoBlingSelected(product)) return cleanNonBlingTitle(product.title)
+  return product.title
 }
 
 const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
@@ -328,7 +328,9 @@ const productPrice = (product) => {
 }
 
 const displayDescription = (product) => {
-  if (isNoBlingSelected(product)) return product.noBlingDescription || product.description
+  if (isNoBlingSelected(product)) {
+    return product.noBlingDescription || `${cleanNonBlingTitle(product.title)} without added bling.`
+  }
   return product.description
 }
 

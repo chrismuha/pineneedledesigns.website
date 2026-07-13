@@ -21,6 +21,17 @@ const sortBeltSizes = (left, right) => {
   return Number(left) - Number(right);
 };
 
+const cleanNonBlingTitle = (title) => String(title || '')
+  .replace(/\bblinged\s+out\b\s*/gi, '')
+  .replace(/\bblinged\b\s*/gi, '')
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+
+const noBlingDescriptionFor = (product) => (
+  product.noBlingDescription?.trim()
+  || `${cleanNonBlingTitle(product.name)} without added bling.`
+);
+
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
@@ -67,7 +78,9 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     noBlingPrice: allowBlingOptions ? product.noBlingPrice ?? undefined : undefined,
     meta: product.meta || [],
     description: product.description,
-    noBlingDescription: allowBlingOptions ? product.noBlingDescription || undefined : undefined,
+    noBlingDescription: allowBlingOptions && product.noBlingPrice != null
+      ? noBlingDescriptionFor(product)
+      : undefined,
     options: options.length ? options : undefined,
     images: product.photos || [],
     videos: product.videos?.length ? product.videos : undefined,

@@ -73,6 +73,42 @@ const renameNaturalWhiteColors = async () => {
   }
 };
 
+const backfillNoBlingDescriptions = async () => {
+  const shirts = await Collection.findOne({
+    isSystem: false,
+    $or: [
+      { name: /^shirts$/i },
+      { slug: 'shirts' },
+    ],
+  }).lean();
+
+  if (!shirts) return;
+
+  const products = await Product.find({
+    collectionId: shirts._id,
+    noBlingPrice: { $ne: null },
+    $or: [
+      { noBlingDescription: { $exists: false } },
+      { noBlingDescription: null },
+      { noBlingDescription: /^\s*$/ },
+    ],
+  }).select('name');
+
+  for (const product of products) {
+    const cleanTitle = String(product.name || '')
+      .replace(/\bblinged\s+out\b\s*/gi, '')
+      .replace(/\bblinged\b\s*/gi, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+    product.noBlingDescription = `${cleanTitle} without added bling.`;
+    await product.save();
+  }
+
+  if (products.length) {
+    console.log(`ℹ️ Added missing No Bling descriptions for ${products.length} shirts.`);
+  }
+};
+
 const inferSubcollectionName = (productName, subcollectionNames) => {
   const name = String(productName || '').toLowerCase();
   const sorted = [...subcollectionNames].sort((left, right) => right.length - left.length);
@@ -307,6 +343,7 @@ export const connectDatabase = async () => {
   await repairLegacyProductIndex();
   await backfillProductQuantities();
   await renameNaturalWhiteColors();
+  await backfillNoBlingDescriptions();
   await ensureMyraBeltsSubcollection();
   await backfillProductSubcollectionIds();
 };
