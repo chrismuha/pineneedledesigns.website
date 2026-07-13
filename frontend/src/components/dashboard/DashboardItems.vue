@@ -72,7 +72,9 @@ const editSnapshot = (product) => JSON.stringify({
   shippingCost: String(product?.shippingCost ?? ''),
   outOfStock: Boolean(product?.outOfStock),
   quantity: String(product?.quantity ?? ''),
-  videos: (product?.videos || []).join('\n'),
+  videos: Array.isArray(product?.videos)
+    ? product.videos.join('\n')
+    : String(product?.videos || ''),
 })
 
 const editIsDirty = computed(() => Boolean(
