@@ -7,7 +7,7 @@ import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
-import CalmColorOptionEditor from './CalmColorOptionEditor.vue'
+import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
@@ -54,7 +54,7 @@ const editSnapshot = (product) => JSON.stringify({
   shoeSizes: (product?.shoeSizes || []).map((value) => String(value)),
   beltSizes: (product?.beltSizes || []).map((value) => String(value)),
   sizePrices: Object.fromEntries(Object.entries(product?.sizePrices || {}).sort(([left], [right]) => left.localeCompare(right))),
-  calmColors: (product?.calmColors || []).map((value) => String(value)),
+  comfortColors: (product?.comfortColors || []).map((value) => String(value)),
   customProperties: (product?.customProperties || []).map((property) => ({
     name: String(property.name || ''),
     required: Boolean(property.required),
@@ -417,9 +417,9 @@ const openEditModal = async (product) => {
       ? String(product.beltSize).split(',').map((size) => size.trim()).filter(Boolean)
       : [''],
     sizePrices: { ...(product.sizePrices || {}) },
-    calmColors: [...(product.calmColors || [])],
+    comfortColors: [...(product.comfortColors || [])],
     customProperties: customProperties.filter(
-      (property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()),
+      (property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()),
     ),
     videos: (product.videos || []).join('\n'),
   }
@@ -614,9 +614,9 @@ const saveProduct = async () => {
   }
 
   if (editingProduct.value.customProperties.some((property) => (
-    ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(property.name || '').trim().toLowerCase())
+    ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Calm Colors are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -637,7 +637,7 @@ const saveProduct = async () => {
         required: Boolean(property.required),
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
-      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(property.name.toLowerCase()))
+      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
@@ -651,7 +651,7 @@ const saveProduct = async () => {
       if (value !== '' && value != null) prices[row.key] = Number(value)
       return prices
     }, {})))
-    formData.append('calmColors', JSON.stringify(editingProduct.value.calmColors || []))
+    formData.append('comfortColors', JSON.stringify(editingProduct.value.comfortColors || []))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
     formData.append('hasBlingOptions', String(editingProduct.value.hasBlingOptions && collectionAllowsBling(editingProduct.value.collectionId)))
@@ -797,7 +797,7 @@ const sortedProperties = (properties = []) => [...properties].sort((left, right)
 const sortedOptions = (options = []) => [...options].sort((left, right) => (
   left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 ))
-const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
 const customPropertiesForDisplay = (properties = []) => sortedProperties(properties).filter(
   (property) => !isReservedPropertyName(property.name),
 )
@@ -1177,9 +1177,9 @@ watch(
         </div>
 
         <div class="field">
-          <label>Calm Colors</label>
-          <CalmColorOptionEditor v-model="editingProduct.calmColors" :disabled="saving" />
-          <p class="hint">Choose presets or add custom choices for the Calm Colors dropdown.</p>
+          <label>Comfort Colors</label>
+          <ComfortColorOptionEditor v-model="editingProduct.comfortColors" :disabled="saving" />
+          <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown.</p>
         </div>
 
         <div class="field">

@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
     of: Number,
     default: undefined,
   },
-  calmColors: { type: [String], default: [] },
+  comfortColors: { type: [String], default: [] },
   description: {
     type: String,
     required: true,

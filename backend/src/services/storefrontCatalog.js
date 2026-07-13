@@ -71,7 +71,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -94,7 +94,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
-    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors.map(normalizeColorName), placeholder: 'Select a calm color' }] : []),
+    ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
@@ -280,10 +280,29 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
       return [];
     }
 
-    filter.$or = [
-      { subCollectionId: subcollection._id },
-      { filters: subcollection.name },
-    ];
+    const normalizedSubcollectionName = subcollection.name.trim().toLowerCase();
+
+    if (normalizedSubcollectionName === 'boa') {
+      // Legacy product filters are not authoritative. Some regular T-shirts still
+      // carry a stale "Boa" filter, so BOA must use the assigned sub-collection.
+      filter.subCollectionId = subcollection._id;
+    } else if (normalizedSubcollectionName === 't-shirts') {
+      // BOA is a type of T-shirt, so the broader T-Shirts view includes both
+      // explicitly assigned T-shirts and explicitly assigned BOA products.
+      const boaSubcollection = await Subcollection.findOne({
+        collectionId: collection._id,
+        name: /^boa$/i,
+      }).lean();
+
+      filter.subCollectionId = {
+        $in: [subcollection._id, boaSubcollection?._id].filter(Boolean),
+      };
+    } else {
+      filter.$or = [
+        { subCollectionId: subcollection._id },
+        { filters: subcollection.name },
+      ];
+    }
   }
 
   const products = await Product.find(filter)

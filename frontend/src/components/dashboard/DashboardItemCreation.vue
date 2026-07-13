@@ -7,7 +7,7 @@ import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
-import CalmColorOptionEditor from './CalmColorOptionEditor.vue'
+import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
 const router = useRouter()
@@ -41,7 +41,7 @@ const form = reactive({
   shoeSizes: [''],
   beltSizes: [''],
   sizePrices: {},
-  calmColors: [],
+  comfortColors: [],
   description: '',
   price: '',
   hasBlingOptions: false,
@@ -74,7 +74,7 @@ const sortedCollections = computed(() => [...collections.value].sort((left, righ
 const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
   left.name.localeCompare(right.name, undefined, { numeric: true })
 )))
-const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
 const hasReservedCustomProperty = computed(() => form.customProperties.some(
   (property) => isReservedPropertyName(property.name),
 ))
@@ -189,7 +189,7 @@ const resetForm = () => {
   form.shoeSizes = ['']
   form.beltSizes = ['']
   form.sizePrices = {}
-  form.calmColors = []
+  form.comfortColors = []
   form.description = ''
   form.price = ''
   form.hasBlingOptions = false
@@ -218,7 +218,7 @@ const buildProductFormData = () => {
       required: property.required,
       options: property.options.map((option) => option.trim()).filter(Boolean),
     }))
-    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
@@ -231,7 +231,7 @@ const buildProductFormData = () => {
     if (value !== '' && value != null) prices[row.key] = Number(value)
     return prices
   }, {})))
-  formData.append('calmColors', JSON.stringify(form.calmColors))
+  formData.append('comfortColors', JSON.stringify(form.comfortColors))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
   formData.append('hasBlingOptions', String(form.hasBlingOptions && collectionAllowsBling.value))
@@ -277,7 +277,7 @@ const submitForm = async () => {
   fieldErrors.subCollectionId = ''
 
   if (hasReservedCustomProperty.value) {
-    error.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Calm Colors are built-in properties and cannot be added as custom properties.'
+    error.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -406,9 +406,9 @@ watch(
           </div>
 
           <div class="field field--full">
-            <label>Calm Colors</label>
-            <CalmColorOptionEditor v-model="form.calmColors" :disabled="loading" />
-            <p class="hint">Choose presets or add custom choices for the Calm Colors dropdown on the item page.</p>
+            <label>Comfort Colors</label>
+            <ComfortColorOptionEditor v-model="form.comfortColors" :disabled="loading" />
+            <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown on the item page.</p>
           </div>
 
           <div class="field">

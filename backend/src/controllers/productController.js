@@ -7,8 +7,8 @@ import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
-const CALM_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
-const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'];
+const COMFORT_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
+const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'];
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
@@ -126,7 +126,7 @@ const normalizeColors = (value) => [...new Set(String(value || '')
   .filter(Boolean))]
   .join(', ');
 
-const normalizeCalmColors = (value) => {
+const normalizeComfortColors = (value) => {
   let values = value;
   if (typeof values === 'string') {
     try {
@@ -140,8 +140,8 @@ const normalizeCalmColors = (value) => {
     .map(normalizeColorName)
     .filter((color) => color && color.length <= 80))];
   const selected = new Set(normalized.map((color) => color.toLowerCase()));
-  const presets = CALM_COLORS.filter((color) => selected.has(color.toLowerCase()));
-  const presetNames = new Set(CALM_COLORS.map((color) => color.toLowerCase()));
+  const presets = COMFORT_COLORS.filter((color) => selected.has(color.toLowerCase()));
+  const presetNames = new Set(COMFORT_COLORS.map((color) => color.toLowerCase()));
   const custom = normalized
     .filter((color) => !presetNames.has(color.toLowerCase()))
     .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }));
@@ -214,7 +214,7 @@ const parseRequestBody = (body) => ({
   bagTypes: body?.bagTypes !== undefined ? normalizeStringList(body.bagTypes) : undefined,
   filters: body?.filters !== undefined ? normalizeStringList(body.filters) : undefined,
   shoeTypes: body?.shoeTypes !== undefined ? normalizeStringList(body.shoeTypes) : undefined,
-  calmColors: body?.calmColors !== undefined ? normalizeCalmColors(body.calmColors) : undefined,
+  comfortColors: body?.comfortColors !== undefined ? normalizeComfortColors(body.comfortColors) : undefined,
   sizePrices: body?.sizePrices !== undefined ? normalizeSizePrices(body.sizePrices) : undefined,
   optionPlaceholders: body?.optionPlaceholders !== undefined ? normalizePlaceholders(body.optionPlaceholders) : undefined,
   subCollectionId: body?.subCollectionId !== undefined
@@ -256,7 +256,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       shoeSize: normalizeShoeSizes(body?.shoeSize),
       beltSize: normalizeBeltSizes(body?.beltSize),
       sizePrices: normalizeSizePrices(body?.sizePrices),
-      calmColors: normalizeCalmColors(body?.calmColors),
+      comfortColors: normalizeComfortColors(body?.comfortColors),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -297,7 +297,7 @@ const formatProductForDashboard = (product) => ({
   shoeSize: normalizeShoeSizes(product.shoeSize),
   beltSize: normalizeBeltSizes(product.beltSize),
   sizePrices: normalizeSizePrices(product.sizePrices),
-  calmColors: normalizeCalmColors(product.calmColors),
+  comfortColors: normalizeComfortColors(product.comfortColors),
   customProperties: normalizeCustomProperties(product.customProperties),
 });
 
@@ -405,7 +405,7 @@ export const createProduct = async (req, res) => {
     shoeSize: data.shoeSize,
     beltSize: data.beltSize,
     sizePrices: data.sizePrices,
-    calmColors: data.calmColors,
+    comfortColors: data.comfortColors,
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
@@ -457,7 +457,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
   if (req.body?.beltSize !== undefined) product.beltSize = data.beltSize;
   if (req.body?.sizePrices !== undefined) product.sizePrices = data.sizePrices;
-  if (req.body?.calmColors !== undefined) product.calmColors = data.calmColors;
+  if (req.body?.comfortColors !== undefined) product.comfortColors = data.comfortColors;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;
   }

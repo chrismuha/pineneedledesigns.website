@@ -45,7 +45,7 @@ const renameNaturalWhiteColors = async () => {
   const products = await Product.find({
     $or: [
       { color: /white\s*\(natural\)/i },
-      { calmColors: legacyLabel },
+      { comfortColors: legacyLabel },
       { 'customProperties.options': legacyLabel },
     ],
   });
@@ -56,7 +56,7 @@ const renameNaturalWhiteColors = async () => {
       .map((color) => legacyLabel.test(color.trim()) ? 'Natural White' : color.trim())
       .filter(Boolean))]
       .join(', ');
-    product.calmColors = [...new Set((product.calmColors || []).map(
+    product.comfortColors = [...new Set((product.comfortColors || []).map(
       (color) => legacyLabel.test(String(color).trim()) ? 'Natural White' : color,
     ))];
     product.customProperties = (product.customProperties || []).map((property) => ({
