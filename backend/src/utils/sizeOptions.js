@@ -6,7 +6,14 @@ const aliases = new Map([
 
 const rank = (value) => standardSizeOrder.indexOf(aliases.get(String(value).trim().toLowerCase()));
 
-export const sortSizeOptions = (sizes = []) => [...sizes].sort((left, right) => {
+const uniqueOptions = (options = []) => [...new Map(options
+  .map((option) => String(option || '').trim())
+  .filter(Boolean)
+  .map((option) => [option.toLowerCase(), option])).values()];
+
+export const sortSizeOptions = (sizes = []) => uniqueOptions(sizes.map((size) => (
+  aliases.get(String(size).trim().toLowerCase()) || String(size).trim()
+))).sort((left, right) => {
   const leftRank = rank(left);
   const rightRank = rank(right);
   if (leftRank >= 0 && rightRank >= 0) return leftRank - rightRank;

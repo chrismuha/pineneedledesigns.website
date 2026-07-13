@@ -8,7 +8,7 @@ import SizeOptionEditor from './SizeOptionEditor.vue'
 import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
-import { sortSizeOptions } from '../../utils/sizeOptions.js'
+import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -61,9 +61,9 @@ const collectionAllowsBling = computed(() => collections.value.find(
   (collection) => String(collection._id) === String(form.collectionId),
 )?.slug === 'shirts')
 const sizePriceRows = computed(() => [
-  ...form.sizes.filter(Boolean).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
-  ...form.shoeSizes.filter(Boolean).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
-  ...form.beltSizes.filter(Boolean).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
+  ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
+  ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ])
 const sortedCollections = computed(() => [...collections.value].sort((left, right) => (
   (left.isSystem ? 'Uncategorized' : left.name).localeCompare(

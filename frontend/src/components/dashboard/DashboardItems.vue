@@ -9,7 +9,7 @@ import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
-import { sortSizeOptions } from '../../utils/sizeOptions.js'
+import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,9 +80,9 @@ const editIsDirty = computed(() => Boolean(
 ))
 
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...(editingProduct.value.sizes || []).filter(Boolean).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
-  ...(editingProduct.value.shoeSizes || []).filter(Boolean).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
-  ...(editingProduct.value.beltSizes || []).filter(Boolean).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
+  ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ] : [])
 
 const {
@@ -139,7 +139,7 @@ const loadItems = async () => {
       const requestedProduct = groupedCollections.value
         .flatMap((collection) => collection.products || [])
         .find((product) => String(product._id) === requestedItemId)
-      if (requestedProduct) void openEditModal(requestedProduct)
+      if (requestedProduct) await openEditModal(requestedProduct)
     }
     void prefetchCollectionSubcollections()
   } catch (err) {
@@ -820,8 +820,8 @@ const sizePriceLabel = (key) => {
 onMounted(loadItems)
 watch(
   () => route.fullPath,
-  (path) => {
-    if (path === '/dashboard/items') {
+  () => {
+    if (route.path === '/dashboard/items') {
       loadItems()
     }
   },
@@ -1344,9 +1344,9 @@ watch(
         </div>
 
         <div v-if="collectionAllowsBling(editingProduct.collectionId)" class="field">
-          <label>
+          <label class="checkbox-row">
             <input v-model="editingProduct.hasBlingOptions" type="checkbox">
-            Offer Bling and No Bling choices
+            <span>Offer Bling and No Bling choices</span>
           </label>
           <p class="hint">Enter a Bling or No Bling price to use style-specific pricing instead of displaying the General Price.</p>
         </div>
@@ -1392,9 +1392,9 @@ watch(
         </div>
 
         <div class="field">
-          <label>
+          <label class="checkbox-row">
             <input v-model="editingProduct.outOfStock" type="checkbox" :disabled="Number(editingProduct.quantity) === 0">
-            Out Of Stock
+            <span>Out Of Stock</span>
           </label>
         </div>
 

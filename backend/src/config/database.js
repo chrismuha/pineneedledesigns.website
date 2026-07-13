@@ -4,6 +4,38 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { slugify } from '../utils/slug.js';
+import { sortSizeOptions } from '../utils/sizeOptions.js';
+
+const removeDuplicateProductSizes = async () => {
+  const products = await Product.find({
+    $or: [
+      { size: /,/ },
+      { shoeSize: /,/ },
+      { beltSize: /,/ },
+    ],
+  });
+  let updated = 0;
+
+  const uniqueList = (value) => [...new Map(String(value || '')
+    .split(',')
+    .map((option) => option.trim())
+    .filter(Boolean)
+    .map((option) => [option.toLowerCase(), option])).values()];
+
+  for (const product of products) {
+    const size = sortSizeOptions(String(product.size || '').split(',')).join(', ');
+    const shoeSize = uniqueList(product.shoeSize).join(', ');
+    const beltSize = uniqueList(product.beltSize).join(', ');
+    if (size === product.size && shoeSize === product.shoeSize && beltSize === product.beltSize) continue;
+    product.size = size;
+    product.shoeSize = shoeSize;
+    product.beltSize = beltSize;
+    await product.save();
+    updated += 1;
+  }
+
+  if (updated) console.log(`ℹ️ Removed duplicate size options from ${updated} product(s).`);
+};
 
 const ensureMyraBeltsSubcollection = async () => {
   const myra = await Collection.findOne({
@@ -342,6 +374,7 @@ export const connectDatabase = async () => {
   await migrateLegacySubcollectionFields();
   await repairLegacyProductIndex();
   await backfillProductQuantities();
+  await removeDuplicateProductSizes();
   await renameNaturalWhiteColors();
   await backfillNoBlingDescriptions();
   await ensureMyraBeltsSubcollection();
