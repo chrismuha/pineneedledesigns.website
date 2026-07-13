@@ -1,7 +1,74 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
+const dragTarget = ref('')
+const navDrag = ref(null)
+const suppressSyntheticClick = ref(false)
+
+const tabAtPoint = (x, y) =>
+  document.elementFromPoint(x, y)?.closest?.('[data-nav-path]')?.dataset.navPath || ''
+
+const startNavDrag = (event) => {
+  if (event.pointerType === 'mouse' && event.button !== 0) return
+
+  event.currentTarget.setPointerCapture?.(event.pointerId)
+  navDrag.value = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    moved: false,
+  }
+  dragTarget.value = ''
+}
+
+const moveNavDrag = (event) => {
+  const drag = navDrag.value
+  if (!drag || drag.pointerId !== event.pointerId) return
+
+  if (!drag.moved) {
+    drag.moved = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 8
+  }
+  if (!drag.moved) return
+
+  const target = tabAtPoint(event.clientX, event.clientY)
+  if (target) dragTarget.value = target
+}
+
+const finishNavDrag = (event) => {
+  const drag = navDrag.value
+  if (!drag || drag.pointerId !== event.pointerId) return
+
+  const target = drag.moved
+    ? tabAtPoint(event.clientX, event.clientY) || dragTarget.value
+    : ''
+
+  navDrag.value = null
+  dragTarget.value = ''
+
+  if (!target) return
+
+  suppressSyntheticClick.value = true
+  window.setTimeout(() => {
+    suppressSyntheticClick.value = false
+  }, 0)
+  void router.push(target)
+}
+
+const cancelNavDrag = () => {
+  navDrag.value = null
+  dragTarget.value = ''
+}
+
+const handleNavClick = (event) => {
+  if (!suppressSyntheticClick.value) return
+
+  event.preventDefault()
+  event.stopPropagation()
+  suppressSyntheticClick.value = false
+}
 
 const menuItems = [
   {
@@ -72,13 +139,22 @@ const isActive = (path) => {
     </div>
 
     <!-- Mobile bottom nav for widths below 850px -->
-    <nav class="bottom-nav">
+    <nav
+      class="bottom-nav"
+      @pointerdown="startNavDrag"
+      @pointermove="moveNavDrag"
+      @pointerup="finishNavDrag"
+      @pointercancel="cancelNavDrag"
+      @click.capture="handleNavClick"
+    >
       <RouterLink
         v-for="item in menuItems"
         :key="item.to"
         :to="item.to"
+        :data-nav-path="item.to"
         class="bottom-tab"
-        :class="{ active: isActive(item.to) }"
+        :class="{ active: dragTarget ? dragTarget === item.to : isActive(item.to), 'drag-preview': dragTarget === item.to }"
+        @dragstart.prevent
       >
         <i :class="['bi', item.icon, 'menu-icon']" aria-hidden="true"></i>
         <span class="label">{{ item.label }}</span>
@@ -239,7 +315,7 @@ const isActive = (path) => {
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     justify-content: space-between;
     align-items: center;
-    touch-action: manipulation;
+    touch-action: pan-y;
   }
 
   .bottom-tab {
@@ -256,6 +332,8 @@ const isActive = (path) => {
     text-decoration: none;
     color: inherit;
     font-size: 0.7rem;
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
   .menu-icon {
@@ -276,6 +354,11 @@ const isActive = (path) => {
 
   .bottom-tab.active {
     background: #d0d0d0;
+  }
+
+  .bottom-tab.drag-preview {
+    transform: scale(.96);
+    transition: transform 90ms ease-out, background 90ms ease-out;
   }
 
   .logout-tab * {
