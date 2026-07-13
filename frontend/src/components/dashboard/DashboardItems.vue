@@ -1177,6 +1177,12 @@ watch(
         </div>
 
         <div class="field">
+          <label>Calm Colors</label>
+          <CalmColorOptionEditor v-model="editingProduct.calmColors" :disabled="saving" />
+          <p class="hint">Optional. Selected choices appear together in one Calm Colors dropdown.</p>
+        </div>
+
+        <div class="field">
           <label>Shirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
           <p class="hint">These appear together in one Shirt Size dropdown.</p>
@@ -1185,13 +1191,13 @@ watch(
         <div class="field">
           <label>Shoe Sizes</label>
           <ShoeSizeOptionEditor v-model="editingProduct.shoeSizes" :disabled="saving" />
-          <p class="hint">Select whole shoe sizes from 6 through 12.</p>
+          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
         </div>
 
         <div class="field">
           <label>Belt Sizes</label>
           <BeltSizeOptionEditor v-model="editingProduct.beltSizes" :disabled="saving" />
-          <p class="hint">Select Small through 3XL, or even-numbered sizes from 28 through 52 inches.</p>
+          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
         </div>
 
         <div v-if="editSizePriceRows.length" class="field">
@@ -1203,12 +1209,6 @@ watch(
               <input v-model="editingProduct.sizePrices[row.key]" type="number" min="0" step="0.01" placeholder="Uses General Price">
             </label>
           </div>
-        </div>
-
-        <div class="field">
-          <label>Calm Colors</label>
-          <CalmColorOptionEditor v-model="editingProduct.calmColors" :disabled="saving" />
-          <p class="hint">Optional. Selected choices appear together in one Calm Colors dropdown.</p>
         </div>
 
         <div class="field edit-section">

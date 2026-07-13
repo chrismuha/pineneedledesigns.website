@@ -18,7 +18,21 @@ const sortBeltSizes = (left, right) => {
     if (rightNamed === -1) return -1;
     return leftNamed - rightNamed;
   }
-  return Number(left) - Number(right);
+  const leftNumber = /^\d+$/.test(left);
+  const rightNumber = /^\d+$/.test(right);
+  if (leftNumber && rightNumber) return Number(left) - Number(right);
+  if (leftNumber) return -1;
+  if (rightNumber) return 1;
+  return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' });
+};
+
+const sortShoeSizes = (left, right) => {
+  const leftPreset = /^(?:[6-9]|1[0-2])$/.test(left);
+  const rightPreset = /^(?:[6-9]|1[0-2])$/.test(right);
+  if (leftPreset && rightPreset) return Number(left) - Number(right);
+  if (leftPreset) return -1;
+  if (rightPreset) return 1;
+  return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' });
 };
 
 const cleanNonBlingTitle = (title) => String(title || '')
@@ -68,7 +82,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const colorOptions = colors.length ? colors : propertyValues('Color');
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
-    .sort((left, right) => Number(left) - Number(right));
+    .sort(sortShoeSizes);
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortBeltSizes);
   const hasBlingOptions = allowBlingOptions && (
@@ -80,10 +94,10 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
+    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors.map(normalizeColorName), placeholder: 'Select a calm color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
-    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors.map(normalizeColorName), placeholder: 'Select a calm color' }] : []),
     ...customOptions,
   ];
 

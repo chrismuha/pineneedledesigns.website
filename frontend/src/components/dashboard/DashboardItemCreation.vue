@@ -405,6 +405,12 @@ watch(
             <p class="hint">Each color becomes an option in one Color dropdown on the item page.</p>
           </div>
 
+          <div class="field field--full">
+            <label>Calm Colors</label>
+            <CalmColorOptionEditor v-model="form.calmColors" :disabled="loading" />
+            <p class="hint">Optional. Selected choices appear in one Calm Colors dropdown on the item page.</p>
+          </div>
+
           <div class="field">
             <label>Shirt Sizes</label>
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
@@ -414,13 +420,13 @@ watch(
           <div class="field">
             <label>Shoe Sizes</label>
             <ShoeSizeOptionEditor v-model="form.shoeSizes" :disabled="loading" />
-            <p class="hint">Select whole shoe sizes from 6 through 12.</p>
+            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
           </div>
 
           <div class="field">
             <label>Belt Sizes</label>
             <BeltSizeOptionEditor v-model="form.beltSizes" :disabled="loading" />
-            <p class="hint">Select Small through 3XL, or even-numbered sizes from 28 through 52 inches.</p>
+            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
           </div>
 
           <div v-if="sizePriceRows.length" class="field field--full">
@@ -434,11 +440,6 @@ watch(
             </div>
           </div>
 
-          <div class="field field--full">
-            <label>Calm Colors</label>
-            <CalmColorOptionEditor v-model="form.calmColors" :disabled="loading" />
-            <p class="hint">Optional. Selected choices appear in one Calm Colors dropdown on the item page.</p>
-          </div>
         </div>
 
         <div class="field">

@@ -83,14 +83,21 @@ const parseBooleanField = (value) => {
 const normalizeShoeSizes = (value) => [...new Set(String(value || '')
   .split(',')
   .map((size) => size.trim())
-  .filter((size) => /^(?:[6-9]|1[0-2])$/.test(size)))]
-  .sort((left, right) => Number(left) - Number(right))
+  .filter((size) => size && size.length <= 80))]
+  .sort((left, right) => {
+    const leftPreset = /^(?:[6-9]|1[0-2])$/.test(left);
+    const rightPreset = /^(?:[6-9]|1[0-2])$/.test(right);
+    if (leftPreset && rightPreset) return Number(left) - Number(right);
+    if (leftPreset) return -1;
+    if (rightPreset) return 1;
+    return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' });
+  })
   .join(', ');
 
 const normalizeBeltSizes = (value) => [...new Set(String(value || '')
   .split(',')
   .map((size) => size.trim())
-  .filter((size) => /^(?:small|medium|large|[23]xl|28|3[02468]|4[02468]|5[02])$/i.test(size)))]
+  .filter((size) => size && size.length <= 80))]
   .sort((left, right) => {
     const namedOrder = ['small', 'medium', 'large', '2xl', '3xl'];
     const leftNamed = namedOrder.indexOf(left.toLowerCase());
@@ -100,7 +107,12 @@ const normalizeBeltSizes = (value) => [...new Set(String(value || '')
       if (rightNamed === -1) return -1;
       return leftNamed - rightNamed;
     }
-    return Number(left) - Number(right);
+    const leftNumber = /^\d+$/.test(left);
+    const rightNumber = /^\d+$/.test(right);
+    if (leftNumber && rightNumber) return Number(left) - Number(right);
+    if (leftNumber) return -1;
+    if (rightNumber) return 1;
+    return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' });
   })
   .join(', ');
 
