@@ -111,6 +111,11 @@ const productSchema = new mongoose.Schema({
     default: '',
     trim: true,
   },
+  generalDescription: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   maker: {
     type: String,
     default: '',

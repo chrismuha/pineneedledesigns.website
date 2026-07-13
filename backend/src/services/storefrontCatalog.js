@@ -111,11 +111,15 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     sizePrices: sizePricesFor(product),
     blingPrice: hasBlingOptions ? product.blingPrice ?? product.price : undefined,
     noBlingPrice: hasBlingOptions ? product.noBlingPrice ?? product.price : undefined,
+    hasBlingOptions,
     hasStyleSpecificPricing: hasBlingOptions && hasStyleSpecificPricing,
     meta: storefrontMeta(product.meta),
     description: product.description,
     noBlingDescription: hasBlingOptions
       ? noBlingDescriptionFor(product)
+      : undefined,
+    generalDescription: hasBlingOptions
+      ? product.generalDescription?.trim() || product.description
       : undefined,
     options: options.length ? options : undefined,
     images: product.photos || [],

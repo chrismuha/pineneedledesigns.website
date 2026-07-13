@@ -62,6 +62,7 @@ const editSnapshot = (product) => JSON.stringify({
   })),
   photos: (product?.photos || []).map((value) => String(value)),
   description: String(product?.description || ''),
+  generalDescription: String(product?.generalDescription || ''),
   price: String(product?.price ?? ''),
   hasBlingOptions: Boolean(product?.hasBlingOptions),
   blingPrice: String(product?.blingPrice ?? ''),
@@ -408,6 +409,7 @@ const openEditModal = async (product) => {
     subCollectionId: getSubCollectionId(product),
     hasBlingOptions: Boolean(product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null),
     blingPrice: product.blingPrice ?? '',
+    generalDescription: product.generalDescription || product.description || '',
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
     shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
@@ -653,11 +655,10 @@ const saveProduct = async () => {
     }, {})))
     formData.append('comfortColors', JSON.stringify(editingProduct.value.comfortColors || []))
     formData.append('description', editingProduct.value.description)
-    const fallbackPrice = hasStyleSpecificPrice(editingProduct.value)
-      ? (editingProduct.value.blingPrice !== '' && editingProduct.value.blingPrice != null
-        ? editingProduct.value.blingPrice
-        : editingProduct.value.noBlingPrice)
-      : editingProduct.value.price
+    formData.append('generalDescription', editingProduct.value.hasBlingOptions
+      ? String(editingProduct.value.generalDescription || editingProduct.value.description || '').trim()
+      : '')
+    const fallbackPrice = editingProduct.value.price
     formData.append('price', String(Number(fallbackPrice)))
     formData.append('hasBlingOptions', String(editingProduct.value.hasBlingOptions && collectionAllowsBling(editingProduct.value.collectionId)))
     formData.append('blingPrice', editingProduct.value.hasBlingOptions ? String(editingProduct.value.blingPrice ?? '') : '')
@@ -976,6 +977,10 @@ watch(
           <p v-if="collectionAllowsBling(collection._id) && product.blingPrice != null"><strong>Price with Bling:</strong> ${{ Number(product.blingPrice).toFixed(2) }}</p>
           <p v-if="collectionAllowsBling(collection._id) && product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
+          <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
+            <strong>General Description:</strong><br>
+            {{ product.generalDescription || product.description }}
+          </p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
@@ -1320,6 +1325,12 @@ watch(
               <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditVideo(index)">Remove</button>
             </div>
           </div>
+        </div>
+
+        <div v-if="collectionAllowsBling(editingProduct.collectionId) && editingProduct.hasBlingOptions" class="field">
+          <label>General Description</label>
+          <textarea v-model="editingProduct.generalDescription" rows="5" placeholder="Description shown before a style is selected." />
+          <p class="hint">Defaults to the full Bling description and can be edited independently.</p>
         </div>
 
         <div class="field">

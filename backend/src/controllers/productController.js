@@ -268,6 +268,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
         ? Number(body.noBlingPrice)
         : null,
       noBlingDescription: String(body?.noBlingDescription || '').trim(),
+      generalDescription: String(body?.generalDescription || '').trim(),
       shippingCost: body?.shippingCost !== undefined ? Number(body.shippingCost) : undefined,
       freeShipping: Boolean(body?.freeShipping),
       outOfStock: Boolean(body?.outOfStock),
@@ -292,6 +293,11 @@ const productPopulatePaths = [
 
 const formatProductForDashboard = (product) => ({
   ...product,
+  generalDescription: product.generalDescription || (
+    product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null
+      ? product.description
+      : ''
+  ),
   color: normalizeColors(product.color),
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
@@ -413,6 +419,7 @@ export const createProduct = async (req, res) => {
     blingPrice: data.blingPrice,
     noBlingPrice: data.noBlingPrice,
     noBlingDescription: data.noBlingDescription,
+    generalDescription: data.generalDescription || (data.hasBlingOptions ? data.description : ''),
     shippingCost: data.shippingCost ?? 0,
     freeShipping: data.freeShipping,
     outOfStock: data.quantity === 0 || data.outOfStock,
@@ -487,6 +494,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.blingPrice !== undefined) product.blingPrice = data.blingPrice;
   if (req.body?.noBlingPrice !== undefined) product.noBlingPrice = data.noBlingPrice;
   if (req.body?.noBlingDescription !== undefined) product.noBlingDescription = data.noBlingDescription;
+  if (req.body?.generalDescription !== undefined) product.generalDescription = data.generalDescription;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;
   if (req.body?.quantity !== undefined) product.quantity = data.quantity;

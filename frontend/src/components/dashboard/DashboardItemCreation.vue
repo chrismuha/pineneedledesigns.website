@@ -43,6 +43,7 @@ const form = reactive({
   sizePrices: {},
   comfortColors: [],
   description: '',
+  generalDescription: '',
   price: '',
   hasBlingOptions: false,
   blingPrice: '',
@@ -196,6 +197,7 @@ const resetForm = () => {
   form.sizePrices = {}
   form.comfortColors = []
   form.description = ''
+  form.generalDescription = ''
   form.price = ''
   form.hasBlingOptions = false
   form.blingPrice = ''
@@ -238,6 +240,9 @@ const buildProductFormData = () => {
   }, {})))
   formData.append('comfortColors', JSON.stringify(form.comfortColors))
   formData.append('description', form.description.trim())
+  formData.append('generalDescription', form.hasBlingOptions
+    ? (form.generalDescription.trim() || form.description.trim())
+    : '')
   const fallbackPrice = hasStyleSpecificPrice.value
     ? (form.blingPrice !== '' && form.blingPrice != null ? form.blingPrice : form.noBlingPrice)
     : form.price
@@ -276,6 +281,7 @@ const handleCollectionChange = async () => {
     form.blingPrice = ''
     form.noBlingPrice = ''
     form.noBlingDescription = ''
+    form.generalDescription = ''
   }
   fieldErrors.subCollectionId = ''
   await loadSubcollections(form.collectionId)
@@ -448,6 +454,12 @@ watch(
             </div>
           </div>
 
+        </div>
+
+        <div v-if="form.hasBlingOptions" class="field">
+          <label>General Description</label>
+          <textarea v-model="form.generalDescription" rows="5" :placeholder="form.description || 'Description shown before a style is selected.'" />
+          <p class="hint">Defaults to the full Bling description when left blank.</p>
         </div>
 
         <div class="field">

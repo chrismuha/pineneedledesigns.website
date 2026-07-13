@@ -350,6 +350,9 @@ const displayDescription = (product) => {
   if (isNoBlingSelected(product)) {
     return product.noBlingDescription || `${cleanNonBlingTitle(product.title)} without added bling.`
   }
+  if (product.hasBlingOptions && !selectedStyle(product)) {
+    return product.generalDescription || product.description
+  }
   return product.description
 }
 
