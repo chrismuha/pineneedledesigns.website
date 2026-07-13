@@ -141,6 +141,7 @@ const isActive = (path) => {
     <!-- Mobile bottom nav for widths below 850px -->
     <nav
       class="bottom-nav"
+      aria-label="Dashboard navigation"
       @pointerdown="startNavDrag"
       @pointermove="moveNavDrag"
       @pointerup="finishNavDrag"
@@ -267,7 +268,7 @@ const isActive = (path) => {
 
 @media (max-width: 850px) {
   .dashboard-shell {
-    --mobile-nav-height: calc(80px + env(safe-area-inset-bottom));
+    --mobile-nav-height: calc(96px + env(safe-area-inset-bottom));
     position: fixed;
     inset: 0;
     overflow: hidden;
@@ -304,18 +305,41 @@ const isActive = (path) => {
   .bottom-nav {
     display: flex;
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    min-height: 64px;
-    background: #fff;
-    border-top: 1px solid #e6e6e6;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    min-height: 68px;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, .82), rgba(238, 249, 241, .6)),
+      rgba(255, 255, 255, .55);
+    border: 1px solid rgba(255, 255, 255, .82);
+    border-radius: 999px;
+    box-shadow:
+      0 18px 44px rgba(21, 61, 35, .2),
+      0 4px 12px rgba(21, 61, 35, .1),
+      inset 0 1px 0 rgba(255, 255, 255, .95),
+      inset 0 -1px 0 rgba(46, 164, 79, .08);
+    backdrop-filter: blur(24px) saturate(175%);
+    -webkit-backdrop-filter: blur(24px) saturate(175%);
     z-index: 1000;
-    gap: 4px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    gap: 6px;
+    padding: 7px;
     justify-content: space-between;
     align-items: center;
     touch-action: pan-y;
+  }
+
+  .bottom-nav::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 1px 12% auto;
+    height: 48%;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, 0));
+    pointer-events: none;
   }
 
   .bottom-tab {
@@ -324,16 +348,24 @@ const isActive = (path) => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 0px;
-    margin: 0 4px;
-    border-radius: 8px;
-    background: transparent;
-    border: none;
+    min-width: 0;
+    min-height: 54px;
+    padding: 7px 4px 6px;
+    margin: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .46);
+    border: 1px solid rgba(255, 255, 255, .7);
     text-decoration: none;
-    color: inherit;
-    font-size: 0.7rem;
+    color: #25442e;
+    box-shadow:
+      0 2px 8px rgba(20, 61, 33, .07),
+      inset 0 1px 0 rgba(255, 255, 255, .9);
+    font-size: .68rem;
+    font-weight: 650;
+    letter-spacing: .015em;
     user-select: none;
     -webkit-user-drag: none;
+    transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   }
 
   .menu-icon {
@@ -349,16 +381,53 @@ const isActive = (path) => {
 
   /* icon spacing for bottom tabs (column) */
   .bottom-tab .menu-icon {
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   .bottom-tab.active {
-    background: #d0d0d0;
+    background: linear-gradient(145deg, rgba(52, 178, 88, .94), rgba(31, 126, 59, .96));
+    border-color: rgba(255, 255, 255, .58);
+    color: #fff;
+    box-shadow:
+      0 8px 18px rgba(31, 126, 59, .28),
+      inset 0 1px 0 rgba(255, 255, 255, .42),
+      inset 0 -1px 0 rgba(9, 75, 31, .26);
+    transform: translateY(-1px);
+  }
+
+  .bottom-tab.active .menu-icon {
+    color: #fff;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .16));
+  }
+
+  .bottom-tab:hover:not(.active),
+  .bottom-tab:focus-visible:not(.active) {
+    background: rgba(255, 255, 255, .78);
+    color: #176c31;
+  }
+
+  .bottom-tab:focus-visible {
+    outline: 2px solid rgba(46, 164, 79, .65);
+    outline-offset: 2px;
   }
 
   .bottom-tab.drag-preview {
     transform: scale(.96);
     transition: transform 90ms ease-out, background 90ms ease-out;
+  }
+
+  @media (max-width: 430px) {
+    .bottom-nav {
+      left: 8px;
+      right: 8px;
+      gap: 4px;
+      padding: 6px;
+    }
+
+    .bottom-tab {
+      min-height: 52px;
+      font-size: .64rem;
+    }
   }
 
   .logout-tab * {
