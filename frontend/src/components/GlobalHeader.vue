@@ -58,9 +58,9 @@
       <a
         v-for="link in navLinks"
         :key="link.path"
-        :href="router.resolve(link.path).href"
+        :href="link.path"
         :class="{ active: isNavLinkActive(link) }"
-        @click.stop.prevent="navigateFromMenu(link.path)"
+        @click="closeMenu"
       >{{ link.label }}</a>
     </nav>
 
@@ -69,13 +69,12 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
 
 const menuOpen = ref(false)
 const route = useRoute()
-const router = useRouter()
 const cartStore = useCartStore()
 const catalogStore = useCatalogStore()
 
@@ -99,14 +98,6 @@ const closeMenu = () => {
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
-}
-
-const navigateFromMenu = (path) => {
-  closeMenu()
-
-  if (route.path !== path) {
-    router.push(path)
-  }
 }
 
 const isNavLinkActive = (link) => {
