@@ -53,6 +53,7 @@ const editSnapshot = (product) => JSON.stringify({
   sizes: (product?.sizes || []).map((value) => String(value)),
   shoeSizes: (product?.shoeSizes || []).map((value) => String(value)),
   beltSizes: (product?.beltSizes || []).map((value) => String(value)),
+  sizePrices: Object.fromEntries(Object.entries(product?.sizePrices || {}).sort(([left], [right]) => left.localeCompare(right))),
   calmColors: (product?.calmColors || []).map((value) => String(value)),
   customProperties: (product?.customProperties || []).map((property) => ({
     name: String(property.name || ''),
@@ -77,6 +78,12 @@ const editIsDirty = computed(() => Boolean(
   editingProduct.value
   && (editPhotoFiles.value.length > 0 || editVideoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
 ))
+
+const editSizePriceRows = computed(() => editingProduct.value ? [
+  ...(editingProduct.value.sizes || []).filter(Boolean).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...(editingProduct.value.shoeSizes || []).filter(Boolean).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
+  ...(editingProduct.value.beltSizes || []).filter(Boolean).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
+] : [])
 
 const {
   subcollections: managerSubcollections,
@@ -410,6 +417,7 @@ const openEditModal = async (product) => {
     beltSizes: String(product.beltSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
       ? String(product.beltSize).split(',').map((size) => size.trim()).filter(Boolean)
       : [''],
+    sizePrices: { ...(product.sizePrices || {}) },
     calmColors: [...(product.calmColors || [])],
     customProperties: customProperties.filter(
       (property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()),
@@ -639,6 +647,11 @@ const saveProduct = async () => {
     formData.append('size', sizes.join(', '))
     formData.append('shoeSize', editingProduct.value.shoeSizes.filter(Boolean).join(', '))
     formData.append('beltSize', editingProduct.value.beltSizes.filter(Boolean).join(', '))
+    formData.append('sizePrices', JSON.stringify(editSizePriceRows.value.reduce((prices, row) => {
+      const value = editingProduct.value.sizePrices[row.key]
+      if (value !== '' && value != null) prices[row.key] = Number(value)
+      return prices
+    }, {})))
     formData.append('calmColors', JSON.stringify(editingProduct.value.calmColors || []))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
@@ -790,6 +803,14 @@ const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe s
 const customPropertiesForDisplay = (properties = []) => sortedProperties(properties).filter(
   (property) => !isReservedPropertyName(property.name),
 )
+const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
+  .filter(([, price]) => Number.isFinite(Number(price)))
+  .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
+const sizePriceLabel = (key) => {
+  const [type, size] = String(key).split(':')
+  const labels = { shirt: 'Shirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  return `${labels[type] || 'Size'} ${size}`
+}
 
 onMounted(loadItems)
 watch(
@@ -957,6 +978,9 @@ watch(
           <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
+          <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
+            <strong>{{ sizePriceLabel(key) }} Price:</strong> ${{ Number(price).toFixed(2) }}
+          </p>
           <p>
             <strong>{{ collectionAllowsBling(collection._id) && (product.hasBlingOptions || product.noBlingPrice != null) ? 'Description with Bling:' : 'Description:' }}</strong><br>
             {{ product.description }}
@@ -1170,7 +1194,18 @@ watch(
         <div class="field">
           <label>Belt Sizes</label>
           <BeltSizeOptionEditor v-model="editingProduct.beltSizes" :disabled="saving" />
-          <p class="hint">Select Small, Medium, Large, or even-numbered sizes from 28 through 52 inches.</p>
+          <p class="hint">Select Small through 3XL, or even-numbered sizes from 28 through 52 inches.</p>
+        </div>
+
+        <div v-if="editSizePriceRows.length" class="field">
+          <label>Optional Size Prices</label>
+          <p class="hint">Leave a size price blank to use the General Price.</p>
+          <div class="form-grid">
+            <label v-for="row in editSizePriceRows" :key="row.key" class="field">
+              <span>{{ row.label }}</span>
+              <input v-model="editingProduct.sizePrices[row.key]" type="number" min="0" step="0.01" placeholder="Uses General Price">
+            </label>
+          </div>
         </div>
 
         <div class="field">

@@ -130,6 +130,7 @@ export const seedCatalog = async () => {
             color: optionValues(product.options, 'Color').join(', '),
             size: sortSizeOptions(optionValues(product.options, 'Size')).join(', '),
             beltSize: optionValues(product.options, 'Belt Size').join(', '),
+            sizePrices: {},
             collectionId: collection._id,
             subCollectionId,
             photos: Array.isArray(product.images) ? product.images : [],

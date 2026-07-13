@@ -26,6 +26,11 @@ const productSchema = new mongoose.Schema({
   size: { type: String, default: '', trim: true },
   shoeSize: { type: String, default: '', trim: true },
   beltSize: { type: String, default: '', trim: true },
+  sizePrices: {
+    type: Map,
+    of: Number,
+    default: undefined,
+  },
   calmColors: { type: [String], default: [] },
   description: {
     type: String,

@@ -40,6 +40,7 @@ const form = reactive({
   sizes: [''],
   shoeSizes: [''],
   beltSizes: [''],
+  sizePrices: {},
   calmColors: [],
   description: '',
   price: '',
@@ -59,6 +60,11 @@ const requiresSubcollection = computed(() => subcollections.value.length > 0)
 const collectionAllowsBling = computed(() => collections.value.find(
   (collection) => String(collection._id) === String(form.collectionId),
 )?.slug === 'shirts')
+const sizePriceRows = computed(() => [
+  ...form.sizes.filter(Boolean).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...form.shoeSizes.filter(Boolean).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
+  ...form.beltSizes.filter(Boolean).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
+])
 const sortedCollections = computed(() => [...collections.value].sort((left, right) => (
   (left.isSystem ? 'Uncategorized' : left.name).localeCompare(
     right.isSystem ? 'Uncategorized' : right.name,
@@ -183,6 +189,7 @@ const resetForm = () => {
   form.sizes = ['']
   form.shoeSizes = ['']
   form.beltSizes = ['']
+  form.sizePrices = {}
   form.calmColors = []
   form.description = ''
   form.price = ''
@@ -221,6 +228,11 @@ const buildProductFormData = () => {
   formData.append('size', sizes.join(', '))
   formData.append('shoeSize', form.shoeSizes.filter(Boolean).join(', '))
   formData.append('beltSize', form.beltSizes.filter(Boolean).join(', '))
+  formData.append('sizePrices', JSON.stringify(sizePriceRows.value.reduce((prices, row) => {
+    const value = form.sizePrices[row.key]
+    if (value !== '' && value != null) prices[row.key] = Number(value)
+    return prices
+  }, {})))
   formData.append('calmColors', JSON.stringify(form.calmColors))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
@@ -411,7 +423,18 @@ watch(
           <div class="field">
             <label>Belt Sizes</label>
             <BeltSizeOptionEditor v-model="form.beltSizes" :disabled="loading" />
-            <p class="hint">Select Small, Medium, Large, or even-numbered sizes from 28 through 52 inches.</p>
+            <p class="hint">Select Small through 3XL, or even-numbered sizes from 28 through 52 inches.</p>
+          </div>
+
+          <div v-if="sizePriceRows.length" class="field field--full">
+            <label>Optional Size Prices</label>
+            <p class="hint">Leave a size price blank to use the General Price.</p>
+            <div class="form-grid">
+              <label v-for="row in sizePriceRows" :key="row.key" class="field">
+                <span>{{ row.label }}</span>
+                <input v-model="form.sizePrices[row.key]" type="number" min="0" step="0.01" placeholder="Uses General Price">
+              </label>
+            </div>
           </div>
 
           <div class="field field--full">

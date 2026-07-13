@@ -322,7 +322,25 @@ const displayTitle = (product) => {
 
 const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
 
+const selectedSizePrice = (product) => {
+  const sizeOptions = [
+    ['Shirt Size', 'shirt'],
+    ['Shoe Size', 'shoe'],
+    ['Belt Size', 'belt'],
+  ]
+
+  for (const [optionName, prefix] of sizeOptions) {
+    const selectedSize = selectedOptions.value[optionKey(product, { name: optionName })]
+    const price = product.sizePrices?.[`${prefix}:${selectedSize}`]
+    if (selectedSize && Number.isFinite(price)) return price
+  }
+
+  return null
+}
+
 const productPrice = (product) => {
+  const sizePrice = selectedSizePrice(product)
+  if (Number.isFinite(sizePrice)) return sizePrice
   if (isNoBlingSelected(product) && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice
   if (selectedStyle(product) === blingStyle && Number.isFinite(product.blingPrice)) return product.blingPrice
   return product.price

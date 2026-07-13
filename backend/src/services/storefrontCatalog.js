@@ -9,7 +9,7 @@ const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
 );
 
-const beltSizeOrder = ['small', 'medium', 'large'];
+const beltSizeOrder = ['small', 'medium', 'large', '2xl', '3xl'];
 const sortBeltSizes = (left, right) => {
   const leftNamed = beltSizeOrder.indexOf(left.toLowerCase());
   const rightNamed = beltSizeOrder.indexOf(right.toLowerCase());
@@ -31,6 +31,17 @@ const noBlingDescriptionFor = (product) => (
   product.noBlingDescription?.trim()
   || `${cleanNonBlingTitle(product.name)} without added bling.`
 );
+
+const sizePricesFor = (product) => {
+  const prices = product.sizePrices instanceof Map
+    ? Object.fromEntries(product.sizePrices)
+    : (product.sizePrices || {});
+  return Object.entries(prices).reduce((normalized, [key, price]) => {
+    const amount = Number(price);
+    if (Number.isFinite(amount)) normalized[key] = amount;
+    return normalized;
+  }, {});
+};
 
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
@@ -78,6 +89,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     id: product.legacyId ?? product._id,
     title: product.name,
     price: product.price,
+    sizePrices: sizePricesFor(product),
     blingPrice: hasBlingOptions ? product.blingPrice ?? product.price : undefined,
     noBlingPrice: hasBlingOptions ? product.noBlingPrice ?? product.price : undefined,
     meta: product.meta || [],

@@ -90,9 +90,9 @@ const normalizeShoeSizes = (value) => [...new Set(String(value || '')
 const normalizeBeltSizes = (value) => [...new Set(String(value || '')
   .split(',')
   .map((size) => size.trim())
-  .filter((size) => /^(?:small|medium|large|28|3[02468]|4[02468]|5[02])$/i.test(size)))]
+  .filter((size) => /^(?:small|medium|large|[23]xl|28|3[02468]|4[02468]|5[02])$/i.test(size)))]
   .sort((left, right) => {
-    const namedOrder = ['small', 'medium', 'large'];
+    const namedOrder = ['small', 'medium', 'large', '2xl', '3xl'];
     const leftNamed = namedOrder.indexOf(left.toLowerCase());
     const rightNamed = namedOrder.indexOf(right.toLowerCase());
     if (leftNamed !== -1 || rightNamed !== -1) {
@@ -160,6 +160,27 @@ const normalizePlaceholders = (value) => {
   }
 };
 
+const normalizeSizePrices = (value) => {
+  let prices = value;
+  if (typeof prices === 'string') {
+    try {
+      prices = JSON.parse(prices);
+    } catch {
+      return {};
+    }
+  }
+  if (prices instanceof Map) prices = Object.fromEntries(prices);
+  if (!prices || typeof prices !== 'object' || Array.isArray(prices)) return {};
+
+  return Object.entries(prices).reduce((normalized, [key, price]) => {
+    const amount = Number(price);
+    if (/^(?:shirt|shoe|belt):.+$/.test(key) && Number.isFinite(amount) && amount >= 0) {
+      normalized[key] = amount;
+    }
+    return normalized;
+  }, {});
+};
+
 const parseRequestBody = (body) => ({
   ...body,
   freeShipping: parseBooleanField(body?.freeShipping),
@@ -174,6 +195,7 @@ const parseRequestBody = (body) => ({
   filters: body?.filters !== undefined ? normalizeStringList(body.filters) : undefined,
   shoeTypes: body?.shoeTypes !== undefined ? normalizeStringList(body.shoeTypes) : undefined,
   calmColors: body?.calmColors !== undefined ? normalizeCalmColors(body.calmColors) : undefined,
+  sizePrices: body?.sizePrices !== undefined ? normalizeSizePrices(body.sizePrices) : undefined,
   optionPlaceholders: body?.optionPlaceholders !== undefined ? normalizePlaceholders(body.optionPlaceholders) : undefined,
   subCollectionId: body?.subCollectionId !== undefined
     ? normalizeSubCollectionId(body.subCollectionId)
@@ -213,6 +235,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       shoeSize: normalizeShoeSizes(body?.shoeSize),
       beltSize: normalizeBeltSizes(body?.beltSize),
+      sizePrices: normalizeSizePrices(body?.sizePrices),
       calmColors: normalizeCalmColors(body?.calmColors),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
@@ -253,6 +276,7 @@ const formatProductForDashboard = (product) => ({
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
   beltSize: normalizeBeltSizes(product.beltSize),
+  sizePrices: normalizeSizePrices(product.sizePrices),
   calmColors: normalizeCalmColors(product.calmColors),
   customProperties: normalizeCustomProperties(product.customProperties),
 });
@@ -360,6 +384,7 @@ export const createProduct = async (req, res) => {
     size: data.size,
     shoeSize: data.shoeSize,
     beltSize: data.beltSize,
+    sizePrices: data.sizePrices,
     calmColors: data.calmColors,
     customProperties: data.customProperties,
     photos: data.photos,
@@ -411,6 +436,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.size !== undefined) product.size = data.size;
   if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
   if (req.body?.beltSize !== undefined) product.beltSize = data.beltSize;
+  if (req.body?.sizePrices !== undefined) product.sizePrices = data.sizePrices;
   if (req.body?.calmColors !== undefined) product.calmColors = data.calmColors;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;

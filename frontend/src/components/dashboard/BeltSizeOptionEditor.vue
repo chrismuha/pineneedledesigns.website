@@ -3,6 +3,8 @@ const beltSizes = [
   'Small',
   'Medium',
   'Large',
+  '2XL',
+  '3XL',
   ...Array.from({ length: 13 }, (_, index) => String(28 + (index * 2))),
 ]
 
