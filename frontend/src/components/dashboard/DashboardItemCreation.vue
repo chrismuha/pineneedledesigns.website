@@ -49,7 +49,6 @@ const form = reactive({
   noBlingPrice: '',
   noBlingDescription: '',
   shippingCost: '',
-  freeShipping: false,
   outOfStock: false,
   quantity: 1,
   customProperties: [],
@@ -198,7 +197,6 @@ const resetForm = () => {
   form.noBlingPrice = ''
   form.noBlingDescription = ''
   form.shippingCost = ''
-  form.freeShipping = false
   form.outOfStock = false
   form.quantity = 1
   form.customProperties = []
@@ -241,7 +239,6 @@ const buildProductFormData = () => {
   formData.append('noBlingPrice', form.hasBlingOptions ? String(form.noBlingPrice) : '')
   formData.append('noBlingDescription', form.hasBlingOptions ? form.noBlingDescription.trim() : '')
   formData.append('shippingCost', String(form.shippingCost || 0))
-  formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
   formData.append('quantity', String(form.quantity))
   formData.append('customProperties', JSON.stringify(customProperties))
@@ -573,10 +570,6 @@ watch(
           </div>
         </div>
 
-        <label class="checkbox-row">
-          <input v-model="form.freeShipping" type="checkbox">
-          Free Shipping
-        </label>
       </section>
 
       <section class="card">

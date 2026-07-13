@@ -43,6 +43,10 @@ const sizePricesFor = (product) => {
   }, {});
 };
 
+const storefrontMeta = (meta) => (Array.isArray(meta) ? meta : [meta].filter(Boolean))
+  .map((item) => String(item).replace(/\b(?:with\s+)?free shipping\b/gi, '').trim())
+  .filter(Boolean);
+
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
@@ -92,7 +96,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     sizePrices: sizePricesFor(product),
     blingPrice: hasBlingOptions ? product.blingPrice ?? product.price : undefined,
     noBlingPrice: hasBlingOptions ? product.noBlingPrice ?? product.price : undefined,
-    meta: product.meta || [],
+    meta: storefrontMeta(product.meta),
     description: product.description,
     noBlingDescription: hasBlingOptions
       ? noBlingDescriptionFor(product)
@@ -108,7 +112,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     maker: product.maker || undefined,
     sold: product.outOfStock || undefined,
     availableQuantity: Number.isInteger(product.quantity) ? product.quantity : 1,
-    freeShipping: product.freeShipping || undefined,
+    shippingCost: Number(product.shippingCost || 0),
   };
 };
 

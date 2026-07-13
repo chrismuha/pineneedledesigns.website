@@ -68,7 +68,6 @@ const editSnapshot = (product) => JSON.stringify({
   noBlingPrice: String(product?.noBlingPrice ?? ''),
   noBlingDescription: String(product?.noBlingDescription || ''),
   shippingCost: String(product?.shippingCost ?? ''),
-  freeShipping: Boolean(product?.freeShipping),
   outOfStock: Boolean(product?.outOfStock),
   quantity: String(product?.quantity ?? ''),
   videos: (product?.videos || []).join('\n'),
@@ -660,7 +659,6 @@ const saveProduct = async () => {
     formData.append('noBlingPrice', editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingPrice ?? '') : '')
     formData.append('noBlingDescription', editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingDescription || '').trim() : '')
     formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
-    formData.append('freeShipping', String(editingProduct.value.freeShipping))
     formData.append('outOfStock', String(editingProduct.value.outOfStock))
     formData.append('quantity', String(editingProduct.value.quantity ?? 1))
     formData.append('customProperties', JSON.stringify(customProperties))
@@ -941,7 +939,6 @@ watch(
             <span class="badge" :class="product.outOfStock ? 'red' : 'green'">
               {{ product.outOfStock ? 'Out Of Stock' : 'In Stock' }}
             </span>
-            <span v-if="product.freeShipping" class="badge blue">Free Shipping</span>
             <span v-if="productSubcollectionLabel(product)" class="badge purple">
               {{ productSubcollectionLabel(product) }}
             </span>
@@ -1363,12 +1360,6 @@ watch(
           <input v-model.number="editingProduct.shippingCost" type="number" min="0" step="0.01">
         </div>
 
-        <div class="field">
-          <label>
-            <input v-model="editingProduct.freeShipping" type="checkbox">
-            Free Shipping
-          </label>
-        </div>
 
         <div class="field">
           <label>Quantity Available</label>

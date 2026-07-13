@@ -302,7 +302,8 @@ watch(
             <div class="totals">
               <div><span>Subtotal</span><span>{{ formatMoney(order.summary?.subtotal) }}</span></div>
               <div><span>Discount</span><span>-{{ formatMoney(order.summary?.discount) }}</span></div>
-              <div><span>Total without tax</span><span>{{ formatMoney(totalWithoutTax(order)) }}</span></div>
+              <div><span>Discounted merchandise</span><span>{{ formatMoney(totalWithoutTax(order)) }}</span></div>
+              <div><span>Shipping</span><span>{{ formatMoney(order.summary?.shipping) }}</span></div>
               <div><span>Tax</span><span>{{ formatMoney(order.summary?.tax) }}</span></div>
               <div class="final-total">
                 <span>Final Total</span>

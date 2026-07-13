@@ -5,17 +5,19 @@ const normalizeSummary = (summary = {}) => {
   const subtotal = Number(summary.subtotal || 0);
   const discount = Number(summary.discount || 0);
   const tax = Number(summary.tax || 0);
+  const shipping = Number(summary.shipping || 0);
   const discountedTotal = summary.discountedTotal !== undefined
     ? Number(summary.discountedTotal)
     : Math.max(0, subtotal - discount);
   const finalTotal = summary.finalTotal !== undefined
     ? Number(summary.finalTotal)
-    : discountedTotal + tax;
+    : discountedTotal + shipping + tax;
 
   return {
     subtotal,
     discount,
     discountedTotal,
+    shipping,
     tax,
     finalTotal,
   };

@@ -90,6 +90,11 @@ const menuItems = [
     to: '/dashboard/orders',
     icon: 'bi-receipt',
   },
+  {
+    label: 'Settings',
+    to: '/dashboard/settings',
+    icon: 'bi-gear',
+  },
 ]
 
 const isActive = (path) => {

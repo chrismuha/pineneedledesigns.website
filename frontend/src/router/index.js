@@ -12,6 +12,7 @@ import DashboardView from '../views/DashboardView.vue'
 import DashboardHome from '../components/dashboard/DashboardHome.vue'
 import DashboardItems from '../components/dashboard/DashboardItems.vue'
 import DashboardOrders from '../components/dashboard/DashboardOrders.vue'
+import DashboardSettings from '../components/dashboard/DashboardSettings.vue'
 
 import { sitePages } from '../data/siteData'
 import DashboardItemCreation from '../components/dashboard/DashboardItemCreation.vue'
@@ -67,6 +68,11 @@ const routes = [
         path: 'orders',
         name: 'DashboardOrders',
         component: DashboardOrders,
+      },
+      {
+        path: 'settings',
+        name: 'DashboardSettings',
+        component: DashboardSettings,
       },
       {
         path: 'create',

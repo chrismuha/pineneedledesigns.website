@@ -69,7 +69,9 @@
           <p>Total Price: ${{ cartStore.totalPrice.toFixed(2) }}</p>
           <p v-if="cartStore.discountAmount > 0">Discount: -${{ cartStore.discountAmount.toFixed(2) }}</p>
           <p v-if="cartStore.discountAmount > 0" class="discount-amount-summary">You saved ${{ cartStore.discountAmount.toFixed(2) }}</p>
-          <p class="cart-final-total">Total before taxes: ${{ cartStore.discountedTotal.toFixed(2) }}</p>
+          <p v-if="shippingMessage" class="discount-description">{{ shippingMessage }}</p>
+          <p>Shipping: {{ shippingAmount === 0 ? 'Free' : `$${shippingAmount.toFixed(2)}` }}</p>
+          <p class="cart-final-total">Total before taxes: ${{ (cartStore.discountedTotal + shippingAmount).toFixed(2) }}</p>
           <p class="cart-tax-note">Taxes will be calculated at checkout.</p>
           <button @click="clearCart" class="btn">Clear Cart</button>
           <button v-if="!showCheckoutForm" @click="checkout" class="btn btn-primary">Checkout</button>
@@ -266,6 +268,10 @@
               <span>Discount</span>
               <span class="summary-discount">- ${{ cartStore.discountAmount.toFixed(2) }}</span>
             </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>{{ shippingAmount === 0 ? 'Free' : `+ $${shippingAmount.toFixed(2)}` }}</span>
+            </div>
             <div v-if="cartStore.discountAmount > 0" class="summary-row">
               <span>Total without tax</span>
               <span>${{ cartStore.discountedTotal.toFixed(2) }}</span>
@@ -346,6 +352,18 @@ const shippingZip = ref('')
 const shippingStateOpen = ref(false)
 const shippingCountyOpen = ref(false)
 const checkoutError = ref('')
+const shippingSettings = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 })
+
+const loadShippingSettings = async () => {
+  try {
+    const response = await fetch('/api/settings', { credentials: 'include' })
+    if (response.ok) shippingSettings.value = await response.json()
+  } catch (error) {
+    console.error('Failed to load shipping settings:', error)
+  }
+}
+
+onMounted(loadShippingSettings)
 
 // Prevent background scrolling when modal is open
 watch(showCheckoutForm, (open) => {
@@ -527,9 +545,25 @@ const itemizedLineItems = computed(() => {
   })
 })
 
-const finalTotalWithTax = computed(() => {
-  return Math.max(0, cartStore.discountedTotal + totalTax.value)
+const itemShippingTotal = computed(() => cartStore.items.reduce(
+  (sum, item) => sum + (Number(item.shippingCost || 0) * Number(item.quantity || 0)),
+  0,
+))
+const qualifiesForFreeShipping = computed(() => shippingSettings.value.freeShippingEnabled
+  && Number.isFinite(Number(shippingSettings.value.freeShippingMinimum))
+  && cartStore.discountedTotal >= Number(shippingSettings.value.freeShippingMinimum))
+const shippingAmount = computed(() => qualifiesForFreeShipping.value
+  ? 0
+  : itemShippingTotal.value || Number(shippingSettings.value.fallbackShippingCost ?? 5))
+const shippingMessage = computed(() => {
+  if (!shippingSettings.value.freeShippingEnabled || !cartStore.totalItems) return ''
+  if (qualifiesForFreeShipping.value) return 'You qualify for free shipping!'
+  const remaining = Math.max(0, Number(shippingSettings.value.freeShippingMinimum) - cartStore.discountedTotal)
+  return `Add $${remaining.toFixed(2)} more for free shipping.`
 })
+const finalTotalWithTax = computed(() => (
+  Math.max(0, cartStore.discountedTotal + shippingAmount.value + totalTax.value)
+))
 
 const itemImage = (item) => {
   return item.images?.[0] || item.image || item.placeholderImage || item.placeholderImages?.[0] || '/images/comingsoon/comingsoon015.webp'
@@ -824,6 +858,7 @@ const submitCheckout = async () => {
         subtotal: cartStore.totalPrice,
         discount: cartStore.discountAmount,
         discountedTotal: cartStore.discountedTotal,
+        shipping: shippingAmount.value,
         tax: totalTax.value,
         finalTotal: finalTotalWithTax.value,
       },

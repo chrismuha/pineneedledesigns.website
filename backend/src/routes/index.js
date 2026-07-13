@@ -8,10 +8,12 @@ import healthRouter from './health.js';
 import dashboardRouter from './dashboard.js';
 import ordersRouter from './orders.js';
 import storefrontRouter from './storefront.js';
+import settingsRouter from './settings.js';
 
 const router = Router();
 
 router.use('/storefront', storefrontRouter);
+router.use('/settings', settingsRouter);
 router.use('/collections', collectionsRouter);
 router.use('/products', productsRouter);
 router.use('/cart', cartRouter);

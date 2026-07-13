@@ -5,8 +5,10 @@ import { getEmailRecipients, getEmailSender, mailerConfigured, sendEmail } from 
 import { persistCapturedOrder } from '../services/orderPersistence.js';
 import { Product } from '../models/Product.js';
 import { isValidObjectId, Types } from 'mongoose';
+import { StoreSettings } from '../models/StoreSettings.js';
 
 const orderMap = new Map();
+const roundMoney = (value) => Number(Number(value || 0).toFixed(2));
 
 const findProductByStorefrontId = async (id) => {
   const value = String(id || '').trim();
@@ -14,6 +16,23 @@ const findProductByStorefrontId = async (id) => {
   if (isValidObjectId(value)) filters.push({ _id: Types.ObjectId.createFromHexString(value) });
   if (/^\d+$/.test(value)) filters.push({ legacyId: Number(value) });
   return filters.length ? Product.findOne({ $or: filters }) : null;
+};
+
+const productPriceForCartItem = (product, item) => {
+  const selected = item.selectedOptions || {};
+  const sizeKeys = [
+    ['Shirt Size', 'shirt'],
+    ['Shoe Size', 'shoe'],
+    ['Belt Size', 'belt'],
+  ];
+  for (const [optionName, prefix] of sizeKeys) {
+    const size = selected[optionName];
+    const sizePrice = size ? product.sizePrices?.get?.(`${prefix}:${size}`) : undefined;
+    if (Number.isFinite(sizePrice)) return sizePrice;
+  }
+  if (selected.Style === 'Bling' && Number.isFinite(product.blingPrice)) return product.blingPrice;
+  if (selected.Style === 'No Bling' && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice;
+  return product.price;
 };
 
 const validateCartInventory = async (cart) => {
@@ -24,6 +43,7 @@ const validateCartInventory = async (cart) => {
   }
 
   const inventoryLines = [];
+  const productsByStorefrontId = new Map();
   for (const [id, requestedQuantity] of requestedByProduct) {
     const product = await findProductByStorefrontId(id);
     if (!product) return { error: 'An item in your cart is no longer available.' };
@@ -33,10 +53,20 @@ const validateCartInventory = async (cart) => {
         error: `${product.name} has only ${availableQuantity} available. Please update your cart.`,
       };
     }
-    inventoryLines.push({ productId: product._id, quantity: requestedQuantity });
+    productsByStorefrontId.set(id, product);
+    inventoryLines.push({
+      productId: product._id,
+      quantity: requestedQuantity,
+      shippingCost: Number(product.shippingCost || 0),
+    });
   }
 
-  return { inventoryLines };
+  const pricedCart = cart.map((item) => {
+    const product = productsByStorefrontId.get(String(item.id || ''));
+    return { ...item, price: productPriceForCartItem(product, item) };
+  });
+
+  return { inventoryLines, pricedCart };
 };
 
 const deductCapturedInventory = async (inventoryLines = []) => {
@@ -103,11 +133,48 @@ export const createCheckout = async (req, res) => {
       return [item.description, selectedOptions].filter(Boolean).join(' | ');
     };
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const pricedCart = inventoryCheck.pricedCart;
+    const total = pricedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const discount = getDiscountAmount(total, code);
     const totalAfterDiscount = Math.max(0, total - discount);
+    const settings = await StoreSettings.findOneAndUpdate(
+      { key: 'store' },
+      { $setOnInsert: { freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 } },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    ).lean();
+    const qualifiesForFreeShipping = settings.freeShippingEnabled
+      && Number.isFinite(settings.freeShippingMinimum)
+      && totalAfterDiscount >= settings.freeShippingMinimum;
+    const itemShippingTotal = inventoryCheck.inventoryLines.reduce(
+      (sum, line) => sum + (line.shippingCost * line.quantity),
+      0,
+    );
+    const shipping = roundMoney(qualifiesForFreeShipping
+      ? 0
+      : itemShippingTotal || Number(settings.fallbackShippingCost ?? 5));
+    const tax = roundMoney(Math.max(0, Number(req.body?.summary?.tax || 0)));
+    const finalTotal = roundMoney(totalAfterDiscount + shipping + tax);
+    const submittedLines = Array.isArray(req.body?.lineItems) ? req.body.lineItems : [];
+    const lineItems = pricedCart.map((item, index) => {
+      const subtotal = roundMoney(item.price * item.quantity);
+      const discountAmount = total > 0 ? roundMoney((subtotal / total) * discount) : 0;
+      const discountedLine = Math.max(0, subtotal - discountAmount);
+      const taxAmount = totalAfterDiscount > 0
+        ? roundMoney((discountedLine / totalAfterDiscount) * tax)
+        : 0;
+      return {
+        ...submittedLines[index],
+        id: item.id,
+        title: item.title || item.name || 'Item',
+        quantity: item.quantity,
+        subtotal,
+        discountAmount,
+        taxAmount,
+        lineTotal: roundMoney(discountedLine + taxAmount),
+      };
+    });
 
-    const orderItems = cart.map((item) => ({
+    const orderItems = pricedCart.map((item) => ({
       name: item.title,
       quantity: item.quantity.toString(),
       unitAmount: {
@@ -117,18 +184,6 @@ export const createCheckout = async (req, res) => {
       description: itemDescription(item),
     }));
 
-    if (discount > 0) {
-      orderItems.push({
-        name: `Discount${code ? ` (${code.trim().toUpperCase()})` : ''}`,
-        quantity: '1',
-        unitAmount: {
-          currencyCode: 'USD',
-          value: (-discount).toFixed(2),
-        },
-        description: 'Applied discount code',
-      });
-    }
-
     const order = await ordersController.createOrder({
       prefer: 'return=representation',
       body: {
@@ -136,11 +191,23 @@ export const createCheckout = async (req, res) => {
         purchaseUnits: [{
           amount: {
             currencyCode: 'USD',
-            value: totalAfterDiscount.toFixed(2),
+            value: finalTotal.toFixed(2),
             breakdown: {
               itemTotal: {
                 currencyCode: 'USD',
-                value: totalAfterDiscount.toFixed(2),
+                value: total.toFixed(2),
+              },
+              discount: {
+                currencyCode: 'USD',
+                value: discount.toFixed(2),
+              },
+              shipping: {
+                currencyCode: 'USD',
+                value: shipping.toFixed(2),
+              },
+              taxTotal: {
+                currencyCode: 'USD',
+                value: tax.toFixed(2),
               },
             },
           },
@@ -166,8 +233,15 @@ export const createCheckout = async (req, res) => {
       billingAddress,
       shippingAddress,
       discountCode: code ? code.trim().toUpperCase() : '',
-      summary: req.body.summary,
-      lineItems: req.body.lineItems,
+      summary: {
+        subtotal: total,
+        discount,
+        discountedTotal: totalAfterDiscount,
+        shipping,
+        tax,
+        finalTotal,
+      },
+      lineItems,
       tax: req.body.tax,
       inventoryLines: inventoryCheck.inventoryLines,
     });
@@ -260,7 +334,7 @@ export const captureOrder = async (req, res) => {
           <table width="100%" cellpadding="0" cellspacing="0"><tbody>${lineItemsHtml}</tbody></table>
           <hr>
           <h3>💰 Summary</h3>
-          <p>Subtotal: <b>${money(summary.subtotal)}</b><br>Discount: <b>-${money(summary.discount)}</b><br>Tax: <b>${money(summary.tax)}</b><br><b style="font-size:16px;">Final Total: ${money(summary.finalTotal)}</b></p>
+          <p>Subtotal: <b>${money(summary.subtotal)}</b><br>Discount: <b>-${money(summary.discount)}</b><br>Shipping: <b>${money(summary.shipping)}</b><br>Tax: <b>${money(summary.tax)}</b><br><b style="font-size:16px;">Final Total: ${money(summary.finalTotal)}</b></p>
         </div>
       </div>
     `;
@@ -289,7 +363,7 @@ export const captureOrder = async (req, res) => {
           </table>
           <hr>
           <h3>Summary</h3>
-          <p>Subtotal: $${Number(summary.subtotal || 0).toFixed(2)}<br>Discount: -$${Number(summary.discount || 0).toFixed(2)}<br>Tax: $${Number(summary.tax || 0).toFixed(2)}<br><strong>Total Paid: $${Number(summary.finalTotal || 0).toFixed(2)}</strong></p>
+          <p>Subtotal: $${Number(summary.subtotal || 0).toFixed(2)}<br>Discount: -$${Number(summary.discount || 0).toFixed(2)}<br>Shipping: $${Number(summary.shipping || 0).toFixed(2)}<br>Tax: $${Number(summary.tax || 0).toFixed(2)}<br><strong>Total Paid: $${Number(summary.finalTotal || 0).toFixed(2)}</strong></p>
           <hr>
           <h3>Shipping Address</h3>
           <p>${shippingAddress.name}<br>${shippingAddress.address1}<br>${shippingAddress.address2 || ''}<br>${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}</p>

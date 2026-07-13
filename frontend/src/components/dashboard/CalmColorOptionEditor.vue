@@ -2,35 +2,59 @@
 const calmColors = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White']
 
 const props = defineProps({
-  modelValue: { type: Array, default: () => [] },
+  modelValue: { type: Array, default: () => [''] },
   disabled: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const toggle = (color, checked) => {
-  const selected = new Set(props.modelValue.map(String))
-  if (checked) selected.add(color)
-  else selected.delete(color)
-  emit('update:modelValue', calmColors.filter((option) => selected.has(option)))
+const rows = () => (props.modelValue.length ? props.modelValue.map(String) : [''])
+const updateRows = (values) => emit('update:modelValue', values.length ? values : [''])
+
+const updateColor = (index, color) => {
+  const values = rows()
+  values[index] = color
+  updateRows(values)
 }
+
+const addColor = () => updateRows([...rows(), ''])
+
+const removeColor = (index) => {
+  const values = rows()
+  values.splice(index, 1)
+  updateRows(values)
+}
+
+const optionAvailable = (color, index) => rows()[index] === color || !rows().includes(color)
 </script>
 
 <template>
   <div class="calm-color-editor">
-    <label v-for="color in calmColors" :key="color" class="calm-color-option">
-      <input
-        type="checkbox"
-        :checked="modelValue.includes(color)"
+    <div v-for="(color, index) in rows()" :key="index" class="calm-color-row">
+      <select
+        :value="color"
         :disabled="disabled"
-        @change="toggle(color, $event.target.checked)"
+        :aria-label="`Calm color ${index + 1}`"
+        @change="updateColor(index, $event.target.value)"
       >
-      {{ color }}
-    </label>
+        <option value="">Select a calm color</option>
+        <option v-for="option in calmColors.filter((item) => optionAvailable(item, index))" :key="option" :value="option">
+          {{ option }}
+        </option>
+      </select>
+      <button v-if="rows().length > 1 || color" type="button" class="remove-color" :disabled="disabled" @click="removeColor(index)">Remove</button>
+    </div>
+    <button v-if="rows().length < calmColors.length" type="button" class="add-color" :disabled="disabled" @click="addColor">+ Add Calm Color</button>
   </div>
 </template>
 
 <style scoped>
-.calm-color-editor { display: flex; flex-wrap: wrap; gap: 10px 18px; }
-.calm-color-option { display: inline-flex; align-items: center; gap: 7px; }
+.calm-color-editor { display: flex; flex-direction: column; gap: 10px; }
+.calm-color-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+select { width: 100%; border: 1px solid #cfd8cf; border-radius: 8px; padding: 12px; font: inherit; }
+.add-color, .remove-color { width: fit-content; border: 0; border-radius: 8px; padding: 10px 14px; color: #fff; cursor: pointer; font: inherit; font-weight: 700; }
+.add-color { background: var(--dashboard-green); }
+.remove-color { background: var(--dashboard-red); }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+@media (max-width: 600px) { .calm-color-row { grid-template-columns: 1fr; } }
 </style>
