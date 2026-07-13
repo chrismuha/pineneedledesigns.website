@@ -277,7 +277,7 @@ const isActive = (path) => {
 
   .dashboard-layout {
     position: absolute;
-    inset: 0 0 var(--mobile-nav-height);
+    inset: 0;
     height: auto;
     min-height: 0;
     overflow: hidden;
@@ -298,7 +298,7 @@ const isActive = (path) => {
     -webkit-overflow-scrolling: touch;
     background: #fff;
     padding: 14px 12px;
-    padding-bottom: 14px;
+    padding-bottom: var(--mobile-nav-height);
   }
 
   .bottom-nav {
@@ -308,20 +308,20 @@ const isActive = (path) => {
     right: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom));
     min-height: 68px;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
     background:
-      linear-gradient(135deg, rgba(255, 255, 255, .82), rgba(238, 249, 241, .6)),
-      rgba(255, 255, 255, .55);
-    border: 1px solid rgba(255, 255, 255, .82);
+      radial-gradient(circle at 16% -30%, rgba(255, 255, 255, .92) 0 24%, transparent 55%),
+      linear-gradient(125deg, rgba(255, 255, 255, .6), rgba(226, 247, 233, .26) 54%, rgba(255, 255, 255, .44));
+    border: 1px solid rgba(255, 255, 255, .76);
     border-radius: 999px;
     box-shadow:
-      0 18px 44px rgba(21, 61, 35, .2),
-      0 4px 12px rgba(21, 61, 35, .1),
-      inset 0 1px 0 rgba(255, 255, 255, .95),
-      inset 0 -1px 0 rgba(46, 164, 79, .08);
-    backdrop-filter: blur(24px) saturate(175%);
-    -webkit-backdrop-filter: blur(24px) saturate(175%);
+      0 18px 42px rgba(17, 55, 30, .16),
+      0 3px 10px rgba(17, 55, 30, .08),
+      inset 0 1px 1px rgba(255, 255, 255, .96),
+      inset 0 -1px 1px rgba(21, 103, 47, .1);
+    backdrop-filter: blur(28px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%);
     z-index: 1000;
     gap: 6px;
     padding: 7px;
@@ -333,15 +333,31 @@ const isActive = (path) => {
   .bottom-nav::before {
     content: '';
     position: absolute;
-    z-index: -1;
-    inset: 1px 12% auto;
-    height: 48%;
+    z-index: 2;
+    inset: 1px 8% auto;
+    height: 46%;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, 0));
+    background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, 0));
+    pointer-events: none;
+    opacity: .72;
+  }
+
+  .bottom-nav::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 5px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 18% 75%, rgba(102, 219, 136, .18), transparent 25%),
+      radial-gradient(circle at 82% 20%, rgba(255, 255, 255, .66), transparent 28%);
+    filter: blur(7px);
     pointer-events: none;
   }
 
   .bottom-tab {
+    position: relative;
+    z-index: 1;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -352,13 +368,11 @@ const isActive = (path) => {
     padding: 7px 4px 6px;
     margin: 0;
     border-radius: 999px;
-    background: rgba(255, 255, 255, .46);
-    border: 1px solid rgba(255, 255, 255, .7);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid transparent;
     text-decoration: none;
     color: #25442e;
-    box-shadow:
-      0 2px 8px rgba(20, 61, 33, .07),
-      inset 0 1px 0 rgba(255, 255, 255, .9);
+    box-shadow: none;
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -384,24 +398,29 @@ const isActive = (path) => {
   }
 
   .bottom-tab.active {
-    background: linear-gradient(145deg, rgba(52, 178, 88, .94), rgba(31, 126, 59, .96));
-    border-color: rgba(255, 255, 255, .58);
-    color: #fff;
+    background:
+      radial-gradient(circle at 30% 5%, rgba(255, 255, 255, .88), transparent 38%),
+      linear-gradient(145deg, rgba(225, 250, 232, .7), rgba(137, 218, 160, .36));
+    border-color: rgba(255, 255, 255, .82);
+    color: #0d6a2b;
     box-shadow:
-      0 8px 18px rgba(31, 126, 59, .28),
-      inset 0 1px 0 rgba(255, 255, 255, .42),
-      inset 0 -1px 0 rgba(9, 75, 31, .26);
+      0 7px 18px rgba(25, 112, 52, .16),
+      inset 0 1px 1px rgba(255, 255, 255, .98),
+      inset 0 -1px 1px rgba(29, 138, 61, .16);
+    backdrop-filter: blur(12px) saturate(170%);
+    -webkit-backdrop-filter: blur(12px) saturate(170%);
     transform: translateY(-1px);
   }
 
   .bottom-tab.active .menu-icon {
-    color: #fff;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .16));
+    color: #16813a;
+    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .9));
   }
 
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
-    background: rgba(255, 255, 255, .78);
+    background: rgba(255, 255, 255, .42);
+    border-color: rgba(255, 255, 255, .66);
     color: #176c31;
   }
 
