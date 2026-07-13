@@ -56,7 +56,10 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     .sort((left, right) => Number(left) - Number(right));
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortBeltSizes);
-  const blingOptions = allowBlingOptions && product.noBlingPrice != null
+  const hasBlingOptions = allowBlingOptions && (
+    product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null
+  );
+  const blingOptions = hasBlingOptions
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
   const options = [
@@ -75,10 +78,11 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     id: product.legacyId ?? product._id,
     title: product.name,
     price: product.price,
-    noBlingPrice: allowBlingOptions ? product.noBlingPrice ?? undefined : undefined,
+    blingPrice: hasBlingOptions ? product.blingPrice ?? product.price : undefined,
+    noBlingPrice: hasBlingOptions ? product.noBlingPrice ?? product.price : undefined,
     meta: product.meta || [],
     description: product.description,
-    noBlingDescription: allowBlingOptions && product.noBlingPrice != null
+    noBlingDescription: hasBlingOptions
       ? noBlingDescriptionFor(product)
       : undefined,
     options: options.length ? options : undefined,

@@ -164,6 +164,7 @@ const parseRequestBody = (body) => ({
   ...body,
   freeShipping: parseBooleanField(body?.freeShipping),
   outOfStock: parseBooleanField(body?.outOfStock),
+  hasBlingOptions: parseBooleanField(body?.hasBlingOptions),
   customProperties: normalizeCustomProperties(body?.customProperties),
   photos: body?.photos !== undefined ? normalizePhotos(body.photos) : undefined,
   meta: body?.meta !== undefined ? normalizeStringList(body.meta) : undefined,
@@ -188,11 +189,14 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   if (requireAll && !description) errors.push('Description is required.');
   if (requireAll && !collectionId) errors.push('Collection is required.');
   if (body?.price !== undefined && Number(body.price) < 0) errors.push('Price must be zero or greater.');
+  if (body?.blingPrice !== undefined && body.blingPrice !== '' && Number(body.blingPrice) < 0) {
+    errors.push('Price with bling must be zero or greater.');
+  }
   if (body?.shippingCost !== undefined && Number(body.shippingCost) < 0) errors.push('Shipping cost must be zero or greater.');
   if (body?.noBlingPrice !== undefined && body.noBlingPrice !== '' && Number(body.noBlingPrice) < 0) {
     errors.push('Price without bling must be zero or greater.');
   }
-  if (body?.noBlingPrice !== undefined && body.noBlingPrice !== '' && !String(body?.noBlingDescription || '').trim()) {
+  if (body?.hasBlingOptions && !String(body?.noBlingDescription || '').trim()) {
     errors.push('Description without Bling is required when the item has a No Bling style.');
   }
   if (body?.quantity !== undefined && (!Number.isInteger(Number(body.quantity)) || Number(body.quantity) < 0)) {
@@ -213,6 +217,10 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
+      hasBlingOptions: Boolean(body?.hasBlingOptions),
+      blingPrice: body?.blingPrice !== undefined && body.blingPrice !== ''
+        ? Number(body.blingPrice)
+        : null,
       noBlingPrice: body?.noBlingPrice !== undefined && body.noBlingPrice !== ''
         ? Number(body.noBlingPrice)
         : null,
@@ -356,6 +364,8 @@ export const createProduct = async (req, res) => {
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
+    hasBlingOptions: data.hasBlingOptions,
+    blingPrice: data.blingPrice,
     noBlingPrice: data.noBlingPrice,
     noBlingDescription: data.noBlingDescription,
     shippingCost: data.shippingCost ?? 0,
@@ -427,6 +437,8 @@ export const updateProduct = async (req, res) => {
   if (req.body?.imageWrapper !== undefined) product.imageWrapper = data.imageWrapper;
   if (req.body?.optionPlaceholders !== undefined) product.optionPlaceholders = data.optionPlaceholders;
   if (req.body?.price !== undefined) product.price = data.price;
+  if (req.body?.hasBlingOptions !== undefined) product.hasBlingOptions = data.hasBlingOptions;
+  if (req.body?.blingPrice !== undefined) product.blingPrice = data.blingPrice;
   if (req.body?.noBlingPrice !== undefined) product.noBlingPrice = data.noBlingPrice;
   if (req.body?.noBlingDescription !== undefined) product.noBlingDescription = data.noBlingDescription;
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;

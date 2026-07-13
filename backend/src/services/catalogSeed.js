@@ -134,6 +134,8 @@ export const seedCatalog = async () => {
             subCollectionId,
             photos: Array.isArray(product.images) ? product.images : [],
             price: Number(product.price) || 0,
+            hasBlingOptions: Number.isFinite(product.noBlingPrice),
+            blingPrice: null,
             shippingCost: 0,
             freeShipping: hasFreeShipping(meta),
             outOfStock: Boolean(product.sold || product.soldOut),

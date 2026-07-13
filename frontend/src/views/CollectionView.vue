@@ -324,6 +324,7 @@ const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
 
 const productPrice = (product) => {
   if (isNoBlingSelected(product) && Number.isFinite(product.noBlingPrice)) return product.noBlingPrice
+  if (selectedStyle(product) === blingStyle && Number.isFinite(product.blingPrice)) return product.blingPrice
   return product.price
 }
 

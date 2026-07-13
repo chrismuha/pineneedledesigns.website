@@ -43,6 +43,8 @@ const form = reactive({
   calmColors: [],
   description: '',
   price: '',
+  hasBlingOptions: false,
+  blingPrice: '',
   noBlingPrice: '',
   noBlingDescription: '',
   shippingCost: '',
@@ -54,6 +56,9 @@ const form = reactive({
 })
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
+const collectionAllowsBling = computed(() => collections.value.find(
+  (collection) => String(collection._id) === String(form.collectionId),
+)?.slug === 'shirts')
 const sortedCollections = computed(() => [...collections.value].sort((left, right) => (
   (left.isSystem ? 'Uncategorized' : left.name).localeCompare(
     right.isSystem ? 'Uncategorized' : right.name,
@@ -181,6 +186,8 @@ const resetForm = () => {
   form.calmColors = []
   form.description = ''
   form.price = ''
+  form.hasBlingOptions = false
+  form.blingPrice = ''
   form.noBlingPrice = ''
   form.noBlingDescription = ''
   form.shippingCost = ''
@@ -217,8 +224,10 @@ const buildProductFormData = () => {
   formData.append('calmColors', JSON.stringify(form.calmColors))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
-  formData.append('noBlingPrice', String(form.noBlingPrice))
-  formData.append('noBlingDescription', form.noBlingDescription.trim())
+  formData.append('hasBlingOptions', String(form.hasBlingOptions && collectionAllowsBling.value))
+  formData.append('blingPrice', form.hasBlingOptions ? String(form.blingPrice) : '')
+  formData.append('noBlingPrice', form.hasBlingOptions ? String(form.noBlingPrice) : '')
+  formData.append('noBlingDescription', form.hasBlingOptions ? form.noBlingDescription.trim() : '')
   formData.append('shippingCost', String(form.shippingCost || 0))
   formData.append('freeShipping', String(form.freeShipping))
   formData.append('outOfStock', String(form.outOfStock))
@@ -245,6 +254,12 @@ const loadCollections = async () => {
 
 const handleCollectionChange = async () => {
   form.subCollectionId = ''
+  if (!collectionAllowsBling.value) {
+    form.hasBlingOptions = false
+    form.blingPrice = ''
+    form.noBlingPrice = ''
+    form.noBlingDescription = ''
+  }
   fieldErrors.subCollectionId = ''
   await loadSubcollections(form.collectionId)
 }
@@ -331,7 +346,7 @@ watch(
         <div class="form-grid">
           <div class="field">
             <label>Item Name *</label>
-            <input v-model="form.name" type="text" placeholder="Premium Hoodie" required>
+            <input v-model="form.name" type="text" placeholder="Item Title" required>
           </div>
 
           <div class="field">
@@ -407,8 +422,8 @@ watch(
         </div>
 
         <div class="field">
-          <label>{{ form.noBlingPrice !== '' ? 'Description with Bling *' : 'Description *' }}</label>
-          <textarea v-model="form.description" rows="8" :placeholder="form.noBlingPrice !== '' ? 'Description shown when Bling is selected.' : ''" required />
+          <label>{{ form.hasBlingOptions ? 'Description with Bling *' : 'Description *' }}</label>
+          <textarea v-model="form.description" rows="8" :placeholder="form.hasBlingOptions ? 'Description shown when Bling is selected.' : ''" required />
         </div>
       </section>
 
@@ -502,23 +517,29 @@ watch(
 
         <div class="vertical-grid form-grid">
           <div class="field">
-            <label>Price with Bling (USD) *</label>
+            <label>General Price (USD) *</label>
             <input v-model="form.price" type="number" min="0" step="0.01" placeholder="38.00" required>
           </div>
 
-          <div class="field">
+          <div v-if="collectionAllowsBling" class="field field--full">
+            <label class="checkbox-row">
+              <input v-model="form.hasBlingOptions" type="checkbox">
+              Offer Bling and No Bling choices
+            </label>
+            <p class="hint">Variant prices use the General Price when their override is blank.</p>
+          </div>
+
+          <div v-if="form.hasBlingOptions" class="field">
+            <label>Price with Bling (USD)</label>
+            <input v-model="form.blingPrice" type="number" min="0" step="0.01" placeholder="Uses General Price">
+          </div>
+
+          <div v-if="form.hasBlingOptions" class="field">
             <label>Price without Bling (USD)</label>
-            <input v-model="form.noBlingPrice" type="number" min="0" step="0.01" placeholder="28.00">
-            <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
+            <input v-model="form.noBlingPrice" type="number" min="0" step="0.01" placeholder="Uses General Price">
           </div>
 
-          <div v-if="form.noBlingPrice !== ''" class="field">
-            <label>Style</label>
-            <input value="Bling, No Bling" readonly aria-label="Styles">
-            <p class="hint">Style is a built-in property with Bling and No Bling choices.</p>
-          </div>
-
-          <div v-if="form.noBlingPrice !== ''" class="field field--full">
+          <div v-if="form.hasBlingOptions" class="field field--full">
             <label>Description without Bling *</label>
             <textarea v-model="form.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
           </div>

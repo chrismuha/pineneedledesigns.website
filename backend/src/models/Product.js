@@ -45,6 +45,15 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  hasBlingOptions: {
+    type: Boolean,
+    default: false,
+  },
+  blingPrice: {
+    type: Number,
+    default: null,
+    min: 0,
+  },
   shippingCost: {
     type: Number,
     default: 0,
@@ -90,6 +99,7 @@ const productSchema = new mongoose.Schema({
   noBlingPrice: {
     type: Number,
     default: null,
+    min: 0,
   },
   noBlingDescription: {
     type: String,
