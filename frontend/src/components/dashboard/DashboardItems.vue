@@ -6,6 +6,7 @@ import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
 import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
+import CalmColorOptionEditor from './CalmColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
@@ -50,6 +51,7 @@ const editSnapshot = (product) => JSON.stringify({
   colors: (product?.colors || []).map((value) => String(value)),
   sizes: (product?.sizes || []).map((value) => String(value)),
   shoeSizes: (product?.shoeSizes || []).map((value) => String(value)),
+  calmColors: (product?.calmColors || []).map((value) => String(value)),
   customProperties: (product?.customProperties || []).map((property) => ({
     name: String(property.name || ''),
     required: Boolean(property.required),
@@ -399,8 +401,9 @@ const openEditModal = async (product) => {
     shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
       ? String(product.shoeSize).split(',').map((size) => size.trim()).filter(Boolean)
       : [''],
+    calmColors: [...(product.calmColors || [])],
     customProperties: customProperties.filter(
-      (property) => !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name).toLowerCase()),
+      (property) => !['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()),
     ),
     videos: (product.videos || []).join('\n'),
   }
@@ -583,9 +586,9 @@ const saveProduct = async () => {
   }
 
   if (editingProduct.value.customProperties.some((property) => (
-    ['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name || '').trim().toLowerCase())
+    ['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Shirt Size, Shoe Size, and Style are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Shirt Size, Shoe Size, Style, and Calm Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -606,7 +609,7 @@ const saveProduct = async () => {
         required: Boolean(property.required),
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
-      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(property.name.toLowerCase()))
+      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'].includes(property.name.toLowerCase()))
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
@@ -614,6 +617,7 @@ const saveProduct = async () => {
     formData.append('color', colors.join(', '))
     formData.append('size', sizes.join(', '))
     formData.append('shoeSize', editingProduct.value.shoeSizes.filter(Boolean).join(', '))
+    formData.append('calmColors', JSON.stringify(editingProduct.value.calmColors || []))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
     formData.append('noBlingPrice', editingProduct.value.noBlingPrice == null ? '' : String(editingProduct.value.noBlingPrice))
@@ -1137,6 +1141,12 @@ watch(
           <p class="hint">Select whole shoe sizes from 6 through 12.</p>
         </div>
 
+        <div class="field">
+          <label>Calm Colors</label>
+          <CalmColorOptionEditor v-model="editingProduct.calmColors" :disabled="saving" />
+          <p class="hint">Optional. Selected choices appear together in one Calm Colors dropdown.</p>
+        </div>
+
         <div class="field edit-section">
           <div class="edit-section-header">
             <label>Custom Properties</label>
@@ -1155,7 +1165,7 @@ watch(
             <div class="edit-property-header">
               <input v-model="property.name" type="text" placeholder="Property name">
               <p v-if="isReservedPropertyName(property.name)" class="field-error">
-                Color, Shirt Size, Shoe Size, and Style are built-in properties. Use their dedicated fields.
+                This is a built-in property. Use its dedicated field.
               </p>
               <label class="edit-checkbox">
                 <input v-model="property.required" type="checkbox">

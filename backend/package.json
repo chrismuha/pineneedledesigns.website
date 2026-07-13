@@ -7,7 +7,8 @@
     "dev": "node --watch src/server.js",
     "seed": "node src/scripts/seedCatalog.js",
     "test:mongo": "node src/scripts/testMongoConnection.js",
-    "inspect:mongo": "node src/scripts/inspectMongoDatabases.js"
+    "inspect:mongo": "node src/scripts/inspectMongoDatabases.js",
+    "migrate:calm-colors": "node src/scripts/migrateCalmColors.js"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
