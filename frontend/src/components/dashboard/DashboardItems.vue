@@ -426,7 +426,9 @@ const initializeEditModal = async (product) => {
     customProperties: customProperties.filter(
       (property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()),
     ),
-    videos: (product.videos || []).join('\n'),
+    videos: Array.isArray(product.videos)
+      ? product.videos.join('\n')
+      : String(product.videos || ''),
   }
   editModalError.value = ''
   editPhotoFiles.value = []
