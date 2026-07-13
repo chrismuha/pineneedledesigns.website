@@ -14,7 +14,6 @@ const tabAtPoint = (x, y) =>
 const startNavDrag = (event) => {
   if (event.pointerType === 'mouse' && event.button !== 0) return
 
-  event.currentTarget.setPointerCapture?.(event.pointerId)
   navDrag.value = {
     pointerId: event.pointerId,
     startX: event.clientX,
