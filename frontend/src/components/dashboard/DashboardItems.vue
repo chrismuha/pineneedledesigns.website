@@ -589,14 +589,6 @@ const saveProduct = async () => {
     return
   }
 
-  if (
-    collectionRequiresSubcollection(editingProduct.value.collectionId)
-    && !editingProduct.value.subCollectionId
-  ) {
-    editModalError.value = 'Please select a filter/sub-collection for this collection.'
-    return
-  }
-
   if (!(editingProduct.value.photos?.length || editPhotoFiles.value.length)) {
     editModalError.value = 'At least one photo is required.'
     return
@@ -1108,10 +1100,9 @@ watch(
           v-if="collectionRequiresSubcollection(editingProduct.collectionId)"
           class="field"
         >
-          <label>Filter/Sub-Collection *</label>
+          <label>Filter/Sub-Collection</label>
           <select
             v-model="editingProduct.subCollectionId"
-            required
             :disabled="editSubcollectionsLoading || saving"
           >
             <option value="">

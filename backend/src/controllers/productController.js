@@ -284,7 +284,7 @@ export const createProduct = async (req, res) => {
   const subcollectionResult = await resolveSubCollectionId(
     collection._id,
     body.subCollectionId,
-    { requireWhenAvailable: true },
+    { requireWhenAvailable: false },
   );
   if (subcollectionResult.error) {
     return res.status(400).json({ error: subcollectionResult.error });
@@ -392,7 +392,7 @@ export const updateProduct = async (req, res) => {
     const subcollectionResult = await resolveSubCollectionId(
       product.collectionId,
       body.subCollectionId,
-      { requireWhenAvailable: true },
+      { requireWhenAvailable: false },
     );
     if (subcollectionResult.error) {
       return res.status(400).json({ error: subcollectionResult.error });
@@ -402,7 +402,7 @@ export const updateProduct = async (req, res) => {
     const subcollectionResult = await resolveSubCollectionId(
       product.collectionId,
       null,
-      { requireWhenAvailable: true },
+      { requireWhenAvailable: false },
     );
     if (subcollectionResult.error) {
       return res.status(400).json({ error: subcollectionResult.error });

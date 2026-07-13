@@ -255,12 +255,6 @@ const submitForm = async () => {
     return
   }
 
-  if (requiresSubcollection.value && !form.subCollectionId) {
-    fieldErrors.subCollectionId = 'Please select a filter/sub-collection for this collection.'
-    error.value = 'Please fix the highlighted fields before submitting.'
-    return
-  }
-
   if (subcollectionsLoading.value) {
     error.value = 'Filters/sub-collections are still loading. Please wait a moment.'
     return
@@ -355,10 +349,9 @@ watch(
           </div>
 
           <div v-if="requiresSubcollection || subcollectionsLoading" class="field field--full">
-            <label>Filter/Sub-Collection *</label>
+            <label>Filter/Sub-Collection</label>
             <select
               v-model="form.subCollectionId"
-              required
               :disabled="subcollectionsLoading || loading"
             >
               <option value="">
