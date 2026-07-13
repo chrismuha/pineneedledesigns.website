@@ -55,7 +55,13 @@
       aria-label="Mobile menu"
       :class="{ 'mobile-nav--open': menuOpen, 'mobile-nav--dimmed': chromeDimmed }"
     >
-      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }" @click="closeMenu">{{ link.label }}</router-link>
+      <a
+        v-for="link in navLinks"
+        :key="link.path"
+        :href="router.resolve(link.path).href"
+        :class="{ active: isNavLinkActive(link) }"
+        @click.stop.prevent="navigateFromMenu(link.path)"
+      >{{ link.label }}</a>
     </nav>
 
   </header>
@@ -63,12 +69,13 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
 
 const menuOpen = ref(false)
 const route = useRoute()
+const router = useRouter()
 const cartStore = useCartStore()
 const catalogStore = useCatalogStore()
 
@@ -92,6 +99,14 @@ const closeMenu = () => {
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
+}
+
+const navigateFromMenu = (path) => {
+  closeMenu()
+
+  if (route.path !== path) {
+    router.push(path)
+  }
 }
 
 const isNavLinkActive = (link) => {
@@ -168,6 +183,11 @@ watch(
 .nav-actions--dimmed {
   opacity: 0.14;
   transform: scale(0.96);
+}
+
+.mobile-nav {
+  z-index: 970;
+  pointer-events: auto;
 }
 
 .nav-main,
