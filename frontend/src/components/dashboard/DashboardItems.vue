@@ -529,9 +529,20 @@ const collectionRequiresSubcollection = (collectionId) => (
   subcollectionsForCollection(collectionId).length > 0
 )
 
+const collectionAllowsBling = (collectionId) => {
+  const collection = groupedCollections.value.find(
+    (item) => String(item._id) === String(collectionId),
+  )
+  return collection?.slug === 'shirts'
+}
+
 const handleEditCollectionChange = async () => {
   if (!editingProduct.value) return
   editingProduct.value.subCollectionId = ''
+  if (!collectionAllowsBling(editingProduct.value.collectionId)) {
+    editingProduct.value.noBlingPrice = ''
+    editingProduct.value.noBlingDescription = ''
+  }
   editModalError.value = ''
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
@@ -925,17 +936,17 @@ watch(
             <strong>Filter/Sub-Collection:</strong> {{ productSubcollectionLabel(product) }}
           </p>
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
-          <p v-if="product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
-          <p v-if="product.noBlingPrice != null"><strong>Style:</strong> Bling, No Bling</p>
+          <p v-if="collectionAllowsBling(collection._id) && product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
+          <p v-if="collectionAllowsBling(collection._id) && product.noBlingPrice != null"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p>
-            <strong>{{ product.noBlingPrice != null ? 'Description with Bling:' : 'Description:' }}</strong><br>
+            <strong>{{ collectionAllowsBling(collection._id) && product.noBlingPrice != null ? 'Description with Bling:' : 'Description:' }}</strong><br>
             {{ product.description }}
           </p>
-          <p v-if="product.noBlingPrice != null">
+          <p v-if="collectionAllowsBling(collection._id) && product.noBlingPrice != null">
             <strong>Description without Bling:</strong><br>
             {{ product.noBlingDescription }}
           </p>
@@ -1253,28 +1264,28 @@ watch(
         </div>
 
         <div class="field">
-          <label>{{ editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description with Bling' : 'Description' }}</label>
-          <textarea v-model="editingProduct.description" rows="6" :placeholder="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description shown when Bling is selected.' : ''" />
+          <label>{{ collectionAllowsBling(editingProduct.collectionId) && editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description with Bling' : 'Description' }}</label>
+          <textarea v-model="editingProduct.description" rows="6" :placeholder="collectionAllowsBling(editingProduct.collectionId) && editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null ? 'Description shown when Bling is selected.' : ''" />
         </div>
 
         <div class="field">
-          <label>Price with Bling (USD)</label>
+          <label>{{ collectionAllowsBling(editingProduct.collectionId) ? 'Price with Bling (USD)' : 'Price (USD)' }}</label>
           <input v-model.number="editingProduct.price" type="number" min="0" step="0.01">
         </div>
 
-        <div class="field">
+        <div v-if="collectionAllowsBling(editingProduct.collectionId)" class="field">
           <label>Price without Bling (USD)</label>
           <input v-model="editingProduct.noBlingPrice" type="number" min="0" step="0.01" placeholder="Leave blank if this item has no no-bling version">
           <p class="hint">Entering this price automatically adds the Bling / No Bling choice on the live item.</p>
         </div>
 
-        <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
+        <div v-if="collectionAllowsBling(editingProduct.collectionId) && editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
           <label>Style</label>
           <input value="Bling, No Bling" readonly aria-label="Styles">
           <p class="hint">Style is a built-in property with Bling and No Bling choices.</p>
         </div>
 
-        <div v-if="editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
+        <div v-if="collectionAllowsBling(editingProduct.collectionId) && editingProduct.noBlingPrice !== '' && editingProduct.noBlingPrice != null" class="field">
           <label>Description without Bling *</label>
           <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
         </div>

@@ -225,7 +225,8 @@ export const listProductsGrouped = async (_req, res) => {
   const products = await Product.find()
     .populate('collectionId', 'name slug isSystem sortOrder')
     .populate('subCollectionId', 'name slug sortOrder')
-    .sort({ sortOrder: 1, name: 1 })
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
     .lean();
 
   const grouped = collections.map((collection) => ({
@@ -257,7 +258,8 @@ export const listProducts = async (req, res) => {
   const products = await Product.find(filter)
     .populate('collectionId', 'name slug isSystem')
     .populate('subCollectionId', 'name slug sortOrder')
-    .sort({ sortOrder: 1, name: 1 })
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
     .lean();
 
   res.json(products.map(formatProductForDashboard));

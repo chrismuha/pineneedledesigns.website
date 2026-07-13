@@ -5,7 +5,7 @@ import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
-const mapProductToStorefront = (product, categoryFilters = []) => {
+const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
@@ -27,7 +27,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort((left, right) => Number(left) - Number(right));
-  const blingOptions = product.noBlingPrice != null
+  const blingOptions = allowBlingOptions && product.noBlingPrice != null
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
   const options = [
@@ -45,10 +45,10 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
     id: product.legacyId ?? product._id,
     title: product.name,
     price: product.price,
-    noBlingPrice: product.noBlingPrice ?? undefined,
+    noBlingPrice: allowBlingOptions ? product.noBlingPrice ?? undefined : undefined,
     meta: product.meta || [],
     description: product.description,
-    noBlingDescription: product.noBlingDescription || undefined,
+    noBlingDescription: allowBlingOptions ? product.noBlingDescription || undefined : undefined,
     options: options.length ? options : undefined,
     images: product.photos || [],
     videos: product.videos?.length ? product.videos : undefined,
@@ -65,6 +65,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
 };
 
 const buildCollectionPage = (collection, subcollections, products) => {
+  const allowBlingOptions = collection.slug === 'shirts';
   const filters = subcollections.map((subcollection) => subcollection.name);
   const subcollectionNames = new Map(
     subcollections.map((subcollection) => [String(subcollection._id), subcollection.name]),
@@ -75,7 +76,7 @@ const buildCollectionPage = (collection, subcollections, products) => {
       ? ['Boa', 'T-Shirts']
       : [subcollectionName].filter(Boolean);
 
-    return mapProductToStorefront(product, categoryFilters);
+    return mapProductToStorefront(product, categoryFilters, allowBlingOptions);
   });
 
   const count = storefrontProducts.length;
@@ -149,7 +150,7 @@ const attachCollectionNavigation = (pages) => {
 export const getStorefrontCatalog = async () => {
   const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
-  const products = await Product.find().sort({ sortOrder: 1, name: 1 }).lean();
+  const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
 
   const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
     const key = String(subcollection.collectionId);
@@ -220,11 +221,12 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   }
 
   const products = await Product.find(filter)
-    .sort({ sortOrder: 1, name: 1 })
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
     .lean();
 
   // Pass only the product. Array#map also supplies the item index as the second
   // argument, which mapProductToStorefront would otherwise treat as an iterable
   // list of category filters and throw while building the response.
-  return products.map((product) => mapProductToStorefront(product));
+  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts'));
 };

@@ -3,6 +3,42 @@ import { config } from './index.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
+import { slugify } from '../utils/slug.js';
+
+const ensureMyraBeltsSubcollection = async () => {
+  const myra = await Collection.findOne({
+    isSystem: false,
+    $or: [
+      { name: /^myra$/i },
+      { slug: 'myra' },
+    ],
+  }).lean();
+
+  if (!myra) return;
+
+  const existing = await Subcollection.findOne({
+    collectionId: myra._id,
+    $or: [
+      { name: /^belts$/i },
+      { slug: 'belts' },
+    ],
+  });
+
+  if (existing) return;
+
+  const lastSubcollection = await Subcollection.findOne({ collectionId: myra._id })
+    .sort({ sortOrder: -1 })
+    .select('sortOrder')
+    .lean();
+
+  await Subcollection.create({
+    collectionId: myra._id,
+    name: 'Belts',
+    slug: slugify('Belts'),
+    sortOrder: (lastSubcollection?.sortOrder ?? -1) + 1,
+  });
+  console.log('ℹ️ Added the Belts sub-collection under MYRA.');
+};
 
 const inferSubcollectionName = (productName, subcollectionNames) => {
   const name = String(productName || '').toLowerCase();
@@ -21,6 +57,9 @@ const inferSubcollectionName = (productName, subcollectionNames) => {
       return subcollectionName;
     }
     if (key === 'bracelets' && name.includes('bracelet')) {
+      return subcollectionName;
+    }
+    if (key === 'belts' && name.includes('belt')) {
       return subcollectionName;
     }
     if (key === 'fanny packs' && name.includes('fanny pack')) {
@@ -234,5 +273,6 @@ export const connectDatabase = async () => {
   await migrateLegacySubcollectionFields();
   await repairLegacyProductIndex();
   await backfillProductQuantities();
+  await ensureMyraBeltsSubcollection();
   await backfillProductSubcollectionIds();
 };
