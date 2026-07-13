@@ -56,37 +56,6 @@
       </button>
     </div>
 
-    <div class="footer-actions" :class="{ 'footer-actions--dimmed': chromeDimmed }" aria-label="Shop and booking links">
-      <router-link
-        to="/collections"
-        aria-label="Shop all collections"
-        :class="{ active: route.path.startsWith('/collections') }"
-      >
-        <i class="bi bi-shop" aria-hidden="true"></i>
-        <span>Shop</span>
-      </router-link>
-      <router-link v-if="bookingDepositsEnabled" to="/booking/fitting">
-        <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
-        <span>First Fitting</span>
-      </router-link>
-      <a v-else :href="calendarLinks.fitting">
-        <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
-        <span>First Fitting</span>
-      </a>
-      <router-link v-if="bookingDepositsEnabled" to="/booking/brides">
-        <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
-        <span>Brides</span>
-      </router-link>
-      <a v-else :href="calendarLinks.brides">
-        <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
-        <span>Brides</span>
-      </a>
-      <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7">
-        <i class="footer-actions__emoji" aria-hidden="true">👚</i>
-        <span>Repeat Customers</span>
-      </a>
-    </div>
-
     <section id="foot-section-1" class="footer-section">
       <div class="container foot-toggle-wrap">
         <p class="toggle-label" id="toggle-about-label">OH BEAUTIFUL YOU.......AND ME TOO!</p>

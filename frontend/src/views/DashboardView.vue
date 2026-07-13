@@ -137,6 +137,30 @@ const isActive = (path) => {
       </main>
     </div>
 
+    <!--
+      Original GlobalFooter action bar moved here for reference. It stays
+      commented out while the current liquid-glass dashboard nav is active.
+
+      <div class="footer-actions" aria-label="Shop and booking links">
+        <RouterLink to="/collections" aria-label="Shop all collections">
+          <i class="bi bi-shop" aria-hidden="true"></i>
+          <span>Shop</span>
+        </RouterLink>
+        <RouterLink to="/booking/fitting">
+          <i class="footer-actions__emoji" aria-hidden="true">💃🏻</i>
+          <span>First Fitting</span>
+        </RouterLink>
+        <RouterLink to="/booking/brides">
+          <i class="footer-actions__emoji" aria-hidden="true">👰🏻‍♀️</i>
+          <span>Brides</span>
+        </RouterLink>
+        <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7">
+          <i class="footer-actions__emoji" aria-hidden="true">👚</i>
+          <span>Repeat Customers</span>
+        </a>
+      </div>
+    -->
+
     <!-- Mobile bottom nav for widths below 850px -->
     <nav
       class="bottom-nav"
@@ -264,6 +288,70 @@ const isActive = (path) => {
 .bottom-nav {
   display: none;
 }
+
+/*
+  Original GlobalFooter action-bar CSS moved here for reference. The current
+  liquid-glass .bottom-nav styles below remain active.
+
+  .footer-actions {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 950;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 158px;
+    padding: 8px;
+    border: 1px solid var(--black-08);
+    border-radius: 999px;
+    background: var(--white-92);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(12px);
+  }
+
+  .footer-actions a {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 2px 10px var(--black-08);
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: .04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .footer-actions {
+      top: auto;
+      right: 12px;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      left: 12px;
+      width: auto;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .footer-actions a {
+      display: inline-flex;
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 58px;
+      padding: 6px 4px;
+    }
+  }
+*/
 
 @media (max-width: 850px) {
   .dashboard-shell {
