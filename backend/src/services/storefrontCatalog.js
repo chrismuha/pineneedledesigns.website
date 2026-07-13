@@ -15,7 +15,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -35,6 +35,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
+    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors, placeholder: 'Select a calm color' }] : []),
     ...customOptions,
   ];
 

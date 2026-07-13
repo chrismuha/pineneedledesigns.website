@@ -167,7 +167,6 @@ watch(
 
 .nav-actions--dimmed {
   opacity: 0.14;
-  pointer-events: none;
   transform: scale(0.96);
 }
 
@@ -179,7 +178,6 @@ watch(
 .nav-main--dimmed,
 .mobile-nav--dimmed {
   opacity: 0.14;
-  pointer-events: none;
   transform: scale(0.98);
 }
 

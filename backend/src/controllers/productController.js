@@ -7,6 +7,9 @@ import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
+const CALM_COLORS = ['Pepper', 'Butter', 'Ivory', 'White (Natural)'];
+const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'];
+
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
 
@@ -67,7 +70,7 @@ const normalizeCustomProperties = (properties) => {
           .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }))
         : [],
     }))
-    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !RESERVED_PROPERTIES.includes(property.name.toLowerCase()))
     .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' }));
 };
 
@@ -83,6 +86,20 @@ const normalizeShoeSizes = (value) => [...new Set(String(value || '')
   .filter((size) => /^(?:[6-9]|1[0-2])$/.test(size)))]
   .sort((left, right) => Number(left) - Number(right))
   .join(', ');
+
+const normalizeCalmColors = (value) => {
+  let values = value;
+  if (typeof values === 'string') {
+    try {
+      values = JSON.parse(values);
+    } catch {
+      values = values.split(',');
+    }
+  }
+  if (!Array.isArray(values)) values = [];
+  const selected = new Set(values.map((color) => String(color).trim().toLowerCase()));
+  return CALM_COLORS.filter((color) => selected.has(color.toLowerCase()));
+};
 
 const normalizePhotos = (photos) => {
   if (typeof photos === 'string') {
@@ -128,6 +145,7 @@ const parseRequestBody = (body) => ({
   bagTypes: body?.bagTypes !== undefined ? normalizeStringList(body.bagTypes) : undefined,
   filters: body?.filters !== undefined ? normalizeStringList(body.filters) : undefined,
   shoeTypes: body?.shoeTypes !== undefined ? normalizeStringList(body.shoeTypes) : undefined,
+  calmColors: body?.calmColors !== undefined ? normalizeCalmColors(body.calmColors) : undefined,
   optionPlaceholders: body?.optionPlaceholders !== undefined ? normalizePlaceholders(body.optionPlaceholders) : undefined,
   subCollectionId: body?.subCollectionId !== undefined
     ? normalizeSubCollectionId(body.subCollectionId)
@@ -163,6 +181,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       color: String(body?.color || '').trim(),
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       shoeSize: normalizeShoeSizes(body?.shoeSize),
+      calmColors: normalizeCalmColors(body?.calmColors),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -196,6 +215,7 @@ const formatProductForDashboard = (product) => ({
   ...product,
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
+  calmColors: normalizeCalmColors(product.calmColors),
   customProperties: normalizeCustomProperties(product.customProperties),
 });
 
@@ -299,6 +319,7 @@ export const createProduct = async (req, res) => {
     color: data.color,
     size: data.size,
     shoeSize: data.shoeSize,
+    calmColors: data.calmColors,
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
@@ -346,6 +367,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
   if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
+  if (req.body?.calmColors !== undefined) product.calmColors = data.calmColors;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;
   }
