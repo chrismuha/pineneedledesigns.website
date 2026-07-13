@@ -173,9 +173,7 @@ const removeOption = (propertyIndex, optionIndex) => {
 
 const resetForm = () => {
   form.name = ''
-  form.collectionId = collections.value.find((collection) => !collection.isSystem)?._id
-    || collections.value[0]?._id
-    || ''
+  form.collectionId = ''
   form.colors = ['']
   form.sizes = ['']
   form.shoeSizes = ['']
@@ -240,10 +238,6 @@ const loadCollections = async () => {
   collections.value = await dashboardApi.getCollections()
   if (route.query.collection && collections.value.some((collection) => String(collection._id) === String(route.query.collection))) {
     form.collectionId = String(route.query.collection)
-  } else if (!form.collectionId) {
-    form.collectionId = collections.value.find((collection) => !collection.isSystem)?._id
-      || collections.value[0]?._id
-      || ''
   }
 
   await loadSubcollections(form.collectionId)
@@ -343,6 +337,7 @@ watch(
           <div class="field">
             <label>Collection *</label>
             <select v-model="form.collectionId" required @change="handleCollectionChange">
+              <option value="" disabled>Select a collection</option>
               <option
                 v-for="collection in sortedCollections"
                 :key="collection._id"
