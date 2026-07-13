@@ -7,7 +7,7 @@ import { config } from '../config/index.js';
 import { createUniqueSlug } from '../utils/slug.js';
 
 export const listCollections = async (_req, res) => {
-  const collections = await Collection.find().sort({ sortOrder: 1, name: 1 }).lean();
+  const collections = await Collection.find().sort({ isSystem: 1, name: 1 }).lean();
   res.json(collections);
 };
 

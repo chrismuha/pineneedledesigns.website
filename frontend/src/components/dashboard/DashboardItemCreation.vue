@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
+import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
 const router = useRouter()
@@ -35,6 +36,7 @@ const form = reactive({
   collectionId: '',
   colors: [''],
   sizes: [''],
+  shoeSizes: [],
   description: '',
   price: '',
   noBlingPrice: '',
@@ -45,8 +47,6 @@ const form = reactive({
   quantity: 1,
   customProperties: [],
   subCollectionId: '',
-  meta: '', maker: '', bagTypes: '', filters: '', shoeTypes: '', videos: '', videoPosters: '',
-  imageWrapper: '', optionPlaceholders: '{}',
 })
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
@@ -60,7 +60,7 @@ const sortedCollections = computed(() => [...collections.value].sort((left, righ
 const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
   left.name.localeCompare(right.name, undefined, { numeric: true })
 )))
-const isReservedPropertyName = (name) => ['color', 'size', 'style'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(name || '').trim().toLowerCase())
 const hasReservedCustomProperty = computed(() => form.customProperties.some(
   (property) => isReservedPropertyName(property.name),
 ))
@@ -174,6 +174,7 @@ const resetForm = () => {
     || ''
   form.colors = ['']
   form.sizes = ['']
+  form.shoeSizes = []
   form.description = ''
   form.price = ''
   form.noBlingPrice = ''
@@ -184,8 +185,6 @@ const resetForm = () => {
   form.quantity = 1
   form.customProperties = []
   form.subCollectionId = ''
-  form.meta = ''; form.maker = ''; form.bagTypes = ''; form.filters = ''; form.shoeTypes = ''
-  form.videos = ''; form.videoPosters = ''; form.imageWrapper = ''; form.optionPlaceholders = '{}'
   clearPhotos()
   videoFiles.value.forEach((video) => URL.revokeObjectURL(video.previewUrl))
   videoFiles.value = []
@@ -203,12 +202,13 @@ const buildProductFormData = () => {
       required: property.required,
       options: property.options.map((option) => option.trim()).filter(Boolean),
     }))
-    .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(property.name.toLowerCase()))
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
   formData.append('size', sizes.join(', '))
+  formData.append('shoeSize', form.shoeSizes.join(', '))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
   formData.append('noBlingPrice', String(form.noBlingPrice))
@@ -219,12 +219,6 @@ const buildProductFormData = () => {
   formData.append('quantity', String(form.quantity))
   formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
-  ;['meta', 'bagTypes', 'filters', 'shoeTypes', 'videos', 'videoPosters'].forEach((field) => {
-    formData.append(field, JSON.stringify(form[field].split(/[\n,]+/).map((value) => value.trim()).filter(Boolean)))
-  })
-  formData.append('maker', form.maker.trim())
-  formData.append('imageWrapper', form.imageWrapper.trim())
-  formData.append('optionPlaceholders', form.optionPlaceholders.trim() || '{}')
 
   photoFiles.value.forEach(({ file }) => {
     formData.append('photos', file)
@@ -257,7 +251,7 @@ const submitForm = async () => {
   fieldErrors.subCollectionId = ''
 
   if (hasReservedCustomProperty.value) {
-    error.value = 'Color, Size, and Style are built-in properties and cannot be added as custom properties.'
+    error.value = 'Color, Shirt Size, Shoe Size, and Style are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -392,9 +386,15 @@ watch(
           </div>
 
           <div class="field">
-            <label>Sizes</label>
+            <label>Shirt Sizes</label>
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
-            <p class="hint">Each size becomes an option in one Size dropdown on the item page.</p>
+            <p class="hint">Each size becomes an option in one Shirt Size dropdown on the item page.</p>
+          </div>
+
+          <div class="field">
+            <label>Shoe Sizes</label>
+            <ShoeSizeOptionEditor v-model="form.shoeSizes" :disabled="loading" />
+            <p class="hint">Select whole shoe sizes from 6 through 12.</p>
           </div>
         </div>
 
@@ -425,7 +425,7 @@ watch(
         </div>
 
         <p v-if="!form.customProperties.length" class="hint">
-          Add dropdown properties like print position or material. Color, Size, and Style are managed separately.
+          Add dropdown properties like print position or material. Color, Shirt Size, Shoe Size, and Style are managed separately.
         </p>
 
         <div
@@ -440,7 +440,7 @@ watch(
               placeholder="Property Name (e.g. Material)"
             >
             <p v-if="isReservedPropertyName(property.name)" class="field-error">
-              Color, Size, and Style are built-in properties. Use their dedicated fields.
+              Color, Shirt Size, Shoe Size, and Style are built-in properties. Use their dedicated fields.
             </p>
 
             <label class="checkbox-row">
@@ -540,22 +540,6 @@ watch(
           <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
           Out Of Stock
         </label>
-      </section>
-
-      <section class="card">
-        <div class="section-header"><h2>Advanced Storefront Details</h2></div>
-        <p class="hint">Use one value per line for list fields. These values are shown and filtered by the live storefront.</p>
-        <div class="form-grid">
-          <div class="field"><label>Maker</label><input v-model="form.maker" type="text"></div>
-          <div class="field"><label>Product metadata</label><textarea v-model="form.meta" rows="3" placeholder="One line per detail" /></div>
-          <div class="field"><label>Filters</label><textarea v-model="form.filters" rows="3" /></div>
-          <div class="field"><label>Bag types</label><textarea v-model="form.bagTypes" rows="3" /></div>
-          <div class="field"><label>Shoe types</label><textarea v-model="form.shoeTypes" rows="3" /></div>
-          <div class="field"><label>Video URLs</label><textarea v-model="form.videos" rows="3" /></div>
-          <div class="field"><label>Video poster URLs</label><textarea v-model="form.videoPosters" rows="3" /></div>
-          <div class="field"><label>Image wrapper class</label><input v-model="form.imageWrapper" type="text"></div>
-          <div class="field field--full"><label>Option placeholders (JSON)</label><textarea v-model="form.optionPlaceholders" rows="3" placeholder='{"Color":"Select color"}' /></div>
-        </div>
       </section>
 
       <div class="actions">

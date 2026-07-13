@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import SizeOptionEditor from './SizeOptionEditor.vue'
+import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import { sortSizeOptions } from '../../utils/sizeOptions.js'
 
@@ -48,6 +49,7 @@ const editSnapshot = (product) => JSON.stringify({
   subCollectionId: String(product?.subCollectionId || ''),
   colors: (product?.colors || []).map((value) => String(value)),
   sizes: (product?.sizes || []).map((value) => String(value)),
+  shoeSizes: (product?.shoeSizes || []).map((value) => String(value)),
   customProperties: (product?.customProperties || []).map((property) => ({
     name: String(property.name || ''),
     required: Boolean(property.required),
@@ -62,11 +64,7 @@ const editSnapshot = (product) => JSON.stringify({
   freeShipping: Boolean(product?.freeShipping),
   outOfStock: Boolean(product?.outOfStock),
   quantity: String(product?.quantity ?? ''),
-  meta: (product?.meta || []).join('\n'), maker: String(product?.maker || ''),
-  bagTypes: (product?.bagTypes || []).join('\n'), filters: (product?.filters || []).join('\n'),
-  shoeTypes: (product?.shoeTypes || []).join('\n'), videos: (product?.videos || []).join('\n'),
-  videoPosters: (product?.videoPosters || []).join('\n'), imageWrapper: String(product?.imageWrapper || ''),
-  optionPlaceholders: JSON.stringify(product?.optionPlaceholders || {}),
+  videos: (product?.videos || []).join('\n'),
 })
 
 const editIsDirty = computed(() => Boolean(
@@ -398,13 +396,11 @@ const openEditModal = async (product) => {
     subCollectionId: getSubCollectionId(product),
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
+    shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean),
     customProperties: customProperties.filter(
-      (property) => !['color', 'size', 'style'].includes(String(property.name).toLowerCase()),
+      (property) => !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name).toLowerCase()),
     ),
-    meta: (product.meta || []).join('\n'), bagTypes: (product.bagTypes || []).join('\n'),
-    filters: (product.filters || []).join('\n'), shoeTypes: (product.shoeTypes || []).join('\n'),
-    videos: (product.videos || []).join('\n'), videoPosters: (product.videoPosters || []).join('\n'),
-    optionPlaceholders: JSON.stringify(product.optionPlaceholders || {}, null, 2),
+    videos: (product.videos || []).join('\n'),
   }
   editModalError.value = ''
   editPhotoFiles.value = []
@@ -585,9 +581,9 @@ const saveProduct = async () => {
   }
 
   if (editingProduct.value.customProperties.some((property) => (
-    ['color', 'size', 'style'].includes(String(property.name || '').trim().toLowerCase())
+    ['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Size, and Style are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Shirt Size, Shoe Size, and Style are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -616,13 +612,14 @@ const saveProduct = async () => {
         required: Boolean(property.required),
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
-      .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
+      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(property.name.toLowerCase()))
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
     formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
     formData.append('color', colors.join(', '))
     formData.append('size', sizes.join(', '))
+    formData.append('shoeSize', editingProduct.value.shoeSizes.join(', '))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
     formData.append('noBlingPrice', editingProduct.value.noBlingPrice == null ? '' : String(editingProduct.value.noBlingPrice))
@@ -633,12 +630,7 @@ const saveProduct = async () => {
     formData.append('quantity', String(editingProduct.value.quantity ?? 1))
     formData.append('customProperties', JSON.stringify(customProperties))
     formData.append('photos', JSON.stringify(editingProduct.value.photos || []))
-    ;['meta', 'bagTypes', 'filters', 'shoeTypes', 'videos', 'videoPosters'].forEach((field) => {
-      formData.append(field, JSON.stringify(String(editingProduct.value[field] || '').split(/[\n,]+/).map((value) => value.trim()).filter(Boolean)))
-    })
-    formData.append('maker', String(editingProduct.value.maker || '').trim())
-    formData.append('imageWrapper', String(editingProduct.value.imageWrapper || '').trim())
-    formData.append('optionPlaceholders', String(editingProduct.value.optionPlaceholders || '{}'))
+    formData.append('videos', JSON.stringify(String(editingProduct.value.videos || '').split('\n').filter(Boolean)))
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
     editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
@@ -772,7 +764,7 @@ const sortedProperties = (properties = []) => [...properties].sort((left, right)
 const sortedOptions = (options = []) => [...options].sort((left, right) => (
   left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 ))
-const isReservedPropertyName = (name) => ['color', 'size', 'style'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(name || '').trim().toLowerCase())
 const customPropertiesForDisplay = (properties = []) => sortedProperties(properties).filter(
   (property) => !isReservedPropertyName(property.name),
 )
@@ -939,7 +931,8 @@ watch(
           <p v-if="product.noBlingPrice != null"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
-          <p v-if="product.size"><strong>Size:</strong> {{ product.size }}</p>
+          <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
+          <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p>
             <strong>{{ product.noBlingPrice != null ? 'Description with Bling:' : 'Description:' }}</strong><br>
             {{ product.description }}
@@ -1115,9 +1108,15 @@ watch(
         </div>
 
         <div class="field">
-          <label>Sizes</label>
+          <label>Shirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
-          <p class="hint">These appear together in one Size dropdown.</p>
+          <p class="hint">These appear together in one Shirt Size dropdown.</p>
+        </div>
+
+        <div class="field">
+          <label>Shoe Sizes</label>
+          <ShoeSizeOptionEditor v-model="editingProduct.shoeSizes" :disabled="saving" />
+          <p class="hint">Select whole shoe sizes from 6 through 12.</p>
         </div>
 
         <div class="field edit-section">
@@ -1138,7 +1137,7 @@ watch(
             <div class="edit-property-header">
               <input v-model="property.name" type="text" placeholder="Property name">
               <p v-if="isReservedPropertyName(property.name)" class="field-error">
-                Color, Size, and Style are built-in properties. Use their dedicated fields.
+                Color, Shirt Size, Shoe Size, and Style are built-in properties. Use their dedicated fields.
               </p>
               <label class="edit-checkbox">
                 <input v-model="property.required" type="checkbox">
@@ -1256,20 +1255,6 @@ watch(
           <label>Shipping Cost (USD)</label>
           <input v-model.number="editingProduct.shippingCost" type="number" min="0" step="0.01">
         </div>
-
-        <details class="advanced-fields">
-          <summary>Advanced Storefront Details</summary>
-          <p class="hint">Use one value per line for list fields.</p>
-          <div class="field"><label>Maker</label><input v-model="editingProduct.maker" type="text"></div>
-          <div class="field"><label>Product metadata</label><textarea v-model="editingProduct.meta" rows="3" /></div>
-          <div class="field"><label>Filters</label><textarea v-model="editingProduct.filters" rows="3" /></div>
-          <div class="field"><label>Bag types</label><textarea v-model="editingProduct.bagTypes" rows="3" /></div>
-          <div class="field"><label>Shoe types</label><textarea v-model="editingProduct.shoeTypes" rows="3" /></div>
-          <div class="field"><label>Video URLs</label><textarea v-model="editingProduct.videos" rows="3" /></div>
-          <div class="field"><label>Video poster URLs</label><textarea v-model="editingProduct.videoPosters" rows="3" /></div>
-          <div class="field"><label>Image wrapper class</label><input v-model="editingProduct.imageWrapper" type="text"></div>
-          <div class="field"><label>Option placeholders (JSON)</label><textarea v-model="editingProduct.optionPlaceholders" rows="4" /></div>
-        </details>
 
         <div class="field">
           <label>

@@ -44,16 +44,22 @@ const groupedSlugs = computed(() =>
   new Set(catalogStore.collectionCategoryOrder.flatMap((group) => group.slugs))
 )
 
+const byCollectionTitle = (left, right) => left.title.localeCompare(
+  right.title,
+  undefined,
+  { numeric: true, sensitivity: 'base' },
+)
+
 const collectionGroups = computed(() => [
   ...catalogStore.collectionCategoryOrder.map((group) => ({
     title: group.title,
-    collections: group.slugs.map((slug) => visibleBySlug.value.get(slug)).filter(Boolean),
+    collections: group.slugs.map((slug) => visibleBySlug.value.get(slug)).filter(Boolean).sort(byCollectionTitle),
   })),
   {
     title: 'Other Collections',
     collections: catalogStore.visibleCollectionPages.filter(
       (collection) => !groupedSlugs.value.has(collection.slug),
-    ),
+    ).sort(byCollectionTitle),
   },
 ].filter((group) => group.collections.length > 0))
 

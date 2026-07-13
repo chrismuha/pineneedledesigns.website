@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema({
   },
   color: { type: String, default: '', trim: true },
   size: { type: String, default: '', trim: true },
+  shoeSize: { type: String, default: '', trim: true },
   description: {
     type: String,
     required: true,

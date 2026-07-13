@@ -23,7 +23,7 @@ const mapOptionsToCustomProperties = (options) => {
         ? option.values.map((value) => String(value || '').trim()).filter(Boolean)
         : [],
     }))
-    .filter((option) => option.name && !['color', 'size', 'style'].includes(option.name.toLowerCase()));
+    .filter((option) => option.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(option.name.toLowerCase()));
 };
 
 const mapOptionPlaceholders = (options) => {

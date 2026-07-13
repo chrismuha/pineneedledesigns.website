@@ -15,7 +15,7 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size', 'style'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -25,13 +25,16 @@ const mapProductToStorefront = (product, categoryFilters = []) => {
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
   const colorOptions = colors.length ? colors : propertyValues('Color');
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
+  const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
+    .sort((left, right) => Number(left) - Number(right));
   const blingOptions = product.noBlingPrice != null
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
-    ...(sizeOptions.length ? [{ name: 'Size', values: sizeOptions, placeholder: placeholders.Size || 'Select size' }] : []),
+    ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
+    ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...customOptions,
   ];
 
@@ -143,7 +146,7 @@ const attachCollectionNavigation = (pages) => {
 };
 
 export const getStorefrontCatalog = async () => {
-  const collections = await Collection.find({ isSystem: false }).sort({ sortOrder: 1, name: 1 }).lean();
+  const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
   const products = await Product.find().sort({ sortOrder: 1, name: 1 }).lean();
 

@@ -67,7 +67,7 @@ const normalizeCustomProperties = (properties) => {
           .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }))
         : [],
     }))
-    .filter((property) => property.name && !['color', 'size', 'style'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(property.name.toLowerCase()))
     .sort((left, right) => left.name.localeCompare(right.name, undefined, { numeric: true, sensitivity: 'base' }));
 };
 
@@ -76,6 +76,13 @@ const parseBooleanField = (value) => {
   if (typeof value === 'string') return value === 'true';
   return Boolean(value);
 };
+
+const normalizeShoeSizes = (value) => [...new Set(String(value || '')
+  .split(',')
+  .map((size) => size.trim())
+  .filter((size) => /^(?:[6-9]|1[0-2])$/.test(size)))]
+  .sort((left, right) => Number(left) - Number(right))
+  .join(', ');
 
 const normalizePhotos = (photos) => {
   if (typeof photos === 'string') {
@@ -155,6 +162,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       collectionId,
       color: String(body?.color || '').trim(),
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
+      shoeSize: normalizeShoeSizes(body?.shoeSize),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
       price: body?.price !== undefined ? Number(body.price) : undefined,
@@ -187,11 +195,12 @@ const productPopulatePaths = [
 const formatProductForDashboard = (product) => ({
   ...product,
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
+  shoeSize: normalizeShoeSizes(product.shoeSize),
   customProperties: normalizeCustomProperties(product.customProperties),
 });
 
 export const listProductsGrouped = async (_req, res) => {
-  const collections = await Collection.find().sort({ sortOrder: 1, name: 1 }).lean();
+  const collections = await Collection.find().sort({ isSystem: 1, name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
   const products = await Product.find()
     .populate('collectionId', 'name slug isSystem sortOrder')
@@ -289,6 +298,7 @@ export const createProduct = async (req, res) => {
     subCollectionId: subcollectionResult.id,
     color: data.color,
     size: data.size,
+    shoeSize: data.shoeSize,
     customProperties: data.customProperties,
     photos: data.photos,
     price: data.price,
@@ -335,6 +345,7 @@ export const updateProduct = async (req, res) => {
   if (data.description) product.description = data.description;
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
+  if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;
   }

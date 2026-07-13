@@ -20,7 +20,7 @@ const customRows = ref(new Set())
 const dropdownOptions = computed(() => [
   ...shirtSizeTemplates.map((size) => ({ label: size, value: size })),
   { label: 'Custom…', value: CUSTOM_VALUE },
-].sort((left, right) => left.label.localeCompare(right.label, undefined, { numeric: true })))
+])
 const normalizeRows = (sizes) => (sizes?.length ? sizes.map((size) => String(size || '')) : [''])
 
 watch(
