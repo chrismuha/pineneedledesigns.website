@@ -88,6 +88,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const hasBlingOptions = allowBlingOptions && (
     product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null
   );
+  const hasStyleSpecificPricing = product.blingPrice != null || product.noBlingPrice != null;
   const blingOptions = hasBlingOptions
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
@@ -110,6 +111,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     sizePrices: sizePricesFor(product),
     blingPrice: hasBlingOptions ? product.blingPrice ?? product.price : undefined,
     noBlingPrice: hasBlingOptions ? product.noBlingPrice ?? product.price : undefined,
+    hasStyleSpecificPricing: hasBlingOptions && hasStyleSpecificPricing,
     meta: storefrontMeta(product.meta),
     description: product.description,
     noBlingDescription: hasBlingOptions

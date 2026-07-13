@@ -355,6 +355,10 @@ const displayDescription = (product) => {
 
 const displayProductMeta = (product) => {
   const meta = productMeta(product)
+  if (product.hasStyleSpecificPricing && !selectedStyle(product)) {
+    return meta.filter((item) => !/^price:/i.test(String(item).trim()))
+  }
+
   const price = productPrice(product)
 
   if (!Number.isFinite(price)) return meta

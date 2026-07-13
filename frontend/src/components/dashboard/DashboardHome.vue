@@ -14,6 +14,7 @@ const stats = ref({
 })
 
 const formatMoney = (value) => `$${Number(value || 0).toFixed(2)}`
+const hasStyleSpecificPrice = (product) => product.blingPrice != null || product.noBlingPrice != null
 
 const orderLabel = (order) => (order.orderNumber ? `#${order.orderNumber}` : 'Order')
 
@@ -122,7 +123,9 @@ onMounted(loadStats)
           >
           <div>
             <h3>{{ product.name }}</h3>
-            <p>${{ Number(product.price).toFixed(2) }}</p>
+            <p v-if="!hasStyleSpecificPrice(product)">${{ Number(product.price).toFixed(2) }}</p>
+            <p v-if="product.blingPrice != null">With Bling: {{ formatMoney(product.blingPrice) }}</p>
+            <p v-if="product.noBlingPrice != null">Without Bling: {{ formatMoney(product.noBlingPrice) }}</p>
             <p class="recent-date">{{ formatDate(product.createdAt) }}</p>
           </div>
         </RouterLink>

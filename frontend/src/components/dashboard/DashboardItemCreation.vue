@@ -78,6 +78,11 @@ const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe s
 const hasReservedCustomProperty = computed(() => form.customProperties.some(
   (property) => isReservedPropertyName(property.name),
 ))
+const hasStyleSpecificPrice = computed(() => (
+  form.blingPrice !== '' && form.blingPrice != null
+) || (
+  form.noBlingPrice !== '' && form.noBlingPrice != null
+))
 
 const revokePhotoPreview = (photo) => {
   if (photo?.previewUrl) {
@@ -233,7 +238,10 @@ const buildProductFormData = () => {
   }, {})))
   formData.append('comfortColors', JSON.stringify(form.comfortColors))
   formData.append('description', form.description.trim())
-  formData.append('price', String(form.price))
+  const fallbackPrice = hasStyleSpecificPrice.value
+    ? (form.blingPrice !== '' && form.blingPrice != null ? form.blingPrice : form.noBlingPrice)
+    : form.price
+  formData.append('price', String(fallbackPrice))
   formData.append('hasBlingOptions', String(form.hasBlingOptions && collectionAllowsBling.value))
   formData.append('blingPrice', form.hasBlingOptions ? String(form.blingPrice) : '')
   formData.append('noBlingPrice', form.hasBlingOptions ? String(form.noBlingPrice) : '')
@@ -431,11 +439,11 @@ watch(
 
           <div v-if="sizePriceRows.length" class="field field--full">
             <label>Optional Size Prices</label>
-            <p class="hint">Leave a size price blank to use the General Price.</p>
+            <p class="hint">Leave a size price blank to use the {{ hasStyleSpecificPrice ? 'selected style price' : 'General Price' }}.</p>
             <div class="form-grid">
               <label v-for="row in sizePriceRows" :key="row.key" class="field">
                 <span>{{ row.label }}</span>
-                <input v-model="form.sizePrices[row.key]" type="number" min="0" step="0.01" placeholder="Uses General Price">
+                <input v-model="form.sizePrices[row.key]" type="number" min="0" step="0.01" :placeholder="hasStyleSpecificPrice ? 'Uses selected style price' : 'Uses General Price'">
               </label>
             </div>
           </div>
@@ -537,7 +545,7 @@ watch(
         <div class="section-header"><h2>Pricing & Shipping</h2></div>
 
         <div class="vertical-grid form-grid">
-          <div class="field">
+          <div v-if="!hasStyleSpecificPrice" class="field">
             <label>General Price (USD) *</label>
             <input v-model="form.price" type="number" min="0" step="0.01" placeholder="38.00" required>
           </div>
@@ -547,7 +555,7 @@ watch(
               <input v-model="form.hasBlingOptions" type="checkbox">
               Offer Bling and No Bling choices
             </label>
-            <p class="hint">Variant prices use the General Price when their override is blank.</p>
+            <p class="hint">Enter a Bling or No Bling price to use style-specific pricing instead of displaying the General Price.</p>
           </div>
 
           <div v-if="form.hasBlingOptions" class="field">
