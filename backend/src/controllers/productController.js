@@ -136,8 +136,16 @@ const normalizeCalmColors = (value) => {
     }
   }
   if (!Array.isArray(values)) values = [];
-  const selected = new Set(values.map((color) => normalizeColorName(color).toLowerCase()));
-  return CALM_COLORS.filter((color) => selected.has(color.toLowerCase()));
+  const normalized = [...new Set(values
+    .map(normalizeColorName)
+    .filter((color) => color && color.length <= 80))];
+  const selected = new Set(normalized.map((color) => color.toLowerCase()));
+  const presets = CALM_COLORS.filter((color) => selected.has(color.toLowerCase()));
+  const presetNames = new Set(CALM_COLORS.map((color) => color.toLowerCase()));
+  const custom = normalized
+    .filter((color) => !presetNames.has(color.toLowerCase()))
+    .sort((left, right) => left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' }));
+  return [...presets, ...custom];
 };
 
 const normalizePhotos = (photos) => {

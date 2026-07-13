@@ -408,7 +408,7 @@ watch(
           <div class="field field--full">
             <label>Calm Colors</label>
             <CalmColorOptionEditor v-model="form.calmColors" :disabled="loading" />
-            <p class="hint">Optional. Selected choices appear in one Calm Colors dropdown on the item page.</p>
+            <p class="hint">Choose presets or add custom choices for the Calm Colors dropdown on the item page.</p>
           </div>
 
           <div class="field">

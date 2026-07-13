@@ -1179,7 +1179,7 @@ watch(
         <div class="field">
           <label>Calm Colors</label>
           <CalmColorOptionEditor v-model="editingProduct.calmColors" :disabled="saving" />
-          <p class="hint">Optional. Selected choices appear together in one Calm Colors dropdown.</p>
+          <p class="hint">Choose presets or add custom choices for the Calm Colors dropdown.</p>
         </div>
 
         <div class="field">
