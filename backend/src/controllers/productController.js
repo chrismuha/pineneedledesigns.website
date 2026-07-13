@@ -8,7 +8,7 @@ import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
 const CALM_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
-const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'];
+const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'];
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
@@ -85,6 +85,23 @@ const normalizeShoeSizes = (value) => [...new Set(String(value || '')
   .map((size) => size.trim())
   .filter((size) => /^(?:[6-9]|1[0-2])$/.test(size)))]
   .sort((left, right) => Number(left) - Number(right))
+  .join(', ');
+
+const normalizeBeltSizes = (value) => [...new Set(String(value || '')
+  .split(',')
+  .map((size) => size.trim())
+  .filter((size) => /^(?:small|medium|large|28|3[02468]|4[02468]|5[02])$/i.test(size)))]
+  .sort((left, right) => {
+    const namedOrder = ['small', 'medium', 'large'];
+    const leftNamed = namedOrder.indexOf(left.toLowerCase());
+    const rightNamed = namedOrder.indexOf(right.toLowerCase());
+    if (leftNamed !== -1 || rightNamed !== -1) {
+      if (leftNamed === -1) return 1;
+      if (rightNamed === -1) return -1;
+      return leftNamed - rightNamed;
+    }
+    return Number(left) - Number(right);
+  })
   .join(', ');
 
 const normalizeColorName = (value) => (
@@ -191,6 +208,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       color: normalizeColors(body?.color),
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       shoeSize: normalizeShoeSizes(body?.shoeSize),
+      beltSize: normalizeBeltSizes(body?.beltSize),
       calmColors: normalizeCalmColors(body?.calmColors),
       customProperties: normalizeCustomProperties(body?.customProperties),
       photos: Array.isArray(body?.photos) ? body.photos.filter(Boolean) : [],
@@ -226,6 +244,7 @@ const formatProductForDashboard = (product) => ({
   color: normalizeColors(product.color),
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
+  beltSize: normalizeBeltSizes(product.beltSize),
   calmColors: normalizeCalmColors(product.calmColors),
   customProperties: normalizeCustomProperties(product.customProperties),
 });
@@ -332,6 +351,7 @@ export const createProduct = async (req, res) => {
     color: data.color,
     size: data.size,
     shoeSize: data.shoeSize,
+    beltSize: data.beltSize,
     calmColors: data.calmColors,
     customProperties: data.customProperties,
     photos: data.photos,
@@ -380,6 +400,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
   if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
+  if (req.body?.beltSize !== undefined) product.beltSize = data.beltSize;
   if (req.body?.calmColors !== undefined) product.calmColors = data.calmColors;
   if (body.customProperties !== undefined && req.body?.customProperties !== undefined) {
     product.customProperties = data.customProperties;

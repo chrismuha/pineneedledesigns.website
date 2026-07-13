@@ -9,6 +9,18 @@ const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
 );
 
+const beltSizeOrder = ['small', 'medium', 'large'];
+const sortBeltSizes = (left, right) => {
+  const leftNamed = beltSizeOrder.indexOf(left.toLowerCase());
+  const rightNamed = beltSizeOrder.indexOf(right.toLowerCase());
+  if (leftNamed !== -1 || rightNamed !== -1) {
+    if (leftNamed === -1) return 1;
+    if (rightNamed === -1) return -1;
+    return leftNamed - rightNamed;
+  }
+  return Number(left) - Number(right);
+};
+
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
@@ -19,7 +31,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'calm colors'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -31,6 +43,8 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort((left, right) => Number(left) - Number(right));
+  const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
+    .sort(sortBeltSizes);
   const blingOptions = allowBlingOptions && product.noBlingPrice != null
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
@@ -39,6 +53,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
+    ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
     ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors.map(normalizeColorName), placeholder: 'Select a calm color' }] : []),
     ...customOptions,
   ];
