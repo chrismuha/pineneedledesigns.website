@@ -1,5 +1,5 @@
 <script setup>
-const calmColors = ['Pepper', 'Butter', 'Ivory', 'White (Natural)']
+const calmColors = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White']
 
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },

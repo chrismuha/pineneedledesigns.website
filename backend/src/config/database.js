@@ -40,6 +40,39 @@ const ensureMyraBeltsSubcollection = async () => {
   console.log('ℹ️ Added the Belts sub-collection under MYRA.');
 };
 
+const renameNaturalWhiteColors = async () => {
+  const legacyLabel = /^white\s*\(natural\)$/i;
+  const products = await Product.find({
+    $or: [
+      { color: /white\s*\(natural\)/i },
+      { calmColors: legacyLabel },
+      { 'customProperties.options': legacyLabel },
+    ],
+  });
+
+  for (const product of products) {
+    product.color = [...new Set(String(product.color || '')
+      .split(',')
+      .map((color) => legacyLabel.test(color.trim()) ? 'Natural White' : color.trim())
+      .filter(Boolean))]
+      .join(', ');
+    product.calmColors = [...new Set((product.calmColors || []).map(
+      (color) => legacyLabel.test(String(color).trim()) ? 'Natural White' : color,
+    ))];
+    product.customProperties = (product.customProperties || []).map((property) => ({
+      ...(typeof property.toObject === 'function' ? property.toObject() : property),
+      options: [...new Set((property.options || []).map(
+        (option) => legacyLabel.test(String(option).trim()) ? 'Natural White' : option,
+      ))],
+    }));
+    await product.save();
+  }
+
+  if (products.length) {
+    console.log(`ℹ️ Renamed White (Natural) to Natural White for ${products.length} products.`);
+  }
+};
+
 const inferSubcollectionName = (productName, subcollectionNames) => {
   const name = String(productName || '').toLowerCase();
   const sorted = [...subcollectionNames].sort((left, right) => right.length - left.length);
@@ -273,6 +306,7 @@ export const connectDatabase = async () => {
   await migrateLegacySubcollectionFields();
   await repairLegacyProductIndex();
   await backfillProductQuantities();
+  await renameNaturalWhiteColors();
   await ensureMyraBeltsSubcollection();
   await backfillProductSubcollectionIds();
 };

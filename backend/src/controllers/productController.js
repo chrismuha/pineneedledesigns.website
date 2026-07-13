@@ -7,7 +7,7 @@ import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
-const CALM_COLORS = ['Pepper', 'Butter', 'Ivory', 'White (Natural)'];
+const CALM_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
 const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'style', 'calm colors'];
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
@@ -87,6 +87,16 @@ const normalizeShoeSizes = (value) => [...new Set(String(value || '')
   .sort((left, right) => Number(left) - Number(right))
   .join(', ');
 
+const normalizeColorName = (value) => (
+  /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
+);
+
+const normalizeColors = (value) => [...new Set(String(value || '')
+  .split(',')
+  .map(normalizeColorName)
+  .filter(Boolean))]
+  .join(', ');
+
 const normalizeCalmColors = (value) => {
   let values = value;
   if (typeof values === 'string') {
@@ -97,7 +107,7 @@ const normalizeCalmColors = (value) => {
     }
   }
   if (!Array.isArray(values)) values = [];
-  const selected = new Set(values.map((color) => String(color).trim().toLowerCase()));
+  const selected = new Set(values.map((color) => normalizeColorName(color).toLowerCase()));
   return CALM_COLORS.filter((color) => selected.has(color.toLowerCase()));
 };
 
@@ -178,7 +188,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       name,
       description,
       collectionId,
-      color: String(body?.color || '').trim(),
+      color: normalizeColors(body?.color),
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       shoeSize: normalizeShoeSizes(body?.shoeSize),
       calmColors: normalizeCalmColors(body?.calmColors),
@@ -213,6 +223,7 @@ const productPopulatePaths = [
 
 const formatProductForDashboard = (product) => ({
   ...product,
+  color: normalizeColors(product.color),
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
   calmColors: normalizeCalmColors(product.calmColors),

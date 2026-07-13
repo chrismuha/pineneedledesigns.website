@@ -5,6 +5,10 @@ import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
+const normalizeColorName = (value) => (
+  /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
+);
+
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
@@ -21,7 +25,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
       values: property.options || [],
       placeholder: placeholders[property.name] || `Select ${String(property.name).toLowerCase()}`,
     }));
-  const colors = String(product.color || '').split(',').map((value) => value.trim()).filter(Boolean);
+  const colors = String(product.color || '').split(',').map(normalizeColorName).filter(Boolean);
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
   const colorOptions = colors.length ? colors : propertyValues('Color');
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
@@ -35,7 +39,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
-    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors, placeholder: 'Select a calm color' }] : []),
+    ...(product.calmColors?.length ? [{ name: 'Calm Colors', values: product.calmColors.map(normalizeColorName), placeholder: 'Select a calm color' }] : []),
     ...customOptions,
   ];
 

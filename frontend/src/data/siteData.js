@@ -853,12 +853,15 @@ collectionPages.forEach((page) => {
 
 export const visibleCollectionPages = collectionPages.filter((page) => (page.count > 0 || page.showWhenEmpty) && !page.hidden)
 
-export const shirtColorTemplates = [...new Set(
-  (collectionPages.find((page) => page.slug === 'shirts')?.products || [])
+export const shirtColorTemplates = [...new Set([
+  'White',
+  'Natural White',
+  ...(collectionPages.find((page) => page.slug === 'shirts')?.products || [])
     .flatMap((product) => product.options || [])
     .filter((option) => String(option.name).toLowerCase() === 'color')
-    .flatMap((option) => option.values || []),
-)].sort((left, right) => left.localeCompare(right))
+    .flatMap((option) => option.values || [])
+    .map((color) => color === 'White (Natural)' ? 'Natural White' : color),
+])].sort((left, right) => left.localeCompare(right))
 
 export const shirtSizeTemplates = ['Small', 'Medium', 'Large', '2X', '3X']
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
