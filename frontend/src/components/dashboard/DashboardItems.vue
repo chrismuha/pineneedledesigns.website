@@ -827,7 +827,7 @@ watch(
         <h2 class="collection-title">{{ collectionLabel(collection) }}</h2>
 
         <p v-if="getSubcollectionsForCollection(collection).length" class="collection-subtitle">
-          Filter items by filter/sub-collection.
+          Filter items by sub-collection.
         </p>
 
         <p v-if="isSubcollectionsLoading(collection._id)" class="collection-subtitle">
@@ -996,12 +996,7 @@ watch(
             class="collection-row"
           >
             <div class="collection-row-main">
-              <div v-if="editingCollection?._id === collection._id" class="inline-field collection-inline-rename">
-                <input v-model="collectionForm.name" type="text" :aria-label="`Rename ${collection.name}`" @keyup.enter="saveCollection">
-                <button type="button" class="btn-primary" :disabled="saving || !collectionForm.name.trim()" @click="saveCollection">Save</button>
-                <button type="button" class="btn-outline" :disabled="saving" @click="cancelEditCollection">Cancel</button>
-              </div>
-              <RouterLink v-else :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
+              <RouterLink :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
               <span v-if="collection.subcollections?.length" class="collection-meta">
                 {{ collection.subcollections.length }} filters/sub-collections
               </span>
@@ -1018,7 +1013,7 @@ watch(
               </div>
 
               <div class="row-actions">
-                <button v-if="editingCollection?._id !== collection._id" type="button" class="edit-btn icon-button" @click="startEditCollection(collection)">
+                <button type="button" class="edit-btn icon-button" :disabled="saving" @click="startEditCollection(collection)">
                   <i class="bi bi-pencil" aria-hidden="true"></i>
                   <span class="button-text">Rename</span>
                 </button>
@@ -1038,6 +1033,36 @@ watch(
         </div>
 
         <!-- subcollections moved to a standalone modal (opens when managingSubcollectionsFor is set) -->
+      </section>
+    </div>
+
+    <div v-if="editingCollection" class="modal-overlay" @click.self="cancelEditCollection">
+      <section class="modal-card collection-rename-modal" role="dialog" aria-modal="true" aria-labelledby="rename-collection-title">
+        <div class="modal-header">
+          <h2 id="rename-collection-title">Rename Collection</h2>
+          <button type="button" class="modal-close-button" :disabled="saving" aria-label="Cancel renaming collection" @click="cancelEditCollection">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <p v-if="modalError" class="error-banner">{{ modalError }}</p>
+        <div class="field">
+          <label for="collection-rename-input">Collection Name</label>
+          <input
+            id="collection-rename-input"
+            v-model="collectionForm.name"
+            type="text"
+            :disabled="saving"
+            autocomplete="off"
+            autofocus
+            @keyup.enter="saveCollection"
+          >
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-outline" :disabled="saving" @click="cancelEditCollection">Cancel</button>
+          <button type="button" class="btn-primary" :disabled="saving || !collectionForm.name.trim()" @click="saveCollection">
+            {{ saving ? 'Saving...' : 'Save Name' }}
+          </button>
+        </div>
       </section>
     </div>
 
