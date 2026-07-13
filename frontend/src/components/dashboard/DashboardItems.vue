@@ -21,6 +21,7 @@ const editModalError = ref('')
 const showCollectionManager = ref(false)
 const showEditModal = ref(false)
 const editingProduct = ref(null)
+const openingProductId = ref('')
 const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
 const editVideoFiles = ref([])
@@ -386,7 +387,7 @@ const confirmSubcollectionDeletion = async () => {
   await deleteSubcollection(subcollection)
 }
 
-const openEditModal = async (product) => {
+const initializeEditModal = async (product) => {
   const customProperties = product.customProperties?.length
     ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
     : []
@@ -431,6 +432,22 @@ const openEditModal = async (product) => {
   editInitialSnapshot.value = editSnapshot(editingProduct.value)
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
+}
+
+const openEditModal = async (product) => {
+  const productId = String(product?._id || product || '')
+  if (!productId || openingProductId.value) return
+
+  openingProductId.value = productId
+  error.value = ''
+  try {
+    const freshProduct = await dashboardApi.getProduct(productId)
+    await initializeEditModal(freshProduct)
+  } catch (err) {
+    error.value = err.message || `Could not open ${product?.name || 'this item'} for editing.`
+  } finally {
+    openingProductId.value = ''
+  }
 }
 
 const closeEditModal = async () => {
@@ -1011,8 +1028,8 @@ watch(
         </div>
 
         <div class="actions">
-          <button class="edit-btn" type="button" @click="openEditModal(product)">
-            Edit
+          <button class="edit-btn" type="button" :disabled="Boolean(openingProductId)" @click.stop="openEditModal(product)">
+            {{ openingProductId === String(product._id) ? 'Opening...' : 'Edit' }}
           </button>
 
           <button class="delete-btn btn-danger" type="button" @click="requestProductDeletion(product)">
