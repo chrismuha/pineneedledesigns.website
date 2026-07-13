@@ -310,9 +310,7 @@ const isActive = (path) => {
     min-height: 68px;
     overflow: visible;
     isolation: isolate;
-    background:
-      radial-gradient(circle at 16% -30%, rgba(255, 255, 255, .92) 0 24%, transparent 55%),
-      linear-gradient(125deg, rgba(255, 255, 255, .6), rgba(226, 247, 233, .26) 54%, rgba(255, 255, 255, .44));
+    background: linear-gradient(180deg, rgba(255, 255, 255, .58), rgba(239, 250, 242, .4));
     border: 1px solid rgba(255, 255, 255, .76);
     border-radius: 999px;
     box-shadow:
@@ -334,12 +332,12 @@ const isActive = (path) => {
     content: '';
     position: absolute;
     z-index: 2;
-    inset: 1px 8% auto;
+    inset: 1px 5% auto;
     height: 46%;
     border-radius: 999px;
     background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, 0));
     pointer-events: none;
-    opacity: .72;
+    opacity: .78;
   }
 
   .bottom-nav::after {
@@ -348,9 +346,7 @@ const isActive = (path) => {
     z-index: 0;
     inset: 5px;
     border-radius: inherit;
-    background:
-      radial-gradient(circle at 18% 75%, rgba(102, 219, 136, .18), transparent 25%),
-      radial-gradient(circle at 82% 20%, rgba(255, 255, 255, .66), transparent 28%);
+    background: linear-gradient(90deg, rgba(208, 244, 218, .14), rgba(255, 255, 255, .34), rgba(208, 244, 218, .14));
     filter: blur(7px);
     pointer-events: none;
   }
@@ -368,11 +364,17 @@ const isActive = (path) => {
     padding: 7px 4px 6px;
     margin: 0;
     border-radius: 999px;
-    background: rgba(255, 255, 255, .08);
-    border: 1px solid transparent;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .22));
+    border: 1px solid rgba(255, 255, 255, .62);
     text-decoration: none;
     color: #25442e;
-    box-shadow: none;
+    box-shadow:
+      0 3px 10px rgba(17, 55, 30, .06),
+      inset 0 1px 1px rgba(255, 255, 255, .9),
+      inset 0 -1px 1px rgba(25, 112, 52, .07);
+    backdrop-filter: blur(12px) saturate(155%);
+    -webkit-backdrop-filter: blur(12px) saturate(155%);
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -399,16 +401,15 @@ const isActive = (path) => {
 
   .bottom-tab.active {
     background:
-      radial-gradient(circle at 30% 5%, rgba(255, 255, 255, .88), transparent 38%),
-      linear-gradient(145deg, rgba(225, 250, 232, .7), rgba(137, 218, 160, .36));
-    border-color: rgba(255, 255, 255, .82);
+      linear-gradient(180deg, rgba(240, 255, 244, .7), rgba(159, 226, 178, .42));
+    border-color: rgba(255, 255, 255, .86);
     color: #0d6a2b;
     box-shadow:
-      0 7px 18px rgba(25, 112, 52, .16),
+      0 7px 18px rgba(25, 112, 52, .14),
       inset 0 1px 1px rgba(255, 255, 255, .98),
       inset 0 -1px 1px rgba(29, 138, 61, .16);
-    backdrop-filter: blur(12px) saturate(170%);
-    -webkit-backdrop-filter: blur(12px) saturate(170%);
+    backdrop-filter: blur(14px) saturate(170%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
     transform: translateY(-1px);
   }
 
@@ -419,8 +420,8 @@ const isActive = (path) => {
 
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
-    background: rgba(255, 255, 255, .42);
-    border-color: rgba(255, 255, 255, .66);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(246, 253, 248, .42));
+    border-color: rgba(255, 255, 255, .84);
     color: #176c31;
   }
 
