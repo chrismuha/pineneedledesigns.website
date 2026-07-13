@@ -51,7 +51,7 @@ export const createSubcollection = async (req, res) => {
 
     const name = String(req.body?.name || '').trim();
     if (!name) {
-      return res.status(400).json({ error: 'Subcollection name is required.' });
+      return res.status(400).json({ error: 'Filter/sub-collection name is required.' });
     }
 
     const maxSort = await Subcollection.findOne({ collectionId: collection._id })
@@ -69,10 +69,10 @@ export const createSubcollection = async (req, res) => {
     res.status(201).json(subcollection);
   } catch (err) {
     if (err?.code === 11000) {
-      return res.status(409).json({ error: 'A subcollection with that name already exists in this collection.' });
+      return res.status(409).json({ error: 'A filter/sub-collection with that name already exists in this collection.' });
     }
     console.error('Failed to create subcollection:', err);
-    return res.status(500).json({ error: 'Failed to create subcollection.' });
+    return res.status(500).json({ error: 'Failed to create filter/sub-collection.' });
   }
 };
 
@@ -87,12 +87,12 @@ export const updateSubcollection = async (req, res) => {
     });
 
     if (!subcollection) {
-      return res.status(404).json({ error: 'Subcollection not found.' });
+      return res.status(404).json({ error: 'Filter/sub-collection not found.' });
     }
 
     const name = String(req.body?.name || '').trim();
     if (!name) {
-      return res.status(400).json({ error: 'Subcollection name is required.' });
+      return res.status(400).json({ error: 'Filter/sub-collection name is required.' });
     }
 
     subcollection.name = name;
@@ -106,10 +106,10 @@ export const updateSubcollection = async (req, res) => {
     res.json(subcollection);
   } catch (err) {
     if (err?.code === 11000) {
-      return res.status(409).json({ error: 'A subcollection with that name already exists in this collection.' });
+      return res.status(409).json({ error: 'A filter/sub-collection with that name already exists in this collection.' });
     }
     console.error('Failed to update subcollection:', err);
-    return res.status(500).json({ error: 'Failed to update subcollection.' });
+    return res.status(500).json({ error: 'Failed to update filter/sub-collection.' });
   }
 };
 
@@ -123,7 +123,7 @@ export const deleteSubcollection = async (req, res) => {
   });
 
   if (!subcollection) {
-    return res.status(404).json({ error: 'Subcollection not found.' });
+    return res.status(404).json({ error: 'Filter/sub-collection not found.' });
   }
 
   await Product.updateMany(

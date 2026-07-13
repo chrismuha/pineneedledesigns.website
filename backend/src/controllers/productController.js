@@ -24,14 +24,14 @@ const resolveSubCollectionId = async (collectionId, subCollectionId, { requireWh
   const subcollectionCount = await Subcollection.countDocuments({ collectionId });
 
   if (subcollectionCount > 0 && requireWhenAvailable && !id) {
-    return { id: null, error: 'Subcollection is required for this collection.' };
+    return { id: null, error: 'A filter/sub-collection is required for this collection.' };
   }
 
   if (!id) {
     return { id: null, error: null };
   }
   if (!validId(id)) {
-    return { id: null, error: 'Subcollection is invalid for this collection.' };
+    return { id: null, error: 'The filter/sub-collection is invalid for this collection.' };
   }
 
   const subcollection = await Subcollection.findOne({
@@ -39,7 +39,7 @@ const resolveSubCollectionId = async (collectionId, subCollectionId, { requireWh
     collectionId,
   }).select('_id');
   if (!subcollection) {
-    return { id: null, error: 'Subcollection is invalid for this collection.' };
+    return { id: null, error: 'The filter/sub-collection is invalid for this collection.' };
   }
 
   return { id: subcollection._id, error: null };
@@ -230,7 +230,7 @@ export const listProducts = async (req, res) => {
     filter.collectionId = objectId(req.query.collectionId);
   }
   if (req.query.subCollectionId) {
-    if (!validId(req.query.subCollectionId)) return res.status(400).json({ error: 'Invalid subcollection ID.' });
+    if (!validId(req.query.subCollectionId)) return res.status(400).json({ error: 'Invalid filter/sub-collection ID.' });
     filter.subCollectionId = objectId(req.query.subCollectionId);
   }
 

@@ -16,16 +16,16 @@
       <div
         v-else-if="subcollectionsLoading"
         class="collection-filters collection-filters--loading"
-        aria-label="Loading sub-collections"
+        aria-label="Loading filters/sub-collections"
       >
-        <span class="collection-status">Loading sub-collections...</span>
+        <span class="collection-status">Loading filters/sub-collections...</span>
       </div>
 
       <div
         v-else-if="subcollections.length"
         class="collection-filters"
         :class="{ 'collection-filters--with-bag-types': showBagTypeFilter }"
-        aria-label="Sub-collections"
+        aria-label="Filters/Sub-Collections"
       >
         <button
           type="button"
@@ -222,7 +222,7 @@ const loadSubcollections = async () => {
     subcollections.value = await catalogApi.getSubcollections(props.slug)
   } catch (error) {
     subcollections.value = []
-    subcollectionsError.value = error.message || 'Failed to load sub-collections.'
+    subcollectionsError.value = error.message || 'Failed to load filters/sub-collections.'
   } finally {
     subcollectionsLoading.value = false
   }

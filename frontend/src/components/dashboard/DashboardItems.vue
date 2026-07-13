@@ -288,7 +288,7 @@ const saveSubcollection = async () => {
 
   const name = subcollectionForm.value.name.trim()
   if (!name) {
-    subcollectionFieldError.value = 'Subcollection name is required.'
+    subcollectionFieldError.value = 'Filter/sub-collection name is required.'
     return
   }
 
@@ -396,7 +396,9 @@ const openEditModal = async (product) => {
     subCollectionId: getSubCollectionId(product),
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
-    shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean),
+    shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
+      ? String(product.shoeSize).split(',').map((size) => size.trim()).filter(Boolean)
+      : [''],
     customProperties: customProperties.filter(
       (property) => !['color', 'size', 'shirt size', 'shoe size', 'style'].includes(String(property.name).toLowerCase()),
     ),
@@ -591,7 +593,7 @@ const saveProduct = async () => {
     collectionRequiresSubcollection(editingProduct.value.collectionId)
     && !editingProduct.value.subCollectionId
   ) {
-    editModalError.value = 'Please select a subcollection for this collection.'
+    editModalError.value = 'Please select a filter/sub-collection for this collection.'
     return
   }
 
@@ -619,7 +621,7 @@ const saveProduct = async () => {
     formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
     formData.append('color', colors.join(', '))
     formData.append('size', sizes.join(', '))
-    formData.append('shoeSize', editingProduct.value.shoeSizes.join(', '))
+    formData.append('shoeSize', editingProduct.value.shoeSizes.filter(Boolean).join(', '))
     formData.append('description', editingProduct.value.description)
     formData.append('price', String(Number(editingProduct.value.price)))
     formData.append('noBlingPrice', editingProduct.value.noBlingPrice == null ? '' : String(editingProduct.value.noBlingPrice))
@@ -813,7 +815,7 @@ watch(
           <span class="collection-summary-title">{{ collectionLabel(collection) }}</span>
           <span class="collection-count">{{ collection.products.length }} Items</span>
           <span v-if="getSubcollectionsForCollection(collection).length" class="collection-count">
-            {{ getSubcollectionsForCollection(collection).length }} Subcollections
+            {{ getSubcollectionsForCollection(collection).length }} Filters/Sub-Collections
           </span>
         </span>
       </summary>
@@ -825,11 +827,11 @@ watch(
         <h2 class="collection-title">{{ collectionLabel(collection) }}</h2>
 
         <p v-if="getSubcollectionsForCollection(collection).length" class="collection-subtitle">
-          Filter items by sub-collection.
+          Filter items by filter/sub-collection.
         </p>
 
         <p v-if="isSubcollectionsLoading(collection._id)" class="collection-subtitle">
-          Loading sub-collections...
+          Loading filters/sub-collections...
         </p>
         <div class="collection-header-actions">
           <RouterLink :to="{ path: '/dashboard/create', query: { collection: collection._id } }" class="btn-primary">Add New Item</RouterLink>
@@ -849,7 +851,7 @@ watch(
         <div
           v-if="getSubcollectionsForCollection(collection).length"
           class="collection-filters"
-          aria-label="Sub-collection filters"
+          aria-label="Filters/Sub-Collections"
         >
           <button
             type="button"
@@ -883,7 +885,7 @@ watch(
         v-else-if="!filteredProductsForCollection(collection).length"
         class="empty-collection"
       >
-        No items in this sub-collection yet.
+        No items in this filter/sub-collection yet.
       </p>
 
       <div
@@ -906,7 +908,7 @@ watch(
               v-else-if="productMissingSubcollection(product, collection)"
               class="badge orange"
             >
-              No Subcollection
+              No Filter/Sub-Collection
             </span>
           </div>
         </div>
@@ -924,7 +926,7 @@ watch(
         <div class="item-details">
           <p><strong>Collection:</strong> {{ collectionLabel(collection) }}</p>
           <p v-if="productSubcollectionLabel(product)">
-            <strong>Subcollection:</strong> {{ productSubcollectionLabel(product) }}
+            <strong>Filter/Sub-Collection:</strong> {{ productSubcollectionLabel(product) }}
           </p>
           <p><strong>Price:</strong> ${{ Number(product.price).toFixed(2) }}</p>
           <p v-if="product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
@@ -1001,7 +1003,7 @@ watch(
               </div>
               <RouterLink v-else :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
               <span v-if="collection.subcollections?.length" class="collection-meta">
-                {{ collection.subcollections.length }} subcollections
+                {{ collection.subcollections.length }} filters/sub-collections
               </span>
             </div>
             <div class="collection-actions">
@@ -1011,7 +1013,7 @@ watch(
                   class="manage-btn subcollection-btn"
                   @click="openSubcollectionManager(collection)"
                 >
-                  Subcollections
+                  Filters/Sub-Collections
                 </button>
               </div>
 
@@ -1081,14 +1083,14 @@ watch(
           v-if="collectionRequiresSubcollection(editingProduct.collectionId)"
           class="field"
         >
-          <label>Subcollection *</label>
+          <label>Filter/Sub-Collection *</label>
           <select
             v-model="editingProduct.subCollectionId"
             required
             :disabled="editSubcollectionsLoading || saving"
           >
             <option value="">
-              {{ editSubcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
+              {{ editSubcollectionsLoading ? 'Loading filters/sub-collections...' : 'Select a filter/sub-collection' }}
             </option>
             <option
               v-for="subcollection in sortedSubcollectionsForCollection(editingProduct.collectionId)"
@@ -1343,7 +1345,7 @@ watch(
     <div v-if="managingSubcollectionsFor" class="modal-overlay">
       <section class="modal-card modal-card--wide modal-card--fullscreen">
         <div class="modal-header">
-          <h2>Subcollections for {{ managingSubcollectionsFor.name }}</h2>
+          <h2>Filters/Sub-Collections for {{ managingSubcollectionsFor.name }}</h2>
           <button type="button" class="clear-btn" @click="closeSubcollectionManager">Done</button>
         </div>
 
@@ -1352,10 +1354,10 @@ watch(
         </p>
 
         <p v-if="subcollectionsError" class="error-banner">{{ subcollectionsError }}</p>
-        <p v-if="subcollectionsLoading" class="status-text">Loading subcollections...</p>
+        <p v-if="subcollectionsLoading" class="status-text">Loading filters/sub-collections...</p>
 
         <div class="field">
-          <label>{{ editingSubcollection ? 'Rename Subcollection' : 'New Subcollection' }}</label>
+          <label>{{ editingSubcollection ? 'Rename Filter/Sub-Collection' : 'New Filter/Sub-Collection' }}</label>
           <div class="inline-field">
             <input
               v-model="subcollectionForm.name"
@@ -1370,7 +1372,7 @@ watch(
               :disabled="saving || !subcollectionForm.name.trim()"
               @click="saveSubcollection"
             >
-              {{ saving ? 'Saving...' : (editingSubcollection ? 'Save Name' : 'Add Subcollection') }}
+              {{ saving ? 'Saving...' : (editingSubcollection ? 'Save Name' : 'Add Filter/Sub-Collection') }}
             </button>
             <button
               v-if="editingSubcollection"
@@ -1386,7 +1388,7 @@ watch(
         </div>
 
         <p v-if="!subcollectionsLoading && !managingSubcollectionList.length" class="empty-subcollections">
-          No subcollections yet. Add one above to create chips like “Vests” or “Bracelets”.
+          No filters/sub-collections yet. Add one above to create options like “Vests” or “Bracelets”.
         </p>
 
         <div v-else class="subcollection-list">
@@ -1415,10 +1417,10 @@ watch(
 
     <DashboardConfirmDialog
       :open="Boolean(pendingSubcollectionDelete)"
-      title="Delete subcollection?"
-      :message="`Products in ${pendingSubcollectionDelete?.name || 'this subcollection'} will become unassigned.`"
-      confirm-label="Delete Subcollection"
-      cancel-label="Keep Subcollection"
+      title="Delete filter/sub-collection?"
+      :message="`Products in ${pendingSubcollectionDelete?.name || 'this filter/sub-collection'} will become unassigned.`"
+      confirm-label="Delete Filter/Sub-Collection"
+      cancel-label="Keep Filter/Sub-Collection"
       :busy="saving"
       @confirm="confirmSubcollectionDeletion"
       @cancel="pendingSubcollectionDelete = null"
@@ -1447,7 +1449,7 @@ watch(
           <p>
             This will permanently delete
             <strong>{{ collectionPendingDelete.products?.length || 0 }} item{{ (collectionPendingDelete.products?.length || 0) === 1 ? '' : 's' }}</strong>
-            and all subcollections inside this collection.
+            and all filters/sub-collections inside this collection.
           </p>
           <p class="destructive-warning">This action cannot be undone.</p>
           <div class="confirmation-actions">

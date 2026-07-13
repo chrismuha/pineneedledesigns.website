@@ -36,7 +36,7 @@ const form = reactive({
   collectionId: '',
   colors: [''],
   sizes: [''],
-  shoeSizes: [],
+  shoeSizes: [''],
   description: '',
   price: '',
   noBlingPrice: '',
@@ -174,7 +174,7 @@ const resetForm = () => {
     || ''
   form.colors = ['']
   form.sizes = ['']
-  form.shoeSizes = []
+  form.shoeSizes = ['']
   form.description = ''
   form.price = ''
   form.noBlingPrice = ''
@@ -208,7 +208,7 @@ const buildProductFormData = () => {
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
   formData.append('size', sizes.join(', '))
-  formData.append('shoeSize', form.shoeSizes.join(', '))
+  formData.append('shoeSize', form.shoeSizes.filter(Boolean).join(', '))
   formData.append('description', form.description.trim())
   formData.append('price', String(form.price))
   formData.append('noBlingPrice', String(form.noBlingPrice))
@@ -256,13 +256,13 @@ const submitForm = async () => {
   }
 
   if (requiresSubcollection.value && !form.subCollectionId) {
-    fieldErrors.subCollectionId = 'Please select a subcollection for this collection.'
+    fieldErrors.subCollectionId = 'Please select a filter/sub-collection for this collection.'
     error.value = 'Please fix the highlighted fields before submitting.'
     return
   }
 
   if (subcollectionsLoading.value) {
-    error.value = 'Subcollections are still loading. Please wait a moment.'
+    error.value = 'Filters/sub-collections are still loading. Please wait a moment.'
     return
   }
 
@@ -355,14 +355,14 @@ watch(
           </div>
 
           <div v-if="requiresSubcollection || subcollectionsLoading" class="field field--full">
-            <label>Subcollection *</label>
+            <label>Filter/Sub-Collection *</label>
             <select
               v-model="form.subCollectionId"
               required
               :disabled="subcollectionsLoading || loading"
             >
               <option value="">
-                {{ subcollectionsLoading ? 'Loading subcollections...' : 'Select a subcollection' }}
+                {{ subcollectionsLoading ? 'Loading filters/sub-collections...' : 'Select a filter/sub-collection' }}
               </option>
               <option
                 v-for="subcollection in sortedSubcollections"
@@ -375,7 +375,7 @@ watch(
             <p v-if="subcollectionsError" class="field-error">{{ subcollectionsError }}</p>
             <p v-else-if="fieldErrors.subCollectionId" class="field-error">{{ fieldErrors.subCollectionId }}</p>
             <p v-else class="hint">
-              Manage subcollections from Items → Manage Collections → Subcollections.
+              Manage filters/sub-collections from Items → Manage Collections → Filters/Sub-Collections.
             </p>
           </div>
 
