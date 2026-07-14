@@ -121,6 +121,10 @@ const router = createRouter({
   routes,
 
   scrollBehavior(to) {
+    // Product cards are loaded asynchronously by CollectionView, so that view
+    // scrolls to product anchors once the requested item exists in the DOM.
+    if (to.hash.startsWith('#product-')) return false
+
     if (to.hash) {
       return {
         el: to.hash,

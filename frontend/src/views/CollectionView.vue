@@ -143,6 +143,7 @@
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import MediaSlider from '../components/MediaSlider.vue'
 import ProductOptionSelect from '../components/ProductOptionSelect.vue'
 import { catalogApi } from '../api/catalog.js'
@@ -154,6 +155,7 @@ const props = defineProps({
   slug: String,
 })
 
+const route = useRoute()
 const catalogStore = useCatalogStore()
 const cartStore = useCartStore()
 const selectedOptions = ref({})
@@ -276,6 +278,18 @@ const loadCollectionData = async () => {
   ])
 
   await nextTick()
+  scrollToRequestedProduct()
+}
+
+const scrollToRequestedProduct = () => {
+  if (route.hash.startsWith('#product-')) {
+    const product = document.getElementById(decodeURIComponent(route.hash.slice(1)))
+    if (product) {
+      product.scrollIntoView({ block: 'start', behavior: 'instant' })
+      return
+    }
+  }
+
   firstProductTitle.value?.scrollIntoView({ block: 'start', behavior: 'instant' })
 }
 
@@ -429,6 +443,11 @@ onMounted(() => {
 
 watch(() => props.slug, () => {
   loadCollectionData()
+})
+
+watch(() => route.hash, async () => {
+  await nextTick()
+  scrollToRequestedProduct()
 })
 
 watch(selectedSubcollectionId, () => {
