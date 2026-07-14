@@ -56,12 +56,12 @@ onMounted(loadStats)
     <p v-if="loading" class="status-text">Loading dashboard...</p>
 
     <section v-else class="stats-grid">
-      <article class="stat-card">
+      <RouterLink to="/dashboard/items" class="stat-card stat-card-link">
         <h2>{{ stats.productCount }}</h2>
         <p>Total Items</p>
-      </article>
+      </RouterLink>
 
-      <RouterLink to="/dashboard/items" class="stat-card stat-card-link">
+      <RouterLink :to="{ path: '/dashboard/items', query: { manage: 'collections' } }" class="stat-card stat-card-link">
         <h2>{{ stats.collectionCount }}</h2>
         <p>Collections</p>
       </RouterLink>

@@ -144,6 +144,9 @@ const loadItems = async () => {
         .find((product) => String(product._id) === requestedItemId)
       if (requestedProduct) await openEditModal(requestedProduct)
     }
+    if (route.query.manage === 'collections' && !showCollectionManager.value) {
+      openCollectionManager()
+    }
     void prefetchCollectionSubcollections()
   } catch (err) {
     error.value = err.message
@@ -276,7 +279,7 @@ const openCollectionManager = () => {
   resetManagerSubcollections()
 }
 
-const closeCollectionManager = () => {
+const closeCollectionManager = async () => {
   showCollectionManager.value = false
   collectionForm.value = { name: '' }
   editingCollection.value = null
@@ -284,6 +287,11 @@ const closeCollectionManager = () => {
   modalError.value = ''
   resetSubcollectionForm()
   resetManagerSubcollections()
+  if (route.query.manage === 'collections') {
+    const nextQuery = { ...route.query }
+    delete nextQuery.manage
+    await router.replace({ path: '/dashboard/items', query: nextQuery })
+  }
 }
 
 const openSubcollectionManager = async (collection) => {

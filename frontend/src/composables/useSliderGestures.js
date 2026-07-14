@@ -12,7 +12,7 @@ export const useSliderGestures = ({ next, previous, enabled = () => true }) => {
   let suppressClick = false
 
   const pointerDown = (event) => {
-    if (!enabled() || event.button > 0 || event.target.closest('button, video, input, select, textarea')) return
+    if (!enabled() || event.button > 0 || event.target.closest('button, input, select, textarea')) return
     isDragging.value = true
     startX = event.clientX
     startY = event.clientY

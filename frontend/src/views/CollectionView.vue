@@ -79,7 +79,7 @@
         class="product-card"
       >
         <header>
-          <h3 :ref="productIndex === 0 ? setFirstProductTitle : undefined">
+          <h3>
             {{ displayTitle(product) }}
           </h3>
           <div class="product-meta">
@@ -167,7 +167,6 @@ const productsLoading = ref(false)
 const subcollectionsError = ref('')
 const productsError = ref('')
 const hasLoadedProducts = ref(false)
-const firstProductTitle = ref(null)
 const bagsFilter = 'Bags'
 const allBagTypes = 'All'
 const activeBagType = ref(allBagTypes)
@@ -282,19 +281,10 @@ const loadCollectionData = async () => {
 }
 
 const scrollToRequestedProduct = () => {
-  if (route.hash.startsWith('#product-')) {
-    const product = document.getElementById(decodeURIComponent(route.hash.slice(1)))
-    if (product) {
-      product.scrollIntoView({ block: 'start', behavior: 'instant' })
-      return
-    }
-  }
+  if (!route.hash.startsWith('#product-')) return
 
-  firstProductTitle.value?.scrollIntoView({ block: 'start', behavior: 'instant' })
-}
-
-const setFirstProductTitle = (element) => {
-  firstProductTitle.value = element
+  const product = document.getElementById(decodeURIComponent(route.hash.slice(1)))
+  product?.scrollIntoView({ block: 'start', behavior: 'instant' })
 }
 
 const optionKey = (product, option) => `${product.id}-${option.name}`
