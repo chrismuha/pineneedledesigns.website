@@ -61,6 +61,71 @@
   border-radius: 8px;
 }
 
+.dashboard-remove-btn {
+  appearance: none;
+  width: fit-content;
+  border: 1px solid var(--dashboard-red);
+  border-radius: 8px;
+  background: var(--dashboard-red);
+  color: #fff;
+  padding: 9px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.dashboard-remove-btn:hover {
+  background: #c9183b;
+  border-color: #c9183b;
+  transform: translateY(-1px);
+}
+
+.dashboard-remove-btn:focus-visible {
+  outline: 3px solid rgba(237, 37, 78, .28);
+  outline-offset: 2px;
+}
+
+.dashboard-remove-btn:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+  transform: none;
+}
+
+.dashboard-file-input {
+  width: 100%;
+  border: 1px solid #cfd8cf;
+  border-radius: 10px;
+  background: #fff;
+  color: #333;
+  padding: 6px;
+  font: inherit;
+}
+
+.dashboard-file-input::file-selector-button {
+  appearance: none;
+  border: 1px solid var(--dashboard-green);
+  border-radius: 8px;
+  background: var(--dashboard-green);
+  color: #fff;
+  margin-right: 12px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+.dashboard-file-input:hover::file-selector-button {
+  background: #23863f;
+  border-color: #23863f;
+}
+
+.dashboard-file-input:focus-visible {
+  outline: 3px solid rgba(46, 164, 79, .22);
+  outline-offset: 2px;
+}
+
 .btn-outline {
   background: #fff;
   border: 1px solid var(--dashboard-green);

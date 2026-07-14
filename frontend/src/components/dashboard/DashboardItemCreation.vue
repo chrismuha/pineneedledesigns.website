@@ -470,12 +470,12 @@ watch(
 
       <section class="card">
         <div class="section-header"><h2>Videos</h2></div>
-        <input type="file" class="file-selector-style" multiple accept="video/*" @change="handleVideoUpload">
+        <input type="file" class="dashboard-file-input" multiple accept="video/*" @change="handleVideoUpload">
         <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
         <div v-if="videoFiles.length" class="photo-grid">
           <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
             <video :src="video.previewUrl" controls />
-            <button type="button" class="danger-btn" @click="removeVideo(index)">Remove</button>
+            <button type="button" class="dashboard-remove-btn" @click="removeVideo(index)">Remove</button>
           </div>
         </div>
       </section>
@@ -512,7 +512,7 @@ watch(
               Required
             </label>
 
-            <button type="button" class="btn-danger" @click="removeProperty(propertyIndex)">
+            <button type="button" class="dashboard-remove-btn" @click="removeProperty(propertyIndex)">
               Remove
             </button>
           </div>
@@ -526,7 +526,7 @@ watch(
               class="option-row"
             >
               <input v-model="property.options[optionIndex]" type="text" placeholder="Option">
-              <button type="button" class="btn-danger" @click="removeOption(propertyIndex, optionIndex)">Remove</button>
+              <button type="button" class="dashboard-remove-btn" @click="removeOption(propertyIndex, optionIndex)">Remove</button>
             </div>
 
             <button type="button" class="btn-primary" @click="addOption(propertyIndex)">
@@ -539,7 +539,7 @@ watch(
       <section class="card">
         <div class="section-header"><h2>Photos *</h2></div>
 
-        <input type="file" class="file-selector-style" multiple accept="image/*" @change="handlePhotoUpload">
+        <input type="file" class="dashboard-file-input" multiple accept="image/*" @change="handlePhotoUpload">
 
         <p class="hint">
           Upload as many photos as needed.
@@ -548,7 +548,7 @@ watch(
         <div v-if="photoFiles.length" class="photo-grid">
           <div v-for="(photo, index) in photoFiles" :key="photo.previewUrl" class="photo-box">
             <img :src="photo.previewUrl" :alt="`Preview ${index + 1}`">
-            <button type="button" class="danger-btn" @click="removePhoto(index)">Remove</button>
+            <button type="button" class="dashboard-remove-btn" @click="removePhoto(index)">Remove</button>
           </div>
         </div>
       </section>
@@ -812,16 +812,6 @@ textarea {
 }
 
 .create-collection-modal form { max-width: 680px; }
-
-.file-selector-style::file-selector-button {
-  background: var(--dashboard-green);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  cursor: pointer;
-  margin-right: 1rem;
-}
 
 @media (max-width: 768px) {
   .item-form { gap: 14px; }

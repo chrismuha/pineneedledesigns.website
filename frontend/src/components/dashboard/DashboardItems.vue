@@ -1267,7 +1267,7 @@ watch(
                 <input v-model="property.required" type="checkbox">
                 Required
               </label>
-              <button type="button" class="danger-btn" :disabled="saving" @click="removeEditProperty(propertyIndex)">
+              <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeEditProperty(propertyIndex)">
                 Remove Property
               </button>
             </div>
@@ -1279,7 +1279,7 @@ watch(
               <input v-model="property.options[optionIndex]" type="text" placeholder="Dropdown option">
               <button
                 type="button"
-                class="danger-btn"
+                class="dashboard-remove-btn"
                 :disabled="saving"
                 @click="removeEditPropertyOption(propertyIndex, optionIndex)"
               >
@@ -1317,14 +1317,14 @@ watch(
           <div class="edit-photo-grid">
             <div v-for="(photo, index) in editingProduct.photos" :key="photo" class="edit-photo-card">
               <img :src="photo" :alt="`Existing photo ${index + 1}`">
-              <button type="button" class="danger-btn" :disabled="saving" @click="removeExistingEditPhoto(index)">
+              <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeExistingEditPhoto(index)">
                 Remove
               </button>
             </div>
             <div v-for="(photo, index) in editPhotoFiles" :key="photo.previewUrl" class="edit-photo-card">
               <img :src="photo.previewUrl" :alt="`New photo ${index + 1}`">
               <span class="new-photo-badge">New</span>
-              <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditPhoto(index)">
+              <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeNewEditPhoto(index)">
                 Remove
               </button>
             </div>
@@ -1333,17 +1333,17 @@ watch(
 
         <div class="field edit-section">
           <label>Video Files</label>
-          <input type="file" multiple accept="video/*" :disabled="saving" @change="handleEditVideoUpload">
+          <input class="dashboard-file-input" type="file" multiple accept="video/*" :disabled="saving" @change="handleEditVideoUpload">
           <p class="hint">Uploaded videos are converted and stored in the managed uploads folder.</p>
           <div class="edit-photo-grid">
             <div v-for="(video, index) in String(editingProduct.videos || '').split('\n').filter(Boolean)" :key="video" class="edit-photo-card">
               <video :src="video" controls />
-              <button type="button" class="danger-btn" :disabled="saving" @click="removeExistingEditVideo(index)">Remove</button>
+              <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeExistingEditVideo(index)">Remove</button>
             </div>
             <div v-for="(video, index) in editVideoFiles" :key="video.previewUrl" class="edit-photo-card">
               <video :src="video.previewUrl" controls />
               <span class="new-photo-badge">New</span>
-              <button type="button" class="danger-btn" :disabled="saving" @click="removeNewEditVideo(index)">Remove</button>
+              <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeNewEditVideo(index)">Remove</button>
             </div>
           </div>
         </div>
@@ -2091,8 +2091,9 @@ watch(
 
 .modal-close-button:hover,
 .modal-close-button:focus-visible {
-  background: #e1e1e1;
-  outline: 2px solid var(--dashboard-green);
+  background: var(--dashboard-red-bg);
+  color: var(--dashboard-red);
+  outline: 2px solid var(--dashboard-red);
   outline-offset: 2px;
 }
 
