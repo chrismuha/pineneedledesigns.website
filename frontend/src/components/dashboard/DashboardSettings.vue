@@ -1,11 +1,20 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { dashboardApi } from '../../api/dashboard.js'
+import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 
 const loading = ref(true)
 const saving = ref(false)
 const error = ref('')
-const form = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 })
+const form = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5, toastTimeoutSeconds: 6 })
+const savedSettings = ref('')
+const settingsSnapshot = (settings) => JSON.stringify({
+  freeShippingEnabled: Boolean(settings.freeShippingEnabled),
+  freeShippingMinimum: Number(settings.freeShippingMinimum),
+  fallbackShippingCost: Number(settings.fallbackShippingCost),
+  toastTimeoutSeconds: Number(settings.toastTimeoutSeconds),
+})
+const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
 
 const loadSettings = async () => {
   loading.value = true
@@ -16,7 +25,10 @@ const loadSettings = async () => {
       freeShippingEnabled: Boolean(settings.freeShippingEnabled),
       freeShippingMinimum: settings.freeShippingMinimum ?? 28,
       fallbackShippingCost: settings.fallbackShippingCost ?? 5,
+      toastTimeoutSeconds: settings.toastTimeoutSeconds ?? 6,
     }
+    setDashboardToastTimeout(form.value.toastTimeoutSeconds)
+    savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
   } finally {
@@ -25,6 +37,14 @@ const loadSettings = async () => {
 }
 
 const saveSettings = async () => {
+  if (!hasChanges.value) {
+    showDashboardToast('The shipping settings already match the saved values.', {
+      type: 'warning',
+      title: 'No changes to save',
+    })
+    return
+  }
+
   saving.value = true
   error.value = ''
   try {
@@ -32,6 +52,9 @@ const saveSettings = async () => {
     form.value.freeShippingEnabled = Boolean(settings.freeShippingEnabled)
     form.value.freeShippingMinimum = settings.freeShippingMinimum ?? 28
     form.value.fallbackShippingCost = settings.fallbackShippingCost ?? 5
+    form.value.toastTimeoutSeconds = settings.toastTimeoutSeconds ?? 6
+    setDashboardToastTimeout(form.value.toastTimeoutSeconds)
+    savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
   } finally {
@@ -91,6 +114,20 @@ onMounted(loadSettings)
         </div>
       </div>
 
+      <div class="notification-settings">
+        <div class="notification-settings__heading">
+          <i class="bi bi-bell" aria-hidden="true"></i>
+          <div>
+            <strong>Toast notification timeout</strong>
+            <p>Choose how long dashboard messages remain visible.</p>
+          </div>
+        </div>
+        <label for="toast-timeout">
+          <input id="toast-timeout" v-model.number="form.toastTimeoutSeconds" type="number" min="2" max="30" step="1" inputmode="numeric" required>
+          <span>seconds</span>
+        </label>
+      </div>
+
       <div class="settings-actions">
         <p><i class="bi bi-info-circle" aria-hidden="true"></i>Changes apply to new checkouts.</p>
         <button type="button" class="btn-primary save-button" :disabled="saving" @click="saveSettings">
@@ -131,6 +168,14 @@ onMounted(loadSettings)
 .money-input > span { padding: 0 12px; color: #68766c; font-size: .84rem; font-weight: 700; }
 .money-input input { width: 100%; min-width: 0; height: 48px; box-sizing: border-box; border: 0; border-radius: 0; outline: 0; background: transparent; color: #17251b; font: inherit; font-weight: 700; }
 .settings-actions { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 26px; border-top: 1px solid #e8eeea; background: #fbfcfb; }
+.notification-settings { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #e2e9e4; border-radius: 14px; }
+.notification-settings__heading { display: flex; align-items: center; gap: 12px; }
+.notification-settings__heading > i { color: var(--dashboard-green); font-size: 1.25rem; }
+.notification-settings strong { color: #273b2d; font-size: .92rem; }
+.notification-settings p { margin: 3px 0 0; color: #6a776e; font-size: .82rem; }
+.notification-settings > label { display: flex; align-items: center; overflow: hidden; flex: 0 0 auto; border: 1px solid #cbd7ce; border-radius: 10px; }
+.notification-settings input { width: 74px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; font: inherit; font-weight: 700; }
+.notification-settings label span { padding-right: 12px; color: #68766c; font-size: .82rem; font-weight: 700; }
 .settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
 .save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
 
@@ -147,6 +192,7 @@ onMounted(loadSettings)
   .settings-fields { grid-template-columns: 1fr; gap: 12px; padding: 0 18px 18px; }
   .setting-field { padding: 16px; }
   .settings-actions { align-items: stretch; flex-direction: column-reverse; padding: 18px; }
+  .notification-settings { align-items: flex-start; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
   .save-button { width: 100%; min-height: 50px; }
   .settings-actions p { justify-content: center; }
 }

@@ -314,7 +314,6 @@ const submitForm = async () => {
     showDashboardToast(requirements.join(' '), {
       type: 'warning',
       title: `Cannot create item — ${requirements.length} requirement${requirements.length === 1 ? '' : 's'} missing`,
-      duration: 9000,
     })
     return
   }

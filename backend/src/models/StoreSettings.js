@@ -5,6 +5,7 @@ const storeSettingsSchema = new mongoose.Schema({
   freeShippingEnabled: { type: Boolean, default: true },
   freeShippingMinimum: { type: Number, default: 28, min: 0 },
   fallbackShippingCost: { type: Number, default: 5, min: 0 },
+  toastTimeoutSeconds: { type: Number, default: 6, min: 2, max: 30 },
 }, { timestamps: true });
 
 export const StoreSettings = mongoose.model('StoreSettings', storeSettingsSchema);

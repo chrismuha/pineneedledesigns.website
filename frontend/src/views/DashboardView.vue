@@ -1,6 +1,8 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { dashboardApi } from '../api/dashboard.js'
+import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,7 +23,13 @@ const handleToast = (event) => {
   window.setTimeout(() => dismissToast(id), toast.duration || 6500)
 }
 
-onMounted(() => window.addEventListener('dashboard-toast', handleToast))
+onMounted(async () => {
+  window.addEventListener('dashboard-toast', handleToast)
+  try {
+    const settings = await dashboardApi.getSettings()
+    setDashboardToastTimeout(settings.toastTimeoutSeconds ?? 6)
+  } catch {}
+})
 onBeforeUnmount(() => window.removeEventListener('dashboard-toast', handleToast))
 
 const tabAtPoint = (x, y) =>

@@ -59,7 +59,7 @@ const request = async (url, options = {}, successMessage = '') => {
   }
 
   if (successMessage) {
-    showDashboardToast(successMessage, { type: 'success', title: 'Success', duration: 4500 });
+    showDashboardToast(successMessage, { type: 'success', title: 'Success' });
   }
 
   return data;
