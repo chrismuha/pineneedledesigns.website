@@ -2,23 +2,54 @@ const jsonHeaders = {
   'Content-Type': 'application/json',
 };
 
+const statusMessages = {
+  400: 'The submitted information is invalid. Check the form and try again.',
+  401: 'Your session has expired. Sign in again and retry the request.',
+  403: 'The request was blocked because your session is no longer valid. Refresh the page and try again.',
+  404: 'The requested item could not be found. It may have been removed.',
+  408: 'The request timed out. Check your connection and try again.',
+  409: 'The request conflicts with a recent change. Refresh the page and try again.',
+  413: 'The selected files are too large to upload in one request. Try fewer or smaller files.',
+  422: 'Some submitted information could not be processed. Review the form and try again.',
+  429: 'Too many requests were sent. Wait a moment and try again.',
+  500: 'The server encountered an error while completing the request. Please try again.',
+  502: 'The server is temporarily unavailable. Please try again shortly.',
+  503: 'The service is temporarily unavailable. Please try again shortly.',
+  504: 'The server took too long to respond. Please try again.',
+};
+
 const request = async (url, options = {}) => {
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
-  const response = await fetch(url, {
-    credentials: 'include',
-    ...options,
-    headers: isFormData
-      ? { ...options.headers }
-      : {
-        ...jsonHeaders,
-        ...options.headers,
-      },
-  });
+  let response;
+  try {
+    response = await fetch(url, {
+      credentials: 'include',
+      ...options,
+      headers: isFormData
+        ? { ...options.headers }
+        : {
+          ...jsonHeaders,
+          ...options.headers,
+        },
+    });
+  } catch (cause) {
+    const message = typeof navigator !== 'undefined' && !navigator.onLine
+      ? 'The request failed because this device is offline. Reconnect and try again.'
+      : 'The request could not reach the server. Check your connection and try again.';
+    const error = new Error(message, { cause });
+    error.status = 0;
+    throw error;
+  }
 
-  const data = await response.json().catch(() => ({}));
+  const responseType = response.headers.get('content-type') || '';
+  const data = responseType.includes('application/json')
+    ? await response.json().catch(() => ({}))
+    : {};
 
   if (!response.ok) {
-    const error = new Error(data.error || data.message || 'Request failed.');
+    const fallbackMessage = statusMessages[response.status]
+      || `The request failed with server response ${response.status}. Please try again.`;
+    const error = new Error(data.error || data.message || fallbackMessage);
     error.status = response.status;
     throw error;
   }

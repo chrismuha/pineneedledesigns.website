@@ -46,30 +46,121 @@ onMounted(loadSettings)
 </script>
 
 <template>
-  <div class="dashboard-page">
-    <div class="page-header"><h1>Store Settings</h1></div>
+  <div class="dashboard-page settings-page">
+    <div class="settings-heading">
+      <div class="settings-heading__icon" aria-hidden="true"><i class="bi bi-sliders"></i></div>
+      <div>
+        <h1>Store Settings</h1>
+        <p>Manage how shipping is calculated at checkout.</p>
+      </div>
+    </div>
     <p v-if="error" class="error-banner">{{ error }}</p>
-    <p v-if="success" class="status-text">{{ success }}</p>
+    <p v-if="success" class="success-banner"><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{{ success }}</p>
     <p v-if="loading" class="status-text">Loading settings...</p>
-    <section v-else class="card">
-      <div class="section-header"><h2>Shipping</h2></div>
-      <label class="checkbox-row">
-        <input v-model="form.freeShippingEnabled" type="checkbox">
-        Offer free shipping after an order minimum
+    <section v-else class="settings-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Checkout</span>
+          <h2>Shipping</h2>
+        </div>
+        <i class="bi bi-truck" aria-hidden="true"></i>
+      </div>
+
+      <label class="toggle-row">
+        <span>
+          <strong>Free-shipping threshold</strong>
+          <small>Automatically offer free shipping when an order reaches your minimum.</small>
+        </span>
+        <input v-model="form.freeShippingEnabled" class="toggle-input" type="checkbox" role="switch">
       </label>
-      <div v-if="form.freeShippingEnabled" class="field">
-        <label>Free Shipping Minimum (USD)</label>
-        <input v-model.number="form.freeShippingMinimum" type="number" min="0" step="0.01" required>
-        <p class="hint">Orders below this amount use the shipping costs entered on their items.</p>
+
+      <div class="settings-fields">
+        <div v-if="form.freeShippingEnabled" class="setting-field">
+          <label for="free-shipping-minimum">Free shipping minimum</label>
+          <div class="money-input">
+            <span aria-hidden="true">$</span>
+            <input id="free-shipping-minimum" v-model.number="form.freeShippingMinimum" type="number" min="0" step="0.01" inputmode="decimal" required>
+            <span>USD</span>
+          </div>
+          <p>Orders below this amount use each item's shipping cost.</p>
+        </div>
+
+        <div class="setting-field">
+          <label for="fallback-shipping-cost">Fallback shipping charge</label>
+          <div class="money-input">
+            <span aria-hidden="true">$</span>
+            <input id="fallback-shipping-cost" v-model.number="form.fallbackShippingCost" type="number" min="0" step="0.01" inputmode="decimal" required>
+            <span>USD</span>
+          </div>
+          <p>Used when an item has no shipping cost and the order does not qualify for free shipping.</p>
+        </div>
       </div>
-      <div class="field">
-        <label>Fallback Shipping Charge (USD)</label>
-        <input v-model.number="form.fallbackShippingCost" type="number" min="0" step="0.01" required>
-        <p class="hint">Used for orders below the free-shipping minimum when their items do not have a shipping cost.</p>
+
+      <div class="settings-actions">
+        <p><i class="bi bi-info-circle" aria-hidden="true"></i>Changes apply to new checkouts.</p>
+        <button type="button" class="btn-primary save-button" :disabled="saving" @click="saveSettings">
+          <i :class="saving ? 'bi bi-arrow-repeat' : 'bi bi-check2'" aria-hidden="true"></i>
+          {{ saving ? 'Saving...' : 'Save Changes' }}
+        </button>
       </div>
-      <button type="button" class="btn-primary" :disabled="saving" @click="saveSettings">
-        {{ saving ? 'Saving...' : 'Save Settings' }}
-      </button>
     </section>
   </div>
 </template>
+
+<style scoped>
+.settings-page { width: min(100%, 820px); margin: 0 auto; }
+.settings-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.settings-heading__icon { display: grid; width: 54px; height: 54px; flex: 0 0 54px; place-items: center; border-radius: 16px; background: var(--dashboard-green-bg); color: #187636; font-size: 1.4rem; }
+.settings-heading h1 { margin: 0; color: #18231b; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1.1; }
+.settings-heading p { margin: 6px 0 0; color: #607066; font-size: .98rem; }
+.settings-card { overflow: hidden; border: 1px solid #dce5df; border-radius: 20px; background: #fff; box-shadow: 0 12px 35px rgba(28, 67, 39, .08); }
+.section-heading { display: flex; align-items: center; justify-content: space-between; padding: 24px 26px 20px; border-bottom: 1px solid #e8eeea; }
+.section-heading h2 { margin: 3px 0 0; color: #18231b; font-size: 1.45rem; }
+.section-heading > i { color: #279749; font-size: 1.6rem; }
+.eyebrow { color: #278443; font-size: .75rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 24px 26px; padding: 18px; border: 1px solid #dfe8e2; border-radius: 14px; background: #f8fbf9; cursor: pointer; }
+.toggle-row > span:first-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.toggle-row strong { color: #203326; font-size: 1rem; }
+.toggle-row small { color: #65746a; font-size: .88rem; line-height: 1.45; }
+.toggle-input { width: 48px; height: 28px; flex: 0 0 48px; margin: 0; appearance: none; border: 0; border-radius: 999px; background: #b9c4bc; cursor: pointer; transition: background .18s ease; }
+.toggle-input::before { display: block; width: 22px; height: 22px; margin: 3px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); content: ''; transition: transform .18s ease; }
+.toggle-input:checked { background: var(--dashboard-green); }
+.toggle-input:checked::before { transform: translateX(20px); }
+.toggle-input:focus-visible { outline: 3px solid rgba(46, 164, 79, .25); outline-offset: 3px; }
+.settings-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 0 26px 26px; }
+.setting-field { min-width: 0; padding: 20px; border: 1px solid #e2e9e4; border-radius: 14px; }
+.setting-field > label { display: block; margin-bottom: 10px; color: #273b2d; font-size: .92rem; font-weight: 750; }
+.setting-field > p { margin: 10px 0 0; color: #6a776e; font-size: .82rem; line-height: 1.45; }
+.money-input { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; overflow: hidden; border: 1px solid #cbd7ce; border-radius: 10px; background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+.money-input:focus-within { border-color: var(--dashboard-green); box-shadow: 0 0 0 3px rgba(46, 164, 79, .14); }
+.money-input > span { padding: 0 12px; color: #68766c; font-size: .84rem; font-weight: 700; }
+.money-input input { width: 100%; min-width: 0; height: 48px; box-sizing: border-box; border: 0; border-radius: 0; outline: 0; background: transparent; color: #17251b; font: inherit; font-weight: 700; }
+.settings-actions { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 26px; border-top: 1px solid #e8eeea; background: #fbfcfb; }
+.settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
+.save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
+.success-banner { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 10px; background: var(--dashboard-green-bg); color: #166b30; }
+
+@media (max-width: 650px) {
+  .settings-page { padding: 20px 16px 120px; }
+  .settings-heading { align-items: flex-start; margin-bottom: 20px; }
+  .settings-heading__icon { width: 46px; height: 46px; flex-basis: 46px; border-radius: 13px; }
+  .settings-heading h1 { font-size: 1.75rem; }
+  .settings-heading p { font-size: .9rem; }
+  .settings-card { border-radius: 16px; }
+  .section-heading { padding: 20px; }
+  .toggle-row { align-items: flex-start; margin: 18px; padding: 16px; }
+  .toggle-input { margin-top: 2px; }
+  .settings-fields { grid-template-columns: 1fr; gap: 12px; padding: 0 18px 18px; }
+  .setting-field { padding: 16px; }
+  .settings-actions { align-items: stretch; flex-direction: column-reverse; padding: 18px; }
+  .save-button { width: 100%; min-height: 50px; }
+  .settings-actions p { justify-content: center; }
+}
+
+@media (max-width: 400px) {
+  .settings-page { padding-inline: 12px; }
+  .settings-heading__icon { display: none; }
+  .toggle-row { gap: 12px; }
+  .toggle-row small { font-size: .8rem; }
+}
+</style>

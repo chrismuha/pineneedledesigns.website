@@ -72,9 +72,21 @@ jobs:
             npm ci --omit=dev --ignore-scripts
             npm run seed -w backend
 
-            # Replace any legacy PM2 definition so it cannot keep an obsolete script path.
-            pm2 delete server 2>/dev/null || true
-            pm2 start ecosystem.config.cjs --update-env
+            # Nginx defaults to a 1 MB request body, which rejects normal product
+            # photos before they can reach the app's media upload middleware.
+            sudo tee /etc/nginx/conf.d/pineneedledesigns-uploads.conf >/dev/null <<'NGINX'
+            client_max_body_size 100M;
+            NGINX
+            sudo nginx -t
+            sudo systemctl reload nginx
+
+            # Reload the running API gracefully so open dashboard forms and saves
+            # are not interrupted. Start it only when no existing process exists.
+            if pm2 describe server >/dev/null 2>&1; then
+              pm2 reload server --update-env
+            else
+              pm2 start ecosystem.config.cjs --update-env
+            fi
 
             # Do not report a successful deployment until the backend is actually serving traffic.
             healthy=false

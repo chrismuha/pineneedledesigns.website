@@ -53,6 +53,27 @@ export const createApp = () => {
   app.use('/uploads', express.static(config.uploadsDir));
   app.use('/api', apiRouter);
 
+  app.use('/api', (error, _req, res, _next) => {
+    console.error('API request failed:', error);
+
+    const uploadErrors = {
+      LIMIT_FILE_SIZE: 'One of the selected files exceeds the 100 MB file limit.',
+      LIMIT_FILE_COUNT: 'Too many files were selected for one upload.',
+      LIMIT_UNEXPECTED_FILE: 'Too many files were selected, or an unsupported upload field was used.',
+      LIMIT_FIELD_VALUE: 'One of the submitted fields is too large.',
+    };
+    const status = Number(error?.status || error?.statusCode) || 500;
+    const isCsrfError = status === 403 && /csrf/i.test(String(error?.message || ''));
+    const message = uploadErrors[error?.code]
+      || (isCsrfError ? 'Your session security token expired. Refresh the page and try again.' : '')
+      || (status === 413 ? 'The selected files are too large to upload in one request.' : '')
+      || (status >= 500
+        ? 'The server could not complete the request. Please try again.'
+        : String(error?.message || 'The request could not be completed.'));
+
+    res.status(status).json({ error: message });
+  });
+
   app.use((req, res) => {
     setRevalidationHeaders(res);
     res.sendFile(path.join(config.docsDir, 'index.html'));

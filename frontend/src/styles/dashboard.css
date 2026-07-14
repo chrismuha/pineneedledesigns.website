@@ -8,6 +8,78 @@
   --dashboard-orange-bg: #ffe8cc;
 }
 
+/* Keep every dashboard action visibly interactive. */
+.dashboard-shell button:not(:disabled),
+.dashboard-shell a[href],
+.dashboard-shell label[for],
+.dashboard-shell input[type='checkbox']:not(:disabled),
+.dashboard-shell input[type='file']:not(:disabled)::file-selector-button,
+.dashboard-shell select:not(:disabled),
+.dashboard-shell [role='button']:not([aria-disabled='true']) {
+  cursor: pointer;
+}
+
+.dashboard-shell button:disabled,
+.dashboard-shell input:disabled,
+.dashboard-shell select:disabled,
+.dashboard-shell [aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.dashboard-shell button:not(:disabled),
+.dashboard-shell .btn-primary,
+.dashboard-shell .btn-outline,
+.dashboard-shell .btn-danger,
+.dashboard-shell .btn-ghost,
+.dashboard-shell .create-btn,
+.dashboard-shell .continue-btn,
+.dashboard-shell .edit-btn,
+.dashboard-shell .delete-btn,
+.dashboard-shell .manage-btn,
+.dashboard-shell .clear-btn {
+  touch-action: manipulation;
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease, background-color .14s ease;
+}
+
+@media (hover: hover) {
+  .dashboard-shell button:not(:disabled):hover,
+  .dashboard-shell .btn-primary:hover,
+  .dashboard-shell .btn-outline:hover,
+  .dashboard-shell .btn-danger:hover,
+  .dashboard-shell .btn-ghost:hover,
+  .dashboard-shell .create-btn:hover,
+  .dashboard-shell .continue-btn:hover,
+  .dashboard-shell .edit-btn:hover,
+  .dashboard-shell .delete-btn:hover,
+  .dashboard-shell .manage-btn:hover,
+  .dashboard-shell .clear-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(.96);
+  }
+}
+
+.dashboard-shell button:not(:disabled):active,
+.dashboard-shell .btn-primary:active,
+.dashboard-shell .btn-outline:active,
+.dashboard-shell .btn-danger:active,
+.dashboard-shell .btn-ghost:active,
+.dashboard-shell .create-btn:active,
+.dashboard-shell .continue-btn:active,
+.dashboard-shell .edit-btn:active,
+.dashboard-shell .delete-btn:active,
+.dashboard-shell .manage-btn:active,
+.dashboard-shell .clear-btn:active {
+  transform: translateY(1px) scale(.98);
+  box-shadow: none;
+}
+
+.dashboard-shell button:disabled,
+.dashboard-shell .btn-primary[aria-disabled='true'],
+.dashboard-shell .btn-outline[aria-disabled='true'] {
+  transform: none;
+  filter: none;
+}
+
 /* Buttons */
 .create-btn,
 .continue-btn,
