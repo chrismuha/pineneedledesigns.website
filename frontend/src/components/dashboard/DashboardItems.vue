@@ -390,37 +390,43 @@ const confirmSubcollectionDeletion = async () => {
 }
 
 const initializeEditModal = async (product) => {
+  const optionValues = (currentValues, legacyValue, fallbackValues = []) => {
+    if (Array.isArray(currentValues) && currentValues.length) {
+      return currentValues.map((value) => String(value).trim()).filter(Boolean)
+    }
+    if (Array.isArray(fallbackValues) && fallbackValues.length) {
+      return fallbackValues.map((value) => String(value).trim()).filter(Boolean)
+    }
+    return String(legacyValue || '').split(',').map((value) => value.trim()).filter(Boolean)
+  }
   const customProperties = product.customProperties?.length
     ? product.customProperties.map((property) => ({ ...property, options: [...(property.options || [])] }))
     : []
   const colorProperty = customProperties.find(
     (property) => String(property.name).toLowerCase() === 'color',
   )
-  const colors = colorProperty?.options?.length
-    ? [...colorProperty.options]
-    : String(product.color || '').split(',').map((color) => color.trim()).filter(Boolean)
+  const colors = optionValues(product.colors, product.color, colorProperty?.options)
   const sizeProperty = customProperties.find(
     (property) => String(property.name).toLowerCase() === 'size',
   )
-  const sizes = sortSizeOptions(sizeProperty?.options?.length
-    ? [...sizeProperty.options]
-    : String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean))
+  const sizes = sortSizeOptions(optionValues(product.sizes, product.size, sizeProperty?.options))
+  const shoeSizes = optionValues(product.shoeSizes, product.shoeSize)
+  const beltSizes = optionValues(product.beltSizes, product.beltSize)
 
   editingProduct.value = {
     ...product,
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
+    price: product.price ?? '',
     hasBlingOptions: Boolean(product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null),
     blingPrice: product.blingPrice ?? '',
+    noBlingPrice: product.noBlingPrice ?? '',
+    shippingCost: product.shippingCost ?? 0,
     generalDescription: product.generalDescription || product.description || '',
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
-    shoeSizes: String(product.shoeSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
-      ? String(product.shoeSize).split(',').map((size) => size.trim()).filter(Boolean)
-      : [''],
-    beltSizes: String(product.beltSize || '').split(',').map((size) => size.trim()).filter(Boolean).length
-      ? String(product.beltSize).split(',').map((size) => size.trim()).filter(Boolean)
-      : [''],
+    shoeSizes: shoeSizes.length ? shoeSizes : [''],
+    beltSizes: beltSizes.length ? beltSizes : [''],
     sizePrices: { ...(product.sizePrices || {}) },
     comfortColors: [...(product.comfortColors || [])],
     customProperties: customProperties.filter(
@@ -1359,9 +1365,10 @@ watch(
           <textarea v-model="editingProduct.description" rows="6" :placeholder="collectionAllowsBling(editingProduct.collectionId) && editingProduct.hasBlingOptions ? 'Description shown when Bling is selected.' : ''" />
         </div>
 
-        <div v-if="!hasStyleSpecificPrice(editingProduct)" class="field">
+        <div class="field">
           <label>General Price (USD)</label>
           <input v-model.number="editingProduct.price" type="number" min="0" step="0.01">
+          <p class="hint">Used as the fallback when a style or size does not have its own price.</p>
         </div>
 
         <div v-if="collectionAllowsBling(editingProduct.collectionId)" class="field">
