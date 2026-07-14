@@ -77,10 +77,10 @@ onMounted(loadStats)
       </RouterLink>
     </section>
 
-    <section v-if="!loading" class="recent-section">
+    <RouterLink v-if="!loading" class="recent-section recent-section-link" to="/dashboard/orders">
       <div class="section-header">
         <h2>Recent Orders</h2>
-        <RouterLink class="btn-primary" to="/dashboard/orders">View all orders</RouterLink>
+        <span class="btn-primary">View all orders</span>
       </div>
 
       <p v-if="!stats.recentOrders?.length" class="status-text">
@@ -100,7 +100,7 @@ onMounted(loadStats)
           </div>
         </article>
       </div>
-    </section>
+    </RouterLink>
 
     <section v-if="!loading" class="recent-section">
       <div class="section-header">
@@ -183,6 +183,17 @@ onMounted(loadStats)
 
 .recent-section {
   margin-top: 24px;
+}
+
+.recent-section-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.recent-section-link:hover {
+  border-color: var(--dashboard-green);
 }
 
 .recent-list {
