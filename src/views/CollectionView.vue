@@ -227,7 +227,7 @@ const displayProductMeta = (product) => {
   return meta.map((item) => {
     if (!replacedPrice && /^price:/i.test(String(item).trim())) {
       replacedPrice = true
-      return `Price: $${price}`
+      return `Price: $${Number(price).toFixed(2)}`
     }
 
     return item
