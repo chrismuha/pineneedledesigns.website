@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm, stat } from 'node:fs/promises'
+import { cp, mkdir, readFile, readdir, rm, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -7,6 +7,24 @@ const __dirname = path.dirname(__filename)
 const frontendDir = path.resolve(__dirname, '..')
 const rootDir = path.resolve(frontendDir, '..')
 const docsDir = path.join(rootDir, 'docs')
+
+const removeStaleBuildAssets = async () => {
+  const assetsDir = path.join(docsDir, 'assets')
+  const indexHtml = await readFile(path.join(docsDir, 'index.html'), 'utf8')
+  const referencedAssets = new Set(
+    [...indexHtml.matchAll(/\/assets\/(index-[^"'\s>]+\.(?:js|css))/g)]
+      .map((match) => match[1]),
+  )
+  const assets = await readdir(assetsDir, { withFileTypes: true })
+
+  await Promise.all(assets
+    .filter((entry) => (
+      entry.isFile()
+      && /^index-.*\.(?:js|css)$/.test(entry.name)
+      && !referencedAssets.has(entry.name)
+    ))
+    .map((entry) => rm(path.join(assetsDir, entry.name), { force: true })))
+}
 
 const copyIfExists = async (source, destination) => {
   try {
@@ -47,6 +65,7 @@ const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
   }
 }
 
+await removeStaleBuildAssets()
 await copyIfExists(path.join(rootDir, 'CNAME'), path.join(docsDir, 'CNAME'))
 await syncDirectory(path.join(frontendDir, 'images'), path.join(docsDir, 'images'))
 await syncDirectory(path.join(rootDir, 'videos'), path.join(docsDir, 'videos'), {
