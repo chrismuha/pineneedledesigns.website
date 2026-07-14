@@ -51,7 +51,7 @@ const form = reactive({
   noBlingDescription: '',
   shippingCost: '',
   outOfStock: false,
-  quantity: 1,
+  quantity: 88,
   customProperties: [],
   subCollectionId: '',
 })
@@ -205,7 +205,7 @@ const resetForm = () => {
   form.noBlingDescription = ''
   form.shippingCost = ''
   form.outOfStock = false
-  form.quantity = 1
+  form.quantity = 88
   form.customProperties = []
   form.subCollectionId = ''
   clearPhotos()
