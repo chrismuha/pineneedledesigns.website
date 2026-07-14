@@ -8,6 +8,7 @@ import SizeOptionEditor from './SizeOptionEditor.vue'
 import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
+import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
 
@@ -21,6 +22,8 @@ const fieldErrors = reactive({
   subCollectionId: '',
 })
 const photoFiles = ref([])
+const photoCropQueue = ref([])
+const photoBeingCropped = computed(() => photoCropQueue.value[0] || null)
 const videoFiles = ref([])
 const showCreateCollection = ref(false)
 const newCollectionName = ref('')
@@ -100,14 +103,19 @@ const clearPhotos = () => {
 const handlePhotoUpload = (event) => {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
-
-  const nextPhotos = files.map((file) => ({
-    file,
-    previewUrl: URL.createObjectURL(file),
-  }))
-
-  photoFiles.value.push(...nextPhotos)
+  const availableSlots = Math.max(0, 20 - photoFiles.value.length - photoCropQueue.value.length)
+  photoCropQueue.value.push(...files.slice(0, availableSlots))
+  if (files.length > availableSlots) error.value = `A maximum of 20 photos is allowed. You can add ${availableSlots} more.`
   event.target.value = ''
+}
+
+const finishPhotoCrop = (file) => {
+  photoFiles.value.push({ file, previewUrl: URL.createObjectURL(file) })
+  photoCropQueue.value.shift()
+}
+
+const cancelPhotoCrop = () => {
+  photoCropQueue.value.shift()
 }
 
 const removePhoto = (index) => {
@@ -661,6 +669,13 @@ watch(
         </form>
       </section>
     </div>
+
+    <DashboardPhotoCropper
+      v-if="photoBeingCropped"
+      :file="photoBeingCropped"
+      @confirm="finishPhotoCrop"
+      @cancel="cancelPhotoCrop"
+    />
   </div>
 </template>
 

@@ -17,6 +17,11 @@ const formatMoney = (value) => `$${Number(value || 0).toFixed(2)}`
 const hasStyleSpecificPrice = (product) => product.blingPrice != null || product.noBlingPrice != null
 
 const orderLabel = (order) => (order.orderNumber ? `#${order.orderNumber}` : 'Order')
+const recentItemsSection = ref(null)
+
+const scrollToRecentItems = () => {
+  recentItemsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 const loadStats = async () => {
   loading.value = true
@@ -77,10 +82,12 @@ onMounted(loadStats)
       </RouterLink>
     </section>
 
-    <RouterLink v-if="!loading" class="recent-section recent-section-link" to="/dashboard/orders">
+    <section v-if="!loading" class="recent-section">
       <div class="section-header">
-        <h2>Recent Orders</h2>
-        <span class="btn-primary">View all orders</span>
+        <RouterLink class="section-title-link" to="/dashboard/orders">
+          <h2>Recent Orders</h2>
+        </RouterLink>
+        <RouterLink class="btn-primary" to="/dashboard/orders">View all orders</RouterLink>
       </div>
 
       <p v-if="!stats.recentOrders?.length" class="status-text">
@@ -88,7 +95,7 @@ onMounted(loadStats)
       </p>
 
       <div v-else class="recent-list">
-        <article v-for="order in stats.recentOrders" :key="order._id" class="recent-card">
+        <RouterLink v-for="order in stats.recentOrders" :key="order._id" class="recent-card recent-card-link" to="/dashboard/orders">
           <div>
             <h3>{{ orderLabel(order) }}</h3>
             <p>{{ order.customer?.email || 'No email' }}</p>
@@ -98,13 +105,15 @@ onMounted(loadStats)
               {{ formatDate(order.createdAt) }}
             </p>
           </div>
-        </article>
+        </RouterLink>
       </div>
-    </RouterLink>
+    </section>
 
-    <section v-if="!loading" class="recent-section">
+    <section v-if="!loading" ref="recentItemsSection" class="recent-section">
       <div class="section-header">
-        <h2>Recent Items</h2>
+        <button type="button" class="section-title-button" @click="scrollToRecentItems">
+          Recent Items
+        </button>
         <RouterLink class="btn-primary" to="/dashboard/items">View all items</RouterLink>
       </div>
 
@@ -185,15 +194,37 @@ onMounted(loadStats)
   margin-top: 24px;
 }
 
-.recent-section-link {
-  display: block;
+.section-title-link {
   color: inherit;
   text-decoration: none;
-  transition: border-color 0.15s ease;
 }
 
-.recent-section-link:hover {
-  border-color: var(--dashboard-green);
+.section-title-link h2 {
+  margin: 0;
+}
+
+.section-title-button {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.section-title-link:hover,
+.section-title-button:hover {
+  color: var(--dashboard-green);
+}
+
+.section-title-link:focus-visible,
+.section-title-button:focus-visible {
+  outline: 2px solid var(--dashboard-green);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 .recent-list {

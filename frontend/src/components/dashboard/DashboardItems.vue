@@ -9,6 +9,7 @@ import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
+import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 
 const route = useRoute()
@@ -24,6 +25,8 @@ const editingProduct = ref(null)
 const openingProductId = ref('')
 const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
+const editPhotoCropQueue = ref([])
+const editPhotoBeingCropped = computed(() => editPhotoCropQueue.value[0] || null)
 const editVideoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
@@ -509,16 +512,22 @@ const confirmEditCancellation = async () => {
 
 const handleEditPhotoUpload = (event) => {
   const files = Array.from(event.target.files || [])
-  const currentCount = (editingProduct.value?.photos?.length || 0) + editPhotoFiles.value.length
+  const currentCount = (editingProduct.value?.photos?.length || 0) + editPhotoFiles.value.length + editPhotoCropQueue.value.length
   const availableSlots = Math.max(0, 20 - currentCount)
   if (files.length > availableSlots) {
     editModalError.value = `A maximum of 20 photos is allowed. You can add ${availableSlots} more.`
   }
-  editPhotoFiles.value.push(...files.slice(0, availableSlots).map((file) => ({
-    file,
-    previewUrl: URL.createObjectURL(file),
-  })))
+  editPhotoCropQueue.value.push(...files.slice(0, availableSlots))
   event.target.value = ''
+}
+
+const finishEditPhotoCrop = (file) => {
+  editPhotoFiles.value.push({ file, previewUrl: URL.createObjectURL(file) })
+  editPhotoCropQueue.value.shift()
+}
+
+const cancelEditPhotoCrop = () => {
+  editPhotoCropQueue.value.shift()
 }
 
 const removeExistingEditPhoto = (index) => {
@@ -1627,6 +1636,13 @@ watch(
         </template>
       </section>
     </div>
+
+    <DashboardPhotoCropper
+      v-if="editPhotoBeingCropped"
+      :file="editPhotoBeingCropped"
+      @confirm="finishEditPhotoCrop"
+      @cancel="cancelEditPhotoCrop"
+    />
   </div>
 </template>
 
