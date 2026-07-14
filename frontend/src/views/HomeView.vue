@@ -21,7 +21,7 @@
       <div v-for="section in homeSections" :key="section.id" class="container highlighted-collection">
         <div class="section-head">
           <h2>{{ section.title }}</h2>
-          <router-link class="link" :to="section.path">Browse All Collections</router-link>
+          <router-link class="link collection-cta" :to="section.path">Browse All Collections</router-link>
         </div>
 
         <div v-if="section.cards.length" class="grid grid-4">

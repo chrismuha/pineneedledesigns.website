@@ -51,6 +51,14 @@ export const createApp = () => {
   });
   app.use('/api', csrfSynchronisedProtection);
   app.use('/uploads', express.static(config.uploadsDir));
+  if (!config.isProduction) {
+    app.use('/uploads', (req, res, next) => {
+      if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+
+      const productionUrl = new URL(req.originalUrl, config.productionMediaOrigin);
+      return res.redirect(307, productionUrl.href);
+    });
+  }
   app.use('/api', apiRouter);
 
   app.use('/api', (error, _req, res, _next) => {

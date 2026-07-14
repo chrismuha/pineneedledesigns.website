@@ -10,7 +10,7 @@
       </div>
       <div v-else-if="cartStore.items.length === 0" class="empty-cart">
         <p>Your cart is empty.</p>
-        <router-link to="/collections" class="btn" @click="cartStore.close">Browse Collections</router-link>
+        <router-link to="/collections" class="btn collection-cta" @click="cartStore.close">Browse Collections</router-link>
       </div>
       <div v-else class="cart-items">
         <div v-if="cartStore.items.length" class="cart-items-list">
@@ -1644,6 +1644,23 @@ const submitCheckout = async () => {
   border: none;
   cursor: pointer;
   margin: 5px;
+}
+
+.btn.collection-cta {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #b82343, #7f1830);
+  color: var(--white);
+  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
+}
+
+@media (hover: hover) {
+  .btn.collection-cta:hover {
+    border-color: transparent;
+    background: var(--accent-2);
+    box-shadow: 0 12px 26px rgba(3, 83, 93, 0.38);
+    transform: translateY(-2px);
+  }
 }
 
 .btn-primary {

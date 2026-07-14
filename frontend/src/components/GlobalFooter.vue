@@ -1,6 +1,7 @@
 <template>
   <footer class="footer--temporary-booking">
-    <div ref="bookingControl" class="temporary-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
+    <Teleport to="#header-booking-slot">
+    <div ref="bookingControl" class="temporary-booking header-booking" :class="{ 'temporary-booking--dimmed': chromeDimmed }">
       <div v-if="calendarMenuOpen" id="calendar-menu" class="calendar-menu" aria-label="Choose calendar">
         <div class="calendar-menu__header">
           <p class="calendar-menu__title">Choose Calendar</p>
@@ -55,6 +56,7 @@
         <span>Book Fitting Appointment</span>
       </button>
     </div>
+    </Teleport>
 
     <section id="foot-section-1" class="footer-section">
       <div class="container foot-toggle-wrap">

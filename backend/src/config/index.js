@@ -30,6 +30,7 @@ export const config = {
   docsDir: path.join(rootDir, 'docs'),
   sessionDir: path.join(rootDir, '.sessions'),
   uploadsDir: path.join(rootDir, 'backend', 'uploads'),
+  productionMediaOrigin: process.env.PRODUCTION_MEDIA_ORIGIN || 'https://pineneedledesigns.store',
   allowedOrigins: [
     'http://localhost:5173',
     'http://localhost:3001',

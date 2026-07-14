@@ -42,6 +42,7 @@
             <span class="designer-name">Wende Maliani</span>
           </router-link>
         </div>
+        <div id="header-booking-slot" class="header-booking-slot" aria-label="Book a fitting"></div>
       </div>
     </div>
 
@@ -139,6 +140,11 @@ watch(
 </script>
 
 <style scoped>
+.header-booking-slot {
+  width: min(420px, calc(100vw - 32px));
+  margin: 14px auto 22px;
+}
+
 .cart-count {
   position: absolute;
   top: -8px;

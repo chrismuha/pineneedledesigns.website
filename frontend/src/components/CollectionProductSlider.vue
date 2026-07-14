@@ -118,7 +118,7 @@
     </div>
 
     <div class="collection-product-slider__footer">
-      <router-link class="collection-product-slider__all" :to="collection.path">
+      <router-link class="collection-product-slider__all collection-cta" :to="collection.path">
         View Full Collection <span aria-hidden="true">→</span>
       </router-link>
     </div>
@@ -240,21 +240,23 @@ watch(
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--accent-2);
-  color: var(--white);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, #b82343, #7f1830);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
-.collection-product-slider__quick-controls button:hover,
-.collection-product-slider__quick-controls button:active,
-.collection-product-slider__quick-controls button:focus {
-  background: var(--accent-2);
-  color: var(--white);
-  box-shadow: var(--shadow-sm);
-  transform: none;
+@media (hover: hover) {
+  .collection-product-slider__quick-controls button:hover {
+    background: var(--accent-2);
+    color: var(--white);
+    box-shadow: 0 10px 24px rgba(3, 83, 93, 0.42);
+    transform: translateY(-1px) scale(1.04);
+  }
 }
 
 .collection-product-slider__quick-controls button:focus-visible {
@@ -337,16 +339,20 @@ watch(
   min-height: 44px;
   padding: 11px 18px;
   border-radius: 999px;
-  background: var(--accent-2);
-  color: var(--white);
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, #b82343, #7f1830);
+  color: #fff;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: var(--shadow-sm);
-  transition: background 180ms ease, transform 180ms ease;
+  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
+  transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .collection-product-slider__all:hover {
-  background: var(--accent);
+  border-color: transparent;
+  background: var(--accent-2);
+  color: var(--white);
+  box-shadow: 0 12px 26px rgba(3, 83, 93, 0.38);
   transform: translateY(-2px);
 }
 
