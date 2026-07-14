@@ -6,6 +6,7 @@ export const useSliderGestures = ({ next, previous, enabled = () => true }) => {
   let startX = 0
   let startY = 0
   let pointerId = null
+  let pointerTarget = null
   let wheelDistance = 0
   let wheelTimer
   let suppressClick = false
@@ -17,7 +18,7 @@ export const useSliderGestures = ({ next, previous, enabled = () => true }) => {
     startY = event.clientY
     dragOffsetX.value = 0
     pointerId = event.pointerId
-    event.currentTarget.setPointerCapture?.(pointerId)
+    pointerTarget = event.currentTarget
   }
 
   const pointerMove = (event) => {
@@ -29,7 +30,14 @@ export const useSliderGestures = ({ next, previous, enabled = () => true }) => {
       return
     }
     dragOffsetX.value = offsetX
-    if (Math.abs(offsetX) > 8) suppressClick = true
+    if (Math.abs(offsetX) > 8) {
+      suppressClick = true
+      // Capturing on pointerdown retargets an ordinary click from the product
+      // link to the slider container. Capture only after a drag has begun.
+      if (!pointerTarget.hasPointerCapture?.(pointerId)) {
+        pointerTarget.setPointerCapture?.(pointerId)
+      }
+    }
   }
 
   const pointerUp = (event) => {
@@ -40,9 +48,13 @@ export const useSliderGestures = ({ next, previous, enabled = () => true }) => {
   }
 
   const pointerCancel = () => {
+    if (pointerId !== null && pointerTarget?.hasPointerCapture?.(pointerId)) {
+      pointerTarget.releasePointerCapture?.(pointerId)
+    }
     isDragging.value = false
     dragOffsetX.value = 0
     pointerId = null
+    pointerTarget = null
   }
 
   const wheel = (event) => {
