@@ -53,7 +53,6 @@ onMounted(loadStats)
       </div>
     </div>
 
-    <p v-if="error" class="error-banner">{{ error }}</p>
     <p v-if="loading" class="status-text">Loading dashboard...</p>
 
     <section v-else class="stats-grid">

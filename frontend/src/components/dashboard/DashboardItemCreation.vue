@@ -9,6 +9,7 @@ import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
+import { showDashboardToast } from '../../utils/dashboardToast.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -290,13 +291,39 @@ const handleCollectionChange = async () => {
 const submitForm = async () => {
   fieldErrors.subCollectionId = ''
 
+  const requirements = []
+  if (!form.name.trim()) requirements.push('Enter an item name.')
+  if (!form.collectionId) requirements.push('Select a collection.')
+  if (!form.description.trim()) requirements.push('Enter a description.')
+  if (!photoFiles.value.length) requirements.push('Add at least one photo.')
+  if (!hasStyleSpecificPrice.value && (form.price === '' || Number(form.price) < 0)) {
+    requirements.push('Enter a valid general price.')
+  }
+  if (form.hasBlingOptions && !form.noBlingDescription.trim()) {
+    requirements.push('Enter the description without bling.')
+  }
+  if (!Number.isInteger(Number(form.quantity)) || Number(form.quantity) < 0) {
+    requirements.push('Enter a whole-number quantity of zero or more.')
+  }
+
   if (hasReservedCustomProperty.value) {
-    error.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
+    requirements.push('Remove built-in fields from Custom Properties; use their dedicated fields instead.')
+  }
+
+  if (requirements.length) {
+    showDashboardToast(requirements.join(' '), {
+      type: 'warning',
+      title: `Cannot create item — ${requirements.length} requirement${requirements.length === 1 ? '' : 's'} missing`,
+      duration: 9000,
+    })
     return
   }
 
   if (subcollectionsLoading.value) {
-    error.value = 'Filters/sub-collections are still loading. Please wait a moment.'
+    showDashboardToast('Filters and sub-collections are still loading. Please wait a moment and try again.', {
+      type: 'warning',
+      title: 'Item is not ready to create',
+    })
     return
   }
 
@@ -359,10 +386,9 @@ watch(
       </RouterLink>
     </div>
 
-    <p v-if="error" class="error-banner">{{ error }}</p>
     <p v-if="pageLoading" class="status-text">Loading form...</p>
 
-    <form v-else class="item-form" @submit.prevent="submitForm">
+    <form v-else class="item-form" novalidate @submit.prevent="submitForm">
       <section class="card">
         <div class="section-header"><h2>Basic Information</h2></div>
 
@@ -609,7 +635,7 @@ watch(
       </section>
 
       <div class="actions">
-        <button type="submit" class="btn-primary" :disabled="loading || pageLoading || subcollectionsLoading || !photoFiles.length || hasReservedCustomProperty">
+        <button type="submit" class="btn-primary" :disabled="loading || pageLoading">
           {{ loading ? 'Creating...' : 'Create Item' }}
         </button>
       </div>

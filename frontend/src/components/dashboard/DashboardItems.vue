@@ -873,7 +873,6 @@ watch(
       </div>
     </div>
 
-    <p v-if="error" class="error-banner">{{ error }}</p>
     <p v-if="loading" class="status-text">Loading items...</p>
 
     <details

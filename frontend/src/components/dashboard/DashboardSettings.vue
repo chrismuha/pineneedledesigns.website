@@ -5,7 +5,6 @@ import { dashboardApi } from '../../api/dashboard.js'
 const loading = ref(true)
 const saving = ref(false)
 const error = ref('')
-const success = ref('')
 const form = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 })
 
 const loadSettings = async () => {
@@ -28,13 +27,11 @@ const loadSettings = async () => {
 const saveSettings = async () => {
   saving.value = true
   error.value = ''
-  success.value = ''
   try {
     const settings = await dashboardApi.updateSettings(form.value)
     form.value.freeShippingEnabled = Boolean(settings.freeShippingEnabled)
     form.value.freeShippingMinimum = settings.freeShippingMinimum ?? 28
     form.value.fallbackShippingCost = settings.fallbackShippingCost ?? 5
-    success.value = 'Shipping settings saved.'
   } catch (err) {
     error.value = err.message
   } finally {
@@ -54,8 +51,6 @@ onMounted(loadSettings)
         <p>Manage how shipping is calculated at checkout.</p>
       </div>
     </div>
-    <p v-if="error" class="error-banner">{{ error }}</p>
-    <p v-if="success" class="success-banner"><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{{ success }}</p>
     <p v-if="loading" class="status-text">Loading settings...</p>
     <section v-else class="settings-card">
       <div class="section-heading">
@@ -138,7 +133,6 @@ onMounted(loadSettings)
 .settings-actions { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 26px; border-top: 1px solid #e8eeea; background: #fbfcfb; }
 .settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
 .save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
-.success-banner { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 10px; background: var(--dashboard-green-bg); color: #166b30; }
 
 @media (max-width: 650px) {
   .settings-page { padding: 20px 16px 120px; }

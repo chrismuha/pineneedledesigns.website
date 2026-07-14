@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -7,6 +7,22 @@ const router = useRouter()
 const dragTarget = ref('')
 const navDrag = ref(null)
 const suppressSyntheticClick = ref(false)
+const toasts = ref([])
+let nextToastId = 0
+
+const dismissToast = (id) => {
+  toasts.value = toasts.value.filter((toast) => toast.id !== id)
+}
+
+const handleToast = (event) => {
+  const id = ++nextToastId
+  const toast = { id, ...event.detail }
+  toasts.value.push(toast)
+  window.setTimeout(() => dismissToast(id), toast.duration || 6500)
+}
+
+onMounted(() => window.addEventListener('dashboard-toast', handleToast))
+onBeforeUnmount(() => window.removeEventListener('dashboard-toast', handleToast))
 
 const tabAtPoint = (x, y) =>
   document.elementFromPoint(x, y)?.closest?.('[data-nav-path]')?.dataset.navPath || ''
@@ -190,6 +206,17 @@ const isActive = (path) => {
       </RouterLink>
 
     </nav>
+
+    <div class="toast-region" aria-live="assertive" aria-atomic="false">
+      <article v-for="toast in toasts" :key="toast.id" class="dashboard-toast" :class="`dashboard-toast--${toast.type}`">
+        <i :class="toast.type === 'success' ? 'bi bi-check-circle-fill' : toast.type === 'warning' ? 'bi bi-exclamation-triangle-fill' : 'bi bi-x-circle-fill'" aria-hidden="true"></i>
+        <div>
+          <strong>{{ toast.title || (toast.type === 'success' ? 'Success' : toast.type === 'warning' ? 'Action needed' : 'Request failed') }}</strong>
+          <p>{{ toast.message }}</p>
+        </div>
+        <button type="button" aria-label="Dismiss notification" @click="dismissToast(toast.id)">×</button>
+      </article>
+    </div>
   </div>
 </template>
 
@@ -288,6 +315,20 @@ const isActive = (path) => {
   padding: 24px;
 }
 
+.toast-region { position: fixed; z-index: 6000; top: 18px; right: 18px; display: grid; width: min(390px, calc(100vw - 32px)); gap: 10px; pointer-events: none; }
+.dashboard-toast { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 15px 14px; border: 1px solid #f0b8c4; border-radius: 14px; background: #fff; color: #722039; box-shadow: 0 16px 40px rgba(64, 19, 30, .2); pointer-events: auto; animation: toast-in .2s ease-out; }
+.dashboard-toast > i { margin-top: 2px; color: var(--dashboard-red); font-size: 1.2rem; }
+.dashboard-toast strong { display: block; color: #40131f; font-size: .92rem; }
+.dashboard-toast p { margin: 3px 0 0; font-size: .86rem; line-height: 1.4; }
+.dashboard-toast button { width: 30px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: #6f5660; font-size: 1.35rem; line-height: 1; }
+.dashboard-toast--warning { border-color: #ead19b; color: #6b4c0c; }
+.dashboard-toast--warning > i { color: #c4880c; }
+.dashboard-toast--warning strong { color: #513807; }
+.dashboard-toast--success { border-color: #a8dab6; color: #17652e; box-shadow: 0 16px 40px rgba(20, 91, 42, .18); }
+.dashboard-toast--success > i { color: var(--dashboard-green); }
+.dashboard-toast--success strong { color: #114d24; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-10px) scale(.98); } }
+
 
 /* Mobile bottom navigation (visible under 850px) */
 .bottom-nav {
@@ -367,6 +408,8 @@ const isActive = (path) => {
     overscroll-behavior: none;
     background: #fff;
   }
+
+  .toast-region { top: 10px; right: 10px; left: 10px; width: auto; }
 
   .dashboard-layout {
     position: absolute;

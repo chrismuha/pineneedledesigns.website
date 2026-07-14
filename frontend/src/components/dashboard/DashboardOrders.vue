@@ -192,7 +192,6 @@ watch(
       </button>
     </div>
 
-    <p v-if="error" class="error-banner">{{ error }}</p>
     <p v-if="loading" class="status-text">Loading orders...</p>
     <p v-else-if="!orders.length" class="status-text">
       No orders yet. Completed checkout orders will appear here after PayPal payment.
