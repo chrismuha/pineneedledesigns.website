@@ -178,19 +178,19 @@ h2 { margin: 0; color: #182b1e; } header p { margin: 4px 0 0; color: #627168; }
 .crop-close-button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 999px; background: #f1f1f1; color: #222; cursor: pointer; font: inherit; font-size: 2rem; line-height: 1; }
 .crop-close-button:hover, .crop-close-button:focus-visible { background: var(--dashboard-red-bg); color: var(--dashboard-red); outline: 2px solid var(--dashboard-red); outline-offset: 2px; }
 .crop-close-button:disabled { cursor: not-allowed; opacity: .55; }
-.crop-stage { min-height: 0; padding: 12px; background: #dfe9e2; overflow: hidden; }
+.crop-stage { position: relative; z-index: 0; min-height: 0; overflow: hidden; isolation: isolate; contain: layout paint; padding: 12px; background: #dfe9e2; }
 .crop-stage img { display: block; max-width: 100%; }
-.editor-controls { display: grid; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; }
+.editor-controls { display: grid; position: relative; z-index: 3; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; }
 .ratio-controls, .tool-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .ratio-controls button, .tool-controls button { min-height: 40px; padding: 7px 13px; border: 1px solid #cbdacf; border-radius: 999px; background: #fff; color: #294431; font: inherit; font-weight: 700; }
 .ratio-controls button.active { border-color: #17813a; background: var(--dashboard-green); color: #fff; }
 .tool-controls button { border-radius: 10px; }
 .tool-controls i { margin-right: 4px; }
 .crop-error { margin: 0; color: var(--dashboard-red); text-align: center; }
-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 14px 18px max(14px, env(safe-area-inset-bottom)); border-top: 1px solid #dce8df; background: #fff; }
+footer { display: flex; position: relative; z-index: 3; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 14px 18px max(14px, env(safe-area-inset-bottom)); border-top: 1px solid #dce8df; background: #fff; }
 footer button { min-width: 130px; }
 .done-button { font-size: 1rem; font-weight: 800; }
-:deep(.cropper-container) { width: 100% !important; height: 100% !important; }
+:deep(.cropper-container) { width: 100% !important; height: 100% !important; overflow: hidden; }
 :deep(.cropper-view-box) { outline-color: rgba(255,255,255,.95); outline-width: 2px; }
 :deep(.cropper-line) { background-color: rgba(255,255,255,.9); }
 :deep(.cropper-point) { width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%; background-color: var(--dashboard-green); opacity: 1; }

@@ -480,7 +480,8 @@ const isActive = (path) => {
     padding: 7px;
     justify-content: space-between;
     align-items: center;
-    touch-action: pan-y;
+    overscroll-behavior: none;
+    touch-action: none;
   }
 
   .bottom-nav::before {
