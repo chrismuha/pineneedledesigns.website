@@ -452,47 +452,26 @@ const isActive = (path) => {
     right: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom));
     min-height: 68px;
-    overflow: visible;
-    isolation: isolate;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .58), rgba(239, 250, 242, .4));
-    border: 1px solid rgba(255, 255, 255, .76);
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid rgba(0, 0, 0, .08);
     border-radius: 999px;
-    box-shadow:
-      0 18px 42px rgba(17, 55, 30, .16),
-      0 3px 10px rgba(17, 55, 30, .08),
-      inset 0 1px 1px rgba(255, 255, 255, .96),
-      inset 0 -1px 1px rgba(21, 103, 47, .1);
-    backdrop-filter: blur(28px) saturate(190%) contrast(105%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 1000;
-    gap: 6px;
-    padding: 7px;
-    justify-content: space-between;
+    gap: 8px;
+    padding: 8px;
+    justify-content: center;
     align-items: center;
     touch-action: pan-y;
   }
 
   .bottom-nav::before {
-    content: '';
-    position: absolute;
-    z-index: 2;
-    inset: 1px 5% auto;
-    height: 46%;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, 0));
-    pointer-events: none;
-    opacity: .78;
+    content: none;
   }
 
   .bottom-nav::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    inset: 5px;
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgba(208, 244, 218, .14), rgba(255, 255, 255, .34), rgba(208, 244, 218, .14));
-    filter: blur(7px);
-    pointer-events: none;
+    content: none;
   }
 
   .bottom-tab {
@@ -504,27 +483,23 @@ const isActive = (path) => {
     align-items: center;
     justify-content: center;
     min-width: 0;
-    min-height: 54px;
-    padding: 7px 4px 6px;
+    min-height: 58px;
+    padding: 6px 4px;
     margin: 0;
     border-radius: 999px;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .22));
-    border: 1px solid rgba(255, 255, 255, .62);
+    background: #fff;
+    border: 0;
     text-decoration: none;
     color: #25442e;
-    box-shadow:
-      0 3px 10px rgba(17, 55, 30, .06),
-      inset 0 1px 1px rgba(255, 255, 255, .9),
-      inset 0 -1px 1px rgba(25, 112, 52, .07);
-    backdrop-filter: blur(12px) saturate(155%);
-    -webkit-backdrop-filter: blur(12px) saturate(155%);
-    font-size: .68rem;
-    font-weight: 650;
-    letter-spacing: .015em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    font-size: 7pt;
+    font-weight: 600;
+    letter-spacing: .04em;
+    line-height: 1.05;
+    text-transform: uppercase;
     user-select: none;
     -webkit-user-drag: none;
-    transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    transition: transform 180ms ease, color 180ms ease, background 180ms ease;
   }
 
   .menu-icon {
@@ -544,29 +519,21 @@ const isActive = (path) => {
   }
 
   .bottom-tab.active {
-    background:
-      linear-gradient(180deg, rgba(240, 255, 244, .7), rgba(159, 226, 178, .42));
-    border-color: rgba(255, 255, 255, .86);
-    color: #0d6a2b;
-    box-shadow:
-      0 7px 18px rgba(25, 112, 52, .14),
-      inset 0 1px 1px rgba(255, 255, 255, .98),
-      inset 0 -1px 1px rgba(29, 138, 61, .16);
-    backdrop-filter: blur(14px) saturate(170%);
-    -webkit-backdrop-filter: blur(14px) saturate(170%);
-    transform: translateY(-1px);
+    background: var(--dashboard-green);
+    color: white;
+    transform: none;
   }
 
   .bottom-tab.active .menu-icon {
-    color: #16813a;
-    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .9));
+    color: white;
+    filter: none;
   }
 
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
-    background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(246, 253, 248, .42));
-    border-color: rgba(255, 255, 255, .84);
-    color: #176c31;
+    background: white;
+    color: var(--dashboard-green);
+    transform: translateY(-1px);
   }
 
   .bottom-tab:focus-visible {
@@ -583,13 +550,13 @@ const isActive = (path) => {
     .bottom-nav {
       left: 8px;
       right: 8px;
-      gap: 4px;
+      gap: 5px;
       padding: 6px;
     }
 
     .bottom-tab {
-      min-height: 52px;
-      font-size: .64rem;
+      min-height: 56px;
+      font-size: 6.5pt;
     }
   }
 

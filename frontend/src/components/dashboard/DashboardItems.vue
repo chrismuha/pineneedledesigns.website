@@ -27,6 +27,7 @@ const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
 const editPhotoCropQueue = ref([])
 const editPhotoBeingCropped = computed(() => editPhotoCropQueue.value[0] || null)
+const editPhotoCropTarget = ref(null)
 const editVideoFiles = ref([])
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
@@ -522,12 +523,43 @@ const handleEditPhotoUpload = (event) => {
 }
 
 const finishEditPhotoCrop = (file) => {
-  editPhotoFiles.value.push({ file, previewUrl: URL.createObjectURL(file) })
+  const replacement = { file, previewUrl: URL.createObjectURL(file) }
+  const target = editPhotoCropTarget.value
+  if (target?.type === 'existing') {
+    editingProduct.value?.photos.splice(target.index, 1)
+    editPhotoFiles.value.push(replacement)
+  } else if (target?.type === 'new') {
+    URL.revokeObjectURL(editPhotoFiles.value[target.index].previewUrl)
+    editPhotoFiles.value.splice(target.index, 1, replacement)
+  } else {
+    editPhotoFiles.value.push(replacement)
+  }
+  editPhotoCropTarget.value = null
   editPhotoCropQueue.value.shift()
 }
 
 const cancelEditPhotoCrop = () => {
+  editPhotoCropTarget.value = null
   editPhotoCropQueue.value.shift()
+}
+
+const openExistingPhotoCrop = async (photo, index) => {
+  editModalError.value = ''
+  try {
+    const response = await fetch(photo, { credentials: 'include' })
+    if (!response.ok) throw new Error('The existing photo could not be loaded for editing.')
+    const blob = await response.blob()
+    const filename = String(photo).split('/').pop()?.split('?')[0] || `photo-${index + 1}`
+    editPhotoCropTarget.value = { type: 'existing', index }
+    editPhotoCropQueue.value.push(new File([blob], filename, { type: blob.type || 'image/webp' }))
+  } catch (err) {
+    editModalError.value = err.message || 'The existing photo could not be loaded for editing.'
+  }
+}
+
+const openNewPhotoCrop = (photo, index) => {
+  editPhotoCropTarget.value = { type: 'new', index }
+  editPhotoCropQueue.value.push(photo.file)
 }
 
 const removeExistingEditPhoto = (index) => {
@@ -1001,6 +1033,17 @@ watch(
           </div>
         </div>
 
+        <div v-if="customPropertiesForDisplay(product.customProperties).length" class="custom-properties">
+          <h4>Custom Properties</h4>
+
+          <div v-for="property in customPropertiesForDisplay(product.customProperties)" :key="property.name" class="property">
+            <strong>{{ property.name }}{{ property.required ? ' *' : '' }}</strong>
+            <ul>
+              <li v-for="option in sortedOptions(property.options)" :key="option">{{ option }}</li>
+            </ul>
+          </div>
+        </div>
+
         <div v-if="product.photos?.length" class="photo-grid">
           <img
             v-for="(photo, index) in product.photos.slice(0, 4)"
@@ -1009,6 +1052,21 @@ watch(
             :alt="`${product.name} photo ${index + 1}`"
             class="photo"
           >
+        </div>
+
+        <div v-if="product.videos?.length" class="video-summary">
+          <h4>Videos</h4>
+          <div class="photo-grid">
+            <video
+              v-for="(video, index) in product.videos.slice(0, 4)"
+              :key="`${product._id}-video-${index}`"
+              :src="video"
+              :aria-label="`${product.name} video ${index + 1}`"
+              class="photo video-preview"
+              controls
+              preload="metadata"
+            />
+          </div>
         </div>
 
         <div class="item-details">
@@ -1040,17 +1098,6 @@ watch(
             <strong>Description without Bling:</strong><br>
             {{ product.noBlingDescription }}
           </p>
-
-          <div v-if="customPropertiesForDisplay(product.customProperties).length" class="custom-properties">
-            <h4>Custom Properties</h4>
-
-            <div v-for="property in customPropertiesForDisplay(product.customProperties)" :key="property.name" class="property">
-              <strong>{{ property.name }}{{ property.required ? ' *' : '' }}</strong>
-              <ul>
-                <li v-for="option in sortedOptions(property.options)" :key="option">{{ option }}</li>
-              </ul>
-            </div>
-          </div>
         </div>
 
         <div class="actions">
@@ -1338,13 +1385,19 @@ watch(
           <p class="hint">Add or remove photos. At least one and no more than 20 are required.</p>
           <div class="edit-photo-grid">
             <div v-for="(photo, index) in editingProduct.photos" :key="photo" class="edit-photo-card">
-              <img :src="photo" :alt="`Existing photo ${index + 1}`">
+              <button type="button" class="edit-photo-trigger" :disabled="saving" :aria-label="`Crop existing photo ${index + 1}`" @click="openExistingPhotoCrop(photo, index)">
+                <img :src="photo" :alt="`Existing photo ${index + 1}`">
+                <span>Tap to crop</span>
+              </button>
               <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeExistingEditPhoto(index)">
                 Remove
               </button>
             </div>
             <div v-for="(photo, index) in editPhotoFiles" :key="photo.previewUrl" class="edit-photo-card">
-              <img :src="photo.previewUrl" :alt="`New photo ${index + 1}`">
+              <button type="button" class="edit-photo-trigger" :disabled="saving" :aria-label="`Crop new photo ${index + 1}`" @click="openNewPhotoCrop(photo, index)">
+                <img :src="photo.previewUrl" :alt="`New photo ${index + 1}`">
+                <span>Tap to crop</span>
+              </button>
               <span class="new-photo-badge">New</span>
               <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeNewEditPhoto(index)">
                 Remove
@@ -1728,11 +1781,15 @@ watch(
 }
 
 .photo {
+  width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 8px;
   background: #ececec;
 }
+
+.video-summary h4 { margin: 20px 0 -8px; }
+.video-preview { background: #111; }
 
 .badges {
   display: flex;
@@ -1891,6 +1948,11 @@ watch(
 
 .edit-photo-card { position: relative; display: flex; flex-direction: column; gap: 8px; }
 .edit-photo-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+.edit-photo-trigger { position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 8px; background: transparent; cursor: pointer; overflow: hidden; }
+.edit-photo-trigger img { display: block; }
+.edit-photo-trigger span { position: absolute; right: 6px; bottom: 6px; left: 6px; padding: 5px 7px; border-radius: 6px; background: rgba(13, 55, 27, .82); color: #fff; font-size: .75rem; font-weight: 700; text-align: center; backdrop-filter: blur(6px); }
+.edit-photo-trigger:hover span, .edit-photo-trigger:focus-visible span { background: var(--dashboard-green); }
+.edit-photo-trigger:focus-visible { outline: 3px solid rgba(46, 164, 79, .45); outline-offset: 2px; }
 .new-photo-badge { position: absolute; top: 6px; left: 6px; padding: 3px 7px; border-radius: 999px; background: var(--dashboard-green); color: #fff; font-size: .75rem; font-weight: 700; }
 .visually-hidden-file { position: absolute; width: 1px !important; height: 1px; padding: 0 !important; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0 !important; }
 .add-photos-control { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: center; gap: 12px; padding: 18px; border: 2px dashed #83b990; border-radius: 12px; background: #f4fbf6; color: #185f30; cursor: pointer; text-align: left; transition: border-color .18s ease, background .18s ease, transform .18s ease; }

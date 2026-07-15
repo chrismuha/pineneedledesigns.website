@@ -502,18 +502,6 @@ watch(
       </section>
 
       <section class="card">
-        <div class="section-header"><h2>Videos</h2></div>
-        <input type="file" class="dashboard-file-input" multiple accept="video/*" @change="handleVideoUpload">
-        <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
-        <div v-if="videoFiles.length" class="photo-grid">
-          <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
-            <video :src="video.previewUrl" controls />
-            <button type="button" class="dashboard-remove-btn" @click="removeVideo(index)">Remove</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
         <div class="section-header">
           <h2>Custom Properties</h2>
           <button type="button" class="btn-primary" @click="addProperty">
@@ -582,6 +570,18 @@ watch(
           <div v-for="(photo, index) in photoFiles" :key="photo.previewUrl" class="photo-box">
             <img :src="photo.previewUrl" :alt="`Preview ${index + 1}`">
             <button type="button" class="dashboard-remove-btn" @click="removePhoto(index)">Remove</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header"><h2>Videos</h2></div>
+        <input type="file" class="dashboard-file-input" multiple accept="video/*" @change="handleVideoUpload">
+        <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
+        <div v-if="videoFiles.length" class="photo-grid">
+          <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
+            <video :src="video.previewUrl" controls />
+            <button type="button" class="dashboard-remove-btn" @click="removeVideo(index)">Remove</button>
           </div>
         </div>
       </section>
