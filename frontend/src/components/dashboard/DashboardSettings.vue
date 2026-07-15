@@ -1,9 +1,12 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { dashboardApi } from '../../api/dashboard.js'
 import {
+  clearDashboardAppearancePreviews,
   getDashboardDarkPhotoEditorEnabled,
   getDashboardLiquidGlassEnabled,
+  previewDashboardDarkPhotoEditor,
+  previewDashboardLiquidGlass,
   setDashboardDarkPhotoEditorEnabled,
   setDashboardLiquidGlassEnabled,
 } from '../../utils/dashboardAppearance.js'
@@ -30,6 +33,9 @@ const settingsSnapshot = (settings) => JSON.stringify({
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
+
+watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
+watch(() => form.value.darkPhotoEditorEnabled, previewDashboardDarkPhotoEditor)
 
 const loadSettings = async () => {
   loading.value = true
@@ -82,6 +88,7 @@ const saveSettings = async () => {
 }
 
 onMounted(loadSettings)
+onBeforeUnmount(clearDashboardAppearancePreviews)
 </script>
 
 <template>

@@ -18,10 +18,10 @@ let previousBodyOverflow = ''
 
 const ratios = [
   { label: 'Freeform', value: 'freeform', ratio: NaN },
-  { label: 'Original', value: 'original', ratio: null },
   { label: 'Square', value: '1:1', ratio: 1 },
   { label: 'Portrait', value: '4:5', ratio: 4 / 5 },
   { label: 'Landscape', value: '4:3', ratio: 4 / 3 },
+  { label: 'Original', value: 'original', ratio: null },
 ]
 
 const initializeCropper = () => {
@@ -214,11 +214,13 @@ footer button { min-width: 130px; }
   .crop-editor { grid-template-rows: auto minmax(0, 1fr) auto auto; height: 100dvh; border: 0; border-radius: 0; }
   header { align-items: center; padding: max(10px, env(safe-area-inset-top)) 12px 10px; }
   header p { display: none; }
-  .crop-stage { padding: 4px; }
+  .crop-stage { padding: 0; }
   .editor-controls { min-width: 0; gap: 7px; padding: 8px 10px; }
-  .ratio-controls, .tool-controls { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding: 1px 0 3px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .ratio-controls::-webkit-scrollbar, .tool-controls::-webkit-scrollbar { display: none; }
-  .ratio-controls button, .tool-controls button { min-height: 38px; flex: 0 0 auto; padding: 6px 10px; font-size: .78rem; }
+  .ratio-controls, .tool-controls { display: grid; width: 100%; gap: 5px; }
+  .ratio-controls { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .tool-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ratio-controls button, .tool-controls button { width: 100%; min-width: 0; min-height: 38px; padding: 5px 2px; font-size: clamp(.62rem, 2.6vw, .75rem); white-space: nowrap; }
+  .tool-controls i { margin-right: 2px; }
   footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 10px 10px max(10px, env(safe-area-inset-bottom)); }
   footer button { width: 100%; min-width: 0; min-height: 48px; padding-inline: 6px; font-size: .78rem; white-space: nowrap; }
 }

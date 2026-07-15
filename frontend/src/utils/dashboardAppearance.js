@@ -1,12 +1,35 @@
 const LIQUID_GLASS_KEY = 'dashboard-liquid-glass-enabled'
 const DARK_PHOTO_EDITOR_KEY = 'dashboard-dark-photo-editor-enabled'
+let liquidGlassPreview
+let darkPhotoEditorPreview
 
-export const getDashboardLiquidGlassEnabled = () => {
+const getStoredLiquidGlassEnabled = () => {
   try {
     return window.localStorage.getItem(LIQUID_GLASS_KEY) !== 'false'
   } catch {
     return true
   }
+}
+
+const getStoredDarkPhotoEditorEnabled = () => {
+  try {
+    return window.localStorage.getItem(DARK_PHOTO_EDITOR_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+const announceLiquidGlass = (enabled) => {
+  window.dispatchEvent(new CustomEvent('dashboard-liquid-glass-change', {
+    detail: { enabled },
+  }))
+}
+
+export const getDashboardLiquidGlassEnabled = () => liquidGlassPreview ?? getStoredLiquidGlassEnabled()
+
+export const previewDashboardLiquidGlass = (enabled) => {
+  liquidGlassPreview = Boolean(enabled)
+  announceLiquidGlass(liquidGlassPreview)
 }
 
 export const setDashboardLiquidGlassEnabled = (enabled) => {
@@ -16,21 +39,25 @@ export const setDashboardLiquidGlassEnabled = (enabled) => {
     window.localStorage.setItem(LIQUID_GLASS_KEY, String(value))
   } catch {}
 
-  window.dispatchEvent(new CustomEvent('dashboard-liquid-glass-change', {
-    detail: { enabled: value },
-  }))
+  liquidGlassPreview = undefined
+  announceLiquidGlass(value)
 }
 
-export const getDashboardDarkPhotoEditorEnabled = () => {
-  try {
-    return window.localStorage.getItem(DARK_PHOTO_EDITOR_KEY) === 'true'
-  } catch {
-    return false
-  }
+export const getDashboardDarkPhotoEditorEnabled = () => darkPhotoEditorPreview ?? getStoredDarkPhotoEditorEnabled()
+
+export const previewDashboardDarkPhotoEditor = (enabled) => {
+  darkPhotoEditorPreview = Boolean(enabled)
 }
 
 export const setDashboardDarkPhotoEditorEnabled = (enabled) => {
   try {
     window.localStorage.setItem(DARK_PHOTO_EDITOR_KEY, String(Boolean(enabled)))
   } catch {}
+  darkPhotoEditorPreview = undefined
+}
+
+export const clearDashboardAppearancePreviews = () => {
+  liquidGlassPreview = undefined
+  darkPhotoEditorPreview = undefined
+  announceLiquidGlass(getStoredLiquidGlassEnabled())
 }

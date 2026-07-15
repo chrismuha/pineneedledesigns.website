@@ -548,7 +548,7 @@ const isActive = (path) => {
     border-radius: 999px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, .36), rgba(255, 255, 255, .12));
-    border: 1px solid rgba(255, 255, 255, .7);
+    border: 1px solid rgba(27, 119, 54, .08);
     text-decoration: none;
     color: #25442e;
     box-shadow:
@@ -584,7 +584,7 @@ const isActive = (path) => {
   .bottom-tab.active {
     background:
       linear-gradient(180deg, rgba(241, 255, 245, .56), rgba(132, 218, 156, .3));
-    border-color: rgba(255, 255, 255, .86);
+    border-color: rgba(27, 119, 54, .18);
     color: #0d6a2b;
     box-shadow:
       0 7px 18px rgba(25, 112, 52, .14),
@@ -603,7 +603,7 @@ const isActive = (path) => {
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
     background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(246, 253, 248, .42));
-    border-color: rgba(255, 255, 255, .84);
+    border-color: rgba(27, 119, 54, .12);
     color: #176c31;
   }
 
