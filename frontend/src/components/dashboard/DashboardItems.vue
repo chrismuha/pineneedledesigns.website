@@ -26,7 +26,8 @@ const openingProductId = ref('')
 const editInitialSnapshot = ref('')
 const editPhotoFiles = ref([])
 const editPhotoCropQueue = ref([])
-const editPhotoBeingCropped = computed(() => editPhotoCropQueue.value[0] || null)
+const editPhotoCropEntry = computed(() => editPhotoCropQueue.value[0] || null)
+const editPhotoBeingCropped = computed(() => editPhotoCropEntry.value?.file || null)
 const editPhotoCropTarget = ref(null)
 const editVideoFiles = ref([])
 const collectionPendingDelete = ref(null)
@@ -518,12 +519,12 @@ const handleEditPhotoUpload = (event) => {
   if (files.length > availableSlots) {
     editModalError.value = `A maximum of 20 photos is allowed. You can add ${availableSlots} more.`
   }
-  editPhotoCropQueue.value.push(...files.slice(0, availableSlots))
+  editPhotoCropQueue.value.push(...files.slice(0, availableSlots).map((file) => ({ file })))
   event.target.value = ''
 }
 
-const finishEditPhotoCrop = (file) => {
-  const replacement = { file, previewUrl: URL.createObjectURL(file) }
+const finishEditPhotoCrop = ({ file, sourceFile, cropState }) => {
+  const replacement = { file, sourceFile, cropState, previewUrl: URL.createObjectURL(file) }
   const target = editPhotoCropTarget.value
   if (target?.type === 'existing') {
     editingProduct.value?.photos.splice(target.index, 1)
@@ -551,7 +552,7 @@ const openExistingPhotoCrop = async (photo, index) => {
     const blob = await response.blob()
     const filename = String(photo).split('/').pop()?.split('?')[0] || `photo-${index + 1}`
     editPhotoCropTarget.value = { type: 'existing', index }
-    editPhotoCropQueue.value.push(new File([blob], filename, { type: blob.type || 'image/webp' }))
+    editPhotoCropQueue.value.push({ file: new File([blob], filename, { type: blob.type || 'image/webp' }) })
   } catch (err) {
     editModalError.value = err.message || 'The existing photo could not be loaded for editing.'
   }
@@ -559,7 +560,10 @@ const openExistingPhotoCrop = async (photo, index) => {
 
 const openNewPhotoCrop = (photo, index) => {
   editPhotoCropTarget.value = { type: 'new', index }
-  editPhotoCropQueue.value.push(photo.file)
+  editPhotoCropQueue.value.push({
+    file: photo.sourceFile || photo.file,
+    initialCropState: photo.cropState || null,
+  })
 }
 
 const removeExistingEditPhoto = (index) => {
@@ -1693,6 +1697,7 @@ watch(
     <DashboardPhotoCropper
       v-if="editPhotoBeingCropped"
       :file="editPhotoBeingCropped"
+      :initial-crop-state="editPhotoCropEntry?.initialCropState"
       @confirm="finishEditPhotoCrop"
       @cancel="cancelEditPhotoCrop"
     />

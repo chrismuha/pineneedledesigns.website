@@ -4,7 +4,10 @@ import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { getDashboardDarkPhotoEditorEnabled } from '../../utils/dashboardAppearance.js'
 
-const props = defineProps({ file: { type: File, required: true } })
+const props = defineProps({
+  file: { type: File, required: true },
+  initialCropState: { type: Object, default: null },
+})
 const emit = defineEmits(['cancel', 'confirm'])
 
 const image = ref(null)
@@ -50,6 +53,18 @@ const initializeCropper = () => {
     cropBoxMovable: true,
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
+    ready() {
+      if (!props.initialCropState?.data) return
+      selectedRatio.value = props.initialCropState.ratio || 'freeform'
+      const ratio = ratios.find((option) => option.value === selectedRatio.value)
+      if (ratio?.value === 'original') {
+        const imageData = this.cropper.getImageData()
+        this.cropper.setAspectRatio(imageData.naturalWidth / imageData.naturalHeight)
+      } else {
+        this.cropper.setAspectRatio(ratio?.ratio ?? NaN)
+      }
+      this.cropper.setData(props.initialCropState.data)
+    },
   })
 }
 
@@ -105,7 +120,14 @@ const confirmCrop = async (useFullPhoto = false) => {
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', .92))
     if (!blob) throw new Error('The cropped photo could not be created.')
     const baseName = props.file.name.replace(/\.[^.]+$/, '') || 'photo'
-    emit('confirm', new File([blob], `${baseName}-cropped.webp`, { type: 'image/webp', lastModified: Date.now() }))
+    emit('confirm', {
+      file: new File([blob], `${baseName}-cropped.webp`, { type: 'image/webp', lastModified: Date.now() }),
+      sourceFile: props.file,
+      cropState: {
+        ratio: useFullPhoto ? 'freeform' : selectedRatio.value,
+        data: cropper.getData(true),
+      },
+    })
   } catch (err) {
     error.value = err.message || 'The cropped photo could not be created.'
   } finally {
@@ -188,7 +210,7 @@ h2 { margin: 0; color: #182b1e; } header p { margin: 4px 0 0; color: #627168; }
 .crop-close-button:disabled { cursor: not-allowed; opacity: .55; }
 .crop-stage { position: relative; z-index: 0; min-height: 0; overflow: hidden; isolation: isolate; contain: strict; clip-path: inset(0); transform: translateZ(0); touch-action: none; padding: 12px; background: #dfe9e2; }
 .crop-stage img { display: block; max-width: 100%; }
-.editor-controls { display: grid; position: relative; z-index: 100; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; box-shadow: 0 -8px 0 #f7faf8; }
+.editor-controls { display: grid; position: relative; z-index: 100; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; box-shadow: 0 -16px 0 #f7faf8; }
 .ratio-controls, .tool-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .ratio-controls button, .tool-controls button { min-height: 40px; padding: 7px 13px; border: 1px solid #cbdacf; border-radius: 999px; background: #fff; color: #294431; font: inherit; font-weight: 700; }
 .ratio-controls button.active { border-color: #17813a; background: var(--dashboard-green); color: #fff; }
@@ -211,7 +233,7 @@ footer button { min-width: 130px; }
 .crop-overlay--dark h2 { color: #fff; }
 .crop-overlay--dark header p { color: rgba(255,255,255,.68); }
 .crop-overlay--dark .crop-stage { background: #080b09; }
-.crop-overlay--dark .editor-controls { border-top-color: rgba(255,255,255,.12); background: rgb(23,34,26); box-shadow: 0 -8px 0 rgb(23,34,26); }
+.crop-overlay--dark .editor-controls { border-top-color: rgba(255,255,255,.12); background: rgb(23,34,26); box-shadow: 0 -16px 0 rgb(23,34,26); }
 .crop-overlay--dark .ratio-controls button,
 .crop-overlay--dark .tool-controls button { border-color: rgba(255,255,255,.24); background: rgba(255,255,255,.09); color: #fff; }
 .crop-overlay--dark .ratio-controls button.active { border-color: #9fd9ae; background: var(--dashboard-green); }
@@ -229,7 +251,7 @@ footer button { min-width: 130px; }
   .tool-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .ratio-controls button, .tool-controls button { width: 100%; min-width: 0; min-height: 38px; padding: 5px 2px; font-size: clamp(.62rem, 2.6vw, .75rem); white-space: nowrap; }
   .tool-controls i { margin-right: 2px; }
-  footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 7px 8px max(4px, calc(env(safe-area-inset-bottom) - 10px)); }
+  footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px 8px 3px; }
   footer button { width: 100%; min-width: 0; min-height: 48px; padding-inline: 6px; font-size: .78rem; white-space: nowrap; }
 }
 @media (max-height: 700px) { header p { display: none; } .editor-controls { gap: 6px; padding-top: 6px; padding-bottom: 6px; } .ratio-controls button, .tool-controls button { min-height: 34px; } }

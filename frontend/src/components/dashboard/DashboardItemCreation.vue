@@ -23,7 +23,8 @@ const fieldErrors = reactive({
 })
 const photoFiles = ref([])
 const photoCropQueue = ref([])
-const photoBeingCropped = computed(() => photoCropQueue.value[0] || null)
+const photoCropEntry = computed(() => photoCropQueue.value[0] || null)
+const photoBeingCropped = computed(() => photoCropEntry.value?.file || null)
 const videoFiles = ref([])
 const showCreateCollection = ref(false)
 const newCollectionName = ref('')
@@ -104,14 +105,29 @@ const handlePhotoUpload = (event) => {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
   const availableSlots = Math.max(0, 20 - photoFiles.value.length - photoCropQueue.value.length)
-  photoCropQueue.value.push(...files.slice(0, availableSlots))
+  photoCropQueue.value.push(...files.slice(0, availableSlots).map((file) => ({ file })))
   if (files.length > availableSlots) error.value = `A maximum of 20 photos is allowed. You can add ${availableSlots} more.`
   event.target.value = ''
 }
 
-const finishPhotoCrop = (file) => {
-  photoFiles.value.push({ file, previewUrl: URL.createObjectURL(file) })
+const finishPhotoCrop = ({ file, sourceFile, cropState }) => {
+  const photo = { file, sourceFile, cropState, previewUrl: URL.createObjectURL(file) }
+  const targetIndex = photoCropEntry.value?.targetIndex
+  if (Number.isInteger(targetIndex)) {
+    revokePhotoPreview(photoFiles.value[targetIndex])
+    photoFiles.value.splice(targetIndex, 1, photo)
+  } else {
+    photoFiles.value.push(photo)
+  }
   photoCropQueue.value.shift()
+}
+
+const openPhotoCrop = (photo, index) => {
+  photoCropQueue.value.push({
+    file: photo.sourceFile || photo.file,
+    initialCropState: photo.cropState || null,
+    targetIndex: index,
+  })
 }
 
 const cancelPhotoCrop = () => {
@@ -568,7 +584,10 @@ watch(
 
         <div v-if="photoFiles.length" class="photo-grid">
           <div v-for="(photo, index) in photoFiles" :key="photo.previewUrl" class="photo-box">
-            <img :src="photo.previewUrl" :alt="`Preview ${index + 1}`">
+            <button type="button" class="photo-crop-trigger" :aria-label="`Edit crop for photo ${index + 1}`" @click="openPhotoCrop(photo, index)">
+              <img :src="photo.previewUrl" :alt="`Preview ${index + 1}`">
+              <span>Tap to crop</span>
+            </button>
             <button type="button" class="dashboard-remove-btn" @click="removePhoto(index)">Remove</button>
           </div>
         </div>
@@ -673,6 +692,7 @@ watch(
     <DashboardPhotoCropper
       v-if="photoBeingCropped"
       :file="photoBeingCropped"
+      :initial-crop-state="photoCropEntry?.initialCropState"
       @confirm="finishPhotoCrop"
       @cancel="cancelPhotoCrop"
     />
@@ -814,6 +834,12 @@ textarea {
   border-radius: 10px;
   border: 2px dashed #c7d9ca;
 }
+
+.photo-crop-trigger { position: relative; display: block; width: 100%; padding: 0; overflow: hidden; border: 0; border-radius: 8px; background: transparent; cursor: pointer; }
+.photo-crop-trigger img { display: block; }
+.photo-crop-trigger span { position: absolute; right: 6px; bottom: 6px; left: 6px; padding: 5px 7px; border-radius: 6px; background: rgba(13, 55, 27, .82); color: #fff; font-size: .75rem; font-weight: 700; text-align: center; backdrop-filter: blur(6px); }
+.photo-crop-trigger:hover span, .photo-crop-trigger:focus-visible span { background: var(--dashboard-green); }
+.photo-crop-trigger:focus-visible { outline: 3px solid rgba(46, 164, 79, .45); outline-offset: 2px; }
 
 /* button utilities are provided by frontend/src/styles/dashboard.css */
 
