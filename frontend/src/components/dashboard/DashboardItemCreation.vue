@@ -1024,8 +1024,19 @@ textarea {
   .draft-actions button { width: 100%; min-height: 44px; }
   .option-row { flex-direction: column; }
   .option-row button { align-self: flex-start; }
-  .actions { position: static; padding: 10px 0; background: #fff; }
-  .actions .btn-primary { width: 100%; min-height: 48px; }
+  .actions {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 10px 0;
+    background: #fff;
+  }
+  .actions .save-draft-button,
+  .actions .btn-primary { width: 100%; min-width: 0; min-height: 48px; }
   input, select, textarea { min-height: 48px; font-size: 16px; }
+}
+
+@media (max-width: 390px) {
+  .actions { grid-template-columns: 1fr; }
 }
 </style>
