@@ -1647,6 +1647,9 @@ const submitCheckout = async () => {
 }
 
 .btn.collection-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border: 2px solid transparent;
   border-radius: 999px;
   background: linear-gradient(135deg, #b82343, #7f1830);
@@ -1654,13 +1657,25 @@ const submitCheckout = async () => {
   box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
 }
 
+.btn.collection-cta::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--accent-2);
+  content: '';
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+
 @media (hover: hover) {
   .btn.collection-cta:hover {
     border-color: transparent;
-    background: var(--accent-2);
+    background: linear-gradient(135deg, #b82343, #7f1830);
     box-shadow: 0 12px 26px rgba(3, 83, 93, 0.38);
     transform: translateY(-2px);
   }
+
+  .btn.collection-cta:hover::before { opacity: 1; }
 }
 
 .btn-primary {
