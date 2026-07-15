@@ -4,13 +4,13 @@
   </template>
 
   <template v-else>
-    <GlobalHeader :chrome-dimmed="isDesktopPageScrolling" @toggle-cart="toggleCart" />
+    <GlobalHeader :chrome-dimmed="isPageScrolling" @toggle-cart="toggleCart" />
 
     <main>
       <router-view />
     </main>
 
-    <GlobalFooter :chrome-dimmed="isDesktopPageScrolling" />
+    <GlobalFooter :chrome-dimmed="isPageScrolling" />
 
     <button
       v-if="cartStore.totalItems > 0 && !cartStore.isOpen"
@@ -59,18 +59,15 @@ const floatingCartButton = ref(null)
 const floatingCartPosition = ref(null)
 const floatingCartDrag = ref(null)
 const suppressFloatingCartClick = ref(false)
-const isDesktopPageScrolling = ref(false)
-const desktopScrollFadeEnabled = ref(false)
+const isPageScrolling = ref(false)
 const floatingCartPositionKey = 'pine-needle-floating-cart-position'
 const floatingCartMargin = 8
 const floatingCartDragThreshold = 4
-const desktopScrollFadeQuery = '(min-width: 981px)'
 const scrollFadeDelay = 320
-let desktopScrollFadeMedia = null
 let scrollFadeTimer = null
 
 const isFloatingCartDimmed = computed(() =>
-  isDesktopPageScrolling.value && !floatingCartDrag.value
+  isPageScrolling.value && !floatingCartDrag.value
 )
 
 const floatingCartStyle = computed(() => {
@@ -210,44 +207,24 @@ const stopScrollFadeTimer = () => {
 }
 
 const finishPageScroll = () => {
-  isDesktopPageScrolling.value = false
+  isPageScrolling.value = false
   scrollFadeTimer = null
 }
 
 const handlePageScroll = () => {
-  if (!desktopScrollFadeEnabled.value) return
-
-  isDesktopPageScrolling.value = true
+  isPageScrolling.value = true
   stopScrollFadeTimer()
   scrollFadeTimer = window.setTimeout(finishPageScroll, scrollFadeDelay)
 }
 
-const setDesktopScrollFadeEnabled = (matches) => {
-  desktopScrollFadeEnabled.value = matches
-  if (!matches) {
-    stopScrollFadeTimer()
-    isDesktopPageScrolling.value = false
-  }
-}
-
-const handleDesktopScrollFadeChange = (event) => {
-  setDesktopScrollFadeEnabled(event.matches)
-}
-
 onMounted(() => {
   loadFloatingCartPosition()
-  desktopScrollFadeMedia = window.matchMedia(desktopScrollFadeQuery)
-  setDesktopScrollFadeEnabled(desktopScrollFadeMedia.matches)
-  desktopScrollFadeMedia.addEventListener?.('change', handleDesktopScrollFadeChange)
-  desktopScrollFadeMedia.addListener?.(handleDesktopScrollFadeChange)
   window.addEventListener('resize', keepFloatingCartInView)
   window.addEventListener('scroll', handlePageScroll, { passive: true })
 })
 
 onBeforeUnmount(() => {
   stopScrollFadeTimer()
-  desktopScrollFadeMedia?.removeEventListener?.('change', handleDesktopScrollFadeChange)
-  desktopScrollFadeMedia?.removeListener?.(handleDesktopScrollFadeChange)
   window.removeEventListener('resize', keepFloatingCartInView)
   window.removeEventListener('scroll', handlePageScroll)
   window.removeEventListener('pointermove', handleFloatingCartDrag)

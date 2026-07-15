@@ -147,9 +147,14 @@ onMounted(loadStats)
 <style scoped>
 .section-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+}
+
+.section-header .btn-primary {
+  white-space: nowrap;
 }
 
 .stats-grid {
@@ -197,6 +202,7 @@ onMounted(loadStats)
 .section-title {
   margin: 0;
   font-size: 1.5em;
+  white-space: nowrap;
 }
 
 .section-title-action {
@@ -208,6 +214,7 @@ onMounted(loadStats)
   font: inherit;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .section-title-action:hover,
