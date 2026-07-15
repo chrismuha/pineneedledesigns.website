@@ -1,8 +1,10 @@
 const LIQUID_GLASS_KEY = 'dashboard-liquid-glass-enabled'
 const LIQUID_GLASS_INTENSITY_KEY = 'dashboard-liquid-glass-intensity'
+const FOOTER_BUTTON_DEPTH_KEY = 'dashboard-footer-button-depth-enabled'
 const DARK_PHOTO_EDITOR_KEY = 'dashboard-dark-photo-editor-enabled'
 let liquidGlassPreview
 let liquidGlassIntensityPreview
+let footerButtonDepthPreview
 let darkPhotoEditorPreview
 
 const getStoredLiquidGlassEnabled = () => {
@@ -24,6 +26,14 @@ const getStoredLiquidGlassIntensity = () => {
   }
 }
 
+const getStoredFooterButtonDepthEnabled = () => {
+  try {
+    return window.localStorage.getItem(FOOTER_BUTTON_DEPTH_KEY) !== 'false'
+  } catch {
+    return true
+  }
+}
+
 const getStoredDarkPhotoEditorEnabled = () => {
   try {
     return window.localStorage.getItem(DARK_PHOTO_EDITOR_KEY) === 'true'
@@ -34,7 +44,11 @@ const getStoredDarkPhotoEditorEnabled = () => {
 
 const announceLiquidGlass = (enabled) => {
   window.dispatchEvent(new CustomEvent('dashboard-liquid-glass-change', {
-    detail: { enabled, intensity: getDashboardLiquidGlassIntensity() },
+    detail: {
+      enabled,
+      intensity: getDashboardLiquidGlassIntensity(),
+      buttonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
+    },
   }))
 }
 
@@ -72,6 +86,22 @@ export const setDashboardLiquidGlassIntensity = (intensity) => {
   announceLiquidGlass(getDashboardLiquidGlassEnabled())
 }
 
+export const getDashboardFooterButtonDepthEnabled = () => footerButtonDepthPreview ?? getStoredFooterButtonDepthEnabled()
+
+export const previewDashboardFooterButtonDepth = (enabled) => {
+  footerButtonDepthPreview = Boolean(enabled)
+  announceLiquidGlass(getDashboardLiquidGlassEnabled())
+}
+
+export const setDashboardFooterButtonDepthEnabled = (enabled) => {
+  const value = Boolean(enabled)
+  try {
+    window.localStorage.setItem(FOOTER_BUTTON_DEPTH_KEY, String(value))
+  } catch {}
+  footerButtonDepthPreview = undefined
+  announceLiquidGlass(getDashboardLiquidGlassEnabled())
+}
+
 export const getDashboardDarkPhotoEditorEnabled = () => darkPhotoEditorPreview ?? getStoredDarkPhotoEditorEnabled()
 
 export const previewDashboardDarkPhotoEditor = (enabled) => {
@@ -88,6 +118,7 @@ export const setDashboardDarkPhotoEditorEnabled = (enabled) => {
 export const clearDashboardAppearancePreviews = () => {
   liquidGlassPreview = undefined
   liquidGlassIntensityPreview = undefined
+  footerButtonDepthPreview = undefined
   darkPhotoEditorPreview = undefined
   announceLiquidGlass(getStoredLiquidGlassEnabled())
 }

@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
-import { getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity } from '../utils/dashboardAppearance.js'
+import { getDashboardFooterButtonDepthEnabled, getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity } from '../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
 
 const route = useRoute()
@@ -13,6 +13,7 @@ const suppressSyntheticClick = ref(false)
 const toasts = ref([])
 const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 const liquidGlassIntensity = ref(getDashboardLiquidGlassIntensity())
+const footerButtonDepthEnabled = ref(getDashboardFooterButtonDepthEnabled())
 let nextToastId = 0
 
 const dismissToast = (id) => {
@@ -29,21 +30,26 @@ const handleToast = (event) => {
 const handleLiquidGlassChange = (event) => {
   liquidGlassEnabled.value = event.detail?.enabled !== false
   liquidGlassIntensity.value = event.detail?.intensity ?? 50
+  footerButtonDepthEnabled.value = event.detail?.buttonDepthEnabled !== false
 }
 
 const liquidGlassStyle = computed(() => {
   const amount = Math.min(1, Math.max(0, liquidGlassIntensity.value / 100))
   const strength = amount * amount
   return {
-    '--glass-blur': `${4 + (30 * strength)}px`,
-    '--glass-saturation': `${110 + (100 * strength)}%`,
-    '--glass-shell-top-alpha': .2 + (.18 * amount),
-    '--glass-shell-bottom-alpha': .1 + (.1 * amount),
-    '--glass-reflection-alpha': .48 + (.42 * amount),
-    '--glass-tab-top-alpha': .18 + (.18 * amount),
-    '--glass-tab-bottom-alpha': .06 + (.06 * amount),
-    '--glass-tab-blur': `${4 + (12 * strength)}px`,
-    '--glass-active-blur': `${5 + (14 * strength)}px`,
+    '--glass-blur': `${34 * strength}px`,
+    '--glass-saturation': `${100 + (110 * strength)}%`,
+    '--glass-shell-top-alpha': .92 - (.54 * amount),
+    '--glass-shell-bottom-alpha': .82 - (.62 * amount),
+    '--glass-reflection-alpha': .16 + (.74 * amount),
+    '--glass-inner-alpha': .1 + (.18 * amount),
+    '--glass-tab-top-alpha': .9 - (.54 * amount),
+    '--glass-tab-bottom-alpha': .74 - (.62 * amount),
+    '--glass-active-top-alpha': .98 - (.42 * amount),
+    '--glass-active-bottom-alpha': .76 - (.46 * amount),
+    '--glass-tab-blur': `${16 * strength}px`,
+    '--glass-active-blur': `${19 * strength}px`,
+    '--glass-shadow-alpha': .05 + (.09 * amount),
   }
 })
 
@@ -221,7 +227,7 @@ const isActive = (path) => {
     <!-- Mobile bottom nav for widths below 850px -->
     <nav
       class="bottom-nav"
-      :class="{ 'bottom-nav--solid': !liquidGlassEnabled }"
+      :class="{ 'bottom-nav--solid': !liquidGlassEnabled, 'bottom-nav--flat-tabs': !footerButtonDepthEnabled }"
       :style="liquidGlassStyle"
       aria-label="Dashboard navigation"
       @pointerdown="startNavDrag"
@@ -488,7 +494,7 @@ const isActive = (path) => {
     border: 1px solid rgba(255, 255, 255, .84);
     border-radius: 999px;
     box-shadow:
-      0 20px 46px rgba(17, 55, 30, .14),
+      0 20px 46px rgba(17, 55, 30, var(--glass-shadow-alpha)),
       0 3px 12px rgba(17, 55, 30, .07),
       inset 0 1.5px 1px rgba(255, 255, 255, 1),
       inset 0 -1px 1px rgba(21, 103, 47, .08);
@@ -521,7 +527,7 @@ const isActive = (path) => {
     z-index: 0;
     inset: 5px;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(185, 237, 200, .08), rgba(255, 255, 255, .28), rgba(185, 237, 200, .08));
+    background: linear-gradient(90deg, rgba(185, 237, 200, .08), rgba(255, 255, 255, var(--glass-inner-alpha)), rgba(185, 237, 200, .08));
     filter: blur(10px);
     pointer-events: none;
   }
@@ -551,6 +557,23 @@ const isActive = (path) => {
     border-color: #b8d9c0;
     background: #d5edd9;
     box-shadow: none;
+  }
+
+  .bottom-nav--flat-tabs .bottom-tab,
+  .bottom-nav--flat-tabs .bottom-tab.active,
+  .bottom-nav--flat-tabs .bottom-tab:hover,
+  .bottom-nav--flat-tabs .bottom-tab:focus-visible {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: none;
+  }
+
+  .bottom-nav--flat-tabs .bottom-tab.active {
+    color: #0d6a2b;
+    background: rgba(176, 229, 190, .22);
   }
 
   .bottom-tab {
@@ -603,7 +626,7 @@ const isActive = (path) => {
 
   .bottom-tab.active {
     background:
-      linear-gradient(180deg, rgba(241, 255, 245, .56), rgba(132, 218, 156, .3));
+      linear-gradient(180deg, rgba(241, 255, 245, var(--glass-active-top-alpha)), rgba(132, 218, 156, var(--glass-active-bottom-alpha)));
     border-color: rgba(27, 119, 54, .18);
     color: #0d6a2b;
     box-shadow:

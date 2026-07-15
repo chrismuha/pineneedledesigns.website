@@ -4,12 +4,15 @@ import { dashboardApi } from '../../api/dashboard.js'
 import {
   clearDashboardAppearancePreviews,
   getDashboardDarkPhotoEditorEnabled,
+  getDashboardFooterButtonDepthEnabled,
   getDashboardLiquidGlassEnabled,
   getDashboardLiquidGlassIntensity,
   previewDashboardDarkPhotoEditor,
+  previewDashboardFooterButtonDepth,
   previewDashboardLiquidGlass,
   previewDashboardLiquidGlassIntensity,
   setDashboardDarkPhotoEditorEnabled,
+  setDashboardFooterButtonDepthEnabled,
   setDashboardLiquidGlassEnabled,
   setDashboardLiquidGlassIntensity,
 } from '../../utils/dashboardAppearance.js'
@@ -26,6 +29,7 @@ const form = ref({
   liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
   liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
   darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
+  footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
 })
 const savedSettings = ref('')
 const settingsSnapshot = (settings) => JSON.stringify({
@@ -36,12 +40,14 @@ const settingsSnapshot = (settings) => JSON.stringify({
   liquidGlassEnabled: Boolean(settings.liquidGlassEnabled),
   liquidGlassIntensity: Number(settings.liquidGlassIntensity),
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
+  footerButtonDepthEnabled: Boolean(settings.footerButtonDepthEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
 
 watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
 watch(() => form.value.liquidGlassIntensity, previewDashboardLiquidGlassIntensity)
 watch(() => form.value.darkPhotoEditorEnabled, previewDashboardDarkPhotoEditor)
+watch(() => form.value.footerButtonDepthEnabled, previewDashboardFooterButtonDepth)
 
 const loadSettings = async () => {
   loading.value = true
@@ -56,6 +62,7 @@ const loadSettings = async () => {
       liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
       liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
       darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
+      footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
     }
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     savedSettings.value = settingsSnapshot(form.value)
@@ -87,6 +94,7 @@ const saveSettings = async () => {
     setDashboardLiquidGlassEnabled(form.value.liquidGlassEnabled)
     setDashboardLiquidGlassIntensity(form.value.liquidGlassIntensity)
     setDashboardDarkPhotoEditorEnabled(form.value.darkPhotoEditorEnabled)
+    setDashboardFooterButtonDepthEnabled(form.value.footerButtonDepthEnabled)
     savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
@@ -179,6 +187,14 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         <div class="glass-intensity-labels" aria-hidden="true"><span>Subtle</span><span>Strong</span></div>
       </div>
 
+      <label v-if="form.liquidGlassEnabled" class="toggle-row appearance-toggle footer-depth-toggle">
+        <span>
+          <strong>3D footer buttons</strong>
+          <small>Give each dashboard navigation button raised glass depth. Turn off for flat buttons.</small>
+        </span>
+        <input v-model="form.footerButtonDepthEnabled" class="toggle-input" type="checkbox" role="switch">
+      </label>
+
       <label class="toggle-row appearance-toggle">
         <span>
           <strong>Dark photo editor</strong>
@@ -242,6 +258,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .glass-intensity-heading output { color: var(--dashboard-green); font-weight: 800; }
 .glass-intensity-setting input { width: 100%; margin: 14px 0 5px; accent-color: var(--dashboard-green); cursor: pointer; }
 .glass-intensity-labels { color: #718078; font-size: .75rem; font-weight: 700; }
+.footer-depth-toggle { margin-top: 0; }
 .settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
 .save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
 
