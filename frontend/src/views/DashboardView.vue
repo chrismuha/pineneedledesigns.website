@@ -35,10 +35,7 @@ const handleLiquidGlassChange = (event) => {
 
 const liquidGlassStyle = computed(() => {
   const amount = Math.min(1, Math.max(0, liquidGlassIntensity.value / 100))
-  const strength = amount * amount
   return {
-    '--glass-blur': `${34 * strength}px`,
-    '--glass-saturation': `${100 + (110 * strength)}%`,
     '--glass-shell-top-alpha': .92 - (.54 * amount),
     '--glass-shell-bottom-alpha': .82 - (.62 * amount),
     '--glass-reflection-alpha': .16 + (.74 * amount),
@@ -496,8 +493,8 @@ const isActive = (path) => {
       0 3px 12px rgba(17, 55, 30, .07),
       inset 0 1.5px 1px rgba(255, 255, 255, 1),
       inset 0 -1px 1px rgba(21, 103, 47, .08);
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)) contrast(108%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)) contrast(108%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     z-index: 1000;
     gap: 6px;
     padding: 7px;
@@ -656,20 +653,6 @@ const isActive = (path) => {
   .bottom-tab.drag-preview {
     transform: scale(.96);
     transition: transform 90ms ease-out, background 90ms ease-out;
-  }
-
-  @media (max-width: 430px) {
-    .bottom-nav {
-      left: 8px;
-      right: 8px;
-      gap: 4px;
-      padding: 6px;
-    }
-
-    .bottom-tab {
-      min-height: 52px;
-      font-size: .64rem;
-    }
   }
 
   .logout-tab * {
