@@ -15,6 +15,9 @@ const error = ref('')
 const darkEditorEnabled = getDashboardDarkPhotoEditorEnabled()
 let cropper = null
 let previousBodyOverflow = ''
+let previousDocumentOverflow = ''
+
+const preventPageScroll = (event) => event.preventDefault()
 
 const ratios = [
   { label: 'Freeform', value: 'freeform', ratio: NaN },
@@ -112,14 +115,19 @@ const confirmCrop = async (useFullPhoto = false) => {
 
 onMounted(() => {
   previousBodyOverflow = document.body.style.overflow
+  previousDocumentOverflow = document.documentElement.style.overflow
   document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+  document.addEventListener('touchmove', preventPageScroll, { passive: false })
   imageUrl.value = URL.createObjectURL(props.file)
 })
 
 onBeforeUnmount(() => {
   cropper?.destroy()
   if (imageUrl.value) URL.revokeObjectURL(imageUrl.value)
+  document.removeEventListener('touchmove', preventPageScroll)
   document.body.style.overflow = previousBodyOverflow
+  document.documentElement.style.overflow = previousDocumentOverflow
 })
 </script>
 
@@ -171,16 +179,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.crop-overlay { position: fixed; z-index: 2147483000; inset: 0; width: 100vw; height: 100dvh; box-sizing: border-box; overflow: hidden; padding: 10px; background: rgba(227, 239, 230, .84); backdrop-filter: blur(18px) saturate(125%); -webkit-backdrop-filter: blur(18px) saturate(125%); }
+.crop-overlay { position: fixed; z-index: 2147483000; inset: 0; width: 100vw; height: 100dvh; box-sizing: border-box; overflow: hidden; overscroll-behavior: none; touch-action: none; padding: 10px; background: rgba(227, 239, 230, .84); backdrop-filter: blur(18px) saturate(125%); -webkit-backdrop-filter: blur(18px) saturate(125%); }
 .crop-editor { display: grid; grid-template-rows: auto minmax(260px, 1fr) auto auto; width: 100%; height: 100%; min-height: 0; overflow: hidden; border: 1px solid rgba(33, 103, 53, .18); border-radius: 20px; background: rgba(250, 253, 251, .98); color: #203326; box-shadow: 0 28px 90px rgba(17, 55, 30, .24); }
 header { display: flex; z-index: 2; align-items: flex-start; justify-content: space-between; gap: 16px; padding: max(16px, env(safe-area-inset-top)) 18px 14px; border-bottom: 1px solid #dce8df; background: rgba(250, 253, 251, .9); backdrop-filter: blur(14px); }
 h2 { margin: 0; color: #182b1e; } header p { margin: 4px 0 0; color: #627168; }
 .crop-close-button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 999px; background: #f1f1f1; color: #222; cursor: pointer; font: inherit; font-size: 2rem; line-height: 1; }
 .crop-close-button:hover, .crop-close-button:focus-visible { background: var(--dashboard-red-bg); color: var(--dashboard-red); outline: 2px solid var(--dashboard-red); outline-offset: 2px; }
 .crop-close-button:disabled { cursor: not-allowed; opacity: .55; }
-.crop-stage { position: relative; z-index: 0; min-height: 0; overflow: hidden; isolation: isolate; contain: layout paint; padding: 12px; background: #dfe9e2; }
+.crop-stage { position: relative; z-index: 0; min-height: 0; overflow: hidden; isolation: isolate; contain: strict; clip-path: inset(0); transform: translateZ(0); touch-action: none; padding: 12px; background: #dfe9e2; }
 .crop-stage img { display: block; max-width: 100%; }
-.editor-controls { display: grid; position: relative; z-index: 3; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; }
+.editor-controls { display: grid; position: relative; z-index: 100; gap: 10px; padding: 12px 18px; border-top: 1px solid #dce8df; background: #f7faf8; box-shadow: 0 -8px 0 #f7faf8; }
 .ratio-controls, .tool-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .ratio-controls button, .tool-controls button { min-height: 40px; padding: 7px 13px; border: 1px solid #cbdacf; border-radius: 999px; background: #fff; color: #294431; font: inherit; font-weight: 700; }
 .ratio-controls button.active { border-color: #17813a; background: var(--dashboard-green); color: #fff; }
@@ -203,7 +211,7 @@ footer button { min-width: 130px; }
 .crop-overlay--dark h2 { color: #fff; }
 .crop-overlay--dark header p { color: rgba(255,255,255,.68); }
 .crop-overlay--dark .crop-stage { background: #080b09; }
-.crop-overlay--dark .editor-controls { border-top-color: rgba(255,255,255,.12); background: rgba(23,34,26,.92); }
+.crop-overlay--dark .editor-controls { border-top-color: rgba(255,255,255,.12); background: rgb(23,34,26); box-shadow: 0 -8px 0 rgb(23,34,26); }
 .crop-overlay--dark .ratio-controls button,
 .crop-overlay--dark .tool-controls button { border-color: rgba(255,255,255,.24); background: rgba(255,255,255,.09); color: #fff; }
 .crop-overlay--dark .ratio-controls button.active { border-color: #9fd9ae; background: var(--dashboard-green); }
@@ -221,7 +229,7 @@ footer button { min-width: 130px; }
   .tool-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .ratio-controls button, .tool-controls button { width: 100%; min-width: 0; min-height: 38px; padding: 5px 2px; font-size: clamp(.62rem, 2.6vw, .75rem); white-space: nowrap; }
   .tool-controls i { margin-right: 2px; }
-  footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 10px 10px max(10px, env(safe-area-inset-bottom)); }
+  footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 7px 8px max(4px, calc(env(safe-area-inset-bottom) - 10px)); }
   footer button { width: 100%; min-width: 0; min-height: 48px; padding-inline: 6px; font-size: .78rem; white-space: nowrap; }
 }
 @media (max-height: 700px) { header p { display: none; } .editor-controls { gap: 6px; padding-top: 6px; padding-bottom: 6px; } .ratio-controls button, .tool-controls button { min-height: 34px; } }
