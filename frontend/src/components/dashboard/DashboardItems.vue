@@ -1313,9 +1313,9 @@ watch(
         </div>
 
         <div class="field edit-section">
-          <div class="edit-section-header">
+          <div class="edit-section-header custom-properties-header">
             <label>Custom Properties</label>
-            <button type="button" class="continue-btn" :disabled="saving" @click="addEditProperty">
+            <button type="button" class="continue-btn add-property-button" :disabled="saving" @click="addEditProperty">
               + Add Property
             </button>
           </div>
@@ -1814,6 +1814,7 @@ watch(
 .item-card .badge.orange { background: #b85c00; border-color: #914900; color: #fff; }
 
 .custom-properties { margin-top: 20px; }
+.custom-properties h4 { white-space: nowrap; }
 
 .actions {
   display: flex;
@@ -1932,6 +1933,8 @@ watch(
 }
 
 .edit-section-header { justify-content: space-between; }
+.custom-properties-header { align-items: flex-start; flex-direction: column; }
+.custom-properties-header > label, .add-property-button { white-space: nowrap; }
 .edit-property-card { margin-top: 12px; padding: 14px; border: 1px solid #d9e8dc; border-radius: 10px; }
 .edit-property-header { margin-bottom: 12px; }
 .edit-property-header > input, .edit-option-row > input { flex: 1; }

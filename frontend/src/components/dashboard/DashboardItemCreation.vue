@@ -502,9 +502,9 @@ watch(
       </section>
 
       <section class="card">
-        <div class="section-header">
+        <div class="section-header custom-properties-header">
           <h2>Custom Properties</h2>
-          <button type="button" class="btn-primary" @click="addProperty">
+          <button type="button" class="btn-primary add-property-button" @click="addProperty">
             + Add Property
           </button>
         </div>
@@ -751,6 +751,16 @@ textarea {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.custom-properties-header {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.custom-properties-header h2,
+.add-property-button {
+  white-space: nowrap;
 }
 
 .property-card {

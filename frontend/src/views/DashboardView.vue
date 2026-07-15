@@ -465,16 +465,16 @@ const isActive = (path) => {
     min-height: 68px;
     overflow: visible;
     isolation: isolate;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .58), rgba(239, 250, 242, .4));
-    border: 1px solid rgba(255, 255, 255, .76);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .38), rgba(226, 248, 232, .2));
+    border: 1px solid rgba(255, 255, 255, .84);
     border-radius: 999px;
     box-shadow:
-      0 18px 42px rgba(17, 55, 30, .16),
-      0 3px 10px rgba(17, 55, 30, .08),
-      inset 0 1px 1px rgba(255, 255, 255, .96),
-      inset 0 -1px 1px rgba(21, 103, 47, .1);
-    backdrop-filter: blur(28px) saturate(190%) contrast(105%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%);
+      0 20px 46px rgba(17, 55, 30, .14),
+      0 3px 12px rgba(17, 55, 30, .07),
+      inset 0 1.5px 1px rgba(255, 255, 255, 1),
+      inset 0 -1px 1px rgba(21, 103, 47, .08);
+    backdrop-filter: blur(34px) saturate(210%) contrast(108%);
+    -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(108%);
     z-index: 1000;
     gap: 6px;
     padding: 7px;
@@ -488,11 +488,11 @@ const isActive = (path) => {
     position: absolute;
     z-index: 2;
     inset: 1px 5% auto;
-    height: 46%;
+    height: 52%;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, 0));
+    background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .08) 72%, rgba(255, 255, 255, 0));
     pointer-events: none;
-    opacity: .78;
+    opacity: .88;
   }
 
   .bottom-nav::after {
@@ -501,8 +501,8 @@ const isActive = (path) => {
     z-index: 0;
     inset: 5px;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(208, 244, 218, .14), rgba(255, 255, 255, .34), rgba(208, 244, 218, .14));
-    filter: blur(7px);
+    background: linear-gradient(90deg, rgba(185, 237, 200, .08), rgba(255, 255, 255, .28), rgba(185, 237, 200, .08));
+    filter: blur(10px);
     pointer-events: none;
   }
 
@@ -547,16 +547,16 @@ const isActive = (path) => {
     margin: 0;
     border-radius: 999px;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .22));
-    border: 1px solid rgba(255, 255, 255, .62);
+      linear-gradient(180deg, rgba(255, 255, 255, .36), rgba(255, 255, 255, .12));
+    border: 1px solid rgba(255, 255, 255, .7);
     text-decoration: none;
     color: #25442e;
     box-shadow:
-      0 3px 10px rgba(17, 55, 30, .06),
-      inset 0 1px 1px rgba(255, 255, 255, .9),
-      inset 0 -1px 1px rgba(25, 112, 52, .07);
-    backdrop-filter: blur(12px) saturate(155%);
-    -webkit-backdrop-filter: blur(12px) saturate(155%);
+      0 3px 10px rgba(17, 55, 30, .045),
+      inset 0 1px 1px rgba(255, 255, 255, .96),
+      inset 0 -1px 1px rgba(25, 112, 52, .05);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -583,15 +583,15 @@ const isActive = (path) => {
 
   .bottom-tab.active {
     background:
-      linear-gradient(180deg, rgba(240, 255, 244, .7), rgba(159, 226, 178, .42));
+      linear-gradient(180deg, rgba(241, 255, 245, .56), rgba(132, 218, 156, .3));
     border-color: rgba(255, 255, 255, .86);
     color: #0d6a2b;
     box-shadow:
       0 7px 18px rgba(25, 112, 52, .14),
       inset 0 1px 1px rgba(255, 255, 255, .98),
       inset 0 -1px 1px rgba(29, 138, 61, .16);
-    backdrop-filter: blur(14px) saturate(170%);
-    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    backdrop-filter: blur(19px) saturate(195%);
+    -webkit-backdrop-filter: blur(19px) saturate(195%);
     transform: translateY(-1px);
   }
 
