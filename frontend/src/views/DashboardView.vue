@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
+import { getDashboardLiquidGlassEnabled } from '../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
 
 const route = useRoute()
@@ -10,6 +11,7 @@ const dragTarget = ref('')
 const navDrag = ref(null)
 const suppressSyntheticClick = ref(false)
 const toasts = ref([])
+const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 let nextToastId = 0
 
 const dismissToast = (id) => {
@@ -23,14 +25,22 @@ const handleToast = (event) => {
   window.setTimeout(() => dismissToast(id), toast.duration || 6500)
 }
 
+const handleLiquidGlassChange = (event) => {
+  liquidGlassEnabled.value = event.detail?.enabled !== false
+}
+
 onMounted(async () => {
   window.addEventListener('dashboard-toast', handleToast)
+  window.addEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
   try {
     const settings = await dashboardApi.getSettings()
     setDashboardToastTimeout(settings.toastTimeoutSeconds ?? 6)
   } catch {}
 })
-onBeforeUnmount(() => window.removeEventListener('dashboard-toast', handleToast))
+onBeforeUnmount(() => {
+  window.removeEventListener('dashboard-toast', handleToast)
+  window.removeEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
+})
 
 const tabAtPoint = (x, y) =>
   document.elementFromPoint(x, y)?.closest?.('[data-nav-path]')?.dataset.navPath || ''
@@ -193,6 +203,7 @@ const isActive = (path) => {
     <!-- Mobile bottom nav for widths below 850px -->
     <nav
       class="bottom-nav"
+      :class="{ 'bottom-nav--solid': !liquidGlassEnabled }"
       aria-label="Dashboard navigation"
       @pointerdown="startNavDrag"
       @pointermove="moveNavDrag"
@@ -452,26 +463,74 @@ const isActive = (path) => {
     right: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom));
     min-height: 68px;
-    background: rgba(255, 255, 255, .92);
-    border: 1px solid rgba(0, 0, 0, .08);
+    overflow: visible;
+    isolation: isolate;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .58), rgba(239, 250, 242, .4));
+    border: 1px solid rgba(255, 255, 255, .76);
     border-radius: 999px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+      0 18px 42px rgba(17, 55, 30, .16),
+      0 3px 10px rgba(17, 55, 30, .08),
+      inset 0 1px 1px rgba(255, 255, 255, .96),
+      inset 0 -1px 1px rgba(21, 103, 47, .1);
+    backdrop-filter: blur(28px) saturate(190%) contrast(105%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%);
     z-index: 1000;
-    gap: 8px;
-    padding: 8px;
-    justify-content: center;
+    gap: 6px;
+    padding: 7px;
+    justify-content: space-between;
     align-items: center;
     touch-action: pan-y;
   }
 
   .bottom-nav::before {
-    content: none;
+    content: '';
+    position: absolute;
+    z-index: 2;
+    inset: 1px 5% auto;
+    height: 46%;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, 0));
+    pointer-events: none;
+    opacity: .78;
   }
 
   .bottom-nav::after {
-    content: none;
+    content: '';
+    position: absolute;
+    z-index: 0;
+    inset: 5px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(208, 244, 218, .14), rgba(255, 255, 255, .34), rgba(208, 244, 218, .14));
+    filter: blur(7px);
+    pointer-events: none;
+  }
+
+  .bottom-nav--solid {
+    border-color: #cfe2d4;
+    background: #edf7ef;
+    box-shadow: 0 10px 28px rgba(17, 55, 30, .14);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .bottom-nav--solid::before,
+  .bottom-nav--solid::after {
+    display: none;
+  }
+
+  .bottom-nav--solid .bottom-tab {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .bottom-nav--solid .bottom-tab.active {
+    border-color: #b8d9c0;
+    background: #d5edd9;
+    box-shadow: none;
   }
 
   .bottom-tab {
@@ -483,23 +542,27 @@ const isActive = (path) => {
     align-items: center;
     justify-content: center;
     min-width: 0;
-    min-height: 58px;
-    padding: 6px 4px;
+    min-height: 54px;
+    padding: 7px 4px 6px;
     margin: 0;
     border-radius: 999px;
-    background: #fff;
-    border: 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .22));
+    border: 1px solid rgba(255, 255, 255, .62);
     text-decoration: none;
     color: #25442e;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-    font-size: 7pt;
-    font-weight: 600;
-    letter-spacing: .04em;
-    line-height: 1.05;
-    text-transform: uppercase;
+    box-shadow:
+      0 3px 10px rgba(17, 55, 30, .06),
+      inset 0 1px 1px rgba(255, 255, 255, .9),
+      inset 0 -1px 1px rgba(25, 112, 52, .07);
+    backdrop-filter: blur(12px) saturate(155%);
+    -webkit-backdrop-filter: blur(12px) saturate(155%);
+    font-size: .68rem;
+    font-weight: 650;
+    letter-spacing: .015em;
     user-select: none;
     -webkit-user-drag: none;
-    transition: transform 180ms ease, color 180ms ease, background 180ms ease;
+    transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   }
 
   .menu-icon {
@@ -519,21 +582,29 @@ const isActive = (path) => {
   }
 
   .bottom-tab.active {
-    background: var(--dashboard-green);
-    color: white;
-    transform: none;
+    background:
+      linear-gradient(180deg, rgba(240, 255, 244, .7), rgba(159, 226, 178, .42));
+    border-color: rgba(255, 255, 255, .86);
+    color: #0d6a2b;
+    box-shadow:
+      0 7px 18px rgba(25, 112, 52, .14),
+      inset 0 1px 1px rgba(255, 255, 255, .98),
+      inset 0 -1px 1px rgba(29, 138, 61, .16);
+    backdrop-filter: blur(14px) saturate(170%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    transform: translateY(-1px);
   }
 
   .bottom-tab.active .menu-icon {
-    color: white;
-    filter: none;
+    color: #16813a;
+    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .9));
   }
 
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
-    background: white;
-    color: var(--dashboard-green);
-    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(246, 253, 248, .42));
+    border-color: rgba(255, 255, 255, .84);
+    color: #176c31;
   }
 
   .bottom-tab:focus-visible {
@@ -550,13 +621,13 @@ const isActive = (path) => {
     .bottom-nav {
       left: 8px;
       right: 8px;
-      gap: 5px;
+      gap: 4px;
       padding: 6px;
     }
 
     .bottom-tab {
-      min-height: 56px;
-      font-size: 6.5pt;
+      min-height: 52px;
+      font-size: .64rem;
     }
   }
 

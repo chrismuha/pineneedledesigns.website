@@ -1,11 +1,13 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { dashboardApi } from '../../api/dashboard.js'
+import { getDashboardLiquidGlassEnabled, setDashboardLiquidGlassEnabled } from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 
 const loading = ref(true)
 const saving = ref(false)
 const error = ref('')
+const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 const form = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5, toastTimeoutSeconds: 6 })
 const savedSettings = ref('')
 const settingsSnapshot = (settings) => JSON.stringify({
@@ -15,6 +17,10 @@ const settingsSnapshot = (settings) => JSON.stringify({
   toastTimeoutSeconds: Number(settings.toastTimeoutSeconds),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
+
+const updateLiquidGlass = () => {
+  setDashboardLiquidGlassEnabled(liquidGlassEnabled.value)
+}
 
 const loadSettings = async () => {
   loading.value = true
@@ -71,7 +77,7 @@ onMounted(loadSettings)
       <div class="settings-heading__icon" aria-hidden="true"><i class="bi bi-sliders"></i></div>
       <div>
         <h1>Store Settings</h1>
-        <p>Manage how shipping is calculated at checkout.</p>
+        <p>Manage checkout and dashboard preferences.</p>
       </div>
     </div>
     <p v-if="loading" class="status-text">Loading settings...</p>
@@ -128,6 +134,14 @@ onMounted(loadSettings)
         </label>
       </div>
 
+      <label class="toggle-row appearance-toggle">
+        <span>
+          <strong>Liquid-glass footer</strong>
+          <small>Use the translucent icy-green effect on the mobile dashboard navigation.</small>
+        </span>
+        <input v-model="liquidGlassEnabled" class="toggle-input" type="checkbox" role="switch" @change="updateLiquidGlass">
+      </label>
+
       <div class="settings-actions">
         <p><i class="bi bi-info-circle" aria-hidden="true"></i>Changes apply to new checkouts.</p>
         <button type="button" class="btn-primary save-button" :disabled="saving" @click="saveSettings">
@@ -176,6 +190,7 @@ onMounted(loadSettings)
 .notification-settings > label { display: flex; align-items: center; overflow: hidden; flex: 0 0 auto; border: 1px solid #cbd7ce; border-radius: 10px; }
 .notification-settings input { width: 74px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; font: inherit; font-weight: 700; }
 .notification-settings label span { padding-right: 12px; color: #68766c; font-size: .82rem; font-weight: 700; }
+.appearance-toggle { margin-top: 0; }
 .settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
 .save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
 
