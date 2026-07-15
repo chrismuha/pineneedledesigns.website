@@ -35,4 +35,6 @@ export const listItemDrafts = async () => {
 
 export const saveItemDraft = (draft) => runDraftRequest('readwrite', (store) => store.put(draft))
 
+export const getItemDraft = (id) => runDraftRequest('readonly', (store) => store.get(id))
+
 export const deleteItemDraft = (id) => runDraftRequest('readwrite', (store) => store.delete(id))

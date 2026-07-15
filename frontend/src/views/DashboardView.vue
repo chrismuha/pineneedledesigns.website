@@ -674,6 +674,26 @@ const isActive = (path) => {
     }
   }
 
+  /*
+    WebKit composites nested backdrop filters as separate opaque layers. Keep
+    the glass on the shared shell on iOS so it matches the desktop rendering;
+    the tab gradients, borders, highlights, and depth remain unchanged.
+  */
+  @supports (-webkit-touch-callout: none) {
+    .bottom-nav {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    .bottom-tab,
+    .bottom-tab.active,
+    .bottom-tab:hover:not(.active),
+    .bottom-tab:focus-visible:not(.active) {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
   .logout-tab * {
     color: var(--dashboard-red);
   }

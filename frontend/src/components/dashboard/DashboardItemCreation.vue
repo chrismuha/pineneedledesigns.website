@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
@@ -34,6 +34,8 @@ const creatingCollection = ref(false)
 const drafts = ref([])
 const activeDraftId = ref('')
 const savingDraft = ref(false)
+let autoSaveTimer = 0
+let suppressAutoSave = false
 
 const {
   subcollections,
@@ -64,6 +66,7 @@ const form = reactive({
   customProperties: [],
   subCollectionId: '',
 })
+const initialFormSnapshot = JSON.stringify(form)
 
 const requiresSubcollection = computed(() => subcollections.value.length > 0)
 const collectionAllowsBling = computed(() => collections.value.find(
@@ -161,16 +164,24 @@ const clearVideos = () => {
 }
 
 const refreshDrafts = async () => {
-  drafts.value = await listItemDrafts()
+  drafts.value = (await listItemDrafts()).filter((draft) => !draft.kind || draft.kind === 'create')
 }
 
-const saveDraft = async () => {
-  savingDraft.value = true
+const hasDraftChanges = () => (
+  JSON.stringify(form) !== initialFormSnapshot
+  || photoFiles.value.length > 0
+  || videoFiles.value.length > 0
+)
+
+const persistDraft = async ({ notify = false } = {}) => {
+  if (suppressAutoSave || !hasDraftChanges()) return
+  if (notify) savingDraft.value = true
   try {
     const id = activeDraftId.value || globalThis.crypto?.randomUUID?.() || `draft-${Date.now()}-${Math.random().toString(36).slice(2)}`
     const updatedAt = new Date().toISOString()
     await saveItemDraft({
       id,
+      kind: 'create',
       updatedAt,
       name: form.name.trim() || 'Untitled item',
       form: JSON.parse(JSON.stringify(form)),
@@ -178,16 +189,31 @@ const saveDraft = async () => {
       videos: videoFiles.value.map(({ file }) => ({ file })),
     })
     activeDraftId.value = id
-    await refreshDrafts()
-    showDashboardToast('This item draft and its media are saved in this browser.', {
-      type: 'success',
-      title: 'Draft saved',
-    })
+    if (notify) {
+      await refreshDrafts()
+      showDashboardToast('This item draft and its media are saved in this browser.', {
+        type: 'success',
+        title: 'Draft saved',
+      })
+    }
   } catch (err) {
-    showDashboardToast(err.message || 'The browser could not save this draft.', { title: 'Draft not saved' })
+    if (notify) showDashboardToast(err.message || 'The browser could not save this draft.', { title: 'Draft not saved' })
   } finally {
-    savingDraft.value = false
+    if (notify) savingDraft.value = false
   }
+}
+
+const saveDraft = () => persistDraft({ notify: true })
+
+const scheduleAutoSave = () => {
+  if (suppressAutoSave || pageLoading.value || !hasDraftChanges()) return
+  window.clearTimeout(autoSaveTimer)
+  autoSaveTimer = window.setTimeout(() => void persistDraft(), 250)
+}
+
+const flushAutoSave = () => {
+  window.clearTimeout(autoSaveTimer)
+  if (document.visibilityState === 'hidden' || hasDraftChanges()) void persistDraft()
 }
 
 const resumeDraft = async (draft) => {
@@ -418,6 +444,8 @@ const submitForm = async () => {
 
   try {
     await dashboardApi.createProduct(buildProductFormData())
+    suppressAutoSave = true
+    window.clearTimeout(autoSaveTimer)
     if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
 
     router.push('/dashboard/items')
@@ -429,6 +457,8 @@ const submitForm = async () => {
 }
 
 onMounted(async () => {
+  window.addEventListener('pagehide', flushAutoSave)
+  document.addEventListener('visibilitychange', flushAutoSave)
   pageLoading.value = true
   error.value = ''
 
@@ -439,6 +469,14 @@ onMounted(async () => {
   } finally {
     pageLoading.value = false
   }
+})
+
+watch([() => JSON.stringify(form), photoFiles, videoFiles], scheduleAutoSave, { deep: true })
+
+onBeforeUnmount(() => {
+  window.removeEventListener('pagehide', flushAutoSave)
+  document.removeEventListener('visibilitychange', flushAutoSave)
+  flushAutoSave()
 })
 
 watch(

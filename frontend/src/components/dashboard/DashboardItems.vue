@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
@@ -10,7 +10,9 @@ import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
+import { deleteItemDraft, getItemDraft, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
+import { showDashboardToast } from '../../utils/dashboardToast.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -50,6 +52,11 @@ const collectionDetails = ref([])
 const showQuickCollection = ref(false)
 const quickCollectionName = ref('')
 const quickCollectionError = ref('')
+const savingEditDraft = ref(false)
+let editAutoSaveTimer = 0
+let suppressEditAutoSave = false
+
+const editDraftId = (productId) => `edit-${productId}`
 
 const editSnapshot = (product) => JSON.stringify({
   name: String(product?.name || ''),
@@ -453,6 +460,26 @@ const initializeEditModal = async (product) => {
   editPhotoFiles.value = []
   editVideoFiles.value = []
   editInitialSnapshot.value = editSnapshot(editingProduct.value)
+  const savedDraft = await getItemDraft(editDraftId(editingProduct.value._id))
+  if (savedDraft?.kind === 'edit' && savedDraft.form) {
+    editingProduct.value = {
+      ...editingProduct.value,
+      ...JSON.parse(JSON.stringify(savedDraft.form)),
+      _id: editingProduct.value._id,
+    }
+    editPhotoFiles.value = (savedDraft.photos || []).map((photo) => ({
+      ...photo,
+      previewUrl: URL.createObjectURL(photo.file),
+    }))
+    editVideoFiles.value = (savedDraft.videos || []).map((video) => ({
+      ...video,
+      previewUrl: URL.createObjectURL(video.file),
+    }))
+    showDashboardToast('Your unsaved item changes were restored from this browser.', {
+      type: 'success',
+      title: 'Draft restored',
+    })
+  }
   showEditModal.value = true
   await loadEditSubcollections(editingProduct.value.collectionId)
 }
@@ -509,7 +536,81 @@ const cancelEditCancellation = () => {
 
 const confirmEditCancellation = async () => {
   editCancellationStep.value = 0
+  suppressEditAutoSave = true
+  window.clearTimeout(editAutoSaveTimer)
+  if (editingProduct.value?._id) await deleteItemDraft(editDraftId(editingProduct.value._id))
   await closeEditModal()
+  suppressEditAutoSave = false
+}
+
+const persistEditDraft = async () => {
+  if (suppressEditAutoSave || !editIsDirty.value || !editingProduct.value?._id) return false
+  try {
+    await saveItemDraft({
+      id: editDraftId(editingProduct.value._id),
+      kind: 'edit',
+      productId: String(editingProduct.value._id),
+      name: editingProduct.value.name?.trim() || 'Untitled item',
+      updatedAt: new Date().toISOString(),
+      form: JSON.parse(JSON.stringify(editingProduct.value)),
+      photos: editPhotoFiles.value.map(({ file, sourceFile, cropState }) => ({ file, sourceFile, cropState })),
+      videos: editVideoFiles.value.map(({ file }) => ({ file })),
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
+const saveEditDraftManually = async () => {
+  if (!editIsDirty.value) {
+    showDashboardToast('There are no unsaved changes to store as a draft.', {
+      type: 'warning',
+      title: 'Draft not needed',
+    })
+    return
+  }
+
+  savingEditDraft.value = true
+  window.clearTimeout(editAutoSaveTimer)
+  const saved = await persistEditDraft()
+  savingEditDraft.value = false
+  showDashboardToast(
+    saved ? 'Your item changes and new media are saved in this browser.' : 'The browser could not save this item draft.',
+    { type: saved ? 'success' : 'error', title: saved ? 'Draft saved' : 'Draft not saved' },
+  )
+}
+
+const saveEditDraftAndExit = async () => {
+  savingEditDraft.value = true
+  window.clearTimeout(editAutoSaveTimer)
+  const saved = await persistEditDraft()
+  savingEditDraft.value = false
+
+  if (!saved) {
+    showDashboardToast('The browser could not save this item draft. Your editor remains open.', {
+      type: 'error',
+      title: 'Draft not saved',
+    })
+    return
+  }
+
+  showDashboardToast('Your changes were saved as a draft and will be restored when you reopen this item.', {
+    type: 'success',
+    title: 'Draft saved',
+  })
+  await closeEditModal()
+}
+
+const scheduleEditAutoSave = () => {
+  if (suppressEditAutoSave || !editIsDirty.value) return
+  window.clearTimeout(editAutoSaveTimer)
+  editAutoSaveTimer = window.setTimeout(() => void persistEditDraft(), 250)
+}
+
+const flushEditAutoSave = () => {
+  window.clearTimeout(editAutoSaveTimer)
+  void persistEditDraft()
 }
 
 const handleEditPhotoUpload = (event) => {
@@ -754,11 +855,15 @@ const saveProduct = async () => {
     editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
     await dashboardApi.updateProduct(editingProduct.value._id, formData)
+    suppressEditAutoSave = true
+    window.clearTimeout(editAutoSaveTimer)
+    await deleteItemDraft(editDraftId(editingProduct.value._id))
     await closeEditModal()
     await loadItems()
   } catch (err) {
     editModalError.value = err.message
   } finally {
+    suppressEditAutoSave = false
     saving.value = false
   }
 }
@@ -897,7 +1002,12 @@ const sizePriceLabel = (key) => {
   return `${labels[type] || 'Size'} ${size}`
 }
 
-onMounted(loadItems)
+onMounted(() => {
+  window.addEventListener('pagehide', flushEditAutoSave)
+  document.addEventListener('visibilitychange', flushEditAutoSave)
+  void loadItems()
+})
+watch([() => editingProduct.value && editSnapshot(editingProduct.value), editPhotoFiles, editVideoFiles], scheduleEditAutoSave, { deep: true })
 watch(
   () => route.fullPath,
   () => {
@@ -906,6 +1016,12 @@ watch(
     }
   },
 )
+
+onBeforeUnmount(() => {
+  window.removeEventListener('pagehide', flushEditAutoSave)
+  document.removeEventListener('visibilitychange', flushEditAutoSave)
+  flushEditAutoSave()
+})
 </script>
 
 <template>
@@ -1500,6 +1616,9 @@ watch(
         </div>
 
         <div class="modal-actions">
+          <button type="button" class="btn-outline" :disabled="saving || savingEditDraft" @click="saveEditDraftManually">
+            {{ savingEditDraft ? 'Saving Draft...' : 'Save Draft' }}
+          </button>
           <button type="button" class="continue-btn" :disabled="saving || editSubcollectionsLoading" @click="saveProduct">
             {{ saving ? 'Saving...' : 'Save Changes' }}
           </button>
@@ -1534,12 +1653,15 @@ watch(
         </div>
 
         <template v-if="editCancellationStep === 1">
-          <p class="confirmation-step">Confirmation 1 of 2</p>
-          <h2>Cancel item changes?</h2>
-          <p>Any changes made in the item editor will be discarded.</p>
+          <p class="confirmation-step">Unsaved changes</p>
+          <h2>Save a draft before exiting?</h2>
+          <p>You can save these changes in this browser, keep editing, or continue to the discard confirmation.</p>
           <div class="confirmation-actions">
-            <button type="button" class="btn-outline" @click="cancelEditCancellation">Keep Editing</button>
-            <button type="button" class="btn-danger" @click="continueEditCancellation">Continue</button>
+            <button type="button" class="btn-outline" :disabled="savingEditDraft" @click="cancelEditCancellation">Keep Editing</button>
+            <button type="button" class="btn-primary" :disabled="savingEditDraft" @click="saveEditDraftAndExit">
+              {{ savingEditDraft ? 'Saving Draft...' : 'Save Draft & Exit' }}
+            </button>
+            <button type="button" class="btn-danger" :disabled="savingEditDraft" @click="continueEditCancellation">Discard Instead</button>
           </div>
         </template>
 
