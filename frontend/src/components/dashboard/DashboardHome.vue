@@ -84,15 +84,15 @@ onMounted(loadStats)
 
     <section v-if="!loading" class="recent-section">
       <div class="section-header">
-        <RouterLink class="section-title-link" to="/dashboard/orders">
-          <h2>Recent Orders</h2>
-        </RouterLink>
+        <h2 class="section-title">
+          <RouterLink class="section-title-action" to="/dashboard/orders">Recent Orders</RouterLink>
+        </h2>
         <RouterLink class="btn-primary" to="/dashboard/orders">View all orders</RouterLink>
       </div>
 
-      <p v-if="!stats.recentOrders?.length" class="status-text">
-        No orders yet. Completed checkout orders will appear here.
-      </p>
+      <RouterLink v-if="!stats.recentOrders?.length" class="recent-empty-link" to="/dashboard/orders">
+        <p class="status-text">No orders yet. Completed checkout orders will appear here.</p>
+      </RouterLink>
 
       <div v-else class="recent-list">
         <RouterLink v-for="order in stats.recentOrders" :key="order._id" class="recent-card recent-card-link" to="/dashboard/orders">
@@ -111,15 +111,15 @@ onMounted(loadStats)
 
     <section v-if="!loading" ref="recentItemsSection" class="recent-section">
       <div class="section-header">
-        <button type="button" class="section-title-button" @click="scrollToRecentItems">
-          Recent Items
-        </button>
+        <h2 class="section-title">
+          <button type="button" class="section-title-action" @click="scrollToRecentItems">Recent Items</button>
+        </h2>
         <RouterLink class="btn-primary" to="/dashboard/items">View all items</RouterLink>
       </div>
 
-      <p v-if="!stats.recentProducts.length" class="status-text">
-        No items yet. Create your first product to get started.
-      </p>
+      <RouterLink v-if="!stats.recentProducts.length" class="recent-empty-link" to="/dashboard/items">
+        <p class="status-text">No items yet. Create your first product to get started.</p>
+      </RouterLink>
 
       <div v-else class="recent-list">
         <RouterLink v-for="product in stats.recentProducts" :key="product._id" class="recent-card recent-card-link" :to="{ path: '/dashboard/items', query: { item: product._id } }">
@@ -194,37 +194,55 @@ onMounted(loadStats)
   margin-top: 24px;
 }
 
-.section-title-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.section-title-link h2 {
+.section-title {
   margin: 0;
+  font-size: 1.5em;
 }
 
-.section-title-button {
+.section-title-action {
   appearance: none;
   padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 1.5em;
-  font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.section-title-link:hover,
-.section-title-button:hover {
-  color: var(--dashboard-green);
+.section-title-action:hover,
+.section-title-action:active,
+.section-title-action:visited {
+  color: inherit;
 }
 
-.section-title-link:focus-visible,
-.section-title-button:focus-visible {
-  outline: 2px solid var(--dashboard-green);
+.section-title-action:focus-visible {
+  outline: 2px solid currentColor;
   outline-offset: 4px;
   border-radius: 2px;
+}
+
+.recent-empty-link {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.recent-empty-link:hover,
+.recent-empty-link:focus-visible {
+  border-color: var(--dashboard-green);
+  background: #f7fbf8;
+}
+
+.recent-empty-link .status-text {
+  margin: 0;
 }
 
 .recent-list {
