@@ -1,26 +1,35 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { dashboardApi } from '../../api/dashboard.js'
-import { getDashboardLiquidGlassEnabled, setDashboardLiquidGlassEnabled } from '../../utils/dashboardAppearance.js'
+import {
+  getDashboardDarkPhotoEditorEnabled,
+  getDashboardLiquidGlassEnabled,
+  setDashboardDarkPhotoEditorEnabled,
+  setDashboardLiquidGlassEnabled,
+} from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 
 const loading = ref(true)
 const saving = ref(false)
 const error = ref('')
-const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
-const form = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5, toastTimeoutSeconds: 6 })
+const form = ref({
+  freeShippingEnabled: true,
+  freeShippingMinimum: 28,
+  fallbackShippingCost: 5,
+  toastTimeoutSeconds: 6,
+  liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
+  darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
+})
 const savedSettings = ref('')
 const settingsSnapshot = (settings) => JSON.stringify({
   freeShippingEnabled: Boolean(settings.freeShippingEnabled),
   freeShippingMinimum: Number(settings.freeShippingMinimum),
   fallbackShippingCost: Number(settings.fallbackShippingCost),
   toastTimeoutSeconds: Number(settings.toastTimeoutSeconds),
+  liquidGlassEnabled: Boolean(settings.liquidGlassEnabled),
+  darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
-
-const updateLiquidGlass = () => {
-  setDashboardLiquidGlassEnabled(liquidGlassEnabled.value)
-}
 
 const loadSettings = async () => {
   loading.value = true
@@ -32,6 +41,8 @@ const loadSettings = async () => {
       freeShippingMinimum: settings.freeShippingMinimum ?? 28,
       fallbackShippingCost: settings.fallbackShippingCost ?? 5,
       toastTimeoutSeconds: settings.toastTimeoutSeconds ?? 6,
+      liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
+      darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
     }
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     savedSettings.value = settingsSnapshot(form.value)
@@ -44,7 +55,7 @@ const loadSettings = async () => {
 
 const saveSettings = async () => {
   if (!hasChanges.value) {
-    showDashboardToast('The shipping settings already match the saved values.', {
+    showDashboardToast('These settings already match the saved values.', {
       type: 'warning',
       title: 'No changes to save',
     })
@@ -60,6 +71,8 @@ const saveSettings = async () => {
     form.value.fallbackShippingCost = settings.fallbackShippingCost ?? 5
     form.value.toastTimeoutSeconds = settings.toastTimeoutSeconds ?? 6
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
+    setDashboardLiquidGlassEnabled(form.value.liquidGlassEnabled)
+    setDashboardDarkPhotoEditorEnabled(form.value.darkPhotoEditorEnabled)
     savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
@@ -139,7 +152,15 @@ onMounted(loadSettings)
           <strong>Liquid-glass footer</strong>
           <small>Use the translucent icy-green effect on the mobile dashboard navigation.</small>
         </span>
-        <input v-model="liquidGlassEnabled" class="toggle-input" type="checkbox" role="switch" @change="updateLiquidGlass">
+        <input v-model="form.liquidGlassEnabled" class="toggle-input" type="checkbox" role="switch">
+      </label>
+
+      <label class="toggle-row appearance-toggle">
+        <span>
+          <strong>Dark photo editor</strong>
+          <small>Use the original charcoal appearance when cropping and rotating photos.</small>
+        </span>
+        <input v-model="form.darkPhotoEditorEnabled" class="toggle-input" type="checkbox" role="switch">
       </label>
 
       <div class="settings-actions">
