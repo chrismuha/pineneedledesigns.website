@@ -59,6 +59,9 @@ onMounted(loadStats)
       <div class="header-actions">
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">Add New Item</RouterLink>
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/items">Edit Items</RouterLink>
+        <a class="website-btn btn-outline" href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
+          Go to Website <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
 
@@ -75,6 +78,11 @@ onMounted(loadStats)
         <p>Collections</p>
       </RouterLink>
 
+      <RouterLink to="/dashboard/drafts" class="stat-card stat-card-link">
+        <h2>{{ draftCount }}</h2>
+        <p>Drafts</p>
+      </RouterLink>
+
       <RouterLink :to="{ path: '/dashboard/orders', query: { status: 'open' } }" class="stat-card stat-card-link">
         <h2>{{ stats.openOrderCount }}</h2>
         <p>Open Orders</p>
@@ -83,11 +91,6 @@ onMounted(loadStats)
       <RouterLink :to="{ path: '/dashboard/orders', query: { status: 'closed' } }" class="stat-card stat-card-link">
         <h2>{{ stats.closedOrderCount }}</h2>
         <p>Closed Orders</p>
-      </RouterLink>
-
-      <RouterLink to="/dashboard/drafts" class="stat-card stat-card-link">
-        <h2>{{ draftCount }}</h2>
-        <p>Drafts</p>
       </RouterLink>
     </section>
 
@@ -164,6 +167,14 @@ onMounted(loadStats)
 
 .section-header .btn-primary {
   white-space: nowrap;
+}
+
+.website-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-decoration: none;
 }
 
 .stats-grid {

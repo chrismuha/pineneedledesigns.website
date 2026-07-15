@@ -6,6 +6,8 @@ import { showDashboardToast } from '../../utils/dashboardToast.js'
 const drafts = ref([])
 const loading = ref(true)
 const deletingId = ref('')
+const draftPendingDelete = ref(null)
+const deleteConfirmationStep = ref(0)
 
 const loadDrafts = async () => {
   loading.value = true
@@ -22,7 +24,23 @@ const draftDestination = (draft) => draft.kind === 'edit'
 
 const draftType = (draft) => draft.kind === 'edit' ? 'Item edit' : 'New item'
 
-const removeDraft = async (draft) => {
+const requestDraftDeletion = (draft) => {
+  draftPendingDelete.value = draft
+  deleteConfirmationStep.value = 1
+}
+
+const continueDraftDeletion = () => {
+  deleteConfirmationStep.value = 2
+}
+
+const cancelDraftDeletion = () => {
+  draftPendingDelete.value = null
+  deleteConfirmationStep.value = 0
+}
+
+const removeDraft = async () => {
+  const draft = draftPendingDelete.value
+  if (!draft) return
   deletingId.value = draft.id
   try {
     await deleteItemDraft(draft.id)
@@ -31,6 +49,7 @@ const removeDraft = async (draft) => {
       type: 'success',
       title: 'Draft deleted',
     })
+    cancelDraftDeletion()
   } finally {
     deletingId.value = ''
   }
@@ -64,12 +83,40 @@ onMounted(loadDrafts)
         </div>
         <div class="draft-actions">
           <RouterLink class="btn-primary" :to="draftDestination(draft)">Resume Draft</RouterLink>
-          <button type="button" class="dashboard-remove-btn" :disabled="deletingId === draft.id" @click="removeDraft(draft)">
+          <button type="button" class="dashboard-remove-btn" :disabled="deletingId === draft.id" @click="requestDraftDeletion(draft)">
             {{ deletingId === draft.id ? 'Deleting...' : 'Delete' }}
           </button>
         </div>
       </article>
     </section>
+
+    <div v-if="draftPendingDelete" class="modal-overlay draft-confirmation-overlay">
+      <section class="modal-card draft-confirmation" role="alertdialog" aria-modal="true">
+        <div class="confirmation-icon" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></div>
+
+        <template v-if="deleteConfirmationStep === 1">
+          <p class="confirmation-step">Confirmation 1 of 2</p>
+          <h2>Delete “{{ draftPendingDelete.name }}”?</h2>
+          <p>This draft and its locally saved media will be removed from this browser.</p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" @click="cancelDraftDeletion">Keep Draft</button>
+            <button type="button" class="btn-danger" @click="continueDraftDeletion">Continue</button>
+          </div>
+        </template>
+
+        <template v-else>
+          <p class="confirmation-step">Confirmation 2 of 2</p>
+          <h2>Permanently delete this draft?</h2>
+          <p>This cannot be undone.</p>
+          <div class="confirmation-actions">
+            <button type="button" class="btn-outline" :disabled="deletingId" @click="cancelDraftDeletion">Go Back</button>
+            <button type="button" class="btn-danger" :disabled="deletingId" @click="removeDraft">
+              {{ deletingId ? 'Deleting...' : 'Delete Draft' }}
+            </button>
+          </div>
+        </template>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -85,9 +132,18 @@ onMounted(loadDrafts)
 .draft-actions { display: flex; flex: none; gap: 10px; }
 .draft-actions a { display: inline-flex; align-items: center; text-decoration: none; }
 .empty-drafts { padding: 28px; border: 1px dashed #bcd6c3; border-radius: 14px; background: #f8fbf9; color: #24783d; text-align: center; text-decoration: none; }
+.draft-confirmation-overlay { z-index: 2200; }
+.draft-confirmation { max-width: 520px; text-align: center; }
+.confirmation-icon { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 14px; border-radius: 50%; background: #ffe2e2; color: var(--dashboard-red); font-size: 1.5rem; }
+.confirmation-step { color: #9b3045; font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.draft-confirmation h2 { margin: 0 0 12px; color: #711525; }
+.confirmation-actions { display: flex; justify-content: center; gap: 12px; margin-top: 22px; }
+.confirmation-actions button { min-width: 150px; }
 @media (max-width: 650px) {
   .draft-card { align-items: stretch; flex-direction: column; }
   .draft-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .draft-actions > * { justify-content: center; width: 100%; min-height: 46px; }
+  .confirmation-actions { flex-direction: column-reverse; }
+  .confirmation-actions button { width: 100%; min-width: 0; }
 }
 </style>

@@ -766,7 +766,7 @@ watch(
 
       <div class="actions">
         <button type="button" class="btn-outline save-draft-button" :disabled="savingDraft || loading" @click="saveDraft">
-          {{ savingDraft ? 'Saving Draft…' : activeDraftId ? 'Update Draft' : 'Save Draft' }}
+          {{ savingDraft ? 'Saving Draft…' : 'Save Draft' }}
         </button>
         <button type="submit" class="btn-primary" :disabled="loading || pageLoading">
           {{ loading ? 'Saving Item…' : 'Save Item' }}
