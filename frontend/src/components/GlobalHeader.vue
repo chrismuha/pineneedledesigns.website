@@ -173,6 +173,7 @@ watch(
   border-radius: 999px;
   background: var(--white-92);
   box-shadow: var(--shadow-sm);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition: opacity 180ms ease, transform 180ms ease;
 }
