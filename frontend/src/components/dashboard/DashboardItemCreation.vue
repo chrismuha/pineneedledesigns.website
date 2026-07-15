@@ -9,6 +9,7 @@ import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
 import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
+import { deleteItemDraft, listItemDrafts, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
 
@@ -30,6 +31,9 @@ const showCreateCollection = ref(false)
 const newCollectionName = ref('')
 const collectionError = ref('')
 const creatingCollection = ref(false)
+const drafts = ref([])
+const activeDraftId = ref('')
+const savingDraft = ref(false)
 
 const {
   subcollections,
@@ -149,6 +153,65 @@ const handleVideoUpload = (event) => {
 const removeVideo = (index) => {
   URL.revokeObjectURL(videoFiles.value[index].previewUrl)
   videoFiles.value.splice(index, 1)
+}
+
+const clearVideos = () => {
+  videoFiles.value.forEach((video) => URL.revokeObjectURL(video.previewUrl))
+  videoFiles.value = []
+}
+
+const refreshDrafts = async () => {
+  drafts.value = await listItemDrafts()
+}
+
+const saveDraft = async () => {
+  savingDraft.value = true
+  try {
+    const id = activeDraftId.value || globalThis.crypto?.randomUUID?.() || `draft-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    const updatedAt = new Date().toISOString()
+    await saveItemDraft({
+      id,
+      updatedAt,
+      name: form.name.trim() || 'Untitled item',
+      form: JSON.parse(JSON.stringify(form)),
+      photos: photoFiles.value.map(({ file, sourceFile, cropState }) => ({ file, sourceFile, cropState })),
+      videos: videoFiles.value.map(({ file }) => ({ file })),
+    })
+    activeDraftId.value = id
+    await refreshDrafts()
+    showDashboardToast('This item draft and its media are saved in this browser.', {
+      type: 'success',
+      title: 'Draft saved',
+    })
+  } catch (err) {
+    showDashboardToast(err.message || 'The browser could not save this draft.', { title: 'Draft not saved' })
+  } finally {
+    savingDraft.value = false
+  }
+}
+
+const resumeDraft = async (draft) => {
+  clearPhotos()
+  clearVideos()
+  Object.assign(form, JSON.parse(JSON.stringify(draft.form)))
+  photoFiles.value = (draft.photos || []).map((photo) => ({
+    ...photo,
+    previewUrl: URL.createObjectURL(photo.file),
+  }))
+  videoFiles.value = (draft.videos || []).map((video) => ({
+    ...video,
+    previewUrl: URL.createObjectURL(video.file),
+  }))
+  activeDraftId.value = draft.id
+  await loadSubcollections(form.collectionId)
+  showDashboardToast(`Resumed “${draft.name}”.`, { type: 'success', title: 'Draft resumed' })
+}
+
+const removeDraft = async (draft) => {
+  await deleteItemDraft(draft.id)
+  if (activeDraftId.value === draft.id) activeDraftId.value = ''
+  await refreshDrafts()
+  showDashboardToast(`Deleted “${draft.name}” from this browser.`, { type: 'success', title: 'Draft deleted' })
 }
 
 const addProperty = () => {
@@ -355,6 +418,7 @@ const submitForm = async () => {
 
   try {
     await dashboardApi.createProduct(buildProductFormData())
+    if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
 
     router.push('/dashboard/items')
   } catch (err) {
@@ -369,7 +433,7 @@ onMounted(async () => {
   error.value = ''
 
   try {
-    await loadCollections()
+    await Promise.all([loadCollections(), refreshDrafts()])
   } catch (err) {
     error.value = err.message
   } finally {
@@ -412,6 +476,31 @@ watch(
     <p v-if="pageLoading" class="status-text">Loading form...</p>
 
     <form v-else class="item-form" novalidate @submit.prevent="submitForm">
+      <section class="card drafts-card">
+        <div class="section-header drafts-header">
+          <div>
+            <h2>Item Drafts</h2>
+            <p class="hint">Saved only in this browser. Drafts survive refreshes and website updates until deleted or browser storage is cleared.</p>
+          </div>
+          <button type="button" class="btn-primary save-draft-button" :disabled="savingDraft" @click="saveDraft">
+            {{ savingDraft ? 'Saving…' : activeDraftId ? 'Update Draft' : 'Save Draft' }}
+          </button>
+        </div>
+        <div v-if="drafts.length" class="draft-list">
+          <article v-for="draft in drafts" :key="draft.id" class="draft-row" :class="{ active: draft.id === activeDraftId }">
+            <div>
+              <strong>{{ draft.name }}</strong>
+              <small>{{ new Date(draft.updatedAt).toLocaleString() }}</small>
+            </div>
+            <div class="draft-actions">
+              <button type="button" class="btn-outline" @click="resumeDraft(draft)">Resume</button>
+              <button type="button" class="dashboard-remove-btn" @click="removeDraft(draft)">Delete</button>
+            </div>
+          </article>
+        </div>
+        <p v-else class="hint">No drafts are saved on this device.</p>
+      </section>
+
       <section class="card">
         <div class="section-header"><h2>Basic Information</h2></div>
 
@@ -783,6 +872,17 @@ textarea {
   white-space: nowrap;
 }
 
+.drafts-header { align-items: flex-start; gap: 16px; }
+.drafts-header h2 { margin-bottom: 0; }
+.save-draft-button { flex: 0 0 auto; white-space: nowrap; }
+.draft-list { display: grid; gap: 10px; }
+.draft-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px; border: 1px solid #dce8df; border-radius: 10px; background: #f8fbf9; }
+.draft-row.active { border-color: #79b88a; background: #eef8f1; }
+.draft-row > div:first-child { display: grid; min-width: 0; gap: 3px; }
+.draft-row strong { overflow: hidden; color: #203326; text-overflow: ellipsis; white-space: nowrap; }
+.draft-row small { color: #68766c; }
+.draft-actions { display: flex; flex: 0 0 auto; gap: 8px; }
+
 .property-card {
   border: 1px solid #d8eadb;
   border-radius: 10px;
@@ -900,6 +1000,10 @@ textarea {
     flex-direction: column;
     align-items: stretch;
   }
+  .drafts-header, .draft-row { align-items: stretch; flex-direction: column; }
+  .save-draft-button { width: 100%; min-height: 48px; }
+  .draft-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .draft-actions button { width: 100%; min-height: 44px; }
   .option-row { flex-direction: column; }
   .option-row button { align-self: flex-start; }
   .actions { position: static; padding: 10px 0; background: #fff; }

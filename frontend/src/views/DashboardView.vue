@@ -1,8 +1,8 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
-import { getDashboardLiquidGlassEnabled } from '../utils/dashboardAppearance.js'
+import { getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity } from '../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
 
 const route = useRoute()
@@ -12,6 +12,7 @@ const navDrag = ref(null)
 const suppressSyntheticClick = ref(false)
 const toasts = ref([])
 const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
+const liquidGlassIntensity = ref(getDashboardLiquidGlassIntensity())
 let nextToastId = 0
 
 const dismissToast = (id) => {
@@ -27,7 +28,24 @@ const handleToast = (event) => {
 
 const handleLiquidGlassChange = (event) => {
   liquidGlassEnabled.value = event.detail?.enabled !== false
+  liquidGlassIntensity.value = event.detail?.intensity ?? 50
 }
+
+const liquidGlassStyle = computed(() => {
+  const amount = Math.min(1, Math.max(0, liquidGlassIntensity.value / 100))
+  const strength = amount * amount
+  return {
+    '--glass-blur': `${4 + (30 * strength)}px`,
+    '--glass-saturation': `${110 + (100 * strength)}%`,
+    '--glass-shell-top-alpha': .2 + (.18 * amount),
+    '--glass-shell-bottom-alpha': .1 + (.1 * amount),
+    '--glass-reflection-alpha': .48 + (.42 * amount),
+    '--glass-tab-top-alpha': .18 + (.18 * amount),
+    '--glass-tab-bottom-alpha': .06 + (.06 * amount),
+    '--glass-tab-blur': `${4 + (12 * strength)}px`,
+    '--glass-active-blur': `${5 + (14 * strength)}px`,
+  }
+})
 
 onMounted(async () => {
   window.addEventListener('dashboard-toast', handleToast)
@@ -204,6 +222,7 @@ const isActive = (path) => {
     <nav
       class="bottom-nav"
       :class="{ 'bottom-nav--solid': !liquidGlassEnabled }"
+      :style="liquidGlassStyle"
       aria-label="Dashboard navigation"
       @pointerdown="startNavDrag"
       @pointermove="moveNavDrag"
@@ -465,7 +484,7 @@ const isActive = (path) => {
     min-height: 68px;
     overflow: visible;
     isolation: isolate;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .38), rgba(226, 248, 232, .2));
+    background: linear-gradient(180deg, rgba(255, 255, 255, var(--glass-shell-top-alpha)), rgba(226, 248, 232, var(--glass-shell-bottom-alpha)));
     border: 1px solid rgba(255, 255, 255, .84);
     border-radius: 999px;
     box-shadow:
@@ -473,8 +492,8 @@ const isActive = (path) => {
       0 3px 12px rgba(17, 55, 30, .07),
       inset 0 1.5px 1px rgba(255, 255, 255, 1),
       inset 0 -1px 1px rgba(21, 103, 47, .08);
-    backdrop-filter: blur(34px) saturate(210%) contrast(108%);
-    -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(108%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)) contrast(108%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)) contrast(108%);
     z-index: 1000;
     gap: 6px;
     padding: 7px;
@@ -491,7 +510,7 @@ const isActive = (path) => {
     inset: 1px 5% auto;
     height: 52%;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .08) 72%, rgba(255, 255, 255, 0));
+    background: linear-gradient(180deg, rgba(255, 255, 255, var(--glass-reflection-alpha)), rgba(255, 255, 255, .08) 72%, rgba(255, 255, 255, 0));
     pointer-events: none;
     opacity: .88;
   }
@@ -548,7 +567,7 @@ const isActive = (path) => {
     margin: 0;
     border-radius: 999px;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, .36), rgba(255, 255, 255, .12));
+      linear-gradient(180deg, rgba(255, 255, 255, var(--glass-tab-top-alpha)), rgba(255, 255, 255, var(--glass-tab-bottom-alpha)));
     border: 1px solid rgba(27, 119, 54, .08);
     text-decoration: none;
     color: #25442e;
@@ -556,8 +575,8 @@ const isActive = (path) => {
       0 3px 10px rgba(17, 55, 30, .045),
       inset 0 1px 1px rgba(255, 255, 255, .96),
       inset 0 -1px 1px rgba(25, 112, 52, .05);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(var(--glass-tab-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-tab-blur)) saturate(var(--glass-saturation));
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -591,8 +610,8 @@ const isActive = (path) => {
       0 7px 18px rgba(25, 112, 52, .14),
       inset 0 1px 1px rgba(255, 255, 255, .98),
       inset 0 -1px 1px rgba(29, 138, 61, .16);
-    backdrop-filter: blur(19px) saturate(195%);
-    -webkit-backdrop-filter: blur(19px) saturate(195%);
+    backdrop-filter: blur(var(--glass-active-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-active-blur)) saturate(var(--glass-saturation));
     transform: translateY(-1px);
   }
 

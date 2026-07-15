@@ -5,10 +5,13 @@ import {
   clearDashboardAppearancePreviews,
   getDashboardDarkPhotoEditorEnabled,
   getDashboardLiquidGlassEnabled,
+  getDashboardLiquidGlassIntensity,
   previewDashboardDarkPhotoEditor,
   previewDashboardLiquidGlass,
+  previewDashboardLiquidGlassIntensity,
   setDashboardDarkPhotoEditorEnabled,
   setDashboardLiquidGlassEnabled,
+  setDashboardLiquidGlassIntensity,
 } from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 
@@ -21,6 +24,7 @@ const form = ref({
   fallbackShippingCost: 5,
   toastTimeoutSeconds: 6,
   liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
+  liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
   darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
 })
 const savedSettings = ref('')
@@ -30,11 +34,13 @@ const settingsSnapshot = (settings) => JSON.stringify({
   fallbackShippingCost: Number(settings.fallbackShippingCost),
   toastTimeoutSeconds: Number(settings.toastTimeoutSeconds),
   liquidGlassEnabled: Boolean(settings.liquidGlassEnabled),
+  liquidGlassIntensity: Number(settings.liquidGlassIntensity),
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
 
 watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
+watch(() => form.value.liquidGlassIntensity, previewDashboardLiquidGlassIntensity)
 watch(() => form.value.darkPhotoEditorEnabled, previewDashboardDarkPhotoEditor)
 
 const loadSettings = async () => {
@@ -48,6 +54,7 @@ const loadSettings = async () => {
       fallbackShippingCost: settings.fallbackShippingCost ?? 5,
       toastTimeoutSeconds: settings.toastTimeoutSeconds ?? 6,
       liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
+      liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
       darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
     }
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
@@ -78,6 +85,7 @@ const saveSettings = async () => {
     form.value.toastTimeoutSeconds = settings.toastTimeoutSeconds ?? 6
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     setDashboardLiquidGlassEnabled(form.value.liquidGlassEnabled)
+    setDashboardLiquidGlassIntensity(form.value.liquidGlassIntensity)
     setDashboardDarkPhotoEditorEnabled(form.value.darkPhotoEditorEnabled)
     savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
@@ -162,6 +170,15 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         <input v-model="form.liquidGlassEnabled" class="toggle-input" type="checkbox" role="switch">
       </label>
 
+      <div v-if="form.liquidGlassEnabled" class="glass-intensity-setting">
+        <div class="glass-intensity-heading">
+          <label for="glass-intensity">Liquid-glass intensity</label>
+          <output for="glass-intensity">{{ form.liquidGlassIntensity }}%</output>
+        </div>
+        <input id="glass-intensity" v-model.number="form.liquidGlassIntensity" type="range" min="0" max="100" step="1">
+        <div class="glass-intensity-labels" aria-hidden="true"><span>Subtle</span><span>Strong</span></div>
+      </div>
+
       <label class="toggle-row appearance-toggle">
         <span>
           <strong>Dark photo editor</strong>
@@ -219,6 +236,12 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .notification-settings input { width: 74px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; font: inherit; font-weight: 700; }
 .notification-settings label span { padding-right: 12px; color: #68766c; font-size: .82rem; font-weight: 700; }
 .appearance-toggle { margin-top: 0; }
+.glass-intensity-setting { margin: -14px 26px 24px; padding: 16px 18px; border: 1px solid #dfe8e2; border-top: 0; border-radius: 0 0 14px 14px; background: #f8fbf9; }
+.glass-intensity-heading, .glass-intensity-labels { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.glass-intensity-heading label { color: #203326; font-size: .92rem; font-weight: 750; }
+.glass-intensity-heading output { color: var(--dashboard-green); font-weight: 800; }
+.glass-intensity-setting input { width: 100%; margin: 14px 0 5px; accent-color: var(--dashboard-green); cursor: pointer; }
+.glass-intensity-labels { color: #718078; font-size: .75rem; font-weight: 700; }
 .settings-actions p { display: flex; align-items: center; gap: 7px; margin: 0; color: #69766d; font-size: .84rem; }
 .save-button { display: inline-flex; min-width: 170px; align-items: center; justify-content: center; gap: 8px; }
 
@@ -232,6 +255,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
   .section-heading { padding: 20px; }
   .toggle-row { align-items: flex-start; margin: 18px; padding: 16px; }
   .toggle-input { margin-top: 2px; }
+  .glass-intensity-setting { margin: -10px 18px 18px; padding: 14px 16px; }
   .settings-fields { grid-template-columns: 1fr; gap: 12px; padding: 0 18px 18px; }
   .setting-field { padding: 16px; }
   .settings-actions { align-items: stretch; flex-direction: column-reverse; padding: 18px; }
