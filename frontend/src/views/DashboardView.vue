@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
@@ -129,11 +129,6 @@ const isActive = (path) => {
   return route.path.startsWith(path)
 }
 
-const activeNavIndex = computed(() => {
-  const activePath = dragTarget.value || menuItems.find((item) => isActive(item.to))?.to
-  return Math.max(0, menuItems.findIndex((item) => item.to === activePath))
-})
-
 </script>
 
 <template>
@@ -205,20 +200,13 @@ const activeNavIndex = computed(() => {
       @pointercancel="cancelNavDrag"
       @click.capture="handleNavClick"
     >
-      <span
-        class="bottom-nav-lens"
-        :class="`bottom-nav-lens--${activeNavIndex}`"
-        aria-hidden="true"
-      ></span>
-
       <RouterLink
-        v-for="(item, index) in menuItems"
+        v-for="item in menuItems"
         :key="item.to"
         :to="item.to"
         :data-nav-path="item.to"
         class="bottom-tab"
         :class="{ active: dragTarget ? dragTarget === item.to : isActive(item.to), 'drag-preview': dragTarget === item.to }"
-        :style="{ gridColumn: index + 1 }"
         @dragstart.prevent
       >
         <i :class="['bi', item.icon, 'menu-icon']" aria-hidden="true"></i>
@@ -458,8 +446,7 @@ const activeNavIndex = computed(() => {
   }
 
   .bottom-nav {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    display: flex;
     position: fixed;
     left: 12px;
     right: 12px;
@@ -478,7 +465,7 @@ const activeNavIndex = computed(() => {
     backdrop-filter: blur(28px) saturate(190%) contrast(105%);
     -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%);
     z-index: 1000;
-    gap: 5px;
+    gap: 6px;
     padding: 7px;
     justify-content: space-between;
     align-items: center;
@@ -508,50 +495,9 @@ const activeNavIndex = computed(() => {
     pointer-events: none;
   }
 
-  .bottom-nav-lens {
-    position: absolute;
-    z-index: 1;
-    top: 7px;
-    bottom: 7px;
-    left: 7px;
-    width: calc((100% - 34px) / 5);
-    border: 1px solid rgba(255, 255, 255, .88);
-    border-radius: 999px;
-    background:
-      radial-gradient(circle at 50% 18%, rgba(255, 255, 255, .78) 0 18%, rgba(255, 255, 255, 0) 54%),
-      linear-gradient(145deg, rgba(231, 255, 238, .7), rgba(102, 201, 131, .38));
-    box-shadow:
-      0 8px 22px rgba(20, 105, 48, .2),
-      0 1px 4px rgba(14, 69, 31, .12),
-      inset 0 1.5px 1px rgba(255, 255, 255, .98),
-      inset 0 -1px 2px rgba(20, 119, 51, .18);
-    backdrop-filter: blur(18px) saturate(210%);
-    -webkit-backdrop-filter: blur(18px) saturate(210%);
-    pointer-events: none;
-    transition: transform 320ms cubic-bezier(.2, .82, .2, 1);
-    will-change: transform;
-  }
-
-  .bottom-nav-lens--0 { transform: translateX(0); }
-  .bottom-nav-lens--1 { transform: translateX(calc(100% + 5px)); }
-  .bottom-nav-lens--2 { transform: translateX(calc(200% + 10px)); }
-  .bottom-nav-lens--3 { transform: translateX(calc(300% + 15px)); }
-  .bottom-nav-lens--4 { transform: translateX(calc(400% + 20px)); }
-
-  .bottom-nav-lens::after {
-    content: '';
-    position: absolute;
-    inset: 4px 10% auto;
-    height: 30%;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, 0));
-    filter: blur(.3px);
-  }
-
   .bottom-tab {
     position: relative;
-    z-index: 3;
-    grid-row: 1;
+    z-index: 1;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -562,11 +508,17 @@ const activeNavIndex = computed(() => {
     padding: 7px 4px 6px;
     margin: 0;
     border-radius: 999px;
-    background: transparent;
-    border: 1px solid transparent;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, .22));
+    border: 1px solid rgba(255, 255, 255, .62);
     text-decoration: none;
     color: #25442e;
-    box-shadow: none;
+    box-shadow:
+      0 3px 10px rgba(17, 55, 30, .06),
+      inset 0 1px 1px rgba(255, 255, 255, .9),
+      inset 0 -1px 1px rgba(25, 112, 52, .07);
+    backdrop-filter: blur(12px) saturate(155%);
+    -webkit-backdrop-filter: blur(12px) saturate(155%);
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -592,11 +544,17 @@ const activeNavIndex = computed(() => {
   }
 
   .bottom-tab.active {
-    background: transparent;
-    border-color: transparent;
+    background:
+      linear-gradient(180deg, rgba(240, 255, 244, .7), rgba(159, 226, 178, .42));
+    border-color: rgba(255, 255, 255, .86);
     color: #0d6a2b;
-    box-shadow: none;
-    transform: translateY(-.5px) scale(1.025);
+    box-shadow:
+      0 7px 18px rgba(25, 112, 52, .14),
+      inset 0 1px 1px rgba(255, 255, 255, .98),
+      inset 0 -1px 1px rgba(29, 138, 61, .16);
+    backdrop-filter: blur(14px) saturate(170%);
+    -webkit-backdrop-filter: blur(14px) saturate(170%);
+    transform: translateY(-1px);
   }
 
   .bottom-tab.active .menu-icon {
@@ -606,8 +564,8 @@ const activeNavIndex = computed(() => {
 
   .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
-    background: rgba(255, 255, 255, .22);
-    border-color: rgba(255, 255, 255, .34);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(246, 253, 248, .42));
+    border-color: rgba(255, 255, 255, .84);
     color: #176c31;
   }
 
@@ -625,21 +583,9 @@ const activeNavIndex = computed(() => {
     .bottom-nav {
       left: 8px;
       right: 8px;
-      gap: 3px;
+      gap: 4px;
       padding: 6px;
     }
-
-    .bottom-nav-lens {
-      top: 6px;
-      bottom: 6px;
-      left: 6px;
-      width: calc((100% - 24px) / 5);
-    }
-
-    .bottom-nav-lens--1 { transform: translateX(calc(100% + 3px)); }
-    .bottom-nav-lens--2 { transform: translateX(calc(200% + 6px)); }
-    .bottom-nav-lens--3 { transform: translateX(calc(300% + 9px)); }
-    .bottom-nav-lens--4 { transform: translateX(calc(400% + 12px)); }
 
     .bottom-tab {
       min-height: 52px;
