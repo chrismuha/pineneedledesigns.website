@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .crop-overlay { position: fixed; z-index: 2147483000; inset: 0; width: 100vw; height: 100dvh; box-sizing: border-box; overflow: hidden; overscroll-behavior: none; touch-action: none; padding: 10px; background: rgba(227, 239, 230, .84); backdrop-filter: blur(18px) saturate(125%); -webkit-backdrop-filter: blur(18px) saturate(125%); }
-.crop-editor { display: grid; grid-template-rows: auto minmax(260px, 1fr) auto auto; width: 100%; height: 100%; min-height: 0; overflow: hidden; border: 1px solid rgba(33, 103, 53, .18); border-radius: 20px; background: rgba(250, 253, 251, .98); color: #203326; box-shadow: 0 28px 90px rgba(17, 55, 30, .24); }
+.crop-editor { display: grid; position: relative; grid-template-rows: auto minmax(260px, 1fr) auto auto; width: 100%; height: 100%; min-height: 0; overflow: hidden; border: 1px solid rgba(33, 103, 53, .18); border-radius: 20px; background: rgba(250, 253, 251, .98); color: #203326; box-shadow: 0 28px 90px rgba(17, 55, 30, .24); }
 .crop-header { display: flex; z-index: 2; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 14px 18px; border-bottom: 1px solid #dce8df; background: rgba(250, 253, 251, .9); backdrop-filter: blur(14px); }
 h2 { margin: 0; color: #182b1e; } .crop-header p { margin: 4px 0 0; color: #627168; }
 .crop-close-button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 999px; background: #f1f1f1; color: #222; cursor: pointer; font: inherit; font-size: 2rem; line-height: 1; }
@@ -249,7 +249,7 @@ h2 { margin: 0; color: #182b1e; } .crop-header p { margin: 4px 0 0; color: #6271
 .crop-overlay--dark .crop-footer { border-top-color: rgba(255,255,255,.14); background: rgba(23,34,26,.94); }
 @media (max-width: 600px) {
   .crop-overlay { padding: 0; }
-  .crop-editor { grid-template-rows: auto minmax(0, 1fr) auto auto; height: 100dvh; border: 0; border-radius: 0; }
+  .crop-editor { grid-template-rows: auto minmax(0, 1fr) auto; height: 100dvh; padding-bottom: 57px; border: 0; border-radius: 0; }
   .crop-header { align-items: center; padding: 10px 12px; }
   .crop-header p { display: none; }
   .crop-stage { padding: 0; }
@@ -259,7 +259,7 @@ h2 { margin: 0; color: #182b1e; } .crop-header p { margin: 4px 0 0; color: #6271
   .tool-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .ratio-controls button, .tool-controls button { width: 100%; min-width: 0; min-height: 38px; padding: 5px 2px; font-size: clamp(.62rem, 2.6vw, .75rem); white-space: nowrap; }
   .tool-controls i { margin-right: 2px; }
-  .crop-footer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px 8px 3px; }
+  .crop-footer { display: grid; position: absolute; right: 0; bottom: 0; left: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); box-sizing: border-box; padding: 3px 8px 2px; }
   .crop-footer button { width: 100%; min-width: 0; min-height: 48px; padding-inline: 6px; font-size: .78rem; white-space: nowrap; }
 }
 @media (max-height: 700px) { .crop-header p { display: none; } .editor-controls { gap: 6px; padding-top: 6px; padding-bottom: 6px; } .ratio-controls button, .tool-controls button { min-height: 34px; } }
