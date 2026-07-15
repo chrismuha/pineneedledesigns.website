@@ -464,6 +464,8 @@ onMounted(async () => {
 
   try {
     await Promise.all([loadCollections(), refreshDrafts()])
+    const requestedDraft = drafts.value.find((draft) => draft.id === route.query.draft)
+    if (requestedDraft) await resumeDraft(requestedDraft)
   } catch (err) {
     error.value = err.message
   } finally {
@@ -514,31 +516,6 @@ watch(
     <p v-if="pageLoading" class="status-text">Loading form...</p>
 
     <form v-else class="item-form" novalidate @submit.prevent="submitForm">
-      <section class="card drafts-card">
-        <div class="section-header drafts-header">
-          <div>
-            <h2>Item Drafts</h2>
-            <p class="hint">Saved only in this browser. Drafts survive refreshes and website updates until deleted or browser storage is cleared.</p>
-          </div>
-          <button type="button" class="btn-primary save-draft-button" :disabled="savingDraft" @click="saveDraft">
-            {{ savingDraft ? 'Saving…' : activeDraftId ? 'Update Draft' : 'Save Draft' }}
-          </button>
-        </div>
-        <div v-if="drafts.length" class="draft-list">
-          <article v-for="draft in drafts" :key="draft.id" class="draft-row" :class="{ active: draft.id === activeDraftId }">
-            <div>
-              <strong>{{ draft.name }}</strong>
-              <small>{{ new Date(draft.updatedAt).toLocaleString() }}</small>
-            </div>
-            <div class="draft-actions">
-              <button type="button" class="btn-outline" @click="resumeDraft(draft)">Resume</button>
-              <button type="button" class="dashboard-remove-btn" @click="removeDraft(draft)">Delete</button>
-            </div>
-          </article>
-        </div>
-        <p v-else class="hint">No drafts are saved on this device.</p>
-      </section>
-
       <section class="card">
         <div class="section-header"><h2>Basic Information</h2></div>
 
@@ -788,6 +765,9 @@ watch(
       </section>
 
       <div class="actions">
+        <button type="button" class="btn-outline save-draft-button" :disabled="savingDraft || loading" @click="saveDraft">
+          {{ savingDraft ? 'Saving Draft…' : activeDraftId ? 'Update Draft' : 'Save Draft' }}
+        </button>
         <button type="submit" class="btn-primary" :disabled="loading || pageLoading">
           {{ loading ? 'Creating...' : 'Create Item' }}
         </button>

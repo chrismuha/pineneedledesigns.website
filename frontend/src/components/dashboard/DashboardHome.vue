@@ -1,9 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { dashboardApi } from '../../api/dashboard.js'
+import { listItemDrafts } from '../../utils/itemDrafts.js'
 
 const loading = ref(true)
 const error = ref('')
+const draftCount = ref(0)
 const stats = ref({
   productCount: 0,
   collectionCount: 0,
@@ -28,7 +30,9 @@ const loadStats = async () => {
   error.value = ''
 
   try {
-    stats.value = await dashboardApi.getStats()
+    const [nextStats, drafts] = await Promise.all([dashboardApi.getStats(), listItemDrafts()])
+    stats.value = nextStats
+    draftCount.value = drafts.length
   } catch (err) {
     error.value = err.message
   } finally {
@@ -79,6 +83,11 @@ onMounted(loadStats)
       <RouterLink :to="{ path: '/dashboard/orders', query: { status: 'closed' } }" class="stat-card stat-card-link">
         <h2>{{ stats.closedOrderCount }}</h2>
         <p>Closed Orders</p>
+      </RouterLink>
+
+      <RouterLink to="/dashboard/drafts" class="stat-card stat-card-link">
+        <h2>{{ draftCount }}</h2>
+        <p>Drafts</p>
       </RouterLink>
     </section>
 

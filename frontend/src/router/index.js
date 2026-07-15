@@ -10,6 +10,7 @@ import BookingPaymentSuccessView from '../views/BookingPaymentSuccessView.vue'
 import DashboardView from '../views/DashboardView.vue'
 
 import DashboardHome from '../components/dashboard/DashboardHome.vue'
+import DashboardDrafts from '../components/dashboard/DashboardDrafts.vue'
 import DashboardItems from '../components/dashboard/DashboardItems.vue'
 import DashboardOrders from '../components/dashboard/DashboardOrders.vue'
 import DashboardSettings from '../components/dashboard/DashboardSettings.vue'
@@ -63,6 +64,11 @@ const routes = [
         path: 'items',
         name: 'DashboardItems',
         component: DashboardItems,
+      },
+      {
+        path: 'drafts',
+        name: 'DashboardDrafts',
+        component: DashboardDrafts,
       },
       {
         path: 'orders',

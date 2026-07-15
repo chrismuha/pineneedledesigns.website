@@ -47,8 +47,6 @@ const liquidGlassStyle = computed(() => {
     '--glass-tab-bottom-alpha': .74 - (.62 * amount),
     '--glass-active-top-alpha': .98 - (.42 * amount),
     '--glass-active-bottom-alpha': .76 - (.46 * amount),
-    '--glass-tab-blur': `${16 * strength}px`,
-    '--glass-active-blur': `${19 * strength}px`,
     '--glass-shadow-alpha': .05 + (.09 * amount),
   }
 })
@@ -598,8 +596,8 @@ const isActive = (path) => {
       0 3px 10px rgba(17, 55, 30, .045),
       inset 0 1px 1px rgba(255, 255, 255, .96),
       inset 0 -1px 1px rgba(25, 112, 52, .05);
-    backdrop-filter: blur(var(--glass-tab-blur)) saturate(var(--glass-saturation));
-    -webkit-backdrop-filter: blur(var(--glass-tab-blur)) saturate(var(--glass-saturation));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     font-size: .68rem;
     font-weight: 650;
     letter-spacing: .015em;
@@ -633,8 +631,8 @@ const isActive = (path) => {
       0 7px 18px rgba(25, 112, 52, .14),
       inset 0 1px 1px rgba(255, 255, 255, .98),
       inset 0 -1px 1px rgba(29, 138, 61, .16);
-    backdrop-filter: blur(var(--glass-active-blur)) saturate(var(--glass-saturation));
-    -webkit-backdrop-filter: blur(var(--glass-active-blur)) saturate(var(--glass-saturation));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     transform: translateY(-1px);
   }
 
@@ -671,26 +669,6 @@ const isActive = (path) => {
     .bottom-tab {
       min-height: 52px;
       font-size: .64rem;
-    }
-  }
-
-  /*
-    WebKit composites nested backdrop filters as separate opaque layers. Keep
-    the glass on the shared shell on iOS so it matches the desktop rendering;
-    the tab gradients, borders, highlights, and depth remain unchanged.
-  */
-  @supports (-webkit-touch-callout: none) {
-    .bottom-nav {
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
-    }
-
-    .bottom-tab,
-    .bottom-tab.active,
-    .bottom-tab:hover:not(.active),
-    .bottom-tab:focus-visible:not(.active) {
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
     }
   }
 
