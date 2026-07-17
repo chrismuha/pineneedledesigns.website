@@ -1,3 +1,15 @@
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+// Replaced with a unique value during every production build so installed
+// copies can reliably detect a deployment even when this source is unchanged.
+const BUILD_ID = '2026-07-17T16:44:18.761Z';
+
 self.addEventListener('push', (event) => {
   let data = {};
   try {

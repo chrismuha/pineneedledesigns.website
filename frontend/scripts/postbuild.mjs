@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir, rm, stat } from 'node:fs/promises'
+import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -66,6 +66,14 @@ const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
 }
 
 await removeStaleBuildAssets()
+
+const serviceWorkerPath = path.join(docsDir, 'sw.js')
+const serviceWorker = await readFile(serviceWorkerPath, 'utf8')
+await writeFile(
+  serviceWorkerPath,
+  serviceWorker.replace('__PINE_NEEDLE_BUILD_ID__', new Date().toISOString()),
+)
+
 await copyIfExists(path.join(rootDir, 'CNAME'), path.join(docsDir, 'CNAME'))
 await syncDirectory(path.join(frontendDir, 'images'), path.join(docsDir, 'images'))
 await syncDirectory(path.join(rootDir, 'videos'), path.join(docsDir, 'videos'), {

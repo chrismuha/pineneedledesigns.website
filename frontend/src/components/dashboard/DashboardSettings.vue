@@ -27,6 +27,7 @@ import {
 const loading = ref(true)
 const saving = ref(false)
 const pushBusy = ref(false)
+const updateChecking = ref(false)
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const error = ref('')
 const form = ref({
@@ -90,6 +91,32 @@ const testPush = async () => {
   } finally {
     pushBusy.value = false
   }
+}
+
+const checkForAppUpdate = () => {
+  if (!('serviceWorker' in navigator)) {
+    showDashboardToast('App updates are not supported in this browser.', { title: 'Unable to check' })
+    return
+  }
+
+  updateChecking.value = true
+  window.dispatchEvent(new CustomEvent('pwa-manual-update-check', {
+    detail: {
+      complete: (result) => {
+        updateChecking.value = false
+        if (result === 'current') {
+          showDashboardToast('Pine Needle Designs is up to date.', {
+            type: 'success',
+            title: 'No updates available',
+          })
+        } else if (result === 'error') {
+          showDashboardToast('Could not check for updates. Check your connection and try again.', {
+            title: 'Update check failed',
+          })
+        }
+      },
+    },
+  }))
 }
 
 watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
@@ -240,6 +267,19 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         </div>
       </div>
 
+      <div class="app-update-setting">
+        <div class="app-update-setting__copy">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+          <div>
+            <strong>App updates</strong>
+            <p>Check whether a newer version of Pine Needle Designs is available.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-outline" :disabled="updateChecking" @click="checkForAppUpdate">
+          {{ updateChecking ? 'Checking...' : 'Check for Updates' }}
+        </button>
+      </div>
+
       <label class="toggle-row appearance-toggle">
         <span>
           <strong>Liquid-glass footer</strong>
@@ -328,6 +368,12 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .push-settings p { margin: 3px 0 0; color: #607066; font-size: .82rem; line-height: 1.4; }
 .push-settings__actions { display: flex; flex: 0 0 auto; gap: 8px; }
 .push-settings__actions button { min-height: 42px; white-space: nowrap; }
+.app-update-setting { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #cfe4d5; border-radius: 14px; background: #f5fbf7; }
+.app-update-setting__copy { display: flex; align-items: center; gap: 12px; }
+.app-update-setting__copy > i { color: var(--dashboard-green); font-size: 1.35rem; }
+.app-update-setting strong { color: #273b2d; font-size: .92rem; }
+.app-update-setting p { margin: 3px 0 0; color: #607066; font-size: .82rem; line-height: 1.4; }
+.app-update-setting button { min-height: 42px; flex: 0 0 auto; white-space: nowrap; }
 .appearance-toggle { margin-top: 0; }
 .glass-intensity-setting { margin: -14px 26px 24px; padding: 16px 18px; border: 1px solid #dfe8e2; border-top: 0; border-radius: 0 0 14px 14px; background: #f8fbf9; }
 .glass-intensity-heading, .glass-intensity-labels { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -356,6 +402,8 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
   .notification-settings { align-items: flex-start; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
   .push-settings { align-items: stretch; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
   .push-settings__actions button { flex: 1; }
+  .app-update-setting { align-items: stretch; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
+  .app-update-setting button { width: 100%; min-height: 48px; }
   .save-button { width: 100%; min-height: 50px; }
   .settings-actions p { justify-content: center; }
 }
