@@ -561,6 +561,10 @@ watch(
 }
 
 @media (max-width: 768px) {
+  .page-header > div {
+    width: 100%;
+    text-align: center;
+  }
   .info-grid {
     grid-template-columns: 1fr;
   }
