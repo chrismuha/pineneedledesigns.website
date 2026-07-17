@@ -14,6 +14,17 @@
     @media (display-mode: standalone) {
       html { background: #236b3a; }
       body { background: #ffffff; }
+      body::before {
+        content: '';
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: env(safe-area-inset-top);
+        background: #236b3a;
+        pointer-events: none;
+      }
     }
   </style>
   <link rel="manifest" href="/manifest.webmanifest" />
