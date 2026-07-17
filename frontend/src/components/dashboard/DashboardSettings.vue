@@ -293,7 +293,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
       <label v-if="installedPwa" class="toggle-row appearance-toggle">
         <span>
           <strong>Green iPhone status area</strong>
-          <small>Turn off to make the clock and battery area transparent so content remains visible while scrolling.</small>
+          <small>Turn off the green background. iPhone keeps its own status-area effect, and page headers remain below it.</small>
         </span>
         <input v-model="form.statusBarColorEnabled" class="toggle-input" type="checkbox" role="switch">
       </label>
