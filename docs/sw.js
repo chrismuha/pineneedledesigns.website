@@ -8,7 +8,7 @@ self.addEventListener('activate', (event) => {
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '2026-07-17T17:40:16.189Z';
+const BUILD_ID = '2026-07-17T17:44:30.531Z';
 
 self.addEventListener('push', (event) => {
   let data = {};

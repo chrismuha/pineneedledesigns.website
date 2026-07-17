@@ -448,6 +448,12 @@ const isActive = (path) => {
     background: #fff;
   }
 
+  @media (display-mode: standalone) {
+    .dashboard-shell {
+      top: env(safe-area-inset-top);
+    }
+  }
+
   .toast-region { top: 10px; right: 10px; left: 10px; width: auto; }
 
   .dashboard-layout {
