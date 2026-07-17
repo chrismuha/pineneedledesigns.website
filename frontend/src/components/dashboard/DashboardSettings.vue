@@ -17,9 +17,17 @@ import {
   setDashboardLiquidGlassIntensity,
 } from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
+import {
+  disablePushNotifications,
+  enablePushNotifications,
+  getPushState,
+  sendTestPushNotification,
+} from '../../utils/pushNotifications.js'
 
 const loading = ref(true)
 const saving = ref(false)
+const pushBusy = ref(false)
+const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const error = ref('')
 const form = ref({
   freeShippingEnabled: true,
@@ -43,6 +51,46 @@ const settingsSnapshot = (settings) => JSON.stringify({
   footerButtonDepthEnabled: Boolean(settings.footerButtonDepthEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
+
+const refreshPushState = async () => {
+  try {
+    pushState.value = await getPushState()
+  } catch {
+    pushState.value = { supported: false, subscribed: false, permission: 'unsupported' }
+  }
+}
+
+const togglePush = async () => {
+  pushBusy.value = true
+  error.value = ''
+  try {
+    if (pushState.value.subscribed) {
+      await disablePushNotifications()
+      showDashboardToast('Phone notifications were turned off on this device.', { type: 'success' })
+    } else {
+      await enablePushNotifications()
+      showDashboardToast('This device will now receive new order and booking alerts.', { type: 'success' })
+    }
+    await refreshPushState()
+  } catch (err) {
+    error.value = err.message
+    showDashboardToast(err.message, { title: 'Notifications unavailable' })
+  } finally {
+    pushBusy.value = false
+  }
+}
+
+const testPush = async () => {
+  pushBusy.value = true
+  try {
+    await sendTestPushNotification()
+    showDashboardToast('Test sent. It should appear as a phone notification shortly.', { type: 'success' })
+  } catch (err) {
+    showDashboardToast(err.message, { title: 'Test failed' })
+  } finally {
+    pushBusy.value = false
+  }
+}
 
 watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
 watch(() => form.value.liquidGlassIntensity, previewDashboardLiquidGlassIntensity)
@@ -103,7 +151,10 @@ const saveSettings = async () => {
   }
 }
 
-onMounted(loadSettings)
+onMounted(() => {
+  loadSettings()
+  refreshPushState()
+})
 onBeforeUnmount(clearDashboardAppearancePreviews)
 </script>
 
@@ -168,6 +219,25 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
           <input id="toast-timeout" v-model.number="form.toastTimeoutSeconds" type="number" min="2" max="30" step="1" inputmode="numeric" required>
           <span>seconds</span>
         </label>
+      </div>
+
+      <div class="push-settings">
+        <div class="push-settings__copy">
+          <i class="bi bi-phone-vibrate" aria-hidden="true"></i>
+          <div>
+            <strong>Phone lock-screen notifications</strong>
+            <p v-if="!pushState.supported">This browser does not support web push. On iPhone, add Pine Needle to the Home Screen and open it there.</p>
+            <p v-else-if="pushState.permission === 'denied'">Notifications are blocked in this device's browser settings.</p>
+            <p v-else-if="pushState.subscribed">Enabled on this device for new orders and paid booking deposits.</p>
+            <p v-else>Enable alerts on this device, even when Pine Needle is closed.</p>
+          </div>
+        </div>
+        <div class="push-settings__actions">
+          <button v-if="pushState.subscribed" type="button" class="btn-outline" :disabled="pushBusy" @click="testPush">Send Test</button>
+          <button type="button" class="btn-primary" :disabled="pushBusy || !pushState.supported || pushState.permission === 'denied'" @click="togglePush">
+            {{ pushBusy ? 'Working...' : pushState.subscribed ? 'Turn Off' : 'Enable Alerts' }}
+          </button>
+        </div>
       </div>
 
       <label class="toggle-row appearance-toggle">
@@ -251,6 +321,13 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .notification-settings > label { display: flex; align-items: center; overflow: hidden; flex: 0 0 auto; border: 1px solid #cbd7ce; border-radius: 10px; }
 .notification-settings input { width: 74px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; font: inherit; font-weight: 700; }
 .notification-settings label span { padding-right: 12px; color: #68766c; font-size: .82rem; font-weight: 700; }
+.push-settings { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #cfe4d5; border-radius: 14px; background: #f5fbf7; }
+.push-settings__copy { display: flex; align-items: center; gap: 12px; }
+.push-settings__copy > i { color: var(--dashboard-green); font-size: 1.35rem; }
+.push-settings strong { color: #273b2d; font-size: .92rem; }
+.push-settings p { margin: 3px 0 0; color: #607066; font-size: .82rem; line-height: 1.4; }
+.push-settings__actions { display: flex; flex: 0 0 auto; gap: 8px; }
+.push-settings__actions button { min-height: 42px; white-space: nowrap; }
 .appearance-toggle { margin-top: 0; }
 .glass-intensity-setting { margin: -14px 26px 24px; padding: 16px 18px; border: 1px solid #dfe8e2; border-top: 0; border-radius: 0 0 14px 14px; background: #f8fbf9; }
 .glass-intensity-heading, .glass-intensity-labels { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -277,6 +354,8 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
   .setting-field { padding: 16px; }
   .settings-actions { align-items: stretch; flex-direction: column-reverse; padding: 18px; }
   .notification-settings { align-items: flex-start; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
+  .push-settings { align-items: stretch; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
+  .push-settings__actions button { flex: 1; }
   .save-button { width: 100%; min-height: 50px; }
   .settings-actions p { justify-content: center; }
 }

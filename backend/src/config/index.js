@@ -52,6 +52,11 @@ export const config = {
     sandboxClientId: process.env.SANDBOX_PAYPAL_CLIENT_ID,
     sandboxClientSecret: process.env.SANDBOX_PAYPAL_CLIENT_SECRET,
   },
+  webPush: {
+    publicKey: process.env.VAPID_PUBLIC_KEY,
+    privateKey: process.env.VAPID_PRIVATE_KEY,
+    subject: process.env.VAPID_SUBJECT || 'mailto:orders@pineneedledesigns.store',
+  },
 };
 
 export const isLocalApp = config.appBaseUrl.includes('localhost')

@@ -32,11 +32,13 @@ jobs:
           RESEND_FROM: ${{ vars.RESEND_FROM || 'orders@pineneedledesigns.store' }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          envs: NODE_ENV,PORT,APP_BASE_URL,PAYPAL_BOOKING_DEPOSITS_ENABLED,PAYPAL_CLIENT_ID,PAYPAL_CLIENT_SECRET,RESEND_API_KEY,RESEND_FROM,SESSION_SECRET,MONGODB_URI
+          envs: NODE_ENV,PORT,APP_BASE_URL,PAYPAL_BOOKING_DEPOSITS_ENABLED,PAYPAL_CLIENT_ID,PAYPAL_CLIENT_SECRET,RESEND_API_KEY,RESEND_FROM,SESSION_SECRET,MONGODB_URI,VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY
           script: |
             set -euo pipefail
             cd ~/pineneedledesigns.website
@@ -67,6 +69,9 @@ jobs:
               "PAYPAL_BOOKING_DEPOSITS_ENABLED=${PAYPAL_BOOKING_DEPOSITS_ENABLED:-false}" \
               "PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-}" \
               "PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-}" \
+              "VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY:-}" \
+              "VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY:-}" \
+              "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
               > backend/.env
 
             npm ci --omit=dev --ignore-scripts

@@ -6,6 +6,7 @@ import {
   paypal,
 } from '../services/paypal.js';
 import { getEmailRecipients, mailerConfigured, sendEmail } from '../services/mailer.js';
+import { sendPushNotification } from '../services/pushNotifications.js';
 
 const bookingDepositMap = new Map();
 
@@ -128,6 +129,15 @@ export const captureBookingDeposit = async (req, res) => {
           `PayPal order: ${order.id}`,
         ].join('\n'),
       }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
+    }
+
+    if (deposit) {
+      sendPushNotification({
+        title: 'New paid booking deposit',
+        body: `${deposit.customer.name} paid $${booking.amount} for ${booking.title}.`,
+        url: '/dashboard',
+        tag: `booking-${order.id}`,
+      }).catch((pushErr) => console.error('Booking push notification failed:', pushErr));
     }
 
     res.json({

@@ -202,10 +202,11 @@ watch(
 
     <div v-else class="orders-list">
       <details
+        :id="`order-${order._id}`"
         v-for="order in filteredOrders"
         :key="order._id"
         class="order-card"
-        :open="order.status === 'open'"
+        :open="order.status === 'open' || String(route.query.order || '') === String(order._id)"
       >
         <summary>
           <div class="order-summary">

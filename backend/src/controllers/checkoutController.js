@@ -6,6 +6,7 @@ import { persistCapturedOrder } from '../services/orderPersistence.js';
 import { Product } from '../models/Product.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { StoreSettings } from '../models/StoreSettings.js';
+import { sendPushNotification } from '../services/pushNotifications.js';
 
 const orderMap = new Map();
 const roundMoney = (value) => Number(Number(value || 0).toFixed(2));
@@ -276,8 +277,9 @@ export const captureOrder = async (req, res) => {
     const summary = storedOrder.summary || {};
     const lineItems = storedOrder.lineItems || [];
 
+    let persistedOrder = null;
     try {
-      await persistCapturedOrder({
+      persistedOrder = await persistCapturedOrder({
         paypalOrderId: order.id,
         customer,
         billingAddress,
@@ -291,6 +293,15 @@ export const captureOrder = async (req, res) => {
       });
     } catch (persistErr) {
       console.error('Failed to persist order:', persistErr);
+    }
+
+    if (persistedOrder) {
+      sendPushNotification({
+        title: `New order #${persistedOrder.orderNumber}`,
+        body: `${shippingAddress.name} paid ${money(summary.finalTotal)}. Tap to view the order.`,
+        url: `/dashboard/orders?order=${persistedOrder.id}`,
+        tag: `order-${persistedOrder.id}`,
+      }).catch((pushErr) => console.error('Order push notification failed:', pushErr));
     }
 
     const itemsHtml = items.map((item) => `

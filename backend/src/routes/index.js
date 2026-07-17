@@ -7,6 +7,7 @@ import bookingRouter from './booking.js';
 import healthRouter from './health.js';
 import dashboardRouter from './dashboard.js';
 import ordersRouter from './orders.js';
+import pushRouter from './push.js';
 import storefrontRouter from './storefront.js';
 import settingsRouter from './settings.js';
 
@@ -22,5 +23,6 @@ router.use('/booking-deposit', bookingRouter);
 router.use('/health', healthRouter);
 router.use('/dashboard', dashboardRouter);
 router.use('/orders', ordersRouter);
+router.use('/push', pushRouter);
 
 export default router;
