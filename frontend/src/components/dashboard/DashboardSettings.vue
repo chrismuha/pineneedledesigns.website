@@ -290,7 +290,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         </button>
       </div>
 
-      <label class="toggle-row appearance-toggle">
+      <label v-if="installedPwa" class="toggle-row appearance-toggle">
         <span>
           <strong>Green iPhone status area</strong>
           <small>Turn off to make the clock and battery area transparent so content remains visible while scrolling.</small>
