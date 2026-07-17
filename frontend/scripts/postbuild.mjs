@@ -26,6 +26,31 @@ const removeStaleBuildAssets = async () => {
     .map((entry) => rm(path.join(assetsDir, entry.name), { force: true })))
 }
 
+const copyIfChanged = async (source, destination) => {
+  try {
+    const [sourceStat, destinationStat] = await Promise.all([
+      stat(source),
+      stat(destination),
+    ])
+
+    if (sourceStat.size === destinationStat.size) {
+      const [sourceContents, destinationContents] = await Promise.all([
+        readFile(source),
+        readFile(destination),
+      ])
+
+      if (sourceContents.equals(destinationContents)) {
+        return
+      }
+    }
+  } catch {
+    // A missing destination is expected on the first build.
+  }
+
+  await mkdir(path.dirname(destination), { recursive: true })
+  await cp(source, destination, { force: true })
+}
+
 const copyIfExists = async (source, destination) => {
   try {
     await stat(source)
@@ -33,8 +58,7 @@ const copyIfExists = async (source, destination) => {
     return
   }
 
-  await mkdir(path.dirname(destination), { recursive: true })
-  await cp(source, destination, { recursive: true, force: true })
+  await copyIfChanged(source, destination)
 }
 
 const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
@@ -44,15 +68,17 @@ const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
     return
   }
 
-  await rm(destinationDir, { recursive: true, force: true })
   await mkdir(destinationDir, { recursive: true })
 
-  const entries = await readdir(sourceDir, { withFileTypes: true })
-  for (const entry of entries) {
+  const sourceEntries = await readdir(sourceDir, { withFileTypes: true })
+  const expectedEntries = new Set()
+
+  for (const entry of sourceEntries) {
     const sourcePath = path.join(sourceDir, entry.name)
     const destinationPath = path.join(destinationDir, entry.name)
 
     if (entry.isDirectory()) {
+      expectedEntries.add(entry.name)
       await syncDirectory(sourcePath, destinationPath, options)
       continue
     }
@@ -61,7 +87,15 @@ const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
       continue
     }
 
-    await cp(sourcePath, destinationPath, { force: true })
+    expectedEntries.add(entry.name)
+    await copyIfChanged(sourcePath, destinationPath)
+  }
+
+  const destinationEntries = await readdir(destinationDir, { withFileTypes: true })
+  for (const entry of destinationEntries) {
+    if (!expectedEntries.has(entry.name)) {
+      await rm(path.join(destinationDir, entry.name), { recursive: true, force: true })
+    }
   }
 }
 
