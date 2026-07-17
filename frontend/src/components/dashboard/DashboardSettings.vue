@@ -7,14 +7,17 @@ import {
   getDashboardFooterButtonDepthEnabled,
   getDashboardLiquidGlassEnabled,
   getDashboardLiquidGlassIntensity,
+  getDashboardStatusBarColorEnabled,
   previewDashboardDarkPhotoEditor,
   previewDashboardFooterButtonDepth,
   previewDashboardLiquidGlass,
   previewDashboardLiquidGlassIntensity,
+  previewDashboardStatusBarColor,
   setDashboardDarkPhotoEditorEnabled,
   setDashboardFooterButtonDepthEnabled,
   setDashboardLiquidGlassEnabled,
   setDashboardLiquidGlassIntensity,
+  setDashboardStatusBarColorEnabled,
 } from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 import { isInstalledPwa } from '../../utils/pwaDisplayMode.js'
@@ -41,6 +44,7 @@ const form = ref({
   liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
   darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
   footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
+  statusBarColorEnabled: getDashboardStatusBarColorEnabled(),
 })
 const savedSettings = ref('')
 const settingsSnapshot = (settings) => JSON.stringify({
@@ -52,6 +56,7 @@ const settingsSnapshot = (settings) => JSON.stringify({
   liquidGlassIntensity: Number(settings.liquidGlassIntensity),
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
   footerButtonDepthEnabled: Boolean(settings.footerButtonDepthEnabled),
+  statusBarColorEnabled: Boolean(settings.statusBarColorEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
 
@@ -125,6 +130,7 @@ watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
 watch(() => form.value.liquidGlassIntensity, previewDashboardLiquidGlassIntensity)
 watch(() => form.value.darkPhotoEditorEnabled, previewDashboardDarkPhotoEditor)
 watch(() => form.value.footerButtonDepthEnabled, previewDashboardFooterButtonDepth)
+watch(() => form.value.statusBarColorEnabled, previewDashboardStatusBarColor)
 
 const loadSettings = async () => {
   loading.value = true
@@ -140,6 +146,7 @@ const loadSettings = async () => {
       liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
       darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
       footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
+      statusBarColorEnabled: getDashboardStatusBarColorEnabled(),
     }
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     savedSettings.value = settingsSnapshot(form.value)
@@ -172,6 +179,7 @@ const saveSettings = async () => {
     setDashboardLiquidGlassIntensity(form.value.liquidGlassIntensity)
     setDashboardDarkPhotoEditorEnabled(form.value.darkPhotoEditorEnabled)
     setDashboardFooterButtonDepthEnabled(form.value.footerButtonDepthEnabled)
+    setDashboardStatusBarColorEnabled(form.value.statusBarColorEnabled)
     savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
@@ -281,6 +289,14 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
           {{ updateChecking ? 'Checking...' : 'Check for Updates' }}
         </button>
       </div>
+
+      <label class="toggle-row appearance-toggle">
+        <span>
+          <strong>Green iPhone status area</strong>
+          <small>Turn off to make the clock and battery area transparent so content remains visible while scrolling.</small>
+        </span>
+        <input v-model="form.statusBarColorEnabled" class="toggle-input" type="checkbox" role="switch">
+      </label>
 
       <label class="toggle-row appearance-toggle">
         <span>

@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import { useCatalogStore } from './stores/catalog.js'
 import { isInstalledPwa } from './utils/pwaDisplayMode.js'
+import { applyStoredDashboardStatusBarColor } from './utils/dashboardAppearance.js'
 
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'
@@ -24,6 +25,7 @@ const bootstrap = async () => {
 }
 
 installCsrfFetch()
+applyStoredDashboardStatusBarColor()
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     const installedPwa = isInstalledPwa()

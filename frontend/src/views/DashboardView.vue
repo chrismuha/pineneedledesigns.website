@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
-import { getDashboardFooterButtonDepthEnabled, getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity } from '../utils/dashboardAppearance.js'
+import { getDashboardFooterButtonDepthEnabled, getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity, getDashboardStatusBarColorEnabled } from '../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
 
 const route = useRoute()
@@ -14,6 +14,7 @@ const toasts = ref([])
 const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 const liquidGlassIntensity = ref(getDashboardLiquidGlassIntensity())
 const footerButtonDepthEnabled = ref(getDashboardFooterButtonDepthEnabled())
+const statusBarColorEnabled = ref(getDashboardStatusBarColorEnabled())
 let nextToastId = 0
 
 const dismissToast = (id) => {
@@ -31,6 +32,10 @@ const handleLiquidGlassChange = (event) => {
   liquidGlassEnabled.value = event.detail?.enabled !== false
   liquidGlassIntensity.value = event.detail?.intensity ?? 50
   footerButtonDepthEnabled.value = event.detail?.buttonDepthEnabled !== false
+}
+
+const handleStatusBarColorChange = (event) => {
+  statusBarColorEnabled.value = event.detail?.enabled !== false
 }
 
 const liquidGlassStyle = computed(() => {
@@ -51,6 +56,7 @@ const liquidGlassStyle = computed(() => {
 onMounted(async () => {
   window.addEventListener('dashboard-toast', handleToast)
   window.addEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
+  window.addEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
   try {
     const settings = await dashboardApi.getSettings()
     setDashboardToastTimeout(settings.toastTimeoutSeconds ?? 6)
@@ -59,6 +65,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   window.removeEventListener('dashboard-toast', handleToast)
   window.removeEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
+  window.removeEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
 })
 
 const tabAtPoint = (x, y) =>
@@ -161,7 +168,7 @@ const isActive = (path) => {
 </script>
 
 <template>
-  <div class="dashboard-shell">
+  <div class="dashboard-shell" :class="{ 'dashboard-shell--transparent-status': !statusBarColorEnabled }">
     <div class="dashboard-layout">
       <aside class="sidebar">
         <div class="sidebar-content">
@@ -451,6 +458,14 @@ const isActive = (path) => {
   @media (display-mode: standalone) {
     .dashboard-shell {
       top: env(safe-area-inset-top);
+    }
+
+    .dashboard-shell--transparent-status {
+      top: 0;
+    }
+
+    .dashboard-shell--transparent-status .content {
+      padding-top: calc(14px + env(safe-area-inset-top));
     }
   }
 
