@@ -465,7 +465,7 @@ const isActive = (path) => {
     }
 
     .dashboard-shell--transparent-status .content {
-      padding-top: calc(14px + env(safe-area-inset-top));
+      padding-top: 14px;
     }
   }
 
