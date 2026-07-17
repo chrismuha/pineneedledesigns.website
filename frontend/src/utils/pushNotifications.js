@@ -1,3 +1,5 @@
+import { isInstalledPwa } from './pwaDisplayMode.js'
+
 const base64UrlToUint8Array = (value) => {
   const padding = '='.repeat((4 - (value.length % 4)) % 4)
   const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/')
@@ -6,7 +8,10 @@ const base64UrlToUint8Array = (value) => {
 }
 
 export const pushSupported = () => (
-  'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
+  isInstalledPwa()
+  && 'serviceWorker' in navigator
+  && 'PushManager' in window
+  && 'Notification' in window
 )
 
 export const getPushState = async () => {

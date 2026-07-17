@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { useCatalogStore } from './stores/catalog.js'
+import { isInstalledPwa } from './utils/pwaDisplayMode.js'
 
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'
@@ -25,12 +26,21 @@ const bootstrap = async () => {
 installCsrfFetch()
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    const installedPwa = isInstalledPwa()
     let refreshing = false
     let hasActiveController = Boolean(navigator.serviceWorker.controller)
     let updatePromptShown = false
 
     const promptForUpdate = (registration) => {
       if (!registration.waiting || updatePromptShown) return
+
+      // Browser tabs update like a normal website: activate the new worker
+      // immediately. Only the installed app asks before replacing its version.
+      if (!installedPwa) {
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+        return
+      }
+
       updatePromptShown = true
 
       const dialog = document.createElement('dialog')
@@ -98,7 +108,9 @@ if ('serviceWorker' in navigator) {
           event.detail?.complete?.(result)
         }
 
-        window.addEventListener('pwa-manual-update-check', handleManualUpdateCheck)
+        if (installedPwa) {
+          window.addEventListener('pwa-manual-update-check', handleManualUpdateCheck)
+        }
 
         promptForUpdate(registration)
         registration.addEventListener('updatefound', () => {

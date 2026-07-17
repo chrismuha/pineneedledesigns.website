@@ -17,6 +17,7 @@ import {
   setDashboardLiquidGlassIntensity,
 } from '../../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
+import { isInstalledPwa } from '../../utils/pwaDisplayMode.js'
 import {
   disablePushNotifications,
   enablePushNotifications,
@@ -28,6 +29,7 @@ const loading = ref(true)
 const saving = ref(false)
 const pushBusy = ref(false)
 const updateChecking = ref(false)
+const installedPwa = isInstalledPwa()
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const error = ref('')
 const form = ref({
@@ -180,7 +182,7 @@ const saveSettings = async () => {
 
 onMounted(() => {
   loadSettings()
-  refreshPushState()
+  if (installedPwa) refreshPushState()
 })
 onBeforeUnmount(clearDashboardAppearancePreviews)
 </script>
@@ -248,7 +250,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         </label>
       </div>
 
-      <div class="push-settings">
+      <div v-if="installedPwa" class="push-settings">
         <div class="push-settings__copy">
           <i class="bi bi-phone-vibrate" aria-hidden="true"></i>
           <div>
@@ -267,7 +269,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         </div>
       </div>
 
-      <div class="app-update-setting">
+      <div v-if="installedPwa" class="app-update-setting">
         <div class="app-update-setting__copy">
           <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
           <div>
