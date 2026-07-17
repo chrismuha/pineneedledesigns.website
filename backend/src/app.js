@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import { config } from './config/index.js';
 import { setRevalidationHeaders } from './middleware/cacheControl.js';
 import { createSessionMiddleware } from './middleware/session.js';
+import { requireCloudflareAccess } from './middleware/cloudflareAccess.js';
 import apiRouter from './routes/index.js';
 
 export const createApp = () => {
@@ -39,6 +40,7 @@ export const createApp = () => {
   app.use(bodyParser.urlencoded({ extended: false }));
 
   app.use(express.json({ limit: '10mb' }));
+  app.use('/dashboard', requireCloudflareAccess);
   app.use(express.static(config.docsDir, {
     setHeaders(res) {
       setRevalidationHeaders(res);

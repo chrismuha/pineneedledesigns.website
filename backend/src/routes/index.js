@@ -10,19 +10,20 @@ import ordersRouter from './orders.js';
 import pushRouter from './push.js';
 import storefrontRouter from './storefront.js';
 import settingsRouter from './settings.js';
+import { requireCloudflareAccess } from '../middleware/cloudflareAccess.js';
 
 const router = Router();
 
 router.use('/storefront', storefrontRouter);
 router.use('/settings', settingsRouter);
-router.use('/collections', collectionsRouter);
-router.use('/products', productsRouter);
+router.use('/collections', requireCloudflareAccess, collectionsRouter);
+router.use('/products', requireCloudflareAccess, productsRouter);
 router.use('/cart', cartRouter);
 router.use('/checkout', checkoutRouter);
 router.use('/booking-deposit', bookingRouter);
 router.use('/health', healthRouter);
-router.use('/dashboard', dashboardRouter);
-router.use('/orders', ordersRouter);
-router.use('/push', pushRouter);
+router.use('/dashboard', requireCloudflareAccess, dashboardRouter);
+router.use('/orders', requireCloudflareAccess, ordersRouter);
+router.use('/push', requireCloudflareAccess, pushRouter);
 
 export default router;

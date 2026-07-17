@@ -57,6 +57,10 @@ export const config = {
     privateKey: process.env.VAPID_PRIVATE_KEY,
     subject: process.env.VAPID_SUBJECT || 'mailto:orders@pineneedledesigns.store',
   },
+  cloudflareAccess: {
+    teamDomain: process.env.CLOUDFLARE_ACCESS_TEAM_DOMAIN || 'chrismuha.cloudflareaccess.com',
+    audience: process.env.CLOUDFLARE_ACCESS_AUD || '3d74f00031bbb04310c544962709dc773d85c1c71c7fd1c86d6d2b4ce14df5eb',
+  },
 };
 
 export const isLocalApp = config.appBaseUrl.includes('localhost')

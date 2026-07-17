@@ -469,7 +469,12 @@ const isActive = (path) => {
     }
   }
 
-  .toast-region { top: 10px; right: 10px; left: 10px; width: auto; }
+  .toast-region {
+    top: calc(10px + env(safe-area-inset-top));
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
 
   .dashboard-layout {
     position: absolute;
