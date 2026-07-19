@@ -11,7 +11,7 @@ defineEmits(['confirm', 'cancel'])
 <template>
   <Teleport to="body">
     <div v-if="open" class="dashboard-confirm-overlay">
-      <section class="dashboard-confirm" role="alertdialog" aria-modal="true" :aria-label="title">
+      <section :key="stepLabel || title" class="dashboard-confirm" role="alertdialog" aria-modal="true" :aria-label="title">
         <div class="dashboard-confirm__icon" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></div>
         <p v-if="stepLabel" class="dashboard-confirm__step">{{ stepLabel }}</p>
         <h2>{{ title }}</h2>

@@ -1652,7 +1652,7 @@ onBeforeUnmount(() => {
           <i class="bi bi-exclamation-triangle"></i>
         </div>
 
-        <template v-if="editCancellationStep === 1">
+        <template v-if="editCancellationStep === 1" key="edit-cancellation-step-1">
           <p class="confirmation-step">Unsaved changes</p>
           <h2>Save a draft before exiting?</h2>
           <p>You can save these changes in this browser, keep editing, or continue to the discard confirmation.</p>
@@ -1665,7 +1665,7 @@ onBeforeUnmount(() => {
           </div>
         </template>
 
-        <template v-else>
+        <template v-else key="edit-cancellation-step-2">
           <p class="confirmation-step">Confirmation 2 of 2</p>
           <h2>Discard all changes?</h2>
           <p class="destructive-warning">This cannot be undone.</p>
@@ -1779,7 +1779,7 @@ onBeforeUnmount(() => {
           <i class="bi bi-exclamation-triangle"></i>
         </div>
 
-        <template v-if="deleteConfirmationStep === 1">
+        <template v-if="deleteConfirmationStep === 1" key="collection-deletion-step-1">
           <p class="confirmation-step">Confirmation 1 of 2</p>
           <h2>Delete {{ collectionPendingDelete.name }}?</h2>
           <p>
@@ -1798,7 +1798,7 @@ onBeforeUnmount(() => {
           </div>
         </template>
 
-        <template v-else>
+        <template v-else key="collection-deletion-step-2">
           <p class="confirmation-step">Final confirmation 2 of 2</p>
           <h2>Are you absolutely sure?</h2>
           <p>
