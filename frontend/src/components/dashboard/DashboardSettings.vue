@@ -265,8 +265,11 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
             <strong>Phone lock-screen notifications</strong>
             <p v-if="!pushState.supported">This browser does not support web push. On iPhone, add Pine Needle to the Home Screen and open it there.</p>
             <p v-else-if="pushState.permission === 'denied'">Notifications are blocked in this device's browser settings.</p>
-            <p v-else-if="pushState.subscribed">Enabled on this device for new orders and paid booking deposits.</p>
+            <p v-else-if="pushState.subscribed">Enabled with sound for new orders and paid booking deposits.</p>
             <p v-else>Enable alerts on this device, even when Pine Needle is closed.</p>
+            <p v-if="pushState.subscribed" class="push-settings__sound-help">
+              On iPhone, sound is controlled in Settings → Notifications → Pine Needle Designs → Sounds. iOS web apps use Apple's notification sound and cannot install a custom tone.
+            </p>
           </div>
         </div>
         <div class="push-settings__actions">
@@ -384,6 +387,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .push-settings__copy > i { color: var(--dashboard-green); font-size: 1.35rem; }
 .push-settings strong { color: #273b2d; font-size: .92rem; }
 .push-settings p { margin: 3px 0 0; color: #607066; font-size: .82rem; line-height: 1.4; }
+.push-settings .push-settings__sound-help { margin-top: 8px; color: #496052; }
 .push-settings__actions { display: flex; flex: 0 0 auto; gap: 8px; }
 .push-settings__actions button { min-height: 42px; white-space: nowrap; }
 .app-update-setting { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #cfe4d5; border-radius: 14px; background: #f5fbf7; }

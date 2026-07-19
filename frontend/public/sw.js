@@ -24,6 +24,9 @@ self.addEventListener('push', (event) => {
       body: data.body || 'You have a new store update.',
       badge: '/pwa-icon-192.png',
       icon: '/pwa-icon-192.png',
+      // iOS/iPadOS web apps use the system notification sound when silent is false.
+      // Web Push cannot package or select a custom audio file.
+      silent: false,
       tag: data.tag || 'pine-needle-update',
       data: { url: data.url || '/dashboard' },
     },
