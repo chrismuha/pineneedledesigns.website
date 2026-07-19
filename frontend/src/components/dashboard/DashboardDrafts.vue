@@ -62,7 +62,7 @@ const removeDraft = async () => {
   try {
     await deleteItemDraft(draft.id)
     await loadDrafts()
-    showDashboardToast(`Deleted “${draft.name}” from this browser.`, {
+    showDashboardToast(`Deleted “${draft.name}” from this device.`, {
       type: 'success',
       title: 'Draft deleted',
     })
@@ -84,7 +84,7 @@ onMounted(loadDrafts)
     <div class="page-header">
       <div>
         <h1>Drafts</h1>
-        <p>Item drafts saved in this browser.</p>
+        <p>Item drafts saved on this device.</p>
       </div>
       <RouterLink class="btn-primary" to="/dashboard/create">Create New Item</RouterLink>
     </div>
@@ -115,7 +115,7 @@ onMounted(loadDrafts)
       :open="Boolean(draftPendingDelete)"
       :step-label="`Confirmation ${deleteConfirmationStep} of 2`"
       :title="deleteConfirmationStep === 1 ? `Delete “${draftPendingDelete?.name || 'this draft'}”?` : 'Permanently delete this draft?'"
-      :message="deleteConfirmationStep === 1 ? 'This draft and its locally saved media will be removed from this browser.' : 'This cannot be undone.'"
+      :message="deleteConfirmationStep === 1 ? 'This draft and its locally saved media will be removed from this device.' : 'This cannot be undone.'"
       :confirm-label="deleteConfirmationStep === 1 ? 'Continue' : 'Delete Draft'"
       :cancel-label="deleteConfirmationStep === 1 ? 'Keep Draft' : 'Go Back'"
       :busy="Boolean(deletingId)"

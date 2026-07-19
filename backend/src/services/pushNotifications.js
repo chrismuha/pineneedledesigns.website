@@ -14,11 +14,18 @@ if (pushNotificationsConfigured) {
   );
 }
 
-export const sendPushNotification = async ({ title, body, url, tag }) => {
+export const sendPushNotification = async ({
+  title,
+  body,
+  url,
+  tag,
+  type = 'store-update',
+  icon = '/pwa-icon-192.png',
+}) => {
   if (!pushNotificationsConfigured) return { sent: 0 };
 
   const subscriptions = await PushSubscription.find({}).lean();
-  const payload = JSON.stringify({ title, body, url, tag });
+  const payload = JSON.stringify({ title, body, url, tag, type, icon });
   let sent = 0;
 
   await Promise.all(subscriptions.map(async (subscription) => {

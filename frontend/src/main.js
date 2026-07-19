@@ -36,7 +36,7 @@ if ('serviceWorker' in navigator) {
     const promptForUpdate = (registration) => {
       if (!registration.waiting || updatePromptShown) return
 
-      // Browser tabs update like a normal website: activate the new worker
+      // Regular website visits update immediately: activate the new worker
       // immediately. Only the installed app asks before replacing its version.
       if (!installedPwa) {
         registration.waiting.postMessage({ type: 'SKIP_WAITING' })

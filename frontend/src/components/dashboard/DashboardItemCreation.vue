@@ -191,13 +191,13 @@ const persistDraft = async ({ notify = false } = {}) => {
     activeDraftId.value = id
     if (notify) {
       await refreshDrafts()
-      showDashboardToast('This item draft and its media are saved in this browser.', {
+      showDashboardToast('This item draft and its media are saved on this device.', {
         type: 'success',
         title: 'Draft saved',
       })
     }
   } catch (err) {
-    if (notify) showDashboardToast(err.message || 'The browser could not save this draft.', { title: 'Draft not saved' })
+    if (notify) showDashboardToast(err.message || 'The app could not save this draft.', { title: 'Draft not saved' })
   } finally {
     if (notify) savingDraft.value = false
   }
@@ -237,7 +237,7 @@ const removeDraft = async (draft) => {
   await deleteItemDraft(draft.id)
   if (activeDraftId.value === draft.id) activeDraftId.value = ''
   await refreshDrafts()
-  showDashboardToast(`Deleted “${draft.name}” from this browser.`, { type: 'success', title: 'Draft deleted' })
+  showDashboardToast(`Deleted “${draft.name}” from this device.`, { type: 'success', title: 'Draft deleted' })
 }
 
 const addProperty = () => {

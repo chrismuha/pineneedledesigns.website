@@ -10,6 +10,13 @@ self.addEventListener('activate', (event) => {
 // copies can reliably detect a deployment even when this source is unchanged.
 const BUILD_ID = '__PINE_NEEDLE_BUILD_ID__';
 
+const updateAppBadge = async () => {
+  if (!self.navigator?.setAppBadge) return;
+  const notifications = await self.registration.getNotifications();
+  if (notifications.length) await self.navigator.setAppBadge(notifications.length);
+  else if (self.navigator.clearAppBadge) await self.navigator.clearAppBadge();
+};
+
 self.addEventListener('push', (event) => {
   let data = {};
   try {
@@ -18,19 +25,19 @@ self.addEventListener('push', (event) => {
     data = { body: event.data?.text() || '' };
   }
 
-  event.waitUntil(self.registration.showNotification(
-    data.title || 'Pine Needle Designs',
-    {
+  event.waitUntil((async () => {
+    await self.registration.showNotification(data.title || 'Pine Needle Designs', {
       body: data.body || 'You have a new store update.',
       badge: '/pwa-icon-192.png',
-      icon: '/pwa-icon-192.png',
+      icon: data.icon || '/pwa-icon-192.png',
       // iOS/iPadOS web apps use the system notification sound when silent is false.
       // Web Push cannot package or select a custom audio file.
       silent: false,
       tag: data.tag || 'pine-needle-update',
-      data: { url: data.url || '/dashboard' },
-    },
-  ));
+      data: { url: data.url || '/dashboard', type: data.type || 'store-update' },
+    });
+    await updateAppBadge();
+  })());
 });
 
 self.addEventListener('notificationclick', (event) => {
@@ -38,6 +45,7 @@ self.addEventListener('notificationclick', (event) => {
   const targetUrl = new URL(event.notification.data?.url || '/dashboard', self.location.origin).href;
 
   event.waitUntil((async () => {
+    await updateAppBadge();
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const existing = windows.find((client) => new URL(client.url).origin === self.location.origin);
     if (existing) {

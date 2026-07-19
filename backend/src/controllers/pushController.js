@@ -22,7 +22,7 @@ export const subscribeToPush = async (req, res) => {
     return res.status(503).json({ error: 'Phone notifications are not configured on the server yet.' });
   }
   if (!validSubscription(req.body)) {
-    return res.status(400).json({ error: 'The browser returned an invalid notification subscription.' });
+    return res.status(400).json({ error: 'This device returned an invalid notification subscription.' });
   }
 
   const subscription = await PushSubscription.findOneAndUpdate(
@@ -49,6 +49,7 @@ export const sendTestPush = async (_req, res) => {
     body: 'This phone will receive new order and booking alerts.',
     url: '/dashboard',
     tag: 'push-test',
+    type: 'test',
   });
   res.json(result);
 };

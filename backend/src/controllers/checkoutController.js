@@ -296,11 +296,18 @@ export const captureOrder = async (req, res) => {
     }
 
     if (persistedOrder) {
+      const firstItem = lineItems[0];
+      const itemCount = lineItems.reduce((total, item) => total + Number(item.quantity || 1), 0);
+      const extraItemTypes = Math.max(0, lineItems.length - 1);
+      const itemSummary = firstItem
+        ? `${itemCount} item${itemCount === 1 ? '' : 's'}: ${firstItem.title}${extraItemTypes ? ` +${extraItemTypes} more` : ''}`
+        : `${itemCount} item${itemCount === 1 ? '' : 's'}`;
       sendPushNotification({
-        title: `New order #${persistedOrder.orderNumber}`,
-        body: `${shippingAddress.name} paid ${money(summary.finalTotal)}. Tap to view the order.`,
+        title: `New order #${persistedOrder.orderNumber} · ${money(summary.finalTotal)}`,
+        body: `${shippingAddress.name} purchased ${itemSummary}. Tap to open the order.`,
         url: `/dashboard/orders?order=${persistedOrder.id}`,
         tag: `order-${persistedOrder.id}`,
+        type: 'order',
       }).catch((pushErr) => console.error('Order push notification failed:', pushErr));
     }
 

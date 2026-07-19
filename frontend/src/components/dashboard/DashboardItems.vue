@@ -475,7 +475,7 @@ const initializeEditModal = async (product) => {
       ...video,
       previewUrl: URL.createObjectURL(video.file),
     }))
-    showDashboardToast('Your unsaved item changes were restored from this browser.', {
+    showDashboardToast('Your unsaved item changes were restored from this device.', {
       type: 'success',
       title: 'Draft restored',
     })
@@ -576,7 +576,7 @@ const saveEditDraftManually = async () => {
   const saved = await persistEditDraft()
   savingEditDraft.value = false
   showDashboardToast(
-    saved ? 'Your item changes and new media are saved in this browser.' : 'The browser could not save this item draft.',
+    saved ? 'Your item changes and new media are saved on this device.' : 'The app could not save this item draft.',
     { type: saved ? 'success' : 'error', title: saved ? 'Draft saved' : 'Draft not saved' },
   )
 }
@@ -588,7 +588,7 @@ const saveEditDraftAndExit = async () => {
   savingEditDraft.value = false
 
   if (!saved) {
-    showDashboardToast('The browser could not save this item draft. Your editor remains open.', {
+    showDashboardToast('The app could not save this item draft. Your editor remains open.', {
       type: 'error',
       title: 'Draft not saved',
     })
@@ -1655,7 +1655,7 @@ onBeforeUnmount(() => {
         <template v-if="editCancellationStep === 1" key="edit-cancellation-step-1">
           <p class="confirmation-step">Unsaved changes</p>
           <h2>Save a draft before exiting?</h2>
-          <p>You can save these changes in this browser, keep editing, or continue to the discard confirmation.</p>
+          <p>You can save these changes on this device, keep editing, or continue to the discard confirmation.</p>
           <div class="confirmation-actions">
             <button type="button" class="btn-outline" :disabled="savingEditDraft" @click="cancelEditCancellation">Keep Editing</button>
             <button type="button" class="btn-primary" :disabled="savingEditDraft" @click="saveEditDraftAndExit">

@@ -102,7 +102,7 @@ const testPush = async () => {
 
 const checkForAppUpdate = () => {
   if (!('serviceWorker' in navigator)) {
-    showDashboardToast('App updates are not supported in this browser.', { title: 'Unable to check' })
+    showDashboardToast('App updates are not supported on this device.', { title: 'Unable to check' })
     return
   }
 
@@ -263,8 +263,8 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
           <i class="bi bi-phone-vibrate" aria-hidden="true"></i>
           <div>
             <strong>Phone lock-screen notifications</strong>
-            <p v-if="!pushState.supported">This browser does not support web push. On iPhone, add Pine Needle to the Home Screen and open it there.</p>
-            <p v-else-if="pushState.permission === 'denied'">Notifications are blocked in this device's browser settings.</p>
+            <p v-if="!pushState.supported">This device does not support app notifications. On iPhone, add Pine Needle to the Home Screen and open it there.</p>
+            <p v-else-if="pushState.permission === 'denied'">Notifications are blocked in this device's settings.</p>
             <p v-else-if="pushState.subscribed">Enabled with sound for new orders and paid booking deposits.</p>
             <p v-else>Enable alerts on this device, even when Pine Needle is closed.</p>
             <p v-if="pushState.subscribed" class="push-settings__sound-help">

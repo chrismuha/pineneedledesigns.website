@@ -1,9 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
 
 const loading = ref(true)
+const route = useRoute()
 const error = ref('')
 const draftCount = ref(0)
 const stats = ref({
@@ -20,6 +22,23 @@ const hasStyleSpecificPrice = (product) => product.blingPrice != null || product
 
 const orderLabel = (order) => (order.orderNumber ? `#${order.orderNumber}` : 'Order')
 const recentItemsSection = ref(null)
+const bookingDetails = computed(() => {
+  if (route.query.notice !== 'booking') return null
+  const details = {
+    fitting: {
+      title: 'First Fitting Deposit',
+      amount: '$10.00',
+      calendarUrl: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+    },
+    brides: {
+      title: 'Bridal Appointment Deposit',
+      amount: '$25.00',
+      calendarUrl: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+    },
+  }[String(route.query.service || '')]
+  if (!details) return null
+  return { ...details, payment: String(route.query.payment || '') }
+})
 
 const scrollToRecentItems = () => {
   recentItemsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -64,6 +83,17 @@ onMounted(loadStats)
         </a>
       </div>
     </div>
+
+    <section v-if="bookingDetails" class="notification-detail notification-detail--booking">
+      <div class="notification-detail__icon" aria-hidden="true"><i class="bi bi-calendar2-check"></i></div>
+      <div>
+        <span class="notification-detail__eyebrow">Paid booking notification</span>
+        <h2>{{ bookingDetails.title }}</h2>
+        <p>Deposit received: <strong>{{ bookingDetails.amount }}</strong></p>
+        <p v-if="bookingDetails.payment" class="notification-detail__reference">PayPal reference: {{ bookingDetails.payment }}</p>
+      </div>
+      <a class="btn-primary" :href="bookingDetails.calendarUrl" target="_blank" rel="noopener noreferrer">Open Booking Calendar</a>
+    </section>
 
     <p v-if="loading" class="status-text">Loading dashboard...</p>
 
@@ -177,6 +207,14 @@ onMounted(loadStats)
   text-decoration: none;
 }
 
+.notification-detail { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-bottom: 24px; padding: 20px; border: 1px solid #b9dcc3; border-radius: 14px; background: #f1faf4; }
+.notification-detail__icon { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: #d9f1df; color: var(--dashboard-green); font-size: 1.3rem; }
+.notification-detail__eyebrow { color: #28763d; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.notification-detail h2 { margin: 3px 0 5px; color: #203326; font-size: 1.2rem; }
+.notification-detail p { margin: 0; color: #526159; }
+.notification-detail__reference { margin-top: 4px !important; font-size: .78rem; overflow-wrap: anywhere; }
+.notification-detail .btn-primary { text-align: center; text-decoration: none; }
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -201,6 +239,11 @@ onMounted(loadStats)
   border: 1px solid #d8eadb;
   border-radius: 14px;
   padding: 24px;
+}
+
+@media (max-width: 700px) {
+  .notification-detail { grid-template-columns: auto minmax(0, 1fr); }
+  .notification-detail .btn-primary { grid-column: 1 / -1; min-height: 46px; align-content: center; }
 }
 
 .stat-card h2 {
