@@ -33,6 +33,7 @@ const saving = ref(false)
 const pushBusy = ref(false)
 const updateChecking = ref(false)
 const installedPwa = isInstalledPwa()
+const updateAvailable = ref(installedPwa && window.localStorage.getItem('pine-needle-update-ready') === 'true')
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const error = ref('')
 const form = ref({
@@ -128,6 +129,29 @@ const checkForAppUpdate = () => {
   }))
 }
 
+const installAppUpdate = () => {
+  updateChecking.value = true
+  window.dispatchEvent(new CustomEvent('pwa-install-waiting-update', {
+    detail: {
+      complete: (started) => {
+        if (!started) {
+          updateChecking.value = false
+          updateAvailable.value = false
+          showDashboardToast('The saved update is no longer available. Check again for the latest version.', {
+            type: 'warning',
+            title: 'Update unavailable',
+          })
+        }
+      },
+    },
+  }))
+}
+
+const handleUpdateAvailabilityChange = (event) => {
+  updateAvailable.value = event.detail?.available === true
+  if (!updateAvailable.value) updateChecking.value = false
+}
+
 watch(() => form.value.liquidGlassEnabled, previewDashboardLiquidGlass)
 watch(() => form.value.liquidGlassIntensity, previewDashboardLiquidGlassIntensity)
 watch(() => form.value.darkPhotoEditorEnabled, previewDashboardDarkPhotoEditor)
@@ -197,9 +221,15 @@ const saveSettings = async () => {
 
 onMounted(() => {
   loadSettings()
-  if (installedPwa) refreshPushState()
+  if (installedPwa) {
+    refreshPushState()
+    window.addEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
+  }
 })
-onBeforeUnmount(clearDashboardAppearancePreviews)
+onBeforeUnmount(() => {
+  clearDashboardAppearancePreviews()
+  window.removeEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
+})
 </script>
 
 <template>
@@ -295,8 +325,13 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
             <p>Check whether a newer version of Pine Needle Designs is available.</p>
           </div>
         </div>
-        <button type="button" class="btn-outline" :disabled="updateChecking" @click="checkForAppUpdate">
-          {{ updateChecking ? 'Checking...' : 'Check for Updates' }}
+        <button
+          type="button"
+          :class="updateAvailable ? 'btn-primary' : 'btn-outline'"
+          :disabled="updateChecking"
+          @click="updateAvailable ? installAppUpdate() : checkForAppUpdate()"
+        >
+          {{ updateChecking ? (updateAvailable ? 'Updating...' : 'Checking...') : (updateAvailable ? 'Update App' : 'Check for Updates') }}
         </button>
       </div>
 

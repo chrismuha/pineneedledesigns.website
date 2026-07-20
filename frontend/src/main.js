@@ -35,6 +35,15 @@ if ('serviceWorker' in navigator) {
     let updatePromptTimer = null
     let updateNotificationDelayMinutes = 0
     const updateFoundAtKey = 'pine-needle-update-found-at'
+    const updateReadyKey = 'pine-needle-update-ready'
+
+    const announceUpdateAvailability = (available) => {
+      if (available) window.localStorage.setItem(updateReadyKey, 'true')
+      else window.localStorage.removeItem(updateReadyKey)
+      window.dispatchEvent(new CustomEvent('pwa-update-availability-change', {
+        detail: { available },
+      }))
+    }
 
     const setUpdateAvailable = (registration, available) => {
       const worker = registration.active || navigator.serviceWorker.controller
@@ -75,6 +84,7 @@ if ('serviceWorker' in navigator) {
       }
 
       setUpdateAvailable(registration, true)
+      announceUpdateAvailability(true)
       updatePromptShown = true
 
       const dialog = document.createElement('dialog')
@@ -108,6 +118,7 @@ if ('serviceWorker' in navigator) {
 
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       window.localStorage.removeItem(updateFoundAtKey)
+      announceUpdateAvailability(false)
       window.clearTimeout(updatePromptTimer)
       // Claiming the very first visit should not cause an unnecessary reload.
       if (!hasActiveController) {
@@ -159,6 +170,16 @@ if ('serviceWorker' in navigator) {
 
         if (installedPwa) {
           window.addEventListener('pwa-manual-update-check', handleManualUpdateCheck)
+          window.addEventListener('pwa-install-waiting-update', (event) => {
+            if (!registration.waiting) {
+              announceUpdateAvailability(false)
+              event.detail?.complete?.(false)
+              return
+            }
+            setUpdateAvailable(registration, false)
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+            event.detail?.complete?.(true)
+          })
           window.addEventListener('pwa-update-delay-change', (event) => {
             updateNotificationDelayMinutes = Number(event.detail?.minutes) || 0
             window.clearTimeout(updatePromptTimer)
@@ -167,7 +188,13 @@ if ('serviceWorker' in navigator) {
           })
         }
 
-        promptForUpdate(registration)
+        const savedUpdateIsReady = Boolean(
+          registration.waiting && window.localStorage.getItem(updateReadyKey) === 'true'
+        )
+        announceUpdateAvailability(savedUpdateIsReady)
+        // Choosing Later turns Settings into the persistent path back to the
+        // update, so reopening the app does not repeat the prompt.
+        if (!savedUpdateIsReady) promptForUpdate(registration)
         registration.addEventListener('updatefound', () => {
           const installingWorker = registration.installing
           installingWorker?.addEventListener('statechange', () => {

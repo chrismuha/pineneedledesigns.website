@@ -4,6 +4,7 @@ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../api/dashboard.js'
 import { getDashboardFooterButtonDepthEnabled, getDashboardLiquidGlassEnabled, getDashboardLiquidGlassIntensity, getDashboardStatusBarColorEnabled } from '../utils/dashboardAppearance.js'
 import { setDashboardToastTimeout } from '../utils/dashboardToast.js'
+import { isInstalledPwa } from '../utils/pwaDisplayMode.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,6 +16,9 @@ const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 const liquidGlassIntensity = ref(getDashboardLiquidGlassIntensity())
 const footerButtonDepthEnabled = ref(getDashboardFooterButtonDepthEnabled())
 const statusBarColorEnabled = ref(getDashboardStatusBarColorEnabled())
+const updateAvailable = ref(
+  isInstalledPwa() && window.localStorage.getItem('pine-needle-update-ready') === 'true'
+)
 let nextToastId = 0
 
 const dismissToast = (id) => {
@@ -38,6 +42,10 @@ const handleStatusBarColorChange = (event) => {
   statusBarColorEnabled.value = event.detail?.enabled !== false
 }
 
+const handleUpdateAvailabilityChange = (event) => {
+  updateAvailable.value = event.detail?.available === true
+}
+
 const liquidGlassStyle = computed(() => {
   const amount = Math.min(1, Math.max(0, liquidGlassIntensity.value / 100))
   return {
@@ -57,6 +65,7 @@ onMounted(async () => {
   window.addEventListener('dashboard-toast', handleToast)
   window.addEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
   window.addEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
+  window.addEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
   try {
     const settings = await dashboardApi.getSettings()
     setDashboardToastTimeout(settings.toastTimeoutSeconds ?? 6)
@@ -66,6 +75,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('dashboard-toast', handleToast)
   window.removeEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
   window.removeEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
+  window.removeEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
 })
 
 const tabAtPoint = (x, y) =>
@@ -249,6 +259,9 @@ const isActive = (path) => {
       >
         <i :class="['bi', item.icon, 'menu-icon']" aria-hidden="true"></i>
         <span class="label">{{ item.label }}</span>
+        <span v-if="item.to === '/dashboard/settings' && updateAvailable" class="update-available-dot">
+          <span class="visually-hidden">Update available</span>
+        </span>
       </RouterLink>
 
     </nav>
@@ -530,24 +543,11 @@ const isActive = (path) => {
     touch-action: none;
   }
 
-  /* Native iOS tab bars extend their surface to the screen edge, then keep
-     their controls clear of the home indicator. Limit that treatment to the
-     installed app so the mobile website retains its floating navigation. */
+  /* Keep the floating pill intact, but place it lower in the installed app.
+     The safe-area inset keeps it clear of the iPhone home indicator. */
   @media (display-mode: standalone) {
-    .dashboard-shell {
-      --mobile-nav-height: calc(75px + env(safe-area-inset-bottom));
-    }
-
     .bottom-nav {
-      right: 0;
-      bottom: 0;
-      left: 0;
-      min-height: calc(68px + env(safe-area-inset-bottom));
-      padding: 7px 12px calc(7px + env(safe-area-inset-bottom));
-      border-right: 0;
-      border-bottom: 0;
-      border-left: 0;
-      border-radius: 24px 24px 0 0;
+      bottom: env(safe-area-inset-bottom);
     }
   }
 
@@ -648,6 +648,20 @@ const isActive = (path) => {
     user-select: none;
     -webkit-user-drag: none;
     transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .update-available-dot {
+    position: absolute;
+    top: 7px;
+    right: max(9px, 19%);
+    z-index: 3;
+    width: 9px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #d62945;
+    box-shadow: 0 1px 4px rgba(116, 12, 34, .3);
+    pointer-events: none;
   }
 
   .menu-icon {
