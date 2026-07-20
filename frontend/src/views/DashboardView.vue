@@ -558,6 +558,7 @@ const isActive = (path) => {
       min-height: 52px;
       padding-block: 5px;
       -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
     }
   }
 
@@ -725,11 +726,18 @@ const isActive = (path) => {
     filter: drop-shadow(0 1px 1px var(--dashboard-footer-bottom-tab-active-menu-icon-shadow));
   }
 
-  .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
     background: linear-gradient(180deg, var(--dashboard-footer-bottom-tab-surface-3), var(--dashboard-footer-bottom-tab-surface-4));
     border-color: var(--dashboard-footer-bottom-tab-border-2);
     color: var(--dashboard-footer-bottom-tab-text-2);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .bottom-tab:hover:not(.active) {
+      background: linear-gradient(180deg, var(--dashboard-footer-bottom-tab-surface-3), var(--dashboard-footer-bottom-tab-surface-4));
+      border-color: var(--dashboard-footer-bottom-tab-border-2);
+      color: var(--dashboard-footer-bottom-tab-text-2);
+    }
   }
 
   .bottom-tab:focus-visible {
