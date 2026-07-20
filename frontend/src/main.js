@@ -33,6 +33,11 @@ if ('serviceWorker' in navigator) {
     let hasActiveController = Boolean(navigator.serviceWorker.controller)
     let updatePromptShown = false
 
+    const setUpdateAvailable = (registration, available) => {
+      const worker = registration.active || navigator.serviceWorker.controller
+      worker?.postMessage({ type: available ? 'SET_UPDATE_AVAILABLE' : 'CLEAR_UPDATE_AVAILABLE' })
+    }
+
     const promptForUpdate = (registration) => {
       if (!registration.waiting || updatePromptShown) return
 
@@ -43,6 +48,7 @@ if ('serviceWorker' in navigator) {
         return
       }
 
+      setUpdateAvailable(registration, true)
       updatePromptShown = true
 
       const dialog = document.createElement('dialog')
@@ -65,6 +71,7 @@ if ('serviceWorker' in navigator) {
       })
       dialog.addEventListener('close', () => {
         if (dialog.returnValue === 'update') {
+          setUpdateAvailable(registration, false)
           registration.waiting?.postMessage({ type: 'SKIP_WAITING' })
         }
         dialog.remove()

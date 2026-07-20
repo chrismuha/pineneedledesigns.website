@@ -1,20 +1,76 @@
+const UPDATE_NOTIFICATION_TAG = 'pine-needle-app-update';
+const UPDATE_STATE_CACHE = 'pine-needle-update-state';
+const UPDATE_STATE_URL = '/__pine-needle-update-available__';
+let updateAvailable = false;
+
+const setUpdateState = async (available) => {
+  updateAvailable = available;
+  const cache = await caches.open(UPDATE_STATE_CACHE);
+  if (available) await cache.put(UPDATE_STATE_URL, new Response('waiting'));
+  else await cache.delete(UPDATE_STATE_URL);
+};
+
+const hasWaitingUpdate = async () => (
+  updateAvailable || Boolean(await caches.match(UPDATE_STATE_URL, { cacheName: UPDATE_STATE_CACHE }))
+);
+
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data?.type === 'SET_UPDATE_AVAILABLE') {
+    event.waitUntil((async () => {
+      await setUpdateState(true);
+      await showUpdateNotification();
+    })());
+  }
+  if (event.data?.type === 'CLEAR_UPDATE_AVAILABLE') {
+    event.waitUntil((async () => {
+      await setUpdateState(false);
+      await clearUpdateNotification();
+    })());
+  }
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  // An activating worker is the installed update, so its update alert is done.
+  event.waitUntil((async () => {
+    await setUpdateState(false);
+    await clearUpdateNotification();
+    await self.clients.claim();
+  })());
 });
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
 const BUILD_ID = '__PINE_NEEDLE_BUILD_ID__';
 
-const updateAppBadge = async () => {
+const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;
   const notifications = await self.registration.getNotifications();
-  if (notifications.length) await self.navigator.setAppBadge(notifications.length);
+  const visibleCount = notifications.filter((notification) => notification.tag !== excludedTag).length;
+  const badgeCount = Math.max(visibleCount, await hasWaitingUpdate() ? 1 : 0);
+  if (badgeCount) await self.navigator.setAppBadge(badgeCount);
   else if (self.navigator.clearAppBadge) await self.navigator.clearAppBadge();
+};
+
+const showUpdateNotification = async () => {
+  if (Notification.permission === 'granted') {
+    await self.registration.showNotification('Pine Needle Designs update available', {
+      body: 'An app update is ready. Open Pine Needle Designs and install it to clear this alert.',
+      badge: '/pwa-icon-192.png',
+      icon: '/pwa-icon-192.png',
+      tag: UPDATE_NOTIFICATION_TAG,
+      renotify: false,
+      requireInteraction: true,
+      data: { url: '/dashboard', type: 'app-update' },
+    });
+  }
+  await updateAppBadge();
+};
+
+const clearUpdateNotification = async () => {
+  const notifications = await self.registration.getNotifications({ tag: UPDATE_NOTIFICATION_TAG });
+  notifications.forEach((notification) => notification.close());
+  await updateAppBadge(UPDATE_NOTIFICATION_TAG);
 };
 
 self.addEventListener('push', (event) => {
@@ -41,11 +97,12 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
+  const isAppUpdate = event.notification.data?.type === 'app-update';
+  if (!isAppUpdate) event.notification.close();
   const targetUrl = new URL(event.notification.data?.url || '/dashboard', self.location.origin).href;
 
   event.waitUntil((async () => {
-    await updateAppBadge();
+    await updateAppBadge(isAppUpdate ? '' : event.notification.tag);
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const existing = windows.find((client) => new URL(client.url).origin === self.location.origin);
     if (existing) {
@@ -53,5 +110,15 @@ self.addEventListener('notificationclick', (event) => {
       return existing.focus();
     }
     return self.clients.openWindow(targetUrl);
+  })());
+});
+
+self.addEventListener('notificationclose', (event) => {
+  event.waitUntil((async () => {
+    if (event.notification.data?.type === 'app-update' && await hasWaitingUpdate()) {
+      await showUpdateNotification();
+      return;
+    }
+    await updateAppBadge(event.notification.tag);
   })());
 });
