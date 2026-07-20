@@ -280,6 +280,7 @@ const isActive = (path) => {
 </template>
 
 <style src="../styles/dashboard.css"></style>
+<style src="../styles/dashboard-footer-tokens.css"></style>
 
 <style scoped>
 .dashboard-layout {
@@ -552,6 +553,7 @@ const isActive = (path) => {
     .bottom-tab {
       min-height: 52px;
       padding-block: 5px;
+      -webkit-tap-highlight-color: transparent;
     }
   }
 
