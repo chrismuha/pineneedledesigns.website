@@ -302,13 +302,17 @@ export const captureOrder = async (req, res) => {
       const itemSummary = firstItem
         ? `${itemCount} item${itemCount === 1 ? '' : 's'}: ${firstItem.title}${extraItemTypes ? ` +${extraItemTypes} more` : ''}`
         : `${itemCount} item${itemCount === 1 ? '' : 's'}`;
-      sendPushNotification({
-        title: `New order #${persistedOrder.orderNumber} · ${money(summary.finalTotal)}`,
-        body: `${shippingAddress.name} purchased ${itemSummary}. Tap to open the order.`,
-        url: `/dashboard/orders?order=${persistedOrder.id}`,
-        tag: `order-${persistedOrder.id}`,
-        type: 'order',
-      }).catch((pushErr) => console.error('Order push notification failed:', pushErr));
+      try {
+        await sendPushNotification({
+          title: `New order #${persistedOrder.orderNumber} · ${money(summary.finalTotal)}`,
+          body: `${shippingAddress.name} purchased ${itemSummary}. Tap to open the order.`,
+          url: `/dashboard/orders?order=${persistedOrder.id}`,
+          tag: `order-${persistedOrder.id}`,
+          type: 'order',
+        });
+      } catch (pushErr) {
+        console.error('Order push notification failed:', pushErr);
+      }
     }
 
     const itemsHtml = items.map((item) => `

@@ -132,13 +132,17 @@ export const captureBookingDeposit = async (req, res) => {
     }
 
     if (deposit) {
-      sendPushNotification({
-        title: `New ${booking.title}`,
-        body: `${deposit.customer.name} paid $${booking.amount}. Tap for booking details.`,
-        url: `/dashboard?notice=booking&service=${encodeURIComponent(service)}&payment=${encodeURIComponent(order.id)}`,
-        tag: `booking-${order.id}`,
-        type: 'booking',
-      }).catch((pushErr) => console.error('Booking push notification failed:', pushErr));
+      try {
+        await sendPushNotification({
+          title: `New ${booking.title}`,
+          body: `${deposit.customer.name} paid $${booking.amount}. Tap for booking details.`,
+          url: `/dashboard?notice=booking&service=${encodeURIComponent(service)}&payment=${encodeURIComponent(order.id)}`,
+          tag: `booking-${order.id}`,
+          type: 'booking',
+        });
+      } catch (pushErr) {
+        console.error('Booking push notification failed:', pushErr);
+      }
     }
 
     res.json({

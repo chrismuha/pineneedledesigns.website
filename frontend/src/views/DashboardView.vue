@@ -195,13 +195,13 @@ const isActive = (path) => {
           </RouterLink>
 
           <div class="sidebar-footer">
-            <h2 class="external-site">
+            <div class="external-site">
               <p>Pine Needle Designs</p>
-              <a href="https://pineneedledesigns.store/" target="_block">
+              <a href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-arrow-up-right-circle-fill"></i>
                 <span class="info-box">External Site</span>
               </a>
-            </h2>
+            </div>
 
           </div>
         </div>
@@ -548,6 +548,13 @@ const isActive = (path) => {
   @media (display-mode: standalone) {
     .bottom-nav {
       bottom: max(10px, calc(env(safe-area-inset-bottom) - 14px));
+      min-height: 64px;
+      padding: 5px 7px;
+    }
+
+    .bottom-tab {
+      min-height: 52px;
+      padding-block: 5px;
     }
   }
 

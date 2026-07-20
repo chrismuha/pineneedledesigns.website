@@ -25,16 +25,21 @@ export const subscribeToPush = async (req, res) => {
     return res.status(400).json({ error: 'This device returned an invalid notification subscription.' });
   }
 
+  const preferences = {
+    orders: req.body?.preferences?.orders !== false,
+    bookings: req.body?.preferences?.bookings !== false,
+  };
   const subscription = await PushSubscription.findOneAndUpdate(
     { endpoint: req.body.endpoint },
     {
       keys: req.body.keys,
       userAgent: String(req.get('user-agent') || '').slice(0, 500),
       lastSeenAt: new Date(),
+      preferences,
     },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
-  res.status(201).json({ subscribed: true, id: subscription.id });
+  res.status(201).json({ subscribed: true, id: subscription.id, preferences: subscription.preferences });
 };
 
 export const unsubscribeFromPush = async (req, res) => {
@@ -51,5 +56,11 @@ export const sendTestPush = async (_req, res) => {
     tag: 'push-test',
     type: 'test',
   });
+  if (result.sent === 0) {
+    return res.status(503).json({
+      error: 'No subscribed device accepted the test notification. Re-enable alerts on this device and try again.',
+      ...result,
+    });
+  }
   res.json(result);
 };

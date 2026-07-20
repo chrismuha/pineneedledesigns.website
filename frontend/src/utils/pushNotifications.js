@@ -1,5 +1,31 @@
 import { isInstalledPwa } from './pwaDisplayMode.js'
 
+const PUSH_PREFERENCES_KEY = 'pine-needle-push-alert-preferences'
+const defaultPreferences = { orders: true, bookings: true, updates: true }
+
+export const getPushAlertPreferences = () => {
+  try {
+    return { ...defaultPreferences, ...JSON.parse(window.localStorage.getItem(PUSH_PREFERENCES_KEY) || '{}') }
+  } catch {
+    return { ...defaultPreferences }
+  }
+}
+
+const subscriptionPayload = (subscription, preferences = getPushAlertPreferences()) => ({
+  ...subscription.toJSON(),
+  preferences: {
+    orders: preferences.orders !== false,
+    bookings: preferences.bookings !== false,
+  },
+})
+
+const syncSubscription = (subscription, preferences) => fetch('/api/push/subscribe', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(subscriptionPayload(subscription, preferences)),
+})
+
 const base64UrlToUint8Array = (value) => {
   const padding = '='.repeat((4 - (value.length % 4)) % 4)
   const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/')
@@ -18,7 +44,17 @@ export const getPushState = async () => {
   if (!pushSupported()) return { supported: false, subscribed: false, permission: 'unsupported' }
   const registration = await navigator.serviceWorker.ready
   const subscription = await registration.pushManager.getSubscription()
-  return { supported: true, subscribed: Boolean(subscription), permission: Notification.permission }
+  if (subscription && Notification.permission === 'granted') {
+    // Refresh the server copy in case the database was restored or iOS rotated
+    // the endpoint while the Home Screen app was not running.
+    await syncSubscription(subscription).catch(() => {})
+  }
+  return {
+    supported: true,
+    subscribed: Boolean(subscription),
+    permission: Notification.permission,
+    preferences: getPushAlertPreferences(),
+  }
 }
 
 export const enablePushNotifications = async () => {
@@ -44,13 +80,34 @@ export const enablePushNotifications = async () => {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(subscription),
+    body: JSON.stringify(subscriptionPayload(subscription)),
   })
   if (!response.ok) {
     const data = await response.json().catch(() => ({}))
     throw new Error(data.error || 'This phone could not be subscribed.')
   }
   return subscription
+}
+
+export const setPushAlertPreferences = async (preferences) => {
+  const normalized = {
+    orders: preferences.orders !== false,
+    bookings: preferences.bookings !== false,
+    updates: preferences.updates !== false,
+  }
+  if (pushSupported()) {
+    const registration = await navigator.serviceWorker.ready
+    const subscription = await registration.pushManager.getSubscription()
+    if (subscription) {
+      const response = await syncSubscription(subscription, normalized)
+      if (!response.ok) throw new Error('Notification preferences could not be saved on the server.')
+    }
+  }
+  window.localStorage.setItem(PUSH_PREFERENCES_KEY, JSON.stringify(normalized))
+  window.dispatchEvent(new CustomEvent('pwa-update-alert-preference-change', {
+    detail: { enabled: normalized.updates },
+  }))
+  return normalized
 }
 
 export const disablePushNotifications = async () => {
@@ -68,5 +125,8 @@ export const disablePushNotifications = async () => {
 
 export const sendTestPushNotification = async () => {
   const response = await fetch('/api/push/test', { method: 'POST', credentials: 'include' })
-  if (!response.ok) throw new Error('The test notification could not be sent.')
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}))
+    throw new Error(data.error || 'The test notification could not be sent.')
+  }
 }

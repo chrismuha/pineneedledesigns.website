@@ -8,6 +8,10 @@ const pushSubscriptionSchema = new mongoose.Schema({
   },
   userAgent: { type: String, default: '' },
   lastSeenAt: { type: Date, default: Date.now },
+  preferences: {
+    orders: { type: Boolean, default: true },
+    bookings: { type: Boolean, default: true },
+  },
 }, { timestamps: true });
 
 export const PushSubscription = mongoose.model('PushSubscription', pushSubscriptionSchema);

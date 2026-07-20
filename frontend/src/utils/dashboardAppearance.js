@@ -1,6 +1,7 @@
 const LIQUID_GLASS_KEY = 'dashboard-liquid-glass-enabled'
 const LIQUID_GLASS_INTENSITY_KEY = 'dashboard-liquid-glass-intensity'
-const FOOTER_BUTTON_DEPTH_KEY = 'dashboard-footer-button-depth-enabled'
+// v2 separates the website's raised default from the PWA's flat iOS default.
+const FOOTER_BUTTON_DEPTH_KEY = 'dashboard-footer-button-depth-enabled-v2'
 const DARK_PHOTO_EDITOR_KEY = 'dashboard-dark-photo-editor-enabled'
 const STATUS_BAR_COLOR_KEY = 'dashboard-status-bar-color-enabled'
 let liquidGlassPreview
@@ -29,10 +30,16 @@ const getStoredLiquidGlassIntensity = () => {
 }
 
 const getStoredFooterButtonDepthEnabled = () => {
+  const installedPwa = (
+    window.matchMedia('(display-mode: standalone)').matches
+    || window.matchMedia('(display-mode: fullscreen)').matches
+    || window.navigator.standalone === true
+  )
   try {
-    return window.localStorage.getItem(FOOTER_BUTTON_DEPTH_KEY) !== 'false'
+    const storedValue = window.localStorage.getItem(FOOTER_BUTTON_DEPTH_KEY)
+    return storedValue === null ? !installedPwa : storedValue === 'true'
   } catch {
-    return true
+    return !installedPwa
   }
 }
 

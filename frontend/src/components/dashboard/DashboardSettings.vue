@@ -24,8 +24,10 @@ import { isInstalledPwa } from '../../utils/pwaDisplayMode.js'
 import {
   disablePushNotifications,
   enablePushNotifications,
+  getPushAlertPreferences,
   getPushState,
   sendTestPushNotification,
+  setPushAlertPreferences,
 } from '../../utils/pushNotifications.js'
 
 const loading = ref(true)
@@ -35,6 +37,7 @@ const updateChecking = ref(false)
 const installedPwa = isInstalledPwa()
 const updateAvailable = ref(installedPwa && window.localStorage.getItem('pine-needle-update-ready') === 'true')
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
+const alertPreferences = ref(getPushAlertPreferences())
 const error = ref('')
 const form = ref({
   freeShippingEnabled: true,
@@ -86,6 +89,19 @@ const togglePush = async () => {
   } catch (err) {
     error.value = err.message
     showDashboardToast(err.message, { title: 'Notifications unavailable' })
+  } finally {
+    pushBusy.value = false
+  }
+}
+
+const saveAlertPreferences = async () => {
+  pushBusy.value = true
+  try {
+    alertPreferences.value = await setPushAlertPreferences(alertPreferences.value)
+    showDashboardToast('Notification preferences were saved for this device.', { type: 'success' })
+  } catch (err) {
+    showDashboardToast(err.message, { title: 'Preferences not saved' })
+    alertPreferences.value = getPushAlertPreferences()
   } finally {
     pushBusy.value = false
   }
@@ -317,6 +333,22 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
+      <fieldset v-if="installedPwa" class="alert-type-settings">
+        <legend>Alert types on this device</legend>
+        <label>
+          <span><strong>Order alerts</strong><small>Notify me when a new paid order is received.</small></span>
+          <input v-model="alertPreferences.orders" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy || !pushState.subscribed" @change="saveAlertPreferences">
+        </label>
+        <label>
+          <span><strong>Booking alerts</strong><small>Notify me when a fitting or bridal deposit is paid.</small></span>
+          <input v-model="alertPreferences.bookings" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy || !pushState.subscribed" @change="saveAlertPreferences">
+        </label>
+        <label>
+          <span><strong>App-update alerts</strong><small>Show automatic update prompts, banners, and badges.</small></span>
+          <input v-model="alertPreferences.updates" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy" @change="saveAlertPreferences">
+        </label>
+      </fieldset>
+
       <div v-if="installedPwa" class="app-update-setting">
         <div class="app-update-setting__copy">
           <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
@@ -413,7 +445,7 @@ onBeforeUnmount(() => {
 .settings-page { width: min(100%, 820px); margin: 0 auto; }
 .settings-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
 .settings-heading__icon { display: grid; width: 54px; height: 54px; flex: 0 0 54px; place-items: center; border-radius: 16px; background: var(--dashboard-green-bg); color: #187636; font-size: 1.4rem; }
-.settings-heading h1 { margin: 0; color: #18231b; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1.1; }
+.settings-heading h1 { margin: 0; color: #18231b; font-size: 2rem; font-weight: 400; line-height: 1.1; }
 .settings-heading p { margin: 6px 0 0; color: #607066; font-size: .98rem; }
 .settings-card { overflow: hidden; border: 1px solid #dce5df; border-radius: 20px; background: #fff; box-shadow: 0 12px 35px rgba(28, 67, 39, .08); }
 .section-heading { display: flex; align-items: center; justify-content: space-between; padding: 24px 26px 20px; border-bottom: 1px solid #e8eeea; }
@@ -455,6 +487,13 @@ onBeforeUnmount(() => {
 .push-settings .push-settings__sound-help { margin-top: 8px; color: #496052; }
 .push-settings__actions { display: flex; flex: 0 0 auto; gap: 8px; }
 .push-settings__actions button { min-height: 42px; white-space: nowrap; }
+.alert-type-settings { display: grid; gap: 0; margin: 0 26px 26px; padding: 0; overflow: hidden; border: 1px solid #dce8df; border-radius: 14px; }
+.alert-type-settings legend { width: 100%; margin: 0; padding: 14px 18px; border-bottom: 1px solid #e5ede7; background: #f5faf6; color: #273b2d; font-size: .9rem; font-weight: 800; }
+.alert-type-settings > label { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 18px; cursor: pointer; }
+.alert-type-settings > label + label { border-top: 1px solid #edf2ee; }
+.alert-type-settings label > span { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.alert-type-settings strong { color: #273b2d; font-size: .9rem; }
+.alert-type-settings small { color: #68766c; font-size: .8rem; line-height: 1.4; }
 .app-update-setting { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #cfe4d5; border-radius: 14px; background: #f5fbf7; }
 .app-update-setting__copy { display: flex; align-items: center; gap: 12px; }
 .app-update-setting__copy > i { color: var(--dashboard-green); font-size: 1.35rem; }
@@ -476,11 +515,12 @@ onBeforeUnmount(() => {
   .settings-page { padding: 20px 16px 120px; }
   .settings-heading { align-items: flex-start; margin-bottom: 20px; }
   .settings-heading__icon { width: 46px; height: 46px; flex-basis: 46px; border-radius: 13px; }
-  .settings-heading h1 { font-size: 1.75rem; }
+  .settings-heading h1 { font-size: 1.65rem; }
   .settings-heading p { font-size: .9rem; }
   .settings-card { border-radius: 16px; }
   .section-heading { padding: 20px; }
   .toggle-row { align-items: flex-start; margin: 18px; padding: 16px; }
+  .alert-type-settings { margin: 0 18px 18px; }
   .toggle-input { margin-top: 2px; }
   .glass-intensity-setting { margin: -10px 18px 18px; padding: 14px 16px; }
   .settings-fields { grid-template-columns: 1fr; gap: 12px; padding: 0 18px 18px; }

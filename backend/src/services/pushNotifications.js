@@ -25,15 +25,25 @@ export const sendPushNotification = async ({
   if (!pushNotificationsConfigured) return { sent: 0 };
 
   const subscriptions = await PushSubscription.find({}).lean();
+  const eligibleSubscriptions = subscriptions.filter((subscription) => {
+    if (type === 'order') return subscription.preferences?.orders !== false;
+    if (type === 'booking') return subscription.preferences?.bookings !== false;
+    return true;
+  });
   const payload = JSON.stringify({ title, body, url, tag, type, icon });
   let sent = 0;
 
-  await Promise.all(subscriptions.map(async (subscription) => {
+  await Promise.all(eligibleSubscriptions.map(async (subscription) => {
     try {
       await webpush.sendNotification({
         endpoint: subscription.endpoint,
         keys: subscription.keys,
-      }, payload, { TTL: 60 * 60 });
+      }, payload, {
+        // Keep alerts available if the phone is temporarily offline and ask
+        // the push service to prioritize these time-sensitive store events.
+        TTL: 24 * 60 * 60,
+        urgency: 'high',
+      });
       sent += 1;
     } catch (error) {
       if (error?.statusCode === 404 || error?.statusCode === 410) {

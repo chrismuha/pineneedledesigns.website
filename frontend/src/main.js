@@ -6,6 +6,7 @@ import router from './router'
 import { useCatalogStore } from './stores/catalog.js'
 import { isInstalledPwa } from './utils/pwaDisplayMode.js'
 import { applyStoredDashboardStatusBarColor } from './utils/dashboardAppearance.js'
+import { getPushAlertPreferences } from './utils/pushNotifications.js'
 
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'
@@ -34,6 +35,7 @@ if ('serviceWorker' in navigator) {
     let updatePromptShown = false
     let updatePromptTimer = null
     let updateNotificationDelayMinutes = 0
+    let updateAlertsEnabled = getPushAlertPreferences().updates !== false
     const updateFoundAtKey = 'pine-needle-update-found-at'
     const updateReadyKey = 'pine-needle-update-ready'
 
@@ -66,6 +68,10 @@ if ('serviceWorker' in navigator) {
         return
       }
 
+      // A manual check is an explicit request and still presents the update.
+      // Disabling update alerts only suppresses automatic prompts and badges.
+      if (!immediate && !updateAlertsEnabled) return
+
       if (!immediate && updateNotificationDelayMinutes > 0) {
         let updateFoundAt = Number(window.localStorage.getItem(updateFoundAtKey))
         if (!Number.isFinite(updateFoundAt) || updateFoundAt <= 0) {
@@ -89,6 +95,7 @@ if ('serviceWorker' in navigator) {
 
       const dialog = document.createElement('dialog')
       dialog.setAttribute('aria-labelledby', 'pwa-update-title')
+      dialog.id = 'pwa-update-dialog'
       dialog.innerHTML = `
         <form method="dialog" style="font-family:Poppins,system-ui,sans-serif;max-width:360px;padding:24px;margin:0">
           <h2 id="pwa-update-title" style="margin:0 0 10px;color:#1f7a3d;font-size:1.35rem">App update available</h2>
@@ -184,6 +191,22 @@ if ('serviceWorker' in navigator) {
             updateNotificationDelayMinutes = Number(event.detail?.minutes) || 0
             window.clearTimeout(updatePromptTimer)
             updatePromptTimer = null
+            if (registration.waiting) promptForUpdate(registration)
+          })
+          window.addEventListener('pwa-update-alert-preference-change', (event) => {
+            updateAlertsEnabled = event.detail?.enabled !== false
+            if (!updateAlertsEnabled) {
+              window.clearTimeout(updatePromptTimer)
+              updatePromptTimer = null
+              setUpdateAvailable(registration, false)
+              announceUpdateAvailability(false)
+              const dialog = document.getElementById('pwa-update-dialog')
+              if (dialog?.open) {
+                dialog.returnValue = 'later'
+                dialog.close()
+              }
+              return
+            }
             if (registration.waiting) promptForUpdate(registration)
           })
         }
