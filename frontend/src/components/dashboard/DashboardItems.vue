@@ -57,6 +57,8 @@ let editAutoSaveTimer = 0
 let suppressEditAutoSave = false
 
 const editDraftId = (productId) => `edit-${productId}`
+const videoPosterFor = (product, index) =>
+  product?.videoPosters?.[index] || product?.photos?.[0] || ''
 
 const editSnapshot = (product) => JSON.stringify({
   name: String(product?.name || ''),
@@ -1181,6 +1183,7 @@ onBeforeUnmount(() => {
               v-for="(video, index) in product.videos.slice(0, 4)"
               :key="`${product._id}-video-${index}`"
               :src="video"
+              :poster="videoPosterFor(product, index)"
               :aria-label="`${product.name} video ${index + 1}`"
               class="photo video-preview"
               controls
@@ -1532,11 +1535,21 @@ onBeforeUnmount(() => {
           <p class="hint">Uploaded videos are converted and stored in the managed uploads folder.</p>
           <div class="edit-photo-grid">
             <div v-for="(video, index) in String(editingProduct.videos || '').split('\n').filter(Boolean)" :key="video" class="edit-photo-card">
-              <video :src="video" controls />
+              <video
+                :src="video"
+                :poster="editingProduct.videoPosters?.[index] || editingProduct.photos?.[0] || ''"
+                controls
+                preload="metadata"
+              />
               <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeExistingEditVideo(index)">Remove</button>
             </div>
             <div v-for="(video, index) in editVideoFiles" :key="video.previewUrl" class="edit-photo-card">
-              <video :src="video.previewUrl" controls />
+              <video
+                :src="video.previewUrl"
+                :poster="editPhotoFiles[0]?.previewUrl || editingProduct.photos?.[0] || ''"
+                controls
+                preload="metadata"
+              />
               <span class="new-photo-badge">New</span>
               <button type="button" class="dashboard-remove-btn" :disabled="saving" @click="removeNewEditVideo(index)">Remove</button>
             </div>

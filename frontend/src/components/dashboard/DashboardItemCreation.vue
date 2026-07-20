@@ -708,7 +708,12 @@ watch(
         <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
         <div v-if="videoFiles.length" class="photo-grid">
           <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
-            <video :src="video.previewUrl" controls />
+            <video
+              :src="video.previewUrl"
+              :poster="photoFiles[0]?.previewUrl || ''"
+              controls
+              preload="metadata"
+            />
             <button type="button" class="dashboard-remove-btn" @click="removeVideo(index)">Remove</button>
           </div>
         </div>

@@ -101,11 +101,19 @@ const syncDirectory = async (sourceDir, destinationDir, options = {}) => {
 
 await removeStaleBuildAssets()
 
+const buildId = new Date().toISOString()
 const serviceWorkerPath = path.join(docsDir, 'sw.js')
 const serviceWorker = await readFile(serviceWorkerPath, 'utf8')
 await writeFile(
   serviceWorkerPath,
-  serviceWorker.replace('__PINE_NEEDLE_BUILD_ID__', new Date().toISOString()),
+  serviceWorker.replace('__PINE_NEEDLE_BUILD_ID__', buildId),
+)
+
+const builtIndexPath = path.join(docsDir, 'index.html')
+const builtIndex = await readFile(builtIndexPath, 'utf8')
+await writeFile(
+  builtIndexPath,
+  builtIndex.replaceAll('__PINE_NEEDLE_BUILD_ID__', encodeURIComponent(buildId)),
 )
 
 await copyIfExists(path.join(rootDir, 'CNAME'), path.join(docsDir, 'CNAME'))
