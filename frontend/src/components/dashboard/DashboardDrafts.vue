@@ -128,15 +128,15 @@ onMounted(loadDrafts)
 <style src="../../styles/dashboard.css"></style>
 
 <style scoped>
-.page-header p { margin: 6px 0 0; color: #66736a; }
+.page-header p { margin: 6px 0 0; color: var(--dashboard-drafts-page-description-text); }
 .drafts-section { display: grid; gap: 14px; }
-.draft-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px; border: 1px solid #d8eadb; border-radius: 14px; background: #fff; }
-.draft-card h2 { margin: 5px 0; color: #203326; font-size: 1.2rem; }
-.draft-card p { margin: 0; color: #68766c; font-size: .88rem; }
-.draft-type { color: var(--dashboard-green); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.draft-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px; border: 1px solid var(--dashboard-drafts-draft-card-border); border-radius: 14px; background: var(--dashboard-drafts-draft-card-surface); }
+.draft-card h2 { margin: 5px 0; color: var(--dashboard-drafts-draft-card-h2-text); font-size: 14.4pt; }
+.draft-card p { margin: 0; color: var(--dashboard-drafts-draft-card-p-text); font-size: 10.56pt; }
+.draft-type { color: var(--dashboard-primary-action-color); font-size: 9pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .draft-actions { display: flex; flex: none; gap: 10px; }
 .draft-actions a { display: inline-flex; align-items: center; text-decoration: none; }
-.empty-drafts { padding: 28px; border: 1px dashed #bcd6c3; border-radius: 14px; background: #f8fbf9; color: #24783d; text-align: center; text-decoration: none; }
+.empty-drafts { padding: 28px; border: 1px dashed var(--dashboard-drafts-empty-drafts-border); border-radius: 14px; background: var(--dashboard-drafts-empty-drafts-surface); color: var(--dashboard-drafts-empty-drafts-text); text-align: center; text-decoration: none; }
 @media (max-width: 650px) {
   .draft-card { align-items: stretch; flex-direction: column; }
   .draft-actions { display: grid; grid-template-columns: 1fr 1fr; }

@@ -84,11 +84,11 @@ const removeColor = (index) => {
 <style scoped>
 .comfort-color-editor, .color-inputs { display: flex; flex-direction: column; gap: 10px; }
 .comfort-color-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px; }
-select, input { width: 100%; border: 1px solid #cfd8cf; border-radius: 8px; padding: 12px; font: inherit; }
-.add-color, .remove-color { width: fit-content; border: 0; border-radius: 8px; padding: 10px 14px; color: #fff; cursor: pointer; font: inherit; font-weight: 700; }
-.add-color { background: var(--dashboard-green); }
-.remove-color { background: var(--dashboard-red); }
+select, input { width: 100%; border: 1px solid var(--comfort-color-option-editor-input-border); border-radius: 8px; padding: 12px; font: inherit; }
+.add-color, .remove-color { width: fit-content; border: 0; border-radius: 8px; padding: 10px 14px; color: var(--comfort-color-option-editor-remove-color-text); cursor: pointer; font: inherit; font-weight: 700; }
+.add-color { background: var(--dashboard-primary-action-color); }
+.remove-color { background: var(--dashboard-destructive-action-color); }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
-.color-hint { margin: 0; color: #666; font-size: 0.92rem; }
+.color-hint { margin: 0; color: var(--comfort-color-option-editor-color-hint-text); font-size: 11.04pt; }
 @media (max-width: 600px) { .comfort-color-row { grid-template-columns: 1fr; } }
 </style>

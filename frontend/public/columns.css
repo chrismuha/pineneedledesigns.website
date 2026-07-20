@@ -89,7 +89,6 @@ body>section:nth-of-type(5) .grid.grid-4 {
     grid-template-columns: repeat(2, 1fr);
 }
 
-
 /* Responsive overrides */
 @media (max-width: 768px) {
     .grid-3 {

@@ -10,10 +10,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
   <style>
-    html { background-color: #ffffff; }
+    :root { --initial-white: #ffffff; --pwa-status-bar-color: #236b3a; }
+    html { background-color: var(--initial-white); }
     @media (display-mode: standalone) {
-      html { background: #236b3a; }
-      body { background: #ffffff; }
+      html { background: var(--pwa-status-bar-color); }
+      body { background: var(--initial-white); }
       body::before {
         content: '';
         position: fixed;
@@ -22,7 +23,7 @@
         right: 0;
         left: 0;
         height: env(safe-area-inset-top);
-        background: #236b3a;
+        background: var(--pwa-status-bar-color);
         pointer-events: none;
       }
       html[data-pwa-status-bar-color='transparent'] body::before { display: none; }

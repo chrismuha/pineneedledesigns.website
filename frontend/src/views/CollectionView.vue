@@ -468,11 +468,11 @@ const addToCart = async (product) => {
 <style scoped>
 .collection-status {
   margin: 12px 0 0;
-  color: #666;
+  color: var(--collection-view-status-text);
 }
 
 .collection-status--error {
-  color: #b42318;
+  color: var(--collection-view-collection-status-error-text);
 }
 
 .collection-status__retry {

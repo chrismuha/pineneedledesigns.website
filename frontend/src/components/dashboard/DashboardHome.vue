@@ -207,12 +207,12 @@ onMounted(loadStats)
   text-decoration: none;
 }
 
-.notification-detail { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-bottom: 24px; padding: 20px; border: 1px solid #b9dcc3; border-radius: 14px; background: #f1faf4; }
-.notification-detail__icon { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: #d9f1df; color: var(--dashboard-green); font-size: 1.3rem; }
-.notification-detail__eyebrow { color: #28763d; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.notification-detail h2 { margin: 3px 0 5px; color: #203326; font-size: 1.2rem; }
-.notification-detail p { margin: 0; color: #526159; }
-.notification-detail__reference { margin-top: 4px !important; font-size: .78rem; overflow-wrap: anywhere; }
+.notification-detail { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-bottom: 24px; padding: 20px; border: 1px solid var(--dashboard-home-notification-detail-border); border-radius: 14px; background: var(--dashboard-home-notification-detail-surface); }
+.notification-detail__icon { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: var(--dashboard-home-notification-detail-icon-surface); color: var(--dashboard-primary-action-color); font-size: 15.6pt; }
+.notification-detail__eyebrow { color: var(--dashboard-home-notification-detail-eyebrow-text); font-size: 8.88pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.notification-detail h2 { margin: 3px 0 5px; color: var(--dashboard-home-notification-detail-h2-text); font-size: 14.4pt; }
+.notification-detail p { margin: 0; color: var(--dashboard-home-notification-detail-p-text); }
+.notification-detail__reference { margin-top: 4px !important; font-size: 9.36pt; overflow-wrap: anywhere; }
 .notification-detail .btn-primary { text-align: center; text-decoration: none; }
 
 .stats-grid {
@@ -230,13 +230,13 @@ onMounted(loadStats)
 }
 
 .stat-card-link:hover {
-  border-color: var(--dashboard-green);
+  border-color: var(--dashboard-primary-action-color);
 }
 
 .stat-card,
 .recent-section {
-  background: white;
-  border: 1px solid #d8eadb;
+  background: var(--dashboard-home-card-surface);
+  border: 1px solid var(--dashboard-home-recent-section-border);
   border-radius: 14px;
   padding: 24px;
 }
@@ -248,14 +248,14 @@ onMounted(loadStats)
 
 .stat-card h2 {
   margin: 0 0 8px;
-  color: #1f7a3d;
-  font-size: 2rem;
+  color: var(--dashboard-home-stat-card-h2-text);
+  font-size: 24pt;
 }
 
 .stat-card p,
 .recent-date,
 .status-text {
-  color: #666;
+  color: var(--dashboard-home-status-text-text);
 }
 
 .recent-section {
@@ -264,7 +264,7 @@ onMounted(loadStats)
 
 .section-title {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 18pt;
   white-space: nowrap;
 }
 
@@ -298,7 +298,7 @@ onMounted(loadStats)
   min-height: 58px;
   margin-top: 16px;
   padding: 12px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--dashboard-home-recent-empty-link-border);
   border-radius: 10px;
   color: inherit;
   text-decoration: none;
@@ -307,8 +307,8 @@ onMounted(loadStats)
 
 .recent-empty-link:hover,
 .recent-empty-link:focus-visible {
-  border-color: var(--dashboard-green);
-  background: #f7fbf8;
+  border-color: var(--dashboard-primary-action-color);
+  background: var(--dashboard-home-recent-empty-link-surface);
 }
 
 .recent-empty-link .status-text {
@@ -326,11 +326,11 @@ onMounted(loadStats)
   gap: 16px;
   align-items: center;
   padding: 12px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--dashboard-home-recent-card-border);
   border-radius: 10px;
 }
 .recent-card-link { color: inherit; text-decoration: none; }
-.recent-card-link:hover { border-color: var(--dashboard-green); }
+.recent-card-link:hover { border-color: var(--dashboard-primary-action-color); }
 
 .recent-photo {
   width: 72px;
@@ -344,8 +344,8 @@ onMounted(loadStats)
 }
 
 .error-banner {
-  background: #ffe2e2;
-  color: #8a1f1f;
+  background: var(--dashboard-home-error-banner-surface);
+  color: var(--dashboard-home-error-banner-text);
   padding: 12px 16px;
   border-radius: 8px;
 }

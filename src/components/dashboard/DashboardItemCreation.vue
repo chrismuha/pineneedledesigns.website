@@ -221,15 +221,15 @@
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #d8eadb;
+  background: var(--legacy-dashboard-item-creation-card-surface);
+  border: 1px solid var(--legacy-dashboard-item-creation-card-border);
   border-radius: 14px;
   padding: 24px;
 }
 
 .card h2 {
   margin-top: 0;
-  color: #1f7a3d;
+  color: var(--legacy-dashboard-item-creation-card-h2-text);
 }
 
 .form-grid {
@@ -249,7 +249,7 @@ input,
 select,
 textarea {
   width: 100%;
-  border: 1px solid #cfd8cf;
+  border: 1px solid var(--legacy-dashboard-item-creation-textarea-border);
   border-radius: 8px;
   padding: 12px;
   font: inherit;
@@ -272,7 +272,7 @@ textarea {
 }
 
 .property-card {
-  border: 1px solid #d8eadb;
+  border: 1px solid var(--legacy-dashboard-item-creation-property-card-border);
   border-radius: 10px;
   padding: 16px;
 }
@@ -310,7 +310,7 @@ textarea {
 
 .photo-box {
   aspect-ratio: 1;
-  border: 2px dashed #c7d9ca;
+  border: 2px dashed var(--legacy-dashboard-item-creation-photo-box-border);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -319,8 +319,8 @@ textarea {
 
 .green-btn,
 .submit-btn {
-  background: #2ea44f;
-  color: white;
+  background: var(--legacy-dashboard-item-creation-submit-btn-surface);
+  color: var(--legacy-dashboard-item-creation-submit-btn-text);
   border: none;
   border-radius: 8px;
   padding: 10px 14px;
@@ -328,7 +328,7 @@ textarea {
 }
 
 .clear-btn {
-  background: #f3f3f3;
+  background: var(--legacy-dashboard-item-creation-clear-btn-surface);
   border: none;
   border-radius: 8px;
   padding: 10px 14px;
@@ -336,8 +336,8 @@ textarea {
 }
 
 .danger-btn {
-  background: #e74c3c;
-  color: white;
+  background: var(--legacy-dashboard-item-creation-danger-btn-surface);
+  color: var(--legacy-dashboard-item-creation-danger-btn-text);
   border: none;
   border-radius: 8px;
   padding: 10px 14px;
@@ -349,7 +349,7 @@ textarea {
 }
 
 .hint {
-  color: #666;
+  color: var(--legacy-dashboard-item-creation-hint-text);
   margin-top: 8px;
 }
 

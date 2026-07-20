@@ -387,7 +387,7 @@ watch(
 
 <style scoped>
 .page-subtitle {
-  color: #666;
+  color: var(--dashboard-orders-page-description-text);
   margin: 4px 0 0;
 }
 
@@ -398,24 +398,24 @@ watch(
 }
 
 .filter-tab {
-  background: white;
-  border: 1px solid #d8eadb;
-  color: #1f7a3d;
+  background: var(--dashboard-orders-filter-tab-surface);
+  border: 1px solid var(--dashboard-orders-filter-tab-border);
+  color: var(--dashboard-orders-filter-tab-text);
   padding: 8px 14px;
   border-radius: 999px;
   cursor: pointer;
 }
 
 .filter-tab.active {
-  background: var(--dashboard-green);
-  border-color: var(--dashboard-green);
-  color: white;
+  background: var(--dashboard-primary-action-color);
+  border-color: var(--dashboard-primary-action-color);
+  color: var(--dashboard-orders-active-filter-tab-text);
 }
 
 .filter-tab {
-  background: white;
-  border: 1px solid #d8eadb;
-  color: #1f7a3d;
+  background: var(--dashboard-orders-filter-tab-surface);
+  border: 1px solid var(--dashboard-orders-filter-tab-border);
+  color: var(--dashboard-orders-filter-tab-text);
   padding: 8px 14px;
   border-radius: 999px;
   cursor: pointer;
@@ -428,10 +428,10 @@ watch(
 }
 
 .order-card {
-  border: 1px solid #dfe7df;
+  border: 1px solid var(--dashboard-orders-order-card-border);
   border-radius: 12px;
   overflow: hidden;
-  background: white;
+  background: var(--dashboard-orders-card-surface);
 }
 
 .order-card summary {
@@ -449,7 +449,7 @@ watch(
 
 .order-content {
   padding: 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--dashboard-orders-order-content-border);
 }
 
 .order-section {
@@ -457,7 +457,7 @@ watch(
 }
 
 .order-section h3 {
-  color: var(--dashboard-green);
+  color: var(--dashboard-primary-action-color);
   margin-bottom: 12px;
 }
 
@@ -475,7 +475,7 @@ watch(
 .items-table th,
 .items-table td {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--dashboard-orders-items-table-td-border);
 }
 
 .totals {
@@ -492,25 +492,25 @@ watch(
 .final-total {
   font-weight: 700;
   padding-top: 8px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--dashboard-orders-final-total-border);
 }
 
 .badge {
   padding: 6px 10px;
   border-radius: 999px;
-  font-size: .8rem;
+  font-size: 9.6pt;
 }
 
 .badge-paid {
-  background: #e3f8e8;
+  background: var(--dashboard-orders-badge-paid-surface);
 }
 
 .badge-open {
-  background: #dff1ff;
+  background: var(--dashboard-orders-badge-open-surface);
 }
 
 .badge-closed {
-  background: #ffe4e4;
+  background: var(--dashboard-orders-badge-closed-surface);
 }
 
 .order-badges {
@@ -530,31 +530,31 @@ watch(
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  color: white;
+  color: var(--dashboard-orders-action-button-text);
 }
 
 .close-btn {
-  background: var(--dashboard-red);
+  background: var(--dashboard-destructive-action-color);
 }
 
 .reopen-btn {
-  background: var(--dashboard-green);
+  background: var(--dashboard-primary-action-color);
 }
 
 .same-address,
 .status-text,
 .paypal-id {
-  color: #666;
+  color: var(--dashboard-orders-paypal-id-text);
 }
 
 .paypal-id {
-  font-size: 0.9rem;
+  font-size: 10.8pt;
   margin-bottom: 16px;
 }
 
 .error-banner {
-  background: #ffe2e2;
-  color: #8a1f1f;
+  background: var(--dashboard-orders-error-banner-surface);
+  color: var(--dashboard-orders-error-banner-text);
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 16px;

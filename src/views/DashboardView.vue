@@ -58,7 +58,7 @@ const isActive = (path) => {
 .sidebar {
   width: 260px;
   padding: 24px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid var(--legacy-dashboard-view-sidebar-border);
 
   display: flex;
   flex-direction: column;

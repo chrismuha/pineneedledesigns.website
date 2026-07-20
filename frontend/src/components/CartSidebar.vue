@@ -1133,7 +1133,6 @@ const submitCheckout = async () => {
   }
 }
 
-
 .item-total-label {
   font-size: 9.84pt;
   color: var(--cart-ink-subtle);
@@ -1652,9 +1651,9 @@ const submitCheckout = async () => {
   overflow: hidden;
   border: 2px solid transparent;
   border-radius: 999px;
-  background: linear-gradient(135deg, #b82343, #7f1830);
+  background: linear-gradient(135deg, var(--cart-sidebar-btn-collection-cta-surface), var(--cart-sidebar-btn-collection-cta-surface-2));
   color: var(--white);
-  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
+  box-shadow: 0 10px 22px var(--cart-sidebar-btn-collection-cta-shadow);
 }
 
 .btn.collection-cta::before {
@@ -1670,8 +1669,8 @@ const submitCheckout = async () => {
 @media (hover: hover) {
   .btn.collection-cta:hover {
     border-color: transparent;
-    background: linear-gradient(135deg, #b82343, #7f1830);
-    box-shadow: 0 12px 26px rgba(3, 83, 93, 0.38);
+    background: linear-gradient(135deg, var(--cart-sidebar-btn-collection-cta-surface), var(--cart-sidebar-btn-collection-cta-surface-2));
+    box-shadow: 0 12px 26px var(--cart-sidebar-btn-collection-cta-shadow-2);
     transform: translateY(-2px);
   }
 

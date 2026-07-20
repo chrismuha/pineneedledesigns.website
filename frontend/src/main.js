@@ -98,17 +98,17 @@ if ('serviceWorker' in navigator) {
       dialog.id = 'pwa-update-dialog'
       dialog.innerHTML = `
         <form method="dialog" style="font-family:Poppins,system-ui,sans-serif;max-width:360px;padding:24px;margin:0">
-          <h2 id="pwa-update-title" style="margin:0 0 10px;color:#1f7a3d;font-size:1.35rem">App update available</h2>
-          <p style="margin:0 0 22px;color:#4f5f54;line-height:1.5">A new version of Pine Needle Designs is ready. Update now?</p>
+          <h2 id="pwa-update-title" style="margin:0 0 10px;color:var(--app-update-dialog-title-text);font-size:16.2pt">App update available</h2>
+          <p style="margin:0 0 22px;color:var(--app-update-dialog-message-text);line-height:1.5">A new version of Pine Needle Designs is ready. Update now?</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <button value="later" style="min-height:48px;border:1px solid #b9c9bd;border-radius:10px;background:#fff;color:#294530;font:inherit;font-weight:700">Later</button>
-            <button value="update" style="min-height:48px;border:0;border-radius:10px;background:#2ea44f;color:#fff;font:inherit;font-weight:700">Update now</button>
+            <button value="later" style="min-height:48px;border:1px solid var(--app-update-dialog-secondary-button-border);border-radius:10px;background:var(--app-update-dialog-secondary-button-surface);color:var(--app-update-dialog-secondary-button-text);font:inherit;font-weight:700">Later</button>
+            <button value="update" style="min-height:48px;border:0;border-radius:10px;background:var(--app-update-dialog-primary-button-surface);color:var(--app-update-dialog-primary-button-text);font:inherit;font-weight:700">Update now</button>
           </div>
         </form>`
       Object.assign(dialog.style, {
-        border: '1px solid #d8eadb',
+        border: '1px solid var(--app-update-dialog-border)',
         borderRadius: '16px',
-        boxShadow: '0 20px 60px rgba(17, 55, 30, .22)',
+        boxShadow: '0 20px 60px var(--app-update-dialog-shadow)',
         maxWidth: 'calc(100vw - 32px)',
         padding: '0',
       })

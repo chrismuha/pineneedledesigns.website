@@ -1093,7 +1093,6 @@ const submitCheckout = async () => {
   }
 }
 
-
 .item-total-label {
   font-size: 9.84pt;
   color: var(--cart-ink-subtle);

@@ -177,7 +177,7 @@ onMounted(() => {
 .dashboard-signin__hint {
   max-width: 640px;
   margin: 0;
-  color: #666;
+  color: var(--home-view-dashboard-signin-hint-text);
   line-height: 1.6;
 }
 
@@ -186,9 +186,9 @@ onMounted(() => {
 }
 
 .dashboard-signin__button--secondary {
-  background: #fff;
+  background: var(--home-view-dashboard-signin-button-secondary-surface);
   color: inherit;
-  border: 1px solid #d8eadb;
+  border: 1px solid var(--home-view-dashboard-signin-button-secondary-border);
 }
 
 .home-product-collections {

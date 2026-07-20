@@ -117,11 +117,11 @@ const removeSize = (index) => {
 <style scoped>
 .size-editor, .size-inputs { display: flex; flex-direction: column; gap: 10px; }
 .size-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px; }
-select, input { width: 100%; border: 1px solid #cfd8cf; border-radius: 8px; padding: 12px; font: inherit; }
-.add-size, .remove-size { width: fit-content; border: 0; border-radius: 8px; padding: 10px 14px; color: #fff; cursor: pointer; font: inherit; font-weight: 700; }
-.add-size { background: var(--dashboard-green); }
-.remove-size { background: var(--dashboard-red); }
+select, input { width: 100%; border: 1px solid var(--size-option-editor-input-border); border-radius: 8px; padding: 12px; font: inherit; }
+.add-size, .remove-size { width: fit-content; border: 0; border-radius: 8px; padding: 10px 14px; color: var(--size-option-editor-remove-size-text); cursor: pointer; font: inherit; font-weight: 700; }
+.add-size { background: var(--dashboard-primary-action-color); }
+.remove-size { background: var(--dashboard-destructive-action-color); }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
-.size-hint { margin: 0; color: #666; font-size: 0.92rem; }
+.size-hint { margin: 0; color: var(--size-option-editor-size-hint-text); font-size: 11.04pt; }
 @media (max-width: 600px) { .size-row { grid-template-columns: 1fr; } }
 </style>

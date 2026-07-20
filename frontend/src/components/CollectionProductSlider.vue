@@ -244,9 +244,9 @@ watch(
   border: 0;
   border-radius: 50%;
   border: 2px solid transparent;
-  background: linear-gradient(135deg, #b82343, #7f1830);
-  color: #fff;
-  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
+  background: linear-gradient(135deg, var(--collection-product-slider-product-slider-quick-controls-button-surface), var(--collection-product-slider-product-slider-quick-controls-button-surface-2));
+  color: var(--collection-product-slider-product-slider-quick-controls-button-text);
+  box-shadow: 0 10px 22px var(--collection-product-slider-product-slider-quick-controls-button-shadow);
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
@@ -266,9 +266,9 @@ watch(
 
 @media (hover: hover) {
   .collection-product-slider__quick-controls button:hover {
-    background: linear-gradient(135deg, #b82343, #7f1830);
+    background: linear-gradient(135deg, var(--collection-product-slider-collection-product-slider-all-surface), var(--collection-product-slider-collection-product-slider-all-surface-2));
     color: var(--white);
-    box-shadow: 0 10px 24px rgba(3, 83, 93, 0.42);
+    box-shadow: 0 10px 24px var(--collection-product-slider-collection-product-slider-all-shadow);
     transform: translateY(-1px) scale(1.04);
   }
 
@@ -361,19 +361,19 @@ watch(
   padding: 11px 18px;
   border-radius: 999px;
   border: 2px solid transparent;
-  background: linear-gradient(135deg, #b82343, #7f1830);
-  color: #fff;
+  background: linear-gradient(135deg, var(--collection-product-slider-collection-product-slider-all-surface), var(--collection-product-slider-collection-product-slider-all-surface-2));
+  color: var(--collection-product-slider-collection-product-slider-all-text);
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 10px 22px rgba(127, 24, 48, 0.32);
+  box-shadow: 0 10px 22px var(--collection-product-slider-collection-product-slider-all-shadow-2);
   transition: box-shadow 160ms ease, transform 160ms ease;
 }
 
 .collection-product-slider__all:hover {
   border-color: transparent;
-  background: linear-gradient(135deg, #b82343, #7f1830);
+  background: linear-gradient(135deg, var(--collection-product-slider-collection-product-slider-all-surface), var(--collection-product-slider-collection-product-slider-all-surface-2));
   color: var(--white);
-  box-shadow: 0 12px 26px rgba(3, 83, 93, 0.38);
+  box-shadow: 0 12px 26px var(--collection-product-slider-collection-product-slider-all-shadow-3);
   transform: translateY(-2px);
 }
 

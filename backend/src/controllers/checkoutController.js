@@ -10,6 +10,12 @@ import { sendPushNotification } from '../services/pushNotifications.js';
 
 const orderMap = new Map();
 const roundMoney = (value) => Number(Number(value || 0).toFixed(2));
+const emailColors = Object.freeze({
+  pageSurface: '#f7f7f7',
+  cardSurface: '#ffffff',
+  divider: '#eeeeee',
+  secondaryText: '#666666',
+});
 
 const findProductByStorefrontId = async (id) => {
   const value = String(id || '').trim();
@@ -317,16 +323,16 @@ export const captureOrder = async (req, res) => {
 
     const itemsHtml = items.map((item) => `
       <tr>
-        <td style="padding:10px;border-bottom:1px solid #eee;">${item.name}</td>
-        <td style="padding:10px;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td>
-        <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;">${money(item.unit_amount.value)}</td>
-        <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;">${money(Number(item.quantity) * Number(item.unit_amount.value))}</td>
+        <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};">${item.name}</td>
+        <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:center;">${item.quantity}</td>
+        <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:right;">${money(item.unit_amount.value)}</td>
+        <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:right;">${money(Number(item.quantity) * Number(item.unit_amount.value))}</td>
       </tr>
     `).join('');
 
     const lineItemsHtml = lineItems.map((line) => `
       <tr>
-        <td style="padding:10px;border-bottom:1px solid #eee;">${line.title}</td>
+        <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};">${line.title}</td>
         <td style="text-align:center;">${line.quantity}</td>
         <td style="text-align:right;">${money(line.subtotal)}</td>
         <td style="text-align:right;">${line.discountPercentDisplay} (${money(line.discountAmount)})</td>
@@ -336,10 +342,10 @@ export const captureOrder = async (req, res) => {
     `).join('');
 
     const html = `
-      <div style="font-family:Arial,sans-serif;background:#f7f7f7;padding:20px;">
-        <div style="max-width:900px;margin:auto;background:white;padding:20px;border-radius:10px;">
+      <div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px;">
+        <div style="max-width:900px;margin:auto;background:${emailColors.cardSurface};padding:20px;border-radius:10px;">
           <h2 style="margin:0;">🧾 New Order Received</h2>
-          <p style="color:#666;">Order ID: <b>${order.id}</b></p>
+          <p style="color:${emailColors.secondaryText};">Order ID: <b>${order.id}</b></p>
           <hr>
           <h3>👤 Customer</h3>
           <p>Type: ${customer.type}<br>Email: ${customer.email}<br>Phone: ${customer.phone}</p>
@@ -364,8 +370,8 @@ export const captureOrder = async (req, res) => {
     const text = `NEW ORDER RECEIVED\nOrder ID: ${order.id}\n\nCUSTOMER\nType: ${customer.type}\nEmail: ${customer.email}\nPhone: ${customer.phone}`;
 
     const customerReceiptHtml = `
-      <div style="font-family:Arial,sans-serif;background:#f7f7f7;padding:20px;">
-        <div style="max-width:700px;margin:auto;background:white;padding:30px;border-radius:10px;">
+      <div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px;">
+        <div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:30px;border-radius:10px;">
           <h2 style="margin-top:0;">Thank you for your order!</h2>
           <p>Hi ${shippingAddress.name},</p>
           <p>Your payment has been successfully received. Below is your receipt.</p>

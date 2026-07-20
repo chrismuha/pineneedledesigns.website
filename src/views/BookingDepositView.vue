@@ -98,18 +98,18 @@ const startPayment = async () => {
 
 <style scoped>
 .booking-deposit-page { min-height: 65vh; display: grid; place-items: center; padding: 56px 18px; }
-.booking-deposit-card { width: min(100%, 560px); padding: clamp(24px, 5vw, 44px); border-radius: 24px; background: #fff; box-shadow: 0 18px 50px rgba(0, 0, 0, .12); }
-.booking-eyebrow { margin: 0 0 8px; color: #8d2635; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.booking-deposit-card { width: min(100%, 560px); padding: clamp(24px, 5vw, 44px); border-radius: 24px; background: var(--legacy-booking-deposit-view-booking-deposit-card-surface); box-shadow: 0 18px 50px var(--legacy-booking-deposit-view-booking-deposit-card-shadow); }
+.booking-eyebrow { margin: 0 0 8px; color: var(--legacy-booking-deposit-view-booking-eyebrow-text); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 h1 { margin: 0 0 14px; }
 .booking-intro { margin-bottom: 28px; font-size: 1.05rem; }
 .booking-form { display: grid; gap: 16px; }
 label { display: grid; gap: 7px; font-weight: 700; }
-input { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid #b8b8b8; border-radius: 10px; font: inherit; }
-input:focus { border-color: #8d2635; outline: 3px solid rgba(141, 38, 53, .16); }
-button { min-height: 50px; margin-top: 4px; border: 0; border-radius: 999px; background: #ffc439; color: #111; font: inherit; font-weight: 800; cursor: pointer; }
-button:hover { background: #f2ba36; }
+input { width: 100%; min-height: 46px; padding: 10px 13px; border: 1px solid var(--legacy-booking-deposit-view-input-border); border-radius: 10px; font: inherit; }
+input:focus { border-color: var(--legacy-booking-deposit-view-input-focus-border); outline: 3px solid var(--legacy-booking-deposit-view-input-focus-focus-ring); }
+button { min-height: 50px; margin-top: 4px; border: 0; border-radius: 999px; background: var(--legacy-booking-deposit-view-button-surface); color: var(--legacy-booking-deposit-view-button-text); font: inherit; font-weight: 800; cursor: pointer; }
+button:hover { background: var(--legacy-booking-deposit-view-button-hover-surface); }
 button:disabled { cursor: wait; opacity: .65; }
-.booking-fine-print { margin: 18px 0 0; color: #555; font-size: .9rem; text-align: center; }
-.booking-notice { margin: 0; color: #624a00; }
-.booking-error { margin: 0; color: #a40000; font-weight: 700; }
+.booking-fine-print { margin: 18px 0 0; color: var(--legacy-booking-deposit-view-booking-fine-print-text); font-size: .9rem; text-align: center; }
+.booking-notice { margin: 0; color: var(--legacy-booking-deposit-view-booking-notice-text); }
+.booking-error { margin: 0; color: var(--legacy-booking-deposit-view-booking-error-text); font-weight: 700; }
 </style>

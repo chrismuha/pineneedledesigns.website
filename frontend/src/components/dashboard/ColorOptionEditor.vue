@@ -152,7 +152,7 @@ const confirmColorRemoval = () => {
 select,
 input {
   width: 100%;
-  border: 1px solid #cfd8cf;
+  border: 1px solid var(--color-option-editor-input-border);
   border-radius: 8px;
   padding: 12px;
   font: inherit;
@@ -164,14 +164,14 @@ input {
   border: 0;
   border-radius: 8px;
   padding: 10px 14px;
-  color: #fff;
+  color: var(--color-option-editor-remove-color-text);
   cursor: pointer;
   font: inherit;
   font-weight: 700;
 }
 
-.add-color { background: var(--dashboard-green); }
-.remove-color { background: var(--dashboard-red); }
+.add-color { background: var(--dashboard-primary-action-color); }
+.remove-color { background: var(--dashboard-destructive-action-color); }
 
 button:disabled {
   cursor: not-allowed;
@@ -180,8 +180,8 @@ button:disabled {
 
 .color-hint {
   margin: 0;
-  color: #666;
-  font-size: 0.92rem;
+  color: var(--color-option-editor-color-hint-text);
+  font-size: 11.04pt;
 }
 
 @media (max-width: 600px) {

@@ -194,10 +194,10 @@
 }
 
 .order-card {
-  border: 1px solid #dfe7df;
+  border: 1px solid var(--legacy-dashboard-orders-order-card-border);
   border-radius: 12px;
   overflow: hidden;
-  background: white;
+  background: var(--legacy-dashboard-orders-order-card-surface);
 }
 
 .order-card summary {
@@ -214,7 +214,7 @@
 
 .order-content {
   padding: 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--legacy-dashboard-orders-order-content-border);
 }
 
 .order-section {
@@ -222,7 +222,7 @@
 }
 
 .order-section h3 {
-  color: #2ea44f;
+  color: var(--legacy-dashboard-orders-order-section-h3-text);
   margin-bottom: 12px;
 }
 
@@ -240,7 +240,7 @@
 .items-table th,
 .items-table td {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--legacy-dashboard-orders-items-table-td-border);
 }
 
 .badge {
@@ -250,15 +250,15 @@
 }
 
 .badge-paid {
-  background: #e3f8e8;
+  background: var(--legacy-dashboard-orders-badge-paid-surface);
 }
 
 .badge-open {
-  background: #dff1ff;
+  background: var(--legacy-dashboard-orders-badge-open-surface);
 }
 
 .badge-closed {
-  background: #ffe4e4;
+  background: var(--legacy-dashboard-orders-badge-closed-surface);
 }
 
 .order-actions {
@@ -276,13 +276,13 @@
 }
 
 .close-btn {
-  background: #d9534f;
-  color: white;
+  background: var(--legacy-dashboard-orders-close-btn-surface);
+  color: var(--legacy-dashboard-orders-close-btn-text);
 }
 
 .edit-btn,
 .reopen-btn {
-  background: #2ea44f;
-  color: white;
+  background: var(--legacy-dashboard-orders-reopen-btn-surface);
+  color: var(--legacy-dashboard-orders-reopen-btn-text);
 }
 </style>

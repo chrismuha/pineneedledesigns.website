@@ -1,5 +1,74 @@
 /* Shared design tokens */
 :root {
+    /* Legacy source-tree component colors. */
+    --legacy-booking-deposit-view-booking-deposit-card-shadow: rgba(0, 0, 0, .12);
+    --legacy-booking-deposit-view-booking-deposit-card-surface: #fff;
+    --legacy-booking-deposit-view-booking-error-text: #a40000;
+    --legacy-booking-deposit-view-booking-eyebrow-text: #8d2635;
+    --legacy-booking-deposit-view-booking-fine-print-text: #555;
+    --legacy-booking-deposit-view-booking-notice-text: #624a00;
+    --legacy-booking-deposit-view-button-hover-surface: #f2ba36;
+    --legacy-booking-deposit-view-button-surface: #ffc439;
+    --legacy-booking-deposit-view-button-text: #111;
+    --legacy-booking-deposit-view-input-border: #b8b8b8;
+    --legacy-booking-deposit-view-input-focus-border: #8d2635;
+    --legacy-booking-deposit-view-input-focus-focus-ring: rgba(141, 38, 53, .16);
+    --legacy-booking-payment-success-view-booking-success-card-shadow: rgba(0, 0, 0, .12);
+    --legacy-booking-payment-success-view-booking-success-card-surface: #fff;
+    --legacy-booking-payment-success-view-calendar-button-surface: #8d2635;
+    --legacy-booking-payment-success-view-calendar-button-text: #fff;
+    --legacy-booking-payment-success-view-error-text: #a40000;
+    --legacy-booking-payment-success-view-important-text: #555;
+    --legacy-booking-payment-success-view-success-mark-surface: #27834a;
+    --legacy-booking-payment-success-view-success-mark-text: #fff;
+    --legacy-dashboard-home-style-scoped-new-item-btn-text: white;
+    --legacy-dashboard-item-creation-card-border: #d8eadb;
+    --legacy-dashboard-item-creation-card-h2-text: #1f7a3d;
+    --legacy-dashboard-item-creation-card-surface: #fff;
+    --legacy-dashboard-item-creation-clear-btn-surface: #f3f3f3;
+    --legacy-dashboard-item-creation-danger-btn-surface: #e74c3c;
+    --legacy-dashboard-item-creation-danger-btn-text: white;
+    --legacy-dashboard-item-creation-hint-text: #666;
+    --legacy-dashboard-item-creation-photo-box-border: #c7d9ca;
+    --legacy-dashboard-item-creation-property-card-border: #d8eadb;
+    --legacy-dashboard-item-creation-submit-btn-surface: #2ea44f;
+    --legacy-dashboard-item-creation-submit-btn-text: white;
+    --legacy-dashboard-item-creation-textarea-border: #cfd8cf;
+    --legacy-dashboard-items-blue-surface: #ddefff;
+    --legacy-dashboard-items-collection-border: #d9e8dc;
+    --legacy-dashboard-items-collection-count-text: #666;
+    --legacy-dashboard-items-collection-summary-surface: #f3faf4;
+    --legacy-dashboard-items-confirm-btn-surface: #2ea44f;
+    --legacy-dashboard-items-confirm-btn-text: white;
+    --legacy-dashboard-items-create-btn-surface: #2ea44f;
+    --legacy-dashboard-items-create-btn-text: white;
+    --legacy-dashboard-items-delete-btn-surface: #d9534f;
+    --legacy-dashboard-items-delete-btn-text: white;
+    --legacy-dashboard-items-edit-btn-surface: #2ea44f;
+    --legacy-dashboard-items-edit-btn-text: white;
+    --legacy-dashboard-items-field-textarea-border: #d0d0d0;
+    --legacy-dashboard-items-green-surface: #dff6e5;
+    --legacy-dashboard-items-item-card-border: #e5e5e5;
+    --legacy-dashboard-items-manage-btn-border: #2ea44f;
+    --legacy-dashboard-items-manage-btn-surface: white;
+    --legacy-dashboard-items-manage-btn-text: #2ea44f;
+    --legacy-dashboard-items-modal-card-border: #d9e8dc;
+    --legacy-dashboard-items-modal-card-surface: white;
+    --legacy-dashboard-items-photo-surface: #ececec;
+    --legacy-dashboard-items-red-surface: #ffe2e2;
+    --legacy-dashboard-orders-badge-closed-surface: #ffe4e4;
+    --legacy-dashboard-orders-badge-open-surface: #dff1ff;
+    --legacy-dashboard-orders-badge-paid-surface: #e3f8e8;
+    --legacy-dashboard-orders-close-btn-surface: #d9534f;
+    --legacy-dashboard-orders-close-btn-text: white;
+    --legacy-dashboard-orders-items-table-td-border: #ddd;
+    --legacy-dashboard-orders-order-card-border: #dfe7df;
+    --legacy-dashboard-orders-order-card-surface: white;
+    --legacy-dashboard-orders-order-content-border: #eee;
+    --legacy-dashboard-orders-order-section-h3-text: #2ea44f;
+    --legacy-dashboard-orders-reopen-btn-surface: #2ea44f;
+    --legacy-dashboard-orders-reopen-btn-text: white;
+    --legacy-dashboard-view-sidebar-border: #ddd;
     --white: #ffffff;
     --white-smoke: #f5f5f5;
     --black: #000000;
@@ -532,7 +601,6 @@ header {
     align-items: center;
 }
 
-
 .slide-item img {
     max-width: 100%;
     max-height: 100%;
@@ -562,20 +630,15 @@ header {
     padding: clamp(16px, 3vw, 32px);
 }
 
-
-
 /* #slider-container.double,
 #slider-container.triple {
   grid-auto-rows: minmax(0, 100%);
 }
 
-
-
 #slider-container.single img {
   object-fit: contain;
   border: none;
 } */
-
 
 #slider-container.double .slide-item:not(:last-child),
 #slider-container.triple .slide-item:not(:last-child) {
@@ -583,13 +646,10 @@ header {
     box-sizing: border-box;
 }
 
-
-
 /* #slider-container.double img,
 #slider-container.triple img {
   box-sizing: border-box;
 } */
-
 
 .slider-btn {
     position: absolute;

@@ -146,7 +146,6 @@
         Example item card...
       </div>
     </details>
-    
 
     <!-- EDIT MODAL MOCKUP -->
 
@@ -254,8 +253,8 @@ Premium heavyweight hoodie designed for comfort and durability.
 }
 
 .create-btn {
-  background: #2ea44f;
-  color: white;
+  background: var(--legacy-dashboard-items-create-btn-surface);
+  color: var(--legacy-dashboard-items-create-btn-text);
   padding: 12px 18px;
   border-radius: 8px;
   text-decoration: none;
@@ -263,26 +262,26 @@ Premium heavyweight hoodie designed for comfort and durability.
 
 .collection {
   margin-bottom: 20px;
-  border: 1px solid #d9e8dc;
+  border: 1px solid var(--legacy-dashboard-items-collection-border);
   border-radius: 12px;
   overflow: hidden;
 }
 
 .collection summary {
   padding: 16px;
-  background: #f3faf4;
+  background: var(--legacy-dashboard-items-collection-summary-surface);
   cursor: pointer;
   font-weight: 600;
 }
 
 .collection-count {
-  color: #666;
+  color: var(--legacy-dashboard-items-collection-count-text);
   margin-left: 10px;
 }
 
 .item-card {
   padding: 20px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--legacy-dashboard-items-item-card-border);
 }
 
 .item-header {
@@ -300,7 +299,7 @@ Premium heavyweight hoodie designed for comfort and durability.
 
 .photo {
   aspect-ratio: 1;
-  background: #ececec;
+  background: var(--legacy-dashboard-items-photo-surface);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -319,15 +318,15 @@ Premium heavyweight hoodie designed for comfort and durability.
 }
 
 .green {
-  background: #dff6e5;
+  background: var(--legacy-dashboard-items-green-surface);
 }
 
 .blue {
-  background: #ddefff;
+  background: var(--legacy-dashboard-items-blue-surface);
 }
 
 .red {
-  background: #ffe2e2;
+  background: var(--legacy-dashboard-items-red-surface);
 }
 
 .custom-properties {
@@ -341,16 +340,16 @@ Premium heavyweight hoodie designed for comfort and durability.
 }
 
 .edit-btn {
-  background: #2ea44f;
-  color: white;
+  background: var(--legacy-dashboard-items-edit-btn-surface);
+  color: var(--legacy-dashboard-items-edit-btn-text);
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
 }
 
 .delete-btn {
-  background: #d9534f;
-  color: white;
+  background: var(--legacy-dashboard-items-delete-btn-surface);
+  color: var(--legacy-dashboard-items-delete-btn-text);
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
@@ -361,10 +360,10 @@ Premium heavyweight hoodie designed for comfort and durability.
 }
 
 .modal-card {
-  border: 1px solid #d9e8dc;
+  border: 1px solid var(--legacy-dashboard-items-modal-card-border);
   border-radius: 12px;
   padding: 24px;
-  background: white;
+  background: var(--legacy-dashboard-items-modal-card-surface);
 }
 
 .field {
@@ -381,7 +380,7 @@ Premium heavyweight hoodie designed for comfort and durability.
 .field textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #d0d0d0;
+  border: 1px solid var(--legacy-dashboard-items-field-textarea-border);
   border-radius: 8px;
 }
 
@@ -393,8 +392,8 @@ Premium heavyweight hoodie designed for comfort and durability.
 
 .continue-btn,
 .confirm-btn {
-  background: #2ea44f;
-  color: white;
+  background: var(--legacy-dashboard-items-confirm-btn-surface);
+  color: var(--legacy-dashboard-items-confirm-btn-text);
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
@@ -405,9 +404,9 @@ Premium heavyweight hoodie designed for comfort and durability.
 }
 
 .manage-btn {
-  background: white;
-  border: 1px solid #2ea44f;
-  color: #2ea44f;
+  background: var(--legacy-dashboard-items-manage-btn-surface);
+  border: 1px solid var(--legacy-dashboard-items-manage-btn-border);
+  color: var(--legacy-dashboard-items-manage-btn-text);
   padding: 12px 18px;
   border-radius: 8px;
   cursor: pointer;

@@ -5,6 +5,6 @@
 .new-item-btn {
     padding: 1rem;
     background: green;
-    color: white;
+    color: var(--legacy-dashboard-home-style-scoped-new-item-btn-text);
 }
 </style>

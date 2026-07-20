@@ -56,9 +56,9 @@ onMounted(async () => {
 
 <style scoped>
 .booking-success-page { min-height: 65vh; display: grid; place-items: center; padding: 56px 18px; }
-.booking-success-card { width: min(100%, 600px); padding: clamp(28px, 5vw, 48px); border-radius: 24px; background: #fff; box-shadow: 0 18px 50px rgba(0, 0, 0, .12); text-align: center; }
-.success-mark { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 16px; border-radius: 50%; background: #27834a; color: #fff; font-size: 2rem; font-weight: 800; }
-.calendar-button { display: inline-flex; min-height: 50px; margin: 18px 0 8px; padding: 12px 26px; align-items: center; border-radius: 999px; background: #8d2635; color: #fff; font-weight: 800; text-decoration: none; }
-.important { color: #555; font-size: .9rem; }
-.error { color: #a40000; font-weight: 700; }
+.booking-success-card { width: min(100%, 600px); padding: clamp(28px, 5vw, 48px); border-radius: 24px; background: var(--booking-payment-success-view-booking-success-card-surface); box-shadow: 0 18px 50px var(--booking-payment-success-view-booking-success-card-shadow); text-align: center; }
+.success-mark { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 16px; border-radius: 50%; background: var(--booking-payment-success-view-success-mark-surface); color: var(--booking-payment-success-view-success-mark-text); font-size: 24pt; font-weight: 800; }
+.calendar-button { display: inline-flex; min-height: 50px; margin: 18px 0 8px; padding: 12px 26px; align-items: center; border-radius: 999px; background: var(--booking-payment-success-view-calendar-button-surface); color: var(--booking-payment-success-view-calendar-button-text); font-weight: 800; text-decoration: none; }
+.important { color: var(--booking-payment-success-view-important-text); font-size: 10.8pt; }
+.error { color: var(--booking-payment-success-view-error-text); font-weight: 700; }
 </style>

@@ -26,11 +26,11 @@ defineEmits(['confirm', 'cancel'])
 </template>
 
 <style scoped>
-.dashboard-confirm-overlay { position: fixed; inset: 0; z-index: 5000; display: grid; place-items: center; padding: 16px; background: rgba(0, 0, 0, .58); }
-.dashboard-confirm { width: min(100%, 520px); box-sizing: border-box; padding: 24px; border-radius: 14px; background: #fff; text-align: center; box-shadow: 0 18px 55px rgba(0, 0, 0, .28); }
-.dashboard-confirm__icon { display: grid; width: 58px; height: 58px; margin: 0 auto 12px; place-items: center; border-radius: 50%; background: var(--dashboard-red-bg); color: var(--dashboard-red); font-size: 1.7rem; }
-.dashboard-confirm__step { margin: 0 0 6px; color: #666; font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-h2 { margin: 0 0 12px; color: #711525; }
+.dashboard-confirm-overlay { position: fixed; inset: 0; z-index: 5000; display: grid; place-items: center; padding: 16px; background: var(--dashboard-confirm-dialog-overlay-surface); }
+.dashboard-confirm { width: min(100%, 520px); box-sizing: border-box; padding: 24px; border-radius: 14px; background: var(--dashboard-confirm-dialog-dashboard-confirm-surface); text-align: center; box-shadow: 0 18px 55px var(--dashboard-confirm-dialog-dashboard-confirm-shadow); }
+.dashboard-confirm__icon { display: grid; width: 58px; height: 58px; margin: 0 auto 12px; place-items: center; border-radius: 50%; background: var(--dashboard-destructive-action-soft-surface); color: var(--dashboard-destructive-action-color); font-size: 20.4pt; }
+.dashboard-confirm__step { margin: 0 0 6px; color: var(--dashboard-confirm-dialog-dashboard-confirm-step-text); font-size: 10.2pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+h2 { margin: 0 0 12px; color: var(--dashboard-confirm-dialog-h2-text); }
 p { line-height: 1.55; }
 .dashboard-confirm__actions { display: flex; justify-content: center; gap: 12px; margin-top: 22px; }
 .dashboard-confirm__actions button { min-width: 150px; }
