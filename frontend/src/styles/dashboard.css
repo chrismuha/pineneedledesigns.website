@@ -8,6 +8,22 @@
   --dashboard-orange-bg: #ffe8cc;
 }
 
+/* Keep dashboard typography independent from the storefront's decorative
+   heading styles and from native form-control font defaults. */
+.dashboard-shell,
+.dashboard-shell h1,
+.dashboard-shell h2,
+.dashboard-shell h3,
+.dashboard-shell h4,
+.dashboard-shell h5,
+.dashboard-shell h6,
+.dashboard-shell button,
+.dashboard-shell input,
+.dashboard-shell select,
+.dashboard-shell textarea {
+  font-family: Poppins, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
 /* Keep every dashboard action visibly interactive. */
 .dashboard-shell button:not(:disabled),
 .dashboard-shell a[href],
@@ -298,7 +314,6 @@
 }
 .page-header h1 {
   font-size: 2rem;
-  font-family: Poppins;
   margin: 0;
   font-weight: normal;
 }
