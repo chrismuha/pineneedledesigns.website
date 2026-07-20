@@ -40,6 +40,7 @@ const form = ref({
   freeShippingMinimum: 28,
   fallbackShippingCost: 5,
   toastTimeoutSeconds: 6,
+  updateNotificationDelayMinutes: 0,
   liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
   liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
   darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
@@ -52,6 +53,7 @@ const settingsSnapshot = (settings) => JSON.stringify({
   freeShippingMinimum: Number(settings.freeShippingMinimum),
   fallbackShippingCost: Number(settings.fallbackShippingCost),
   toastTimeoutSeconds: Number(settings.toastTimeoutSeconds),
+  updateNotificationDelayMinutes: Number(settings.updateNotificationDelayMinutes),
   liquidGlassEnabled: Boolean(settings.liquidGlassEnabled),
   liquidGlassIntensity: Number(settings.liquidGlassIntensity),
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
@@ -142,6 +144,7 @@ const loadSettings = async () => {
       freeShippingMinimum: settings.freeShippingMinimum ?? 28,
       fallbackShippingCost: settings.fallbackShippingCost ?? 5,
       toastTimeoutSeconds: settings.toastTimeoutSeconds ?? 6,
+      updateNotificationDelayMinutes: settings.updateNotificationDelayMinutes ?? 0,
       liquidGlassEnabled: getDashboardLiquidGlassEnabled(),
       liquidGlassIntensity: getDashboardLiquidGlassIntensity(),
       darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
@@ -174,6 +177,10 @@ const saveSettings = async () => {
     form.value.freeShippingMinimum = settings.freeShippingMinimum ?? 28
     form.value.fallbackShippingCost = settings.fallbackShippingCost ?? 5
     form.value.toastTimeoutSeconds = settings.toastTimeoutSeconds ?? 6
+    form.value.updateNotificationDelayMinutes = settings.updateNotificationDelayMinutes ?? 0
+    window.dispatchEvent(new CustomEvent('pwa-update-delay-change', {
+      detail: { minutes: form.value.updateNotificationDelayMinutes },
+    }))
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     setDashboardLiquidGlassEnabled(form.value.liquidGlassEnabled)
     setDashboardLiquidGlassIntensity(form.value.liquidGlassIntensity)
@@ -293,6 +300,27 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
         </button>
       </div>
 
+      <div v-if="installedPwa" class="notification-settings update-delay-setting">
+        <div class="notification-settings__heading">
+          <i class="bi bi-clock-history" aria-hidden="true"></i>
+          <div>
+            <strong>App update notification delay</strong>
+            <p>Choose how soon the update prompt, notification, and badge appear after an update is found.</p>
+          </div>
+        </div>
+        <label for="update-notification-delay">
+          <select id="update-notification-delay" v-model.number="form.updateNotificationDelayMinutes">
+            <option :value="0">Instant</option>
+            <option :value="5">5 minutes</option>
+            <option :value="15">15 minutes</option>
+            <option :value="30">30 minutes</option>
+            <option :value="60">1 hour</option>
+            <option :value="240">4 hours</option>
+            <option :value="1440">1 day</option>
+          </select>
+        </label>
+      </div>
+
       <label v-if="installedPwa" class="toggle-row appearance-toggle">
         <span>
           <strong>Green iPhone status area</strong>
@@ -381,6 +409,7 @@ onBeforeUnmount(clearDashboardAppearancePreviews)
 .notification-settings p { margin: 3px 0 0; color: #6a776e; font-size: .82rem; }
 .notification-settings > label { display: flex; align-items: center; overflow: hidden; flex: 0 0 auto; border: 1px solid #cbd7ce; border-radius: 10px; }
 .notification-settings input { width: 74px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; font: inherit; font-weight: 700; }
+.notification-settings select { min-width: 126px; height: 44px; box-sizing: border-box; border: 0; outline: 0; padding: 0 10px; background: #fff; color: #273b2d; font: inherit; font-weight: 700; }
 .notification-settings label span { padding-right: 12px; color: #68766c; font-size: .82rem; font-weight: 700; }
 .push-settings { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 26px 26px; padding: 18px 20px; border: 1px solid #cfe4d5; border-radius: 14px; background: #f5fbf7; }
 .push-settings__copy { display: flex; align-items: center; gap: 12px; }

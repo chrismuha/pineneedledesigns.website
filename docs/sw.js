@@ -1,13 +1,17 @@
 const UPDATE_NOTIFICATION_TAG = 'pine-needle-app-update';
 const UPDATE_STATE_CACHE = 'pine-needle-update-state';
 const UPDATE_STATE_URL = '/__pine-needle-update-available__';
+const UPDATE_NOTIFICATION_SHOWN_URL = '/__pine-needle-update-notification-shown__';
 let updateAvailable = false;
 
 const setUpdateState = async (available) => {
   updateAvailable = available;
   const cache = await caches.open(UPDATE_STATE_CACHE);
   if (available) await cache.put(UPDATE_STATE_URL, new Response('waiting'));
-  else await cache.delete(UPDATE_STATE_URL);
+  else {
+    await cache.delete(UPDATE_STATE_URL);
+    await cache.delete(UPDATE_NOTIFICATION_SHOWN_URL);
+  }
 };
 
 const hasWaitingUpdate = async () => (
@@ -55,7 +59,7 @@ self.addEventListener('activate', (event) => {
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '2026-07-20T01:17:46.706Z';
+const BUILD_ID = '2026-07-20T01:24:11.501Z';
 
 const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;
@@ -67,9 +71,13 @@ const updateAppBadge = async (excludedTag = '') => {
 };
 
 const showUpdateNotification = async () => {
-  if (Notification.permission === 'granted') {
-    await self.registration.showNotification('Pine Needle Designs update available', {
-      body: 'An app update is ready. Open Pine Needle Designs and install it to clear this alert.',
+  const notificationAlreadyShown = Boolean(await caches.match(
+    UPDATE_NOTIFICATION_SHOWN_URL,
+    { cacheName: UPDATE_STATE_CACHE },
+  ));
+  if (Notification.permission === 'granted' && !notificationAlreadyShown) {
+    await self.registration.showNotification('App update available', {
+      body: 'Open the app and install the update to clear this alert.',
       badge: '/pwa-icon-192.png',
       icon: '/pwa-icon-192.png',
       tag: UPDATE_NOTIFICATION_TAG,
@@ -77,6 +85,8 @@ const showUpdateNotification = async () => {
       requireInteraction: true,
       data: { url: '/dashboard', type: 'app-update' },
     });
+    const cache = await caches.open(UPDATE_STATE_CACHE);
+    await cache.put(UPDATE_NOTIFICATION_SHOWN_URL, new Response('shown'));
   }
   await updateAppBadge();
 };
@@ -96,7 +106,7 @@ self.addEventListener('push', (event) => {
   }
 
   event.waitUntil((async () => {
-    await self.registration.showNotification(data.title || 'Pine Needle Designs', {
+    await self.registration.showNotification(data.title || 'Store update', {
       body: data.body || 'You have a new store update.',
       badge: '/pwa-icon-192.png',
       icon: data.icon || '/pwa-icon-192.png',
@@ -112,7 +122,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   const isAppUpdate = event.notification.data?.type === 'app-update';
-  if (!isAppUpdate) event.notification.close();
+  event.notification.close();
   const targetUrl = new URL(event.notification.data?.url || '/dashboard', self.location.origin).href;
 
   event.waitUntil((async () => {
@@ -129,10 +139,6 @@ self.addEventListener('notificationclick', (event) => {
 
 self.addEventListener('notificationclose', (event) => {
   event.waitUntil((async () => {
-    if (event.notification.data?.type === 'app-update' && await hasWaitingUpdate()) {
-      await showUpdateNotification();
-      return;
-    }
     await updateAppBadge(event.notification.tag);
   })());
 });

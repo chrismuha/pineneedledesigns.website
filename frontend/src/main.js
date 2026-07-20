@@ -32,6 +32,9 @@ if ('serviceWorker' in navigator) {
     let refreshing = false
     let hasActiveController = Boolean(navigator.serviceWorker.controller)
     let updatePromptShown = false
+    let updatePromptTimer = null
+    let updateNotificationDelayMinutes = 0
+    const updateFoundAtKey = 'pine-needle-update-found-at'
 
     const setUpdateAvailable = (registration, available) => {
       const worker = registration.active || navigator.serviceWorker.controller
@@ -44,7 +47,7 @@ if ('serviceWorker' in navigator) {
       worker?.postMessage({ type: 'APP_OPENED' })
     }
 
-    const promptForUpdate = (registration) => {
+    const promptForUpdate = (registration, { immediate = false } = {}) => {
       if (!registration.waiting || updatePromptShown) return
 
       // Regular website visits update immediately: activate the new worker
@@ -52,6 +55,23 @@ if ('serviceWorker' in navigator) {
       if (!installedPwa) {
         registration.waiting.postMessage({ type: 'SKIP_WAITING' })
         return
+      }
+
+      if (!immediate && updateNotificationDelayMinutes > 0) {
+        let updateFoundAt = Number(window.localStorage.getItem(updateFoundAtKey))
+        if (!Number.isFinite(updateFoundAt) || updateFoundAt <= 0) {
+          updateFoundAt = Date.now()
+          window.localStorage.setItem(updateFoundAtKey, String(updateFoundAt))
+        }
+        const remaining = (updateNotificationDelayMinutes * 60 * 1000) - (Date.now() - updateFoundAt)
+        if (remaining > 0) {
+          window.clearTimeout(updatePromptTimer)
+          updatePromptTimer = window.setTimeout(() => {
+            updatePromptTimer = null
+            promptForUpdate(registration, { immediate: true })
+          }, remaining)
+          return
+        }
       }
 
       setUpdateAvailable(registration, true)
@@ -87,6 +107,8 @@ if ('serviceWorker' in navigator) {
     }
 
     navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.localStorage.removeItem(updateFoundAtKey)
+      window.clearTimeout(updatePromptTimer)
       // Claiming the very first visit should not cause an unnecessary reload.
       if (!hasActiveController) {
         hasActiveController = true
@@ -98,8 +120,18 @@ if ('serviceWorker' in navigator) {
     })
 
     navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
-      .then((registration) => {
+      .then(async (registration) => {
         const checkForUpdate = () => registration.update().catch(() => {})
+
+        if (installedPwa) {
+          try {
+            const response = await fetch('/api/settings')
+            if (response.ok) {
+              const settings = await response.json()
+              updateNotificationDelayMinutes = Number(settings.updateNotificationDelayMinutes) || 0
+            }
+          } catch {}
+        }
 
         markNotificationsSeen(registration)
 
@@ -117,7 +149,7 @@ if ('serviceWorker' in navigator) {
             if (registration.waiting) {
               result = 'available'
               updatePromptShown = false
-              promptForUpdate(registration)
+              promptForUpdate(registration, { immediate: true })
             }
           } catch {
             result = 'error'
@@ -127,6 +159,12 @@ if ('serviceWorker' in navigator) {
 
         if (installedPwa) {
           window.addEventListener('pwa-manual-update-check', handleManualUpdateCheck)
+          window.addEventListener('pwa-update-delay-change', (event) => {
+            updateNotificationDelayMinutes = Number(event.detail?.minutes) || 0
+            window.clearTimeout(updatePromptTimer)
+            updatePromptTimer = null
+            if (registration.waiting) promptForUpdate(registration)
+          })
         }
 
         promptForUpdate(registration)

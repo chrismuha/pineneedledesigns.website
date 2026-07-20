@@ -45,7 +45,7 @@ export const unsubscribeFromPush = async (req, res) => {
 
 export const sendTestPush = async (_req, res) => {
   const result = await sendPushNotification({
-    title: 'Test Notification from Pine Needle Designs.',
+    title: 'Test notification',
     body: 'This phone will receive new order and booking alerts.',
     url: '/dashboard',
     tag: 'push-test',
