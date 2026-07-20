@@ -46,21 +46,6 @@ const handleUpdateAvailabilityChange = (event) => {
   updateAvailable.value = event.detail?.available === true
 }
 
-const clearNavInteractionState = () => {
-  navDrag.value = null
-  dragTarget.value = ''
-  suppressSyntheticClick.value = false
-
-  const activeElement = document.activeElement
-  if (activeElement instanceof HTMLElement && activeElement.closest('.bottom-nav')) {
-    activeElement.blur()
-  }
-}
-
-const handleVisibilityChange = () => {
-  if (document.visibilityState === 'hidden') clearNavInteractionState()
-}
-
 const liquidGlassStyle = computed(() => {
   const amount = Math.min(1, Math.max(0, liquidGlassIntensity.value / 100))
   return {
@@ -81,8 +66,6 @@ onMounted(async () => {
   window.addEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
   window.addEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
   window.addEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
-  window.addEventListener('pagehide', clearNavInteractionState)
-  document.addEventListener('visibilitychange', handleVisibilityChange)
   try {
     const settings = await dashboardApi.getSettings()
     setDashboardToastTimeout(settings.toastTimeoutSeconds ?? 6)
@@ -93,8 +76,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('dashboard-liquid-glass-change', handleLiquidGlassChange)
   window.removeEventListener('dashboard-status-bar-color-change', handleStatusBarColorChange)
   window.removeEventListener('pwa-update-availability-change', handleUpdateAvailabilityChange)
-  window.removeEventListener('pagehide', clearNavInteractionState)
-  document.removeEventListener('visibilitychange', handleVisibilityChange)
 })
 
 const tabAtPoint = (x, y) =>
@@ -571,12 +552,6 @@ const isActive = (path) => {
     .bottom-tab {
       min-height: 52px;
       padding-block: 5px;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-    }
-
-    .bottom-tab:focus:not(:focus-visible) {
-      outline: none;
     }
   }
 
@@ -728,18 +703,11 @@ const isActive = (path) => {
     filter: drop-shadow(0 1px 1px var(--dashboard-footer-bottom-tab-active-menu-icon-shadow));
   }
 
+  .bottom-tab:hover:not(.active),
   .bottom-tab:focus-visible:not(.active) {
     background: linear-gradient(180deg, var(--dashboard-footer-bottom-tab-surface-3), var(--dashboard-footer-bottom-tab-surface-4));
     border-color: var(--dashboard-footer-bottom-tab-border-2);
     color: var(--dashboard-footer-bottom-tab-text-2);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .bottom-tab:hover:not(.active) {
-      background: linear-gradient(180deg, var(--dashboard-footer-bottom-tab-surface-3), var(--dashboard-footer-bottom-tab-surface-4));
-      border-color: var(--dashboard-footer-bottom-tab-border-2);
-      color: var(--dashboard-footer-bottom-tab-text-2);
-    }
   }
 
   .bottom-tab:focus-visible {
