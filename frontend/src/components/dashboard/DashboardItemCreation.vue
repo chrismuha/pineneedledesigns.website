@@ -619,6 +619,11 @@ watch(
           <label>{{ form.hasBlingOptions ? 'Description with Bling *' : 'Description *' }}</label>
           <textarea v-model="form.description" rows="8" :placeholder="form.hasBlingOptions ? 'Description shown when Bling is selected.' : ''" required />
         </div>
+
+        <div v-if="form.hasBlingOptions" class="field">
+          <label>Description without Bling *</label>
+          <textarea v-model="form.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
+        </div>
       </section>
 
       <section class="card">
@@ -734,11 +739,6 @@ watch(
           <div v-if="form.hasBlingOptions" class="field">
             <label>Price without Bling (USD)</label>
             <input v-model="form.noBlingPrice" type="number" min="0" step="0.01" placeholder="Uses General Price">
-          </div>
-
-          <div v-if="form.hasBlingOptions" class="field field--full">
-            <label>Description without Bling *</label>
-            <textarea v-model="form.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
           </div>
 
           <div class="field">

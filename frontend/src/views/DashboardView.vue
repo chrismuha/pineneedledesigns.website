@@ -547,7 +547,7 @@ const isActive = (path) => {
      The safe-area inset keeps it clear of the iPhone home indicator. */
   @media (display-mode: standalone) {
     .bottom-nav {
-      bottom: env(safe-area-inset-bottom);
+      bottom: max(4px, calc(env(safe-area-inset-bottom) - 20px));
     }
   }
 

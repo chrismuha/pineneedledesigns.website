@@ -1198,10 +1198,6 @@ onBeforeUnmount(() => {
           <p v-if="collectionAllowsBling(collection._id) && product.blingPrice != null"><strong>Price with Bling:</strong> ${{ Number(product.blingPrice).toFixed(2) }}</p>
           <p v-if="collectionAllowsBling(collection._id) && product.noBlingPrice != null"><strong>Price without Bling:</strong> ${{ Number(product.noBlingPrice).toFixed(2) }}</p>
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
-          <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
-            <strong>General Description:</strong><br>
-            {{ product.generalDescription || product.description }}
-          </p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
@@ -1209,6 +1205,10 @@ onBeforeUnmount(() => {
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
             <strong>{{ sizePriceLabel(key) }} Price:</strong> ${{ Number(price).toFixed(2) }}
+          </p>
+          <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
+            <strong>General Description:</strong><br>
+            {{ product.generalDescription || product.description }}
           </p>
           <p>
             <strong>{{ collectionAllowsBling(collection._id) && (product.hasBlingOptions || product.noBlingPrice != null) ? 'Description with Bling:' : 'Description:' }}</strong><br>
@@ -1554,6 +1554,11 @@ onBeforeUnmount(() => {
           <textarea v-model="editingProduct.description" rows="6" :placeholder="collectionAllowsBling(editingProduct.collectionId) && editingProduct.hasBlingOptions ? 'Description shown when Bling is selected.' : ''" />
         </div>
 
+        <div v-if="collectionAllowsBling(editingProduct.collectionId) && editingProduct.hasBlingOptions" class="field">
+          <label>Description without Bling *</label>
+          <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
+        </div>
+
         <div class="field">
           <label>General Price (USD)</label>
           <input v-model.number="editingProduct.price" type="number" min="0" step="0.01">
@@ -1582,11 +1587,6 @@ onBeforeUnmount(() => {
           <label>Style</label>
           <input value="Bling, No Bling" readonly aria-label="Styles">
           <p class="hint">Style is a built-in property with Bling and No Bling choices.</p>
-        </div>
-
-        <div v-if="collectionAllowsBling(editingProduct.collectionId) && editingProduct.hasBlingOptions" class="field">
-          <label>Description without Bling *</label>
-          <textarea v-model="editingProduct.noBlingDescription" rows="4" placeholder="Description shown when No Bling is selected." required />
         </div>
 
         <div class="field">

@@ -321,8 +321,9 @@ onBeforeUnmount(() => {
         <div class="app-update-setting__copy">
           <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
           <div>
-            <strong>App updates</strong>
-            <p>Check whether a newer version of Pine Needle Designs is available.</p>
+            <strong>{{ updateAvailable ? 'App update available' : 'App updates' }}</strong>
+            <p v-if="updateAvailable">A newer version is ready to install. This is not another update check.</p>
+            <p v-else>Check whether a newer version of Pine Needle Designs is available.</p>
           </div>
         </div>
         <button
@@ -331,7 +332,7 @@ onBeforeUnmount(() => {
           :disabled="updateChecking"
           @click="updateAvailable ? installAppUpdate() : checkForAppUpdate()"
         >
-          {{ updateChecking ? (updateAvailable ? 'Updating...' : 'Checking...') : (updateAvailable ? 'Update App' : 'Check for Updates') }}
+          {{ updateChecking ? (updateAvailable ? 'Installing Update...' : 'Checking...') : (updateAvailable ? 'Install Update Now' : 'Check for Updates') }}
         </button>
       </div>
 
