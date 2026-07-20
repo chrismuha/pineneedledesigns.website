@@ -38,6 +38,12 @@ if ('serviceWorker' in navigator) {
       worker?.postMessage({ type: available ? 'SET_UPDATE_AVAILABLE' : 'CLEAR_UPDATE_AVAILABLE' })
     }
 
+    const markNotificationsSeen = (registration) => {
+      if (!installedPwa) return
+      const worker = navigator.serviceWorker.controller || registration.active
+      worker?.postMessage({ type: 'APP_OPENED' })
+    }
+
     const promptForUpdate = (registration) => {
       if (!registration.waiting || updatePromptShown) return
 
@@ -95,6 +101,8 @@ if ('serviceWorker' in navigator) {
       .then((registration) => {
         const checkForUpdate = () => registration.update().catch(() => {})
 
+        markNotificationsSeen(registration)
+
         const handleManualUpdateCheck = async (event) => {
           let result = 'current'
           try {
@@ -134,7 +142,10 @@ if ('serviceWorker' in navigator) {
         // Check when the app is reopened and while a long-running installed PWA
         // remains active. The user decides when a waiting update is activated.
         document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') checkForUpdate()
+          if (document.visibilityState === 'visible') {
+            markNotificationsSeen(registration)
+            checkForUpdate()
+          }
         })
         window.addEventListener('online', checkForUpdate)
         window.setInterval(checkForUpdate, 60 * 60 * 1000)

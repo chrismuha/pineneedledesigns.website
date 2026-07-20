@@ -530,6 +530,27 @@ const isActive = (path) => {
     touch-action: none;
   }
 
+  /* Native iOS tab bars extend their surface to the screen edge, then keep
+     their controls clear of the home indicator. Limit that treatment to the
+     installed app so the mobile website retains its floating navigation. */
+  @media (display-mode: standalone) {
+    .dashboard-shell {
+      --mobile-nav-height: calc(75px + env(safe-area-inset-bottom));
+    }
+
+    .bottom-nav {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      min-height: calc(68px + env(safe-area-inset-bottom));
+      padding: 7px 12px calc(7px + env(safe-area-inset-bottom));
+      border-right: 0;
+      border-bottom: 0;
+      border-left: 0;
+      border-radius: 24px 24px 0 0;
+    }
+  }
+
   .bottom-nav::before {
     content: '';
     position: absolute;

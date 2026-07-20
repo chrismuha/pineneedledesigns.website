@@ -14,8 +14,22 @@ const hasWaitingUpdate = async () => (
   updateAvailable || Boolean(await caches.match(UPDATE_STATE_URL, { cacheName: UPDATE_STATE_CACHE }))
 );
 
+const clearBadgeWhenAppOpens = async () => {
+  const notifications = await self.registration.getNotifications();
+  notifications
+    .filter((notification) => notification.data?.type !== 'app-update')
+    .forEach((notification) => notification.close());
+
+  // An update is the one alert that remains unread until it is installed.
+  if (await hasWaitingUpdate()) await self.navigator?.setAppBadge?.(1);
+  else await self.navigator?.clearAppBadge?.();
+};
+
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+  if (event.data?.type === 'APP_OPENED') {
+    event.waitUntil(clearBadgeWhenAppOpens());
+  }
   if (event.data?.type === 'SET_UPDATE_AVAILABLE') {
     event.waitUntil((async () => {
       await setUpdateState(true);
@@ -41,7 +55,7 @@ self.addEventListener('activate', (event) => {
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '2026-07-20T00:35:05.188Z';
+const BUILD_ID = '2026-07-20T01:17:46.706Z';
 
 const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;
