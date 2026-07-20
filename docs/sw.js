@@ -59,7 +59,7 @@ self.addEventListener('activate', (event) => {
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '2026-07-20T01:48:39.936Z';
+const BUILD_ID = '2026-07-20T01:52:33.053Z';
 
 const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;

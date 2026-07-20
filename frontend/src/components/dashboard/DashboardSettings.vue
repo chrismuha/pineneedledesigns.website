@@ -445,7 +445,7 @@ onBeforeUnmount(() => {
 .settings-page { width: min(100%, 820px); margin: 0 auto; }
 .settings-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
 .settings-heading__icon { display: grid; width: 54px; height: 54px; flex: 0 0 54px; place-items: center; border-radius: 16px; background: var(--dashboard-green-bg); color: #187636; font-size: 1.4rem; }
-.settings-heading h1 { margin: 0; color: #18231b; font-size: 2rem; font-weight: 400; line-height: 1.1; }
+.settings-heading h1 { margin: 0; color: #18231b; font-size: 2rem; font-weight: 600; line-height: 1.1; }
 .settings-heading p { margin: 6px 0 0; color: #607066; font-size: .98rem; }
 .settings-card { overflow: hidden; border: 1px solid #dce5df; border-radius: 20px; background: #fff; box-shadow: 0 12px 35px rgba(28, 67, 39, .08); }
 .section-heading { display: flex; align-items: center; justify-content: space-between; padding: 24px 26px 20px; border-bottom: 1px solid #e8eeea; }
