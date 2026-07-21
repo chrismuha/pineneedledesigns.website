@@ -26,8 +26,10 @@ import {
   enablePushNotifications,
   getPushAlertPreferences,
   getPushState,
+  getTestPushDelaySeconds,
   sendTestPushNotification,
   setPushAlertPreferences,
+  setTestPushDelaySeconds,
 } from '../../utils/pushNotifications.js'
 
 const loading = ref(true)
@@ -38,6 +40,7 @@ const installedPwa = isInstalledPwa()
 const updateAvailable = ref(installedPwa && window.localStorage.getItem('pine-needle-update-ready') === 'true')
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const alertPreferences = ref(getPushAlertPreferences())
+const testPushDelaySeconds = ref(getTestPushDelaySeconds())
 const error = ref('')
 const form = ref({
   freeShippingEnabled: true,
@@ -110,8 +113,13 @@ const saveAlertPreferences = async () => {
 const testPush = async () => {
   pushBusy.value = true
   try {
-    await sendTestPushNotification()
-    showDashboardToast('Test sent. It should appear as a phone notification shortly.', { type: 'success' })
+    const delay = setTestPushDelaySeconds(testPushDelaySeconds.value)
+    testPushDelaySeconds.value = delay
+    showDashboardToast(
+      delay ? `Test scheduled for ${delay} seconds. Close the app now.` : 'Test is being sent now.',
+      { type: 'success' },
+    )
+    await sendTestPushNotification(delay)
   } catch (err) {
     showDashboardToast(err.message, { title: 'Test failed' })
   } finally {
@@ -326,6 +334,11 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <div class="push-settings__actions">
+          <label v-if="pushState.subscribed" for="test-push-delay" class="test-push-delay">
+            <span>Test delay</span>
+            <input id="test-push-delay" v-model.number="testPushDelaySeconds" type="number" min="0" max="300" step="1" inputmode="numeric" :disabled="pushBusy" @change="testPushDelaySeconds = setTestPushDelaySeconds(testPushDelaySeconds)">
+            <span>sec</span>
+          </label>
           <button v-if="pushState.subscribed" type="button" class="btn-outline" :disabled="pushBusy" @click="testPush">Send Test</button>
           <button type="button" class="btn-primary" :disabled="pushBusy || !pushState.supported || pushState.permission === 'denied'" @click="togglePush">
             {{ pushBusy ? 'Working...' : pushState.subscribed ? 'Turn Off' : 'Enable Alerts' }}
@@ -487,6 +500,8 @@ onBeforeUnmount(() => {
 .push-settings .push-settings__sound-help { margin-top: 8px; color: var(--dashboard-settings-settings-push-settings-sound-help-text); }
 .push-settings__actions { display: flex; flex: 0 0 auto; gap: 8px; }
 .push-settings__actions button { min-height: 42px; white-space: nowrap; }
+.test-push-delay { display: flex; align-items: center; gap: 6px; color: var(--dashboard-settings-push-settings-p-text); font-size: 9.6pt; white-space: nowrap; }
+.test-push-delay input { width: 64px; min-height: 42px; padding: 6px 8px; }
 .alert-type-settings { display: grid; gap: 0; margin: 0 26px 26px; padding: 0; overflow: hidden; border: 1px solid var(--dashboard-settings-alert-type-settings-border); border-radius: 14px; }
 .alert-type-settings legend { width: 100%; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--dashboard-settings-alert-type-settings-legend-border); background: var(--dashboard-settings-alert-type-settings-legend-surface); color: var(--dashboard-settings-alert-type-settings-legend-text); font-size: 10.8pt; font-weight: 800; }
 .alert-type-settings > label { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 18px; cursor: pointer; }
@@ -528,6 +543,8 @@ onBeforeUnmount(() => {
   .settings-actions { align-items: stretch; flex-direction: column-reverse; padding: 18px; }
   .notification-settings { align-items: flex-start; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
   .push-settings { align-items: stretch; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
+  .push-settings__actions { flex-wrap: wrap; }
+  .test-push-delay { flex: 1 0 100%; }
   .push-settings__actions button { flex: 1; }
   .app-update-setting { align-items: stretch; flex-direction: column; margin: 0 18px 18px; padding: 16px; }
   .app-update-setting button { width: 100%; min-height: 48px; }

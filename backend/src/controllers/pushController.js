@@ -48,7 +48,15 @@ export const unsubscribeFromPush = async (req, res) => {
   res.json({ subscribed: false });
 };
 
-export const sendTestPush = async (_req, res) => {
+export const sendTestPush = async (req, res) => {
+  const requestedDelay = Number(req.body?.delaySeconds ?? 5);
+  if (!Number.isFinite(requestedDelay) || requestedDelay < 0 || requestedDelay > 300) {
+    return res.status(400).json({ error: 'Test notification delay must be between 0 and 300 seconds.' });
+  }
+  const delaySeconds = Math.round(requestedDelay);
+  if (delaySeconds) {
+    await new Promise((resolve) => setTimeout(resolve, delaySeconds * 1000));
+  }
   const result = await sendPushNotification({
     title: 'Test notification',
     body: 'This phone will receive new order and booking alerts.',
@@ -62,5 +70,5 @@ export const sendTestPush = async (_req, res) => {
       ...result,
     });
   }
-  res.json(result);
+  res.json({ ...result, delaySeconds });
 };

@@ -6,7 +6,7 @@ import router from './router'
 import { useCatalogStore } from './stores/catalog.js'
 import { isInstalledPwa } from './utils/pwaDisplayMode.js'
 import { applyStoredDashboardStatusBarColor } from './utils/dashboardAppearance.js'
-import { getPushAlertPreferences } from './utils/pushNotifications.js'
+import { getPushAlertPreferences, refreshPushSubscription } from './utils/pushNotifications.js'
 
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual'
@@ -152,6 +152,9 @@ if ('serviceWorker' in navigator) {
         }
 
         markNotificationsSeen(registration)
+        // Repair a rotated/expired browser subscription whenever the installed
+        // app starts, so later pushes do not depend on the dashboard staying open.
+        if (installedPwa) refreshPushSubscription().catch(() => {})
 
         const handleManualUpdateCheck = async (event) => {
           let result = 'current'

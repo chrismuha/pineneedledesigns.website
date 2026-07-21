@@ -1,7 +1,19 @@
 import { isInstalledPwa } from './pwaDisplayMode.js'
 
 const PUSH_PREFERENCES_KEY = 'pine-needle-push-alert-preferences'
+const TEST_PUSH_DELAY_KEY = 'pine-needle-test-push-delay-seconds'
 const defaultPreferences = { orders: true, bookings: true, updates: true }
+
+export const getTestPushDelaySeconds = () => {
+  const saved = Number(window.localStorage.getItem(TEST_PUSH_DELAY_KEY))
+  return Number.isFinite(saved) && saved >= 0 && saved <= 300 ? saved : 5
+}
+
+export const setTestPushDelaySeconds = (value) => {
+  const normalized = Math.min(300, Math.max(0, Math.round(Number(value) || 0)))
+  window.localStorage.setItem(TEST_PUSH_DELAY_KEY, String(normalized))
+  return normalized
+}
 
 export const getPushAlertPreferences = () => {
   try {
@@ -33,6 +45,41 @@ const base64UrlToUint8Array = (value) => {
   return Uint8Array.from(bytes, (character) => character.charCodeAt(0))
 }
 
+const applicationServerKeyMatches = (subscription, publicKey) => {
+  const currentKey = subscription?.options?.applicationServerKey
+  if (!currentKey) return true
+  const expectedKey = base64UrlToUint8Array(publicKey)
+  const currentBytes = new Uint8Array(currentKey)
+  return currentBytes.length === expectedKey.length
+    && currentBytes.every((byte, index) => byte === expectedKey[index])
+}
+
+const getPushConfig = async () => {
+  const response = await fetch('/api/push/config', { credentials: 'include' })
+  const config = await response.json().catch(() => ({}))
+  if (!response.ok || !config.configured) {
+    throw new Error(config.error || 'Phone notifications are not configured on the server yet.')
+  }
+  return config
+}
+
+const ensureCurrentSubscription = async (registration, config) => {
+  let subscription = await registration.pushManager.getSubscription()
+  // A subscription is bound to the VAPID public key used to create it. Keeping
+  // one after that key changes makes the push service reject background sends.
+  if (subscription && !applicationServerKeyMatches(subscription, config.publicKey)) {
+    await subscription.unsubscribe()
+    subscription = null
+  }
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: base64UrlToUint8Array(config.publicKey),
+    })
+  }
+  return subscription
+}
+
 export const pushSupported = () => (
   isInstalledPwa()
   && 'serviceWorker' in navigator
@@ -57,24 +104,24 @@ export const getPushState = async () => {
   }
 }
 
+export const refreshPushSubscription = async () => {
+  if (!pushSupported() || Notification.permission !== 'granted') return null
+  const registration = await navigator.serviceWorker.ready
+  const config = await getPushConfig()
+  const subscription = await ensureCurrentSubscription(registration, config)
+  const response = await syncSubscription(subscription)
+  if (!response.ok) throw new Error('This phone could not refresh its notification subscription.')
+  return subscription
+}
+
 export const enablePushNotifications = async () => {
-  const configResponse = await fetch('/api/push/config', { credentials: 'include' })
-  const config = await configResponse.json()
-  if (!configResponse.ok || !config.configured) {
-    throw new Error(config.error || 'Phone notifications are not configured on the server yet.')
-  }
+  const config = await getPushConfig()
 
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') throw new Error('Notification permission was not allowed on this device.')
 
   const registration = await navigator.serviceWorker.ready
-  let subscription = await registration.pushManager.getSubscription()
-  if (!subscription) {
-    subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: base64UrlToUint8Array(config.publicKey),
-    })
-  }
+  const subscription = await ensureCurrentSubscription(registration, config)
 
   const response = await fetch('/api/push/subscribe', {
     method: 'POST',
@@ -123,8 +170,13 @@ export const disablePushNotifications = async () => {
   await subscription.unsubscribe()
 }
 
-export const sendTestPushNotification = async () => {
-  const response = await fetch('/api/push/test', { method: 'POST', credentials: 'include' })
+export const sendTestPushNotification = async (delaySeconds = getTestPushDelaySeconds()) => {
+  const response = await fetch('/api/push/test', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ delaySeconds }),
+  })
   if (!response.ok) {
     const data = await response.json().catch(() => ({}))
     throw new Error(data.error || 'The test notification could not be sent.')

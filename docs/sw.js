@@ -59,7 +59,7 @@ self.addEventListener('activate', (event) => {
 
 // Replaced with a unique value during every production build so installed
 // copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '2026-07-20T02:53:05.864Z';
+const BUILD_ID = '2026-07-21T16:44:16.433Z';
 
 const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;
@@ -117,6 +117,32 @@ self.addEventListener('push', (event) => {
       data: { url: data.url || '/dashboard', type: data.type || 'store-update' },
     });
     await updateAppBadge();
+  })());
+});
+
+const postSubscriptionFromWorker = async (subscription) => {
+  const tokenResponse = await fetch('/api/csrf-token', { credentials: 'include' });
+  if (!tokenResponse.ok) throw new Error('Unable to refresh push security token.');
+  const { token } = await tokenResponse.json();
+  const response = await fetch('/api/push/subscribe', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-csrf-token': token,
+    },
+    body: JSON.stringify(subscription.toJSON()),
+  });
+  if (!response.ok) throw new Error('Unable to refresh push subscription.');
+};
+
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil((async () => {
+    let subscription = event.newSubscription;
+    if (!subscription && event.oldSubscription?.options) {
+      subscription = await self.registration.pushManager.subscribe(event.oldSubscription.options);
+    }
+    if (subscription) await postSubscriptionFromWorker(subscription);
   })());
 });
 

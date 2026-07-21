@@ -120,6 +120,32 @@ self.addEventListener('push', (event) => {
   })());
 });
 
+const postSubscriptionFromWorker = async (subscription) => {
+  const tokenResponse = await fetch('/api/csrf-token', { credentials: 'include' });
+  if (!tokenResponse.ok) throw new Error('Unable to refresh push security token.');
+  const { token } = await tokenResponse.json();
+  const response = await fetch('/api/push/subscribe', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-csrf-token': token,
+    },
+    body: JSON.stringify(subscription.toJSON()),
+  });
+  if (!response.ok) throw new Error('Unable to refresh push subscription.');
+};
+
+self.addEventListener('pushsubscriptionchange', (event) => {
+  event.waitUntil((async () => {
+    let subscription = event.newSubscription;
+    if (!subscription && event.oldSubscription?.options) {
+      subscription = await self.registration.pushManager.subscribe(event.oldSubscription.options);
+    }
+    if (subscription) await postSubscriptionFromWorker(subscription);
+  })());
+});
+
 self.addEventListener('notificationclick', (event) => {
   const isAppUpdate = event.notification.data?.type === 'app-update';
   event.notification.close();

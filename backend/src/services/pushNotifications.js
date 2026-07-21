@@ -46,7 +46,9 @@ export const sendPushNotification = async ({
       });
       sent += 1;
     } catch (error) {
-      if (error?.statusCode === 404 || error?.statusCode === 410) {
+      // 401/403 also mean this stored endpoint can no longer be used with the
+      // server's current VAPID credentials. The app will recreate and sync it.
+      if ([401, 403, 404, 410].includes(error?.statusCode)) {
         await PushSubscription.deleteOne({ endpoint: subscription.endpoint });
         return;
       }
