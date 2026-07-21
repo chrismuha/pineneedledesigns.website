@@ -40,6 +40,9 @@ const installedPwa = isInstalledPwa()
 const updateAvailable = ref(installedPwa && window.localStorage.getItem('pine-needle-update-ready') === 'true')
 const pushState = ref({ supported: true, subscribed: false, permission: 'default' })
 const alertPreferences = ref(getPushAlertPreferences())
+let confirmedAlertPreferences = { ...alertPreferences.value }
+let alertPreferenceRevision = 0
+let alertPreferenceSaveQueue = Promise.resolve()
 const testPushDelaySeconds = ref(getTestPushDelaySeconds())
 const error = ref('')
 const form = ref({
@@ -97,17 +100,20 @@ const togglePush = async () => {
   }
 }
 
-const saveAlertPreferences = async () => {
-  pushBusy.value = true
-  try {
-    alertPreferences.value = await setPushAlertPreferences(alertPreferences.value)
-    showDashboardToast('Notification preferences were saved for this device.', { type: 'success' })
-  } catch (err) {
-    showDashboardToast(err.message, { title: 'Preferences not saved' })
-    alertPreferences.value = getPushAlertPreferences()
-  } finally {
-    pushBusy.value = false
-  }
+const saveAlertPreferences = () => {
+  const revision = ++alertPreferenceRevision
+  const preferences = { ...alertPreferences.value }
+  alertPreferenceSaveQueue = alertPreferenceSaveQueue.then(async () => {
+    try {
+      const saved = await setPushAlertPreferences(preferences)
+      confirmedAlertPreferences = { ...saved }
+    } catch (err) {
+      if (revision === alertPreferenceRevision) {
+        alertPreferences.value = { ...confirmedAlertPreferences }
+        showDashboardToast(err.message, { title: 'Preferences not saved' })
+      }
+    }
+  })
 }
 
 const testPush = async () => {
@@ -346,19 +352,19 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <fieldset v-if="installedPwa" class="alert-type-settings">
+      <fieldset v-if="installedPwa && pushState.subscribed" class="alert-type-settings">
         <legend>Alert types on this device</legend>
         <label>
           <span><strong>Order alerts</strong><small>Notify me when a new paid order is received.</small></span>
-          <input v-model="alertPreferences.orders" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy || !pushState.subscribed" @change="saveAlertPreferences">
+          <input v-model="alertPreferences.orders" class="toggle-input" type="checkbox" role="switch" @change="saveAlertPreferences">
         </label>
         <label>
           <span><strong>Booking alerts</strong><small>Notify me when a fitting or bridal deposit is paid.</small></span>
-          <input v-model="alertPreferences.bookings" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy || !pushState.subscribed" @change="saveAlertPreferences">
+          <input v-model="alertPreferences.bookings" class="toggle-input" type="checkbox" role="switch" @change="saveAlertPreferences">
         </label>
         <label>
           <span><strong>App-update alerts</strong><small>Show automatic update prompts, banners, and badges.</small></span>
-          <input v-model="alertPreferences.updates" class="toggle-input" type="checkbox" role="switch" :disabled="pushBusy" @change="saveAlertPreferences">
+          <input v-model="alertPreferences.updates" class="toggle-input" type="checkbox" role="switch" @change="saveAlertPreferences">
         </label>
       </fieldset>
 
