@@ -370,15 +370,18 @@ const displayProductMeta = (product) => {
 
   if (!Number.isFinite(price)) return meta
 
+  const priceLabel = `Price: $${Number(price).toFixed(2)}`
   let replacedPrice = false
-  return meta.map((item) => {
+  const displayedMeta = meta.map((item) => {
     if (!replacedPrice && /^price:/i.test(String(item).trim())) {
       replacedPrice = true
-      return `Price: $${Number(price).toFixed(2)}`
+      return priceLabel
     }
 
     return item
   })
+
+  return replacedPrice ? displayedMeta : [priceLabel, ...displayedMeta]
 }
 
 const isProductSold = (product) => {
