@@ -83,7 +83,13 @@
             {{ displayTitle(product) }}
           </h3>
           <div class="product-meta">
-            <div v-for="(item, index) in displayProductMeta(product)" :key="index">{{ item }}</div>
+            <div
+              v-for="(item, index) in displayProductMeta(product)"
+              :key="index"
+              :class="{ 'product-price-meta': isPriceMeta(item) }"
+            >
+              {{ item }}
+            </div>
             <div v-if="product.maker" class="product-maker">{{ product.maker }}</div>
           </div>
           <div class="product-description">
@@ -307,6 +313,7 @@ const hasRequiredOptions = (product) => {
 }
 
 const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isPriceMeta = (item) => /^(?:bling price|no bling price|price):/i.test(String(item).trim())
 const selectedStyle = (product) => selectedOptions.value[optionKey(product, { name: styleOptionName })] || ''
 const hasBlingStyleOption = (product) =>
   product.options?.some((option) => option.name === styleOptionName && option.values?.includes(blingStyle))
@@ -502,6 +509,13 @@ const addToCart = async (product) => {
 .collection-filters--loading {
   min-height: 42px;
   align-items: center;
+}
+
+.product-price-meta {
+  font-size: 16pt;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .product-card:first-child h3 {
