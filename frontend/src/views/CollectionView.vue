@@ -363,14 +363,25 @@ const displayDescription = (product) => {
 const displayProductMeta = (product) => {
   const meta = productMeta(product)
   if (product.hasStyleSpecificPricing && !selectedStyle(product)) {
-    return meta.filter((item) => !/^price:/i.test(String(item).trim()))
+    const displayedMeta = meta.filter((item) => !/^price:/i.test(String(item).trim()))
+    const stylePrices = [
+      ['Bling Price', product.blingPrice],
+      ['No Bling Price', product.noBlingPrice],
+    ]
+      .filter(([, price]) => Number.isFinite(price))
+      .map(([label, price]) => `${label}: $${Number(price).toFixed(2)}`)
+
+    return [...stylePrices, ...displayedMeta]
   }
 
   const price = productPrice(product)
 
   if (!Number.isFinite(price)) return meta
 
-  const priceLabel = `Price: $${Number(price).toFixed(2)}`
+  const selectedPriceLabel = product.hasStyleSpecificPricing
+    ? (isNoBlingSelected(product) ? 'No Bling Price' : 'Bling Price')
+    : 'Price'
+  const priceLabel = `${selectedPriceLabel}: $${Number(price).toFixed(2)}`
   let replacedPrice = false
   const displayedMeta = meta.map((item) => {
     if (!replacedPrice && /^price:/i.test(String(item).trim())) {
