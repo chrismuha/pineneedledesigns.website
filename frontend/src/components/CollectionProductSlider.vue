@@ -81,7 +81,13 @@
             <p class="collection-product-slider__position">{{ productIndex + 1 }} of {{ products.length }}</p>
             <h4>{{ product.title }}</h4>
             <div class="collection-product-slider__facts">
-              <p v-for="(item, index) in displayProductMeta(product)" :key="`meta-${index}`">{{ item }}</p>
+              <p
+                v-for="(item, index) in displayProductMeta(product)"
+                :key="`meta-${index}`"
+                :class="{ 'collection-product-slider__price': isPriceMeta(item) }"
+              >
+                {{ item }}
+              </p>
               <p v-if="product.maker"><strong>Maker:</strong> {{ product.maker }}</p>
               <p v-for="option in product.options || []" :key="option.name">
                 <strong>{{ option.name }}:</strong> {{ option.values.join(', ') }}
@@ -164,6 +170,7 @@ const presentation = computed(() => collectionPresentations[props.collection.slu
   heading: `${props.collection.title} ✨`,
 })
 const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isPriceMeta = (item) => /^price:/i.test(String(item).trim())
 const displayProductMeta = (product) => productMeta(product).map((item) => {
   if (!/^price:/i.test(String(item).trim()) || !Number.isFinite(Number(product.price))) return item
   return `Price: $${Number(product.price).toFixed(2)}`
@@ -448,6 +455,13 @@ watch(
 .collection-product-slider__facts p {
   margin: 0;
   line-height: 1.5;
+}
+
+.collection-product-slider__facts .collection-product-slider__price {
+  font-size: 16pt;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .collection-product-slider__link {

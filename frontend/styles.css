@@ -1773,7 +1773,10 @@ section {
 }
 
 .price {
-    font-weight: 600;
+    font-size: 16pt;
+    line-height: 1.3;
+    font-weight: 700;
+    color: var(--ink);
 }
 
 .product-meta {
