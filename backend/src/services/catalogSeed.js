@@ -61,9 +61,7 @@ export const seedCatalog = async () => {
   let productCount = 0;
 
   for (const [collectionIndex, page] of collectionPages.entries()) {
-    const cardImage = page.cardImageFromProduct
-      ? (firstProductImage(page) || page.cardImage || '')
-      : (page.cardImage || '');
+    const cardImage = firstProductImage(page) || page.cardImage || '';
 
     const collection = await Collection.findOneAndUpdate(
       { slug: page.slug },
@@ -77,7 +75,6 @@ export const seedCatalog = async () => {
           cardImage,
           hidden: Boolean(page.hidden),
           showWhenEmpty: Boolean(page.showWhenEmpty),
-          cardImageFromProduct: Boolean(page.cardImageFromProduct),
         },
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },

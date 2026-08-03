@@ -152,12 +152,8 @@ const buildCollectionPage = (collection, subcollections, products) => {
   });
 
   const count = storefrontProducts.length;
-  let cardImage = collection.cardImage || '';
-
-  if (collection.cardImageFromProduct) {
-    const firstImage = storefrontProducts.find((product) => product.images?.length)?.images?.[0];
-    cardImage = firstImage || cardImage;
-  }
+  const firstImage = storefrontProducts.find((product) => product.images?.length)?.images?.[0];
+  const cardImage = firstImage || collection.cardImage || '';
 
   return {
     slug: collection.slug,
@@ -167,7 +163,6 @@ const buildCollectionPage = (collection, subcollections, products) => {
     description: collection.description || '',
     hidden: collection.hidden || false,
     showWhenEmpty: collection.showWhenEmpty || false,
-    cardImageFromProduct: collection.cardImageFromProduct || false,
     filters: filters.length ? filters : undefined,
     products: storefrontProducts,
     count,

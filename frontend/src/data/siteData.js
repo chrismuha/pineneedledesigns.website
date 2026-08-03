@@ -53,7 +53,6 @@ export const collectionPages = [
     path: '/collections/adirondack-chic',
     showWhenEmpty: true,
     cardImage: '/images/adirondack-chic-collection/torquoise-white-speedy-bag/turquoise-white-speedy-bag1.webp',
-    cardImageFromProduct: true,
     description: 'Country-chic Adirondack style with rustic textures, bold details, and handcrafted attitude.',
     products: [
       {
@@ -554,7 +553,6 @@ export const collectionPages = [
     title: 'Upcycled Collaboration',
     path: '/collections/upcycled-collaboration',
     cardImage: '/images/upcycled-collaboration/adirondack-chic-leather-cowhide-overnight-duffel-bag/cowhide-bag1.webp',
-    cardImageFromProduct: true,
     description: 'Collaborative upcycled pieces with country-chic materials and handcrafted details.',
     filters: ['Bags', 'Fanny Packs', 'Wallets'],
     products: [
@@ -626,7 +624,6 @@ export const collectionPages = [
     title: 'Upcycled Logo',
     path: '/collections/upcycled-logo',
     cardImage: '/images/upcycled-logo/barrette-lv-leather-french-style/barrette-lv-leather-french-style1.webp',
-    cardImageFromProduct: true,
     description: 'Upcycled finds reimagined as one-of-a-kind accessories and statement pieces.',
     filters: ['Bags', 'Wallets', 'Accessories'],
     products: [
@@ -844,9 +841,7 @@ collectionPages.forEach((page) => {
     product.meta = withFreeShippingMeta(product.meta)
   })
   page.count = page.products.filter((product) => !product.placeholder).length
-  if (page.cardImageFromProduct) {
-    page.cardImage = firstProductImage(page) || page.cardImage
-  }
+  page.cardImage = firstProductImage(page) || page.cardImage
   page.previous = null
   page.next = null
 })

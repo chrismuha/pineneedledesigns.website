@@ -39,10 +39,6 @@ const collectionSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  cardImageFromProduct: {
-    type: Boolean,
-    default: false,
-  },
 }, {
   timestamps: true,
 });
