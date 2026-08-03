@@ -26,15 +26,15 @@ export const config = {
   sessionSecret: process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'local-development-only'),
   appBaseUrl: process.env.APP_BASE_URL || (process.env.NODE_ENV === 'production'
     ? 'https://pineneedledesigns.store'
-    : 'http://localhost:5173'),
+    : 'http://localhost:5193'),
   docsDir: path.join(rootDir, 'docs'),
   sessionDir: path.join(rootDir, '.sessions'),
   uploadsDir: path.join(rootDir, 'backend', 'uploads'),
   productionMediaOrigin: process.env.PRODUCTION_MEDIA_ORIGIN || 'https://pineneedledesigns.store',
   allowedOrigins: [
-    'http://localhost:5173',
+    'http://localhost:5193',
     'http://localhost:3001',
-    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5193',
     'https://pineneedledesigns.store',
     'https://www.pineneedledesigns.store',
   ],
