@@ -49,6 +49,7 @@ const form = reactive({
   collectionId: '',
   colors: [''],
   sizes: [''],
+  sweatshirtSizes: [''],
   shoeSizes: [''],
   beltSizes: [''],
   sizePrices: {},
@@ -74,6 +75,7 @@ const collectionAllowsBling = computed(() => collections.value.find(
 )?.slug === 'shirts')
 const sizePriceRows = computed(() => [
   ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ])
@@ -87,7 +89,7 @@ const sortedCollections = computed(() => [...collections.value].sort((left, righ
 const sortedSubcollections = computed(() => [...subcollections.value].sort((left, right) => (
   left.name.localeCompare(right.name, undefined, { numeric: true })
 )))
-const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
 const hasReservedCustomProperty = computed(() => form.customProperties.some(
   (property) => isReservedPropertyName(property.name),
 ))
@@ -312,6 +314,7 @@ const resetForm = () => {
   form.collectionId = ''
   form.colors = ['']
   form.sizes = ['']
+  form.sweatshirtSizes = ['']
   form.shoeSizes = ['']
   form.beltSizes = ['']
   form.sizePrices = {}
@@ -345,12 +348,13 @@ const buildProductFormData = () => {
       required: property.required,
       options: property.options.map((option) => option.trim()).filter(Boolean),
     }))
-    .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
+    .filter((property) => property.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
   formData.append('color', colors.join(', '))
   formData.append('size', sizes.join(', '))
+  formData.append('sweatshirtSize', sortSizeOptions(form.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '))
   formData.append('shoeSize', form.shoeSizes.filter(Boolean).join(', '))
   formData.append('beltSize', form.beltSizes.filter(Boolean).join(', '))
   formData.append('sizePrices', JSON.stringify(sizePriceRows.value.reduce((prices, row) => {
@@ -588,6 +592,12 @@ watch(
             <label>Shirt Sizes</label>
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
             <p class="hint">Each size becomes an option in one Shirt Size dropdown on the item page.</p>
+          </div>
+
+          <div class="field">
+            <label>Sweatshirt Sizes</label>
+            <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" />
+            <p class="hint">Optional. Uses the same size choices as shirts in a separate Sweatshirt Size dropdown.</p>
           </div>
 
           <div class="field">

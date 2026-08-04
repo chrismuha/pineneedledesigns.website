@@ -8,7 +8,7 @@ import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 
 const COMFORT_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
-const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'];
+const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'];
 
 const validId = (value) => typeof value === 'string' && isValidObjectId(value);
 const objectId = (value) => Types.ObjectId.createFromHexString(String(value));
@@ -194,7 +194,7 @@ const normalizeSizePrices = (value) => {
 
   return Object.entries(prices).reduce((normalized, [key, price]) => {
     const amount = Number(price);
-    if (/^(?:shirt|shoe|belt):.+$/.test(key) && Number.isFinite(amount) && amount >= 0) {
+    if (/^(?:shirt|sweatshirt|shoe|belt):.+$/.test(key) && Number.isFinite(amount) && amount >= 0) {
       normalized[key] = amount;
     }
     return normalized;
@@ -253,6 +253,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
       collectionId,
       color: normalizeColors(body?.color),
       size: sortSizeOptions(String(body?.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
+      sweatshirtSize: sortSizeOptions(String(body?.sweatshirtSize || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
       shoeSize: normalizeShoeSizes(body?.shoeSize),
       beltSize: normalizeBeltSizes(body?.beltSize),
       sizePrices: normalizeSizePrices(body?.sizePrices),
@@ -300,6 +301,7 @@ const formatProductForDashboard = (product) => ({
   ),
   color: normalizeColors(product.color),
   size: sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
+  sweatshirtSize: sortSizeOptions(String(product.sweatshirtSize || '').split(',').map((size) => size.trim()).filter(Boolean)).join(', '),
   shoeSize: normalizeShoeSizes(product.shoeSize),
   beltSize: normalizeBeltSizes(product.beltSize),
   sizePrices: normalizeSizePrices(product.sizePrices),
@@ -408,6 +410,7 @@ export const createProduct = async (req, res) => {
     subCollectionId: subcollectionResult.id,
     color: data.color,
     size: data.size,
+    sweatshirtSize: data.sweatshirtSize,
     shoeSize: data.shoeSize,
     beltSize: data.beltSize,
     sizePrices: data.sizePrices,
@@ -461,6 +464,7 @@ export const updateProduct = async (req, res) => {
   if (data.description) product.description = data.description;
   if (req.body?.color !== undefined) product.color = data.color;
   if (req.body?.size !== undefined) product.size = data.size;
+  if (req.body?.sweatshirtSize !== undefined) product.sweatshirtSize = data.sweatshirtSize;
   if (req.body?.shoeSize !== undefined) product.shoeSize = data.shoeSize;
   if (req.body?.beltSize !== undefined) product.beltSize = data.beltSize;
   if (req.body?.sizePrices !== undefined) product.sizePrices = data.sizePrices;

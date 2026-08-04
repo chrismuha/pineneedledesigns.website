@@ -3,11 +3,15 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
+import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 
 const loading = ref(true)
 const route = useRoute()
 const error = ref('')
 const draftCount = ref(0)
+const pendingProductDelete = ref(null)
+const productDeleteStep = ref(0)
+const deletingProduct = ref(false)
 const stats = ref({
   productCount: 0,
   collectionCount: 0,
@@ -42,6 +46,37 @@ const bookingDetails = computed(() => {
 
 const scrollToRecentItems = () => {
   recentItemsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+const requestProductDeletion = (product) => {
+  pendingProductDelete.value = product
+  productDeleteStep.value = 1
+}
+
+const cancelProductDeletion = () => {
+  pendingProductDelete.value = null
+  productDeleteStep.value = 0
+}
+
+const confirmProductDeletion = async () => {
+  if (productDeleteStep.value === 1) {
+    productDeleteStep.value = 2
+    return
+  }
+  const product = pendingProductDelete.value
+  if (!product?._id) return
+  deletingProduct.value = true
+  error.value = ''
+  try {
+    await dashboardApi.deleteProduct(product._id)
+    stats.value.recentProducts = stats.value.recentProducts.filter((item) => item._id !== product._id)
+    stats.value.productCount = Math.max(0, Number(stats.value.productCount || 0) - 1)
+    cancelProductDeletion()
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    deletingProduct.value = false
+  }
 }
 
 const loadStats = async () => {
@@ -96,6 +131,7 @@ onMounted(loadStats)
     </section>
 
     <p v-if="loading" class="status-text">Loading dashboard...</p>
+    <p v-if="error" class="error-banner">{{ error }}</p>
 
     <section v-else class="stats-grid">
       <RouterLink to="/dashboard/items" class="stat-card stat-card-link">
@@ -164,23 +200,40 @@ onMounted(loadStats)
       </RouterLink>
 
       <div v-else class="recent-list">
-        <RouterLink v-for="product in stats.recentProducts" :key="product._id" class="recent-card recent-card-link" :to="{ path: '/dashboard/items', query: { item: product._id } }">
-          <img
-            v-if="product.photos?.[0]"
-            :src="product.photos[0]"
-            :alt="product.name"
-            class="recent-photo"
-          >
-          <div>
-            <h3>{{ product.name }}</h3>
-            <p v-if="!hasStyleSpecificPrice(product)">${{ Number(product.price).toFixed(2) }}</p>
-            <p v-if="product.blingPrice != null">With Bling: {{ formatMoney(product.blingPrice) }}</p>
-            <p v-if="product.noBlingPrice != null">Without Bling: {{ formatMoney(product.noBlingPrice) }}</p>
-            <p class="recent-date">{{ formatDate(product.createdAt) }}</p>
-          </div>
-        </RouterLink>
+        <div v-for="product in stats.recentProducts" :key="product._id" class="recent-card recent-item-card">
+          <RouterLink class="recent-item-link" :to="{ path: '/dashboard/items', query: { item: product._id } }">
+            <img
+              v-if="product.photos?.[0]"
+              :src="product.photos[0]"
+              :alt="product.name"
+              class="recent-photo"
+            >
+            <div>
+              <h3>{{ product.name }}</h3>
+              <p v-if="!hasStyleSpecificPrice(product)">${{ Number(product.price).toFixed(2) }}</p>
+              <p v-if="product.blingPrice != null">With Bling: {{ formatMoney(product.blingPrice) }}</p>
+              <p v-if="product.noBlingPrice != null">Without Bling: {{ formatMoney(product.noBlingPrice) }}</p>
+              <p class="recent-date">{{ formatDate(product.createdAt) }}</p>
+            </div>
+          </RouterLink>
+          <button type="button" class="recent-delete-button" :aria-label="`Delete ${product.name}`" @click="requestProductDeletion(product)">
+            <i class="bi bi-trash" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </section>
+
+    <DashboardConfirmDialog
+      :open="Boolean(pendingProductDelete)"
+      :step-label="`Confirmation ${productDeleteStep} of 2`"
+      :title="productDeleteStep === 1 ? `Delete ${pendingProductDelete?.name || 'item'}?` : 'Permanently delete this item?'"
+      :message="productDeleteStep === 1 ? 'The item will be removed from the store.' : 'This action cannot be undone.'"
+      :confirm-label="productDeleteStep === 1 ? 'Continue' : 'Delete Item'"
+      :cancel-label="productDeleteStep === 1 ? 'Keep Item' : 'Go Back'"
+      :busy="deletingProduct"
+      @confirm="confirmProductDeletion"
+      @cancel="productDeleteStep === 1 ? cancelProductDeletion() : productDeleteStep = 1"
+    />
   </div>
 </template>
 
@@ -331,6 +384,10 @@ onMounted(loadStats)
 }
 .recent-card-link { color: inherit; text-decoration: none; }
 .recent-card-link:hover { border-color: var(--dashboard-primary-action-color); }
+.recent-item-card { justify-content: space-between; }
+.recent-item-link { display: flex; min-width: 0; flex: 1; align-items: center; gap: 16px; color: inherit; text-decoration: none; }
+.recent-delete-button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 1px solid var(--dashboard-destructive-action-color); border-radius: 10px; background: var(--dashboard-destructive-action-soft-surface); color: var(--dashboard-destructive-action-color); font-size: 14.4pt; cursor: pointer; }
+.recent-delete-button:focus-visible { outline: 3px solid var(--dashboard-destructive-action-color); outline-offset: 2px; }
 
 .recent-photo {
   width: 72px;

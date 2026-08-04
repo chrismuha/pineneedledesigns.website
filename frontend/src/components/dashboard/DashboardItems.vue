@@ -66,6 +66,7 @@ const editSnapshot = (product) => JSON.stringify({
   subCollectionId: String(product?.subCollectionId || ''),
   colors: (product?.colors || []).map((value) => String(value)),
   sizes: (product?.sizes || []).map((value) => String(value)),
+  sweatshirtSizes: (product?.sweatshirtSizes || []).map((value) => String(value)),
   shoeSizes: (product?.shoeSizes || []).map((value) => String(value)),
   beltSizes: (product?.beltSizes || []).map((value) => String(value)),
   sizePrices: Object.fromEntries(Object.entries(product?.sizePrices || {}).sort(([left], [right]) => left.localeCompare(right))),
@@ -98,6 +99,7 @@ const editIsDirty = computed(() => Boolean(
 
 const editSizePriceRows = computed(() => editingProduct.value ? [
   ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ] : [])
@@ -432,6 +434,7 @@ const initializeEditModal = async (product) => {
     (property) => String(property.name).toLowerCase() === 'size',
   )
   const sizes = sortSizeOptions(optionValues(product.sizes, product.size, sizeProperty?.options))
+  const sweatshirtSizes = sortSizeOptions(optionValues(product.sweatshirtSizes, product.sweatshirtSize))
   const shoeSizes = optionValues(product.shoeSizes, product.shoeSize)
   const beltSizes = optionValues(product.beltSizes, product.beltSize)
 
@@ -447,12 +450,13 @@ const initializeEditModal = async (product) => {
     generalDescription: product.generalDescription || product.description || '',
     colors: colors.length ? colors : [''],
     sizes: sizes.length ? sizes : [''],
+    sweatshirtSizes: sweatshirtSizes.length ? sweatshirtSizes : [''],
     shoeSizes: shoeSizes.length ? shoeSizes : [''],
     beltSizes: beltSizes.length ? beltSizes : [''],
     sizePrices: { ...(product.sizePrices || {}) },
     comfortColors: [...(product.comfortColors || [])],
     customProperties: customProperties.filter(
-      (property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()),
+      (property) => !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()),
     ),
     videos: Array.isArray(product.videos)
       ? product.videos.join('\n')
@@ -803,9 +807,9 @@ const saveProduct = async () => {
   }
 
   if (editingProduct.value.customProperties.some((property) => (
-    ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name || '').trim().toLowerCase())
+    ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Shirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Shirt Size, Sweatshirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -826,13 +830,14 @@ const saveProduct = async () => {
         required: Boolean(property.required),
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
-      .filter((property) => property.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
+      .filter((property) => property.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
     const formData = new FormData()
     formData.append('name', editingProduct.value.name)
     formData.append('collectionId', editingProduct.value.collectionId)
     formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
     formData.append('color', colors.join(', '))
     formData.append('size', sizes.join(', '))
+    formData.append('sweatshirtSize', sortSizeOptions(editingProduct.value.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '))
     formData.append('shoeSize', editingProduct.value.shoeSizes.filter(Boolean).join(', '))
     formData.append('beltSize', editingProduct.value.beltSizes.filter(Boolean).join(', '))
     formData.append('sizePrices', JSON.stringify(editSizePriceRows.value.reduce((prices, row) => {
@@ -995,7 +1000,7 @@ const sortedOptions = (options = []) => [...options].sort((left, right) => (
   left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 ))
 const hasStyleSpecificPrice = (product) => product.blingPrice != null || product.noBlingPrice != null
-const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
+const isReservedPropertyName = (name) => ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(name || '').trim().toLowerCase())
 const customPropertiesForDisplay = (properties = []) => sortedProperties(properties).filter(
   (property) => !isReservedPropertyName(property.name),
 )
@@ -1004,7 +1009,7 @@ const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
 const sizePriceLabel = (key) => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: 'Shirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: 'Shirt Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1208,6 +1213,7 @@ onBeforeUnmount(() => {
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
+          <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
@@ -1414,6 +1420,12 @@ onBeforeUnmount(() => {
           <label>Shirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
           <p class="hint">These appear together in one Shirt Size dropdown.</p>
+        </div>
+
+        <div class="field">
+          <label>Sweatshirt Sizes</label>
+          <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" />
+          <p class="hint">Optional. Uses the same choices in a separate Sweatshirt Size dropdown.</p>
         </div>
 
         <div class="field">

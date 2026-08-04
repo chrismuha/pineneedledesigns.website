@@ -336,6 +336,7 @@ const isNoBlingSelected = (product) => selectedStyle(product) === noBlingStyle
 const selectedSizePrice = (product) => {
   const sizeOptions = [
     ['Shirt Size', 'shirt'],
+    ['Sweatshirt Size', 'sweatshirt'],
     ['Shoe Size', 'shoe'],
     ['Belt Size', 'belt'],
   ]

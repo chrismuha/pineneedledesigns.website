@@ -10,6 +10,7 @@ const removeDuplicateProductSizes = async () => {
   const products = await Product.find({
     $or: [
       { size: /,/ },
+      { sweatshirtSize: /,/ },
       { shoeSize: /,/ },
       { beltSize: /,/ },
     ],
@@ -24,10 +25,12 @@ const removeDuplicateProductSizes = async () => {
 
   for (const product of products) {
     const size = sortSizeOptions(String(product.size || '').split(',')).join(', ');
+    const sweatshirtSize = sortSizeOptions(String(product.sweatshirtSize || '').split(',')).join(', ');
     const shoeSize = uniqueList(product.shoeSize).join(', ');
     const beltSize = uniqueList(product.beltSize).join(', ');
-    if (size === product.size && shoeSize === product.shoeSize && beltSize === product.beltSize) continue;
+    if (size === product.size && sweatshirtSize === product.sweatshirtSize && shoeSize === product.shoeSize && beltSize === product.beltSize) continue;
     product.size = size;
+    product.sweatshirtSize = sweatshirtSize;
     product.shoeSize = shoeSize;
     product.beltSize = beltSize;
     await product.save();

@@ -29,6 +29,7 @@ const productPriceForCartItem = (product, item) => {
   const selected = item.selectedOptions || {};
   const sizeKeys = [
     ['Shirt Size', 'shirt'],
+    ['Sweatshirt Size', 'sweatshirt'],
     ['Shoe Size', 'shoe'],
     ['Belt Size', 'belt'],
   ];

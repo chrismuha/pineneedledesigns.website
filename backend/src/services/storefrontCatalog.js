@@ -71,7 +71,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     .find((property) => String(property.name).trim().toLowerCase() === name.toLowerCase())
     ?.options?.map((value) => String(value).trim()).filter(Boolean) || [];
   const customOptions = customProperties
-    .filter((property) => !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()))
+    .filter((property) => !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name).toLowerCase()))
     .map((property) => ({
       name: property.name,
       values: property.options || [],
@@ -81,6 +81,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
   const colorOptions = colors.length ? colors : propertyValues('Color');
   const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
+  const sweatshirtSizeOptions = sortSizeOptions(String(product.sweatshirtSize || '').split(',').map((value) => value.trim()).filter(Boolean));
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortShoeSizes);
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
@@ -97,6 +98,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
     ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
+    ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
     ...customOptions,

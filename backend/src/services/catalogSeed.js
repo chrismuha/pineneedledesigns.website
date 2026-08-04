@@ -23,7 +23,7 @@ const mapOptionsToCustomProperties = (options) => {
         ? option.values.map((value) => String(value || '').trim()).filter(Boolean)
         : [],
     }))
-    .filter((option) => option.name && !['color', 'size', 'shirt size', 'shoe size', 'belt size', 'style'].includes(option.name.toLowerCase()));
+    .filter((option) => option.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style'].includes(option.name.toLowerCase()));
 };
 
 const mapOptionPlaceholders = (options) => {
@@ -126,6 +126,7 @@ export const seedCatalog = async () => {
             description: product.description || '',
             color: optionValues(product.options, 'Color').join(', '),
             size: sortSizeOptions(optionValues(product.options, 'Size')).join(', '),
+            sweatshirtSize: sortSizeOptions(optionValues(product.options, 'Sweatshirt Size')).join(', '),
             beltSize: optionValues(product.options, 'Belt Size').join(', '),
             sizePrices: {},
             collectionId: collection._id,
