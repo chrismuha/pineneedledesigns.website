@@ -74,10 +74,14 @@ jobs:
               "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
               > backend/.env
 
-            # npm's download cache is disposable and can otherwise fill the
-            # small production volume while npm ci recreates node_modules.
+            # Reclaim only disposable server data before installing. Product
+            # uploads are intentionally left untouched.
+            pm2 flush || true
+            sudo journalctl --vacuum-size=100M || true
+            sudo apt-get clean
             npm cache clean --force
-            npm ci --omit=dev --ignore-scripts
+            df -h /
+            npm install --omit=dev --ignore-scripts
             npm run seed -w backend
 
             # Nginx defaults to a 1 MB request body, which rejects normal product
