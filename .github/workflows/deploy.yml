@@ -74,6 +74,9 @@ jobs:
               "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
               > backend/.env
 
+            # npm's download cache is disposable and can otherwise fill the
+            # small production volume while npm ci recreates node_modules.
+            npm cache clean --force
             npm ci --omit=dev --ignore-scripts
             npm run seed -w backend
 
