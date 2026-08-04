@@ -64,6 +64,7 @@ const validateCartInventory = async (cart) => {
     productsByStorefrontId.set(id, product);
     inventoryLines.push({
       productId: product._id,
+      productName: product.name,
       quantity: requestedQuantity,
       shippingCost: Number(product.shippingCost || 0),
     });

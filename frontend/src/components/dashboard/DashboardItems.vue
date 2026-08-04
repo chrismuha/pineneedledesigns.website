@@ -1163,7 +1163,7 @@ onBeforeUnmount(() => {
 
           <div class="badges">
             <span class="badge" :class="product.outOfStock ? 'red' : 'green'">
-              {{ product.outOfStock ? 'Out Of Stock' : 'In Stock' }}
+              {{ product.outOfStock ? 'Out of Stock / Sold' : 'In Stock' }}
             </span>
             <span v-if="productSubcollectionLabel(product)" class="badge purple">
               {{ productSubcollectionLabel(product) }}
@@ -1646,13 +1646,13 @@ onBeforeUnmount(() => {
             required
             @input="handleEditQuantityChange"
           >
-          <p class="hint">Setting quantity to 0 automatically marks the item Out Of Stock.</p>
+          <p class="hint">Setting quantity to 0 automatically marks the item Out of Stock / Sold.</p>
         </div>
 
         <div class="field">
-          <label class="checkbox-row">
+          <label class="checkbox-row inventory-status-toggle">
             <input v-model="editingProduct.outOfStock" type="checkbox" :disabled="Number(editingProduct.quantity) === 0">
-            <span>Out Of Stock</span>
+            <span>Out of Stock / Sold</span>
           </label>
         </div>
 

@@ -776,12 +776,12 @@ watch(
         <div class="field">
           <label>Quantity Available *</label>
           <input v-model.number="form.quantity" type="number" min="0" step="1" required>
-          <p class="hint">Setting quantity to 0 automatically marks the item Out Of Stock.</p>
+          <p class="hint">Setting quantity to 0 automatically marks the item Out of Stock / Sold.</p>
         </div>
 
-        <label class="checkbox-row">
+        <label class="checkbox-row inventory-status-toggle">
           <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
-          Out Of Stock
+          <span>Out of Stock / Sold</span>
         </label>
       </section>
 
@@ -893,6 +893,20 @@ textarea {
 }
 .checkbox-row > * {
   width: fit-content;
+}
+.inventory-status-toggle {
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid var(--dashboard-item-creation-card-border);
+  border-radius: 12px;
+  font-size: 14.4pt;
+  font-weight: 700;
+}
+.inventory-status-toggle input[type='checkbox'] {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  margin: 0;
 }
 
 .section-header {

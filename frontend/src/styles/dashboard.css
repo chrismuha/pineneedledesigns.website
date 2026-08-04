@@ -271,6 +271,19 @@
   margin: 0;
   flex: 0 0 20px;
 }
+.field label.inventory-status-toggle {
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid var(--dashboard-field-textarea-border);
+  border-radius: 12px;
+  font-size: 14.4pt;
+  font-weight: 700;
+}
+.field label.inventory-status-toggle input[type='checkbox'] {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+}
 
 /* Collection filters */
 .collection-filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }

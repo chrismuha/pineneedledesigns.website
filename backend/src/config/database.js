@@ -5,6 +5,7 @@ import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { slugify } from '../utils/slug.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
+import { extractSweaterSizes } from '../utils/descriptionSizes.js';
 
 const removeDuplicateProductSizes = async () => {
   const products = await Product.find({
@@ -317,6 +318,34 @@ const backfillProductQuantities = async () => {
   );
 };
 
+const backfillSweaterSizes = async () => {
+  const products = await Product.find({
+    $and: [
+      { $or: [{ sweatshirtSize: { $exists: false } }, { sweatshirtSize: '' }] },
+      {
+        $or: [
+          { name: /sweat(?:shirt|er)/i },
+          { description: /sweat(?:shirt|er)/i },
+          { filters: /sweat(?:shirt|er)/i },
+        ],
+      },
+    ],
+  }).select('name description size sweatshirtSize');
+
+  let updated = 0;
+  for (const product of products) {
+    const descriptionSizes = extractSweaterSizes(product.description);
+    const legacySizes = sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean));
+    const sizes = descriptionSizes.length ? descriptionSizes : legacySizes;
+    if (!sizes.length) continue;
+    product.sweatshirtSize = sizes.join(', ');
+    await product.save();
+    updated += 1;
+  }
+
+  if (updated) console.log(`ℹ️ Backfilled sweatshirt sizes for ${updated} product(s) without changing descriptions.`);
+};
+
 const formatMongoConnectionError = (error) => {
   const message = String(error?.message || error);
   const hostname = (() => {
@@ -378,6 +407,7 @@ export const connectDatabase = async () => {
   await repairLegacyProductIndex();
   await backfillProductQuantities();
   await removeDuplicateProductSizes();
+  await backfillSweaterSizes();
   await renameNaturalWhiteColors();
   await backfillNoBlingDescriptions();
   await ensureMyraBeltsSubcollection();

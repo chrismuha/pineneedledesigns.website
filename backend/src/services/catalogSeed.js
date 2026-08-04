@@ -116,6 +116,10 @@ export const seedCatalog = async () => {
 
       const meta = Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean);
       const legacyId = Number(product.id);
+      const isSweatshirt = (product.filters || []).some((filter) => /sweat(?:shirt|er)/i.test(String(filter)))
+        || /sweatshirt/i.test(String(product.title || ''));
+      const legacySizes = optionValues(product.options, 'Size');
+      const sweatshirtSizes = optionValues(product.options, 'Sweatshirt Size');
 
       await Product.findOneAndUpdate(
         Number.isFinite(legacyId) ? { legacyId } : { name: product.title, collectionId: collection._id },
@@ -125,8 +129,8 @@ export const seedCatalog = async () => {
             name: product.title,
             description: product.description || '',
             color: optionValues(product.options, 'Color').join(', '),
-            size: sortSizeOptions(optionValues(product.options, 'Size')).join(', '),
-            sweatshirtSize: sortSizeOptions(optionValues(product.options, 'Sweatshirt Size')).join(', '),
+            size: sortSizeOptions(isSweatshirt ? [] : legacySizes).join(', '),
+            sweatshirtSize: sortSizeOptions(sweatshirtSizes.length ? sweatshirtSizes : (isSweatshirt ? legacySizes : [])).join(', '),
             beltSize: optionValues(product.options, 'Belt Size').join(', '),
             sizePrices: {},
             collectionId: collection._id,

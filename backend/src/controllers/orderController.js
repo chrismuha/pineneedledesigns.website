@@ -59,6 +59,54 @@ export const resolveOrder = async (req, res) => {
     return res.status(400).json({ error: 'Resolution must be canceled or refunded.' });
   }
 
+  const existingOrder = await Order.findOne({
+    _id: req.params.id,
+    inventoryReturnedAt: null,
+    resolution: 'active',
+  });
+
+  if (!existingOrder) {
+    const existing = await Order.findById(req.params.id);
+    if (!existing) return res.status(404).json({ error: 'Order not found.' });
+    return res.status(409).json({ error: 'Inventory has already been returned for this order.' });
+  }
+
+  const lines = Array.isArray(existingOrder.inventoryLines) ? existingOrder.inventoryLines : [];
+  const distinctOrderItems = (existingOrder.lineItems || []).filter((item, index, items) => (
+    items.findIndex((candidate) => String(candidate?.id || '') === String(item?.id || '')) === index
+  ));
+  const resolvedLines = [];
+  for (const [lineIndex, line] of lines.entries()) {
+    let product = await Product.findById(line.productId);
+    const matchingOrderItem = (existingOrder.lineItems || []).find(
+      (item) => String(item?.id || '') === String(line.productId || ''),
+    );
+    const productName = String(
+      line.productName
+      || matchingOrderItem?.title
+      || distinctOrderItems[lineIndex]?.title
+      || existingOrder.items?.[lineIndex]?.name
+      || '',
+    ).trim();
+
+    if (!product && productName) {
+      product = await Product.findOne({ name: productName })
+        .collation({ locale: 'en', strength: 2 })
+        .sort({ updatedAt: -1 });
+    }
+
+    if (!product) {
+      return res.status(409).json({
+        error: `${productName || 'This item'} is no longer available and cannot be restocked.`,
+      });
+    }
+
+    resolvedLines.push({
+      productId: product._id,
+      quantity: Number(line.quantity || 0),
+    });
+  }
+
   const order = await Order.findOneAndUpdate(
     { _id: req.params.id, inventoryReturnedAt: null, resolution: 'active' },
     {
@@ -74,9 +122,8 @@ export const resolveOrder = async (req, res) => {
     return res.status(409).json({ error: 'Inventory has already been returned for this order.' });
   }
 
-  const lines = Array.isArray(order.inventoryLines) ? order.inventoryLines : [];
-  if (lines.length) {
-    await Product.bulkWrite(lines.map((line) => ({
+  if (resolvedLines.length) {
+    await Product.bulkWrite(resolvedLines.map((line) => ({
       updateOne: {
         filter: { _id: line.productId },
         update: { $inc: { quantity: Number(line.quantity || 0) }, $set: { outOfStock: false } },
