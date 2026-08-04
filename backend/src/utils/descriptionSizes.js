@@ -26,10 +26,14 @@ const expandNumericRange = (start, end) => {
   return Array.from({ length: Math.floor((last - first) / step) + 1 }, (_, index) => String(first + (index * step)));
 };
 
-export const extractSweaterSizes = (description) => {
-  const text = String(description || '');
-  const clauses = [...text.matchAll(/\b(?:size|sizes|fits?|available)\b[^.!?]{0,140}/gi)]
+const sizeClauses = (source) => {
+  const text = Array.isArray(source) ? source.join('. ') : String(source || '');
+  return [...text.matchAll(/\b(?:size|sizes|fits?|available)\b(?:(?:\d\.\d)|[^.!?]){0,140}/gi)]
     .map((match) => match[0]);
+};
+
+const extractWearableSizes = (source, { numeric = true } = {}) => {
+  const clauses = sizeClauses(source);
   if (!clauses.length) return [];
 
   const sizes = [];
@@ -39,10 +43,28 @@ export const extractSweaterSizes = (description) => {
       sizes.push(...expandXRange(start, end));
       return ' ';
     });
-    remaining = remaining.replace(/\b(\d{1,2})\s*[-–—]\s*(\d{1,2})\b/g, (_match, start, end) => {
-      sizes.push(...expandNumericRange(start, end));
+    remaining = remaining.replace(/\b(?:xs|s|m|l|xl|[1-9]x)\s*[-–—]\s*(?:xs|s|m|l|xl|[1-9]x)\b/gi, (range) => {
+      const [start, end] = range.split(/\s*[-–—]\s*/).map(normalizeNamedSize);
+      const order = ['XS', 'Small', 'Medium', 'Large', 'XL', '2X', '3X', '4X', '5X', '6X', '7X', '8X', '9X'];
+      const first = order.indexOf(start);
+      const last = order.indexOf(end);
+      if (first >= 0 && last >= first) sizes.push(...order.slice(first, last + 1));
       return ' ';
     });
+    remaining = remaining.replace(/\b(?:xs|s|m|l|xl|[1-9]x)\s*\/\s*(?:xs|s|m|l|xl|[1-9]x)\b/gi, (pair) => {
+      sizes.push(...pair.split(/\s*\/\s*/).map(normalizeNamedSize).filter(Boolean));
+      return ' ';
+    });
+    if (numeric) {
+      remaining = remaining.replace(/\b(\d{1,2})\s*[-–—]\s*(\d{1,2})\b/g, (_match, start, end) => {
+        sizes.push(...expandNumericRange(start, end));
+        return ' ';
+      });
+      for (const match of remaining.matchAll(/\b\d{1,2}\b/g)) {
+        const tail = remaining.slice(match.index + match[0].length);
+        if (!/^\s*(?:["”']|x\b)/i.test(tail)) sizes.push(match[0]);
+      }
+    }
     for (const match of remaining.matchAll(/\b(?:extra\s+small|extra\s+large|small|medium|large|xs|xl|[1-9]x)\b/gi)) {
       const phrase = match[0].replace(/^extra\s+small$/i, 'XS').replace(/^extra\s+large$/i, 'XL');
       const normalized = normalizeNamedSize(phrase);
@@ -52,3 +74,20 @@ export const extractSweaterSizes = (description) => {
 
   return sortSizeOptions(sizes);
 };
+
+export const extractSweaterSizes = (source) => extractWearableSizes(source);
+
+export const extractClothingSizes = (source) => extractWearableSizes(source);
+
+export const extractShoeSizes = (source) => {
+  const sizes = [];
+  for (const clause of sizeClauses(source)) {
+    for (const match of clause.matchAll(/\b\d{1,2}(?:\.5)?\b/g)) {
+      const tail = clause.slice(match.index + match[0].length);
+      if (!/^\s*(?:["”']|x\b)/i.test(tail)) sizes.push(match[0]);
+    }
+  }
+  return [...new Set(sizes)];
+};
+
+export const extractBeltSizes = (source) => extractWearableSizes(source);

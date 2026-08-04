@@ -3,7 +3,8 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
-import { sortSizeOptions } from '../utils/sizeOptions.js';
+import { defaultShirtSizes, sortSizeOptions } from '../utils/sizeOptions.js';
+import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
 
 const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
@@ -80,8 +81,15 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const colors = String(product.color || '').split(',').map(normalizeColorName).filter(Boolean);
   const sizes = String(product.size || '').split(',').map((value) => value.trim()).filter(Boolean);
   const colorOptions = colors.length ? colors : propertyValues('Color');
-  const sizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
+  const storedSizeOptions = sortSizeOptions(sizes.length ? sizes : propertyValues('Size'));
   const sweatshirtSizeOptions = sortSizeOptions(String(product.sweatshirtSize || '').split(',').map((value) => value.trim()).filter(Boolean));
+  const isSweatshirt = isSweatshirtProduct(product, categoryFilters);
+  const isTShirt = isTShirtProduct(product, categoryFilters);
+  const sizeOptions = storedSizeOptions.length || sweatshirtSizeOptions.length || !(isSweatshirt || isTShirt)
+    ? storedSizeOptions
+    : defaultShirtSizes;
+  const useDedicatedSweatshirtSizes = isSweatshirt
+    && sweatshirtSizeOptions.length > 0;
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortShoeSizes);
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
@@ -97,7 +105,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
-    ...(sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
+    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
     ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),

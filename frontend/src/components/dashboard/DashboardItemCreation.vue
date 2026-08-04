@@ -591,13 +591,13 @@ watch(
           <div class="field">
             <label>Shirt Sizes</label>
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
-            <p class="hint">Each size becomes an option in one Shirt Size dropdown on the item page.</p>
+            <p class="hint">Use for T-shirts. This legacy field is also the shared fallback when a T-shirt or sweatshirt has no dedicated sizes.</p>
           </div>
 
           <div class="field">
             <label>Sweatshirt Sizes</label>
             <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" />
-            <p class="hint">Optional. Uses the same size choices as shirts in a separate Sweatshirt Size dropdown.</p>
+            <p class="hint">Use for sweatshirts. These replace the Shirt Size fallback on known sweatshirt items.</p>
           </div>
 
           <div class="field">

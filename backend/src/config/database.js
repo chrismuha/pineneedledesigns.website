@@ -4,8 +4,14 @@ import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { slugify } from '../utils/slug.js';
-import { sortSizeOptions } from '../utils/sizeOptions.js';
-import { extractSweaterSizes } from '../utils/descriptionSizes.js';
+import { defaultShirtSizes, sortSizeOptions } from '../utils/sizeOptions.js';
+import {
+  extractBeltSizes,
+  extractClothingSizes,
+  extractShoeSizes,
+  extractSweaterSizes,
+} from '../utils/descriptionSizes.js';
+import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
 
 const removeDuplicateProductSizes = async () => {
   const products = await Product.find({
@@ -318,32 +324,78 @@ const backfillProductQuantities = async () => {
   );
 };
 
-const backfillSweaterSizes = async () => {
+const backfillProductSizes = async () => {
   const products = await Product.find({
-    $and: [
-      { $or: [{ sweatshirtSize: { $exists: false } }, { sweatshirtSize: '' }] },
-      {
-        $or: [
-          { name: /sweat(?:shirt|er)/i },
-          { description: /sweat(?:shirt|er)/i },
-          { filters: /sweat(?:shirt|er)/i },
-        ],
-      },
+    $or: [
+      { size: { $exists: false } }, { size: '' },
+      { sweatshirtSize: { $exists: false } }, { sweatshirtSize: '' },
+      { shoeSize: { $exists: false } }, { shoeSize: '' },
+      { beltSize: { $exists: false } }, { beltSize: '' },
     ],
-  }).select('name description size sweatshirtSize');
+  })
+    .populate('collectionId', 'name slug')
+    .populate('subCollectionId', 'name slug')
+    .select('name description meta filters size sweatshirtSize shoeSize beltSize collectionId subCollectionId');
 
   let updated = 0;
   for (const product of products) {
-    const descriptionSizes = extractSweaterSizes(product.description);
-    const legacySizes = sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean));
-    const sizes = descriptionSizes.length ? descriptionSizes : legacySizes;
-    if (!sizes.length) continue;
-    product.sweatshirtSize = sizes.join(', ');
+    const productType = [
+      product.name,
+      ...(product.filters || []),
+      product.collectionId?.name,
+      product.collectionId?.slug,
+      product.subCollectionId?.name,
+      product.subCollectionId?.slug,
+    ].filter(Boolean).join(' ');
+    const source = [product.description, ...(product.meta || [])];
+    const isSweatshirt = isSweatshirtProduct(product);
+    const isTShirt = isTShirtProduct(product);
+    let field = '';
+    let sizes = [];
+    let migratedLegacySizes = false;
+
+    // The original `size` field remains the shared shirt-size fallback. Once an
+    // item's type is known, move legacy values into the appropriate dedicated
+    // field so the storefront does not render duplicate selectors.
+    if (isSweatshirt && String(product.size || '').trim()) {
+      if (!String(product.sweatshirtSize || '').trim()) product.sweatshirtSize = product.size;
+      product.size = '';
+      migratedLegacySizes = true;
+    } else if (isTShirt && !String(product.size || '').trim() && String(product.sweatshirtSize || '').trim()) {
+      product.size = product.sweatshirtSize;
+      product.sweatshirtSize = '';
+      migratedLegacySizes = true;
+    }
+
+    if (isSweatshirt && !String(product.sweatshirtSize || '').trim()) {
+      field = 'sweatshirtSize';
+      sizes = extractSweaterSizes(source);
+      if (!sizes.length) {
+        sizes = sortSizeOptions(String(product.size || '').split(',').map((size) => size.trim()).filter(Boolean));
+      }
+    } else if (/\b(?:shoe|shoes|heel|heels|boot|boots|sandal|sandals|footwear)\b/i.test(productType) && !String(product.shoeSize || '').trim()) {
+      field = 'shoeSize';
+      sizes = extractShoeSizes(source);
+    } else if (/\bbelts?\b/i.test(productType) && !String(product.beltSize || '').trim()) {
+      field = 'beltSize';
+      sizes = extractBeltSizes(source);
+    } else if (/\b(?:shirts?|t[ -]?shirts?|tops?|jackets?|jeans?|pants?|leggings?|shorts?|skirts?|dresses?|vests?|clothing|apparel)\b/i.test(productType) && !String(product.size || '').trim()) {
+      field = 'size';
+      sizes = extractClothingSizes(source);
+    }
+
+    if (sizes.length) product[field] = sizes.join(', ');
+    if (!sizes.length && !migratedLegacySizes && (isSweatshirt || isTShirt)
+      && !String(product.size || '').trim() && !String(product.sweatshirtSize || '').trim()) {
+      product.size = defaultShirtSizes.join(', ');
+      migratedLegacySizes = true;
+    }
+    if (!sizes.length && !migratedLegacySizes) continue;
     await product.save();
     updated += 1;
   }
 
-  if (updated) console.log(`ℹ️ Backfilled sweatshirt sizes for ${updated} product(s) without changing descriptions.`);
+  if (updated) console.log(`ℹ️ Backfilled and routed size dropdowns for ${updated} product(s) without changing descriptions.`);
 };
 
 const formatMongoConnectionError = (error) => {
@@ -407,7 +459,7 @@ export const connectDatabase = async () => {
   await repairLegacyProductIndex();
   await backfillProductQuantities();
   await removeDuplicateProductSizes();
-  await backfillSweaterSizes();
+  await backfillProductSizes();
   await renameNaturalWhiteColors();
   await backfillNoBlingDescriptions();
   await ensureMyraBeltsSubcollection();

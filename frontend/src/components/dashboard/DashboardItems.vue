@@ -1432,13 +1432,13 @@ onBeforeUnmount(() => {
         <div class="field">
           <label>Shirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
-          <p class="hint">These appear together in one Shirt Size dropdown.</p>
+          <p class="hint">Use for T-shirts. This legacy field is also the shared fallback when a T-shirt or sweatshirt has no dedicated sizes.</p>
         </div>
 
         <div class="field">
           <label>Sweatshirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" />
-          <p class="hint">Optional. Uses the same choices in a separate Sweatshirt Size dropdown.</p>
+          <p class="hint">Use for sweatshirts. These replace the Shirt Size fallback on known sweatshirt items.</p>
         </div>
 
         <div class="field">

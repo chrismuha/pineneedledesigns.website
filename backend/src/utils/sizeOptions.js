@@ -1,4 +1,5 @@
 const standardSizeOrder = ['XS', 'Small', 'Medium', 'Large', 'XL', '2X', '3X'];
+export const defaultShirtSizes = ['Small', 'Medium', 'Large', 'XL', '2X', '3X'];
 const aliases = new Map([
   ['xs', 'XS'], ['s', 'Small'], ['small', 'Small'], ['m', 'Medium'], ['medium', 'Medium'],
   ['l', 'Large'], ['large', 'Large'], ['xl', 'XL'], ['1x', 'XL'], ['2x', '2X'], ['3x', '3X'],
