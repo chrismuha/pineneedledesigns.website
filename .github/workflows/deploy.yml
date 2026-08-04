@@ -42,6 +42,15 @@ jobs:
           script: |
             set -euo pipefail
             cd ~/pineneedledesigns.website
+
+            # Reclaim disposable server data before Git needs room to fetch and
+            # unpack the new revision. Product uploads are left untouched.
+            pm2 flush || true
+            sudo journalctl --vacuum-size=100M || true
+            sudo apt-get clean
+            npm cache clean --force
+            df -h /
+
             git fetch origin main
             git reset --hard origin/main
             git clean -fd
@@ -74,13 +83,6 @@ jobs:
               "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
               > backend/.env
 
-            # Reclaim only disposable server data before installing. Product
-            # uploads are intentionally left untouched.
-            pm2 flush || true
-            sudo journalctl --vacuum-size=100M || true
-            sudo apt-get clean
-            npm cache clean --force
-            df -h /
             npm install --omit=dev --ignore-scripts
             npm run seed -w backend
 
