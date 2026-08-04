@@ -22,6 +22,13 @@ const bootstrap = async () => {
   await catalogStore.initialize()
 
   app.use(router)
+  await router.isReady()
+  // Some older iOS home-screen installations retain the page that was open
+  // when the icon was created instead of adopting the manifest start_url.
+  // The installed Pine Needle app is the dashboard, so repair root launches.
+  if (isInstalledPwa() && router.currentRoute.value.path === '/') {
+    await router.replace('/dashboard')
+  }
   app.mount('#app')
 }
 
