@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
@@ -555,8 +555,12 @@ const persistEditDraft = async () => {
       name: editingProduct.value.name?.trim() || 'Untitled item',
       updatedAt: new Date().toISOString(),
       form: JSON.parse(JSON.stringify(editingProduct.value)),
-      photos: editPhotoFiles.value.map(({ file, sourceFile, cropState }) => ({ file, sourceFile, cropState })),
-      videos: editVideoFiles.value.map(({ file }) => ({ file })),
+      photos: editPhotoFiles.value.map(({ file, sourceFile, cropState }) => ({
+        file: toRaw(file),
+        sourceFile: sourceFile ? toRaw(sourceFile) : undefined,
+        cropState: cropState ? JSON.parse(JSON.stringify(cropState)) : null,
+      })),
+      videos: editVideoFiles.value.map(({ file }) => ({ file: toRaw(file) })),
     })
     return true
   } catch {

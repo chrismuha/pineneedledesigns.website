@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
@@ -185,8 +185,14 @@ const persistDraft = async ({ notify = false } = {}) => {
       updatedAt,
       name: form.name.trim() || 'Untitled item',
       form: JSON.parse(JSON.stringify(form)),
-      photos: photoFiles.value.map(({ file, sourceFile, cropState }) => ({ file, sourceFile, cropState })),
-      videos: videoFiles.value.map(({ file }) => ({ file })),
+      // IndexedDB can store File/Blob values, but it cannot clone Vue's reactive
+      // proxies. iOS reports that failure as "The object can not be cloned."
+      photos: photoFiles.value.map(({ file, sourceFile, cropState }) => ({
+        file: toRaw(file),
+        sourceFile: sourceFile ? toRaw(sourceFile) : undefined,
+        cropState: cropState ? JSON.parse(JSON.stringify(cropState)) : null,
+      })),
+      videos: videoFiles.value.map(({ file }) => ({ file: toRaw(file) })),
     })
     activeDraftId.value = id
     if (notify) {

@@ -43,10 +43,18 @@ const convertFile = async (file) => {
 export const convertUploadedMedia = async (req, _res, next) => {
   try {
     if (Array.isArray(req.files)) {
-      req.files = await Promise.all(req.files.map(convertFile));
+      const convertedFiles = [];
+      for (const file of req.files) {
+        convertedFiles.push(await convertFile(file));
+      }
+      req.files = convertedFiles;
     } else if (req.files) {
       for (const [field, files] of Object.entries(req.files)) {
-        req.files[field] = await Promise.all(files.map(convertFile));
+        const convertedFiles = [];
+        for (const file of files) {
+          convertedFiles.push(await convertFile(file));
+        }
+        req.files[field] = convertedFiles;
       }
     }
     next();
