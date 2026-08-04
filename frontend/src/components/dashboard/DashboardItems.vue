@@ -38,6 +38,7 @@ const editCancellationStep = ref(0)
 const pendingSubcollectionDelete = ref(null)
 const pendingProductDelete = ref(null)
 const productDeleteStep = ref(0)
+const deletingProduct = ref(false)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
@@ -883,8 +884,10 @@ const removeProduct = async (productId) => {
   try {
     await dashboardApi.deleteProduct(productId)
     await loadItems()
+    return true
   } catch (err) {
     error.value = err.message
+    return false
   }
 }
 const requestProductDeletion = (product) => {
@@ -899,8 +902,18 @@ const cancelProductDeletion = () => {
 const confirmProductDeletion = async () => {
   const product = pendingProductDelete.value
   if (!product) return
+  const deletingEditedProduct = String(editingProduct.value?._id || '') === String(product._id)
+  deletingProduct.value = true
   cancelProductDeletion()
-  await removeProduct(product._id)
+  const removed = await removeProduct(product._id)
+  if (removed && deletingEditedProduct) {
+    suppressEditAutoSave = true
+    window.clearTimeout(editAutoSaveTimer)
+    await deleteItemDraft(editDraftId(product._id))
+    await closeEditModal()
+    suppressEditAutoSave = false
+  }
+  deletingProduct.value = false
 }
 
 const saveCollection = async () => {
@@ -1644,6 +1657,10 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="modal-actions">
+          <button type="button" class="btn-danger" :disabled="saving || savingEditDraft || deletingProduct" @click="requestProductDeletion(editingProduct)">
+            <i class="bi bi-trash" aria-hidden="true"></i>
+            Delete Item
+          </button>
           <button type="button" class="btn-outline" :disabled="saving || savingEditDraft" @click="saveEditDraftManually">
             {{ savingEditDraft ? 'Saving Draft...' : 'Save Draft' }}
           </button>
@@ -1797,6 +1814,7 @@ onBeforeUnmount(() => {
       :message="productDeleteStep === 1 ? 'The item will be removed from the store.' : 'This action cannot be undone.'"
       :confirm-label="productDeleteStep === 1 ? 'Continue' : 'Delete Item'"
       :cancel-label="productDeleteStep === 1 ? 'Keep Item' : 'Go Back'"
+      :busy="deletingProduct"
       @confirm="productDeleteStep === 1 ? continueProductDeletion() : confirmProductDeletion()"
       @cancel="productDeleteStep === 1 ? cancelProductDeletion() : productDeleteStep = 1"
     />
