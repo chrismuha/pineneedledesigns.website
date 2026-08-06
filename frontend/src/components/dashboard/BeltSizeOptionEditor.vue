@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-const beltSizes = ['Small', 'Medium', 'Large', '2XL', '3XL', ...Array.from({ length: 13 }, (_, index) => String(28 + (index * 2)))]
+const beltSizes = ['Small', 'Medium', 'Large', 'XL', '2XL', '3XL', ...Array.from({ length: 13 }, (_, index) => String(28 + (index * 2)))]
 const CUSTOM_VALUE = '__custom__'
 
 const props = defineProps({

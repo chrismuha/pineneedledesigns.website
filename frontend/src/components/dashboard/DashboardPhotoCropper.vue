@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { getDashboardDarkPhotoEditorEnabled } from '../../utils/dashboardAppearance.js'
@@ -135,13 +135,25 @@ const confirmCrop = async (useFullPhoto = false) => {
   }
 }
 
+watch(
+  () => props.file,
+  (file) => {
+    cropper?.destroy()
+    cropper = null
+    if (imageUrl.value) URL.revokeObjectURL(imageUrl.value)
+    selectedRatio.value = 'freeform'
+    error.value = ''
+    imageUrl.value = URL.createObjectURL(file)
+  },
+  { immediate: true },
+)
+
 onMounted(() => {
   previousBodyOverflow = document.body.style.overflow
   previousDocumentOverflow = document.documentElement.style.overflow
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
   document.addEventListener('touchmove', preventPageScroll, { passive: false })
-  imageUrl.value = URL.createObjectURL(props.file)
 })
 
 onBeforeUnmount(() => {

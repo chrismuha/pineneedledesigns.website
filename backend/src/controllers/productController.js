@@ -99,7 +99,7 @@ const normalizeBeltSizes = (value) => [...new Set(String(value || '')
   .map((size) => size.trim())
   .filter((size) => size && size.length <= 80))]
   .sort((left, right) => {
-    const namedOrder = ['small', 'medium', 'large', '2xl', '3xl'];
+    const namedOrder = ['small', 'medium', 'large', 'xl', '2xl', '3xl'];
     const leftNamed = namedOrder.indexOf(left.toLowerCase());
     const rightNamed = namedOrder.indexOf(right.toLowerCase());
     if (leftNamed !== -1 || rightNamed !== -1) {

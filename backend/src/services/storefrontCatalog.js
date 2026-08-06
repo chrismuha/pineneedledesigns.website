@@ -10,7 +10,7 @@ const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
 );
 
-const beltSizeOrder = ['small', 'medium', 'large', '2xl', '3xl'];
+const beltSizeOrder = ['small', 'medium', 'large', 'xl', '2xl', '3xl'];
 const sortBeltSizes = (left, right) => {
   const leftNamed = beltSizeOrder.indexOf(left.toLowerCase());
   const rightNamed = beltSizeOrder.indexOf(right.toLowerCase());

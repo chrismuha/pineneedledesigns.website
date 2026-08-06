@@ -858,7 +858,7 @@ export const shirtColorTemplates = [...new Set([
     .map((color) => color === 'White (Natural)' ? 'Natural White' : color),
 ])].sort((left, right) => left.localeCompare(right))
 
-export const shirtSizeTemplates = ['Small', 'Medium', 'Large', '2X', '3X']
+export const shirtSizeTemplates = ['Small', 'Medium', 'Large', 'XL', '2X', '3X']
 const visibleCollectionSlugs = new Set(visibleCollectionPages.map((page) => page.slug))
 const visibleCollectionBySlug = new Map(visibleCollectionPages.map((page) => [page.slug, page]))
 const groupedCollectionSlugs = new Set(collectionCategoryOrder.flatMap((group) => group.slugs))
