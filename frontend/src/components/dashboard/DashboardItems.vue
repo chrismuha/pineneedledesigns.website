@@ -32,6 +32,18 @@ const editPhotoCropEntry = computed(() => editPhotoCropQueue.value[0] || null)
 const editPhotoBeingCropped = computed(() => editPhotoCropEntry.value?.file || null)
 const editPhotoCropTarget = ref(null)
 const editVideoFiles = ref([])
+const editMediaSaveStatus = computed(() => {
+  const photos = editPhotoFiles.value.length
+  const videos = editVideoFiles.value.length
+  if (!photos && !videos) return 'Saving item changes…'
+  const parts = [
+    photos ? `${photos} photo${photos === 1 ? '' : 's'}` : '',
+    videos ? `${videos} video${videos === 1 ? '' : 's'}` : '',
+  ].filter(Boolean).join(' and ')
+  return videos
+    ? `Uploading ${parts}. Videos are being converted; keep this page open.`
+    : `Uploading ${parts}; keep this page open.`
+})
 const collectionPendingDelete = ref(null)
 const deleteConfirmationStep = ref(1)
 const editCancellationStep = ref(0)
@@ -1357,7 +1369,11 @@ onBeforeUnmount(() => {
     </div>
 
     <div v-if="showEditModal && editingProduct" class="modal-overlay">
-      <section class="modal-card modal-card--fullscreen edit-item-modal">
+      <section
+        class="modal-card modal-card--fullscreen edit-item-modal"
+        :inert="saving"
+        :aria-busy="saving"
+      >
         <div class="modal-header">
           <h2>Edit Item</h2>
           <button
@@ -1562,6 +1578,9 @@ onBeforeUnmount(() => {
           <label>Video Files</label>
           <input class="dashboard-file-input" type="file" multiple accept="video/*" :disabled="saving" @change="handleEditVideoUpload">
           <p class="hint">Uploaded videos are converted and stored in the managed uploads folder.</p>
+          <p v-if="editVideoFiles.length" class="media-selection-status" role="status">
+            {{ editVideoFiles.length }} new video{{ editVideoFiles.length === 1 ? '' : 's' }} ready to upload.
+          </p>
           <div class="edit-photo-grid">
             <div v-for="(video, index) in String(editingProduct.videos || '').split('\n').filter(Boolean)" :key="video" class="edit-photo-card">
               <video
@@ -1657,6 +1676,10 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="modal-actions">
+          <div v-if="saving" class="media-progress" role="status" aria-live="polite">
+            <progress aria-label="Saving item changes and processing media"></progress>
+            <span>{{ editMediaSaveStatus }}</span>
+          </div>
           <button type="button" class="btn-danger" :disabled="saving || savingEditDraft || deletingProduct" @click="requestProductDeletion(editingProduct)">
             <i class="bi bi-trash" aria-hidden="true"></i>
             Delete Item
@@ -1665,7 +1688,7 @@ onBeforeUnmount(() => {
             {{ savingEditDraft ? 'Saving Draft...' : 'Save Draft' }}
           </button>
           <button type="button" class="continue-btn" :disabled="saving || editSubcollectionsLoading" @click="saveProduct">
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? 'Processing Media…' : 'Save Changes' }}
           </button>
         </div>
       </section>
@@ -2373,6 +2396,10 @@ onBeforeUnmount(() => {
   color: var(--dashboard-items-empty-collection-text);
   padding: 16px 20px;
 }
+
+.media-selection-status { margin: 8px 0 0; color: var(--dashboard-items-empty-collection-text); font-weight: 700; }
+.media-progress { width: 100%; display: grid; flex: 1 0 100%; gap: 7px; color: var(--dashboard-items-empty-collection-text); font-weight: 700; }
+.media-progress progress { width: 100%; height: 10px; accent-color: var(--dashboard-primary-action-color); }
 
 @media (max-width: 720px) {
   .collection-row,

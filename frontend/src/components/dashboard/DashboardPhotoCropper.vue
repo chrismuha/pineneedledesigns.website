@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
         <img ref="image" :src="imageUrl" alt="Photo being cropped" @load="initializeCropper">
       </div>
 
-      <div class="editor-controls">
+      <div class="editor-controls" :inert="working" :aria-busy="working">
         <div class="ratio-controls" aria-label="Crop shape">
           <button
             v-for="option in ratios"

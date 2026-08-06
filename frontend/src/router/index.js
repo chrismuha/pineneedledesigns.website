@@ -1,22 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import CollectionsView from '../views/CollectionsView.vue'
-import CollectionView from '../views/CollectionView.vue'
-import StaticPageView from '../views/StaticPageView.vue'
-import NotFoundView from '../../404View.vue'
-import OrderSuccessView from '../views/OrderSuccessView.vue'
-import BookingDepositView from '../views/BookingDepositView.vue'
-import BookingPaymentSuccessView from '../views/BookingPaymentSuccessView.vue'
-import DashboardView from '../views/DashboardView.vue'
-
-import DashboardHome from '../components/dashboard/DashboardHome.vue'
-import DashboardDrafts from '../components/dashboard/DashboardDrafts.vue'
-import DashboardItems from '../components/dashboard/DashboardItems.vue'
-import DashboardOrders from '../components/dashboard/DashboardOrders.vue'
-import DashboardSettings from '../components/dashboard/DashboardSettings.vue'
-
 import { sitePages } from '../data/siteData'
-import DashboardItemCreation from '../components/dashboard/DashboardItemCreation.vue'
+
+const CollectionsView = () => import('../views/CollectionsView.vue')
+const CollectionView = () => import('../views/CollectionView.vue')
+const StaticPageView = () => import('../views/StaticPageView.vue')
+const NotFoundView = () => import('../../404View.vue')
+const OrderSuccessView = () => import('../views/OrderSuccessView.vue')
+const BookingDepositView = () => import('../views/BookingDepositView.vue')
+const BookingPaymentSuccessView = () => import('../views/BookingPaymentSuccessView.vue')
+const DashboardView = () => import('../views/DashboardView.vue')
+const DashboardHome = () => import('../components/dashboard/DashboardHome.vue')
+const DashboardDrafts = () => import('../components/dashboard/DashboardDrafts.vue')
+const DashboardItems = () => import('../components/dashboard/DashboardItems.vue')
+const DashboardOrders = () => import('../components/dashboard/DashboardOrders.vue')
+const DashboardSettings = () => import('../components/dashboard/DashboardSettings.vue')
+const DashboardItemCreation = () => import('../components/dashboard/DashboardItemCreation.vue')
 
 const routes = [
   {

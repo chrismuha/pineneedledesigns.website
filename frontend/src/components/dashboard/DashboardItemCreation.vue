@@ -27,6 +27,18 @@ const photoCropQueue = ref([])
 const photoCropEntry = computed(() => photoCropQueue.value[0] || null)
 const photoBeingCropped = computed(() => photoCropEntry.value?.file || null)
 const videoFiles = ref([])
+const mediaSaveStatus = computed(() => {
+  const photos = photoFiles.value.length
+  const videos = videoFiles.value.length
+  if (!photos && !videos) return 'Saving item details…'
+  const parts = [
+    photos ? `${photos} photo${photos === 1 ? '' : 's'}` : '',
+    videos ? `${videos} video${videos === 1 ? '' : 's'}` : '',
+  ].filter(Boolean).join(' and ')
+  return videos
+    ? `Uploading ${parts}. Videos are being converted; keep this page open.`
+    : `Uploading ${parts}; keep this page open.`
+})
 const showCreateCollection = ref(false)
 const newCollectionName = ref('')
 const collectionError = ref('')
@@ -525,7 +537,14 @@ watch(
 
     <p v-if="pageLoading" class="status-text">Loading form...</p>
 
-    <form v-else class="item-form" novalidate @submit.prevent="submitForm">
+    <form
+      v-else
+      class="item-form"
+      novalidate
+      :inert="loading"
+      :aria-busy="loading"
+      @submit.prevent="submitForm"
+    >
       <section class="card">
         <div class="section-header"><h2>Basic Information</h2></div>
 
@@ -706,6 +725,9 @@ watch(
         <p class="hint">
           Upload as many photos as needed.
         </p>
+        <p v-if="photoCropQueue.length" class="media-selection-status" role="status">
+          Preparing photo {{ photoFiles.length + 1 }}; {{ photoCropQueue.length }} remaining to crop.
+        </p>
 
         <div v-if="photoFiles.length" class="photo-grid">
           <div v-for="(photo, index) in photoFiles" :key="photo.previewUrl" class="photo-box">
@@ -722,6 +744,9 @@ watch(
         <div class="section-header"><h2>Videos</h2></div>
         <input type="file" class="dashboard-file-input" multiple accept="video/*" @change="handleVideoUpload">
         <p class="hint">Videos are converted to web format and stored in the managed uploads folder.</p>
+        <p v-if="videoFiles.length" class="media-selection-status" role="status">
+          {{ videoFiles.length }} video{{ videoFiles.length === 1 ? '' : 's' }} ready to upload.
+        </p>
         <div v-if="videoFiles.length" class="photo-grid">
           <div v-for="(video, index) in videoFiles" :key="video.previewUrl" class="photo-box">
             <video
@@ -786,11 +811,15 @@ watch(
       </section>
 
       <div class="actions">
+        <div v-if="loading" class="media-progress" role="status" aria-live="polite">
+          <progress aria-label="Saving item and processing media"></progress>
+          <span>{{ mediaSaveStatus }}</span>
+        </div>
         <button type="button" class="btn-outline save-draft-button" :disabled="savingDraft || loading" @click="saveDraft">
           {{ savingDraft ? 'Saving Draft…' : 'Save Draft' }}
         </button>
         <button type="submit" class="btn-primary" :disabled="loading || pageLoading">
-          {{ loading ? 'Saving Item…' : 'Save Item' }}
+          {{ loading ? 'Processing Media…' : 'Save Item' }}
         </button>
       </div>
     </form>
@@ -998,6 +1027,7 @@ textarea {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1018,6 +1048,10 @@ textarea {
   color: var(--dashboard-item-creation-status-text-text);
   margin-bottom: 16px;
 }
+
+.media-selection-status { margin: 8px 0 0; color: var(--dashboard-item-creation-status-text-text); font-weight: 700; }
+.media-progress { display: grid; flex: 1 0 100%; gap: 7px; color: var(--dashboard-item-creation-status-text-text); font-weight: 700; }
+.media-progress progress { width: 100%; height: 10px; accent-color: var(--dashboard-primary-action-color); }
 
 .field-error {
   margin: 8px 0 0;
