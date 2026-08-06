@@ -781,7 +781,7 @@ watch(
 
         <label class="checkbox-row inventory-status-toggle">
           <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
-          <span>Out of Stock / Sold</span>
+          <span>Out of Stock. / Sold.</span>
         </label>
       </section>
 

@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import os from 'os';
 import { promisify } from 'util';
 import { execFile } from 'child_process';
 import ffmpeg from '@ffmpeg-installer/ffmpeg';
@@ -21,41 +22,88 @@ const upload = multer({
 
 const uniqueBase = () => `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
-const convertFile = async (file) => {
-  const base = uniqueBase();
-  if (file.mimetype.startsWith('image/')) {
-    const filename = `${base}.webp`;
-    await sharp(file.buffer).rotate().webp({ quality: 85 }).toFile(path.join(config.uploadsDir, filename));
-    return { ...file, filename, mimetype: 'image/webp' };
-  }
+const VIDEO_CONCURRENCY = Math.max(1, os.cpus().length - 1);
 
+const runLimited = async (items, limit, worker) => {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+
+  const runNext = async () => {
+    const currentIndex = nextIndex;
+    nextIndex += 1;
+    if (currentIndex >= items.length) return;
+    results[currentIndex] = await worker(items[currentIndex], currentIndex);
+    await runNext();
+  };
+
+  const workers = Array.from({ length: Math.min(limit, items.length) }, () => runNext());
+  await Promise.all(workers);
+  return results;
+};
+
+const convertImage = async (file) => {
+  const filename = `${uniqueBase()}.webp`;
+  await sharp(file.buffer).rotate().webp({ quality: 85 }).toFile(path.join(config.uploadsDir, filename));
+  return { ...file, filename, mimetype: 'image/webp' };
+};
+
+const convertVideo = async (file) => {
+  const base = uniqueBase();
   const input = path.join(config.uploadsDir, `${base}${path.extname(file.originalname) || '.video'}`);
   const filename = `${base}.webm`;
+  const startedAt = Date.now();
+
   await fs.writeFile(input, file.buffer);
   try {
-    await run(ffmpeg.path, ['-y', '-i', input, '-c:v', 'libvpx-vp9', '-crf', '32', '-b:v', '0', '-c:a', 'libopus', path.join(config.uploadsDir, filename)]);
+    await run(ffmpeg.path, [
+      '-y',
+      '-i', input,
+      '-c:v', 'libvpx-vp9',
+      '-crf', '32',
+      '-b:v', '0',
+      '-deadline', 'realtime',
+      '-cpu-used', '5',
+      '-threads', '2',
+      '-row-mt', '1',
+      '-c:a', 'libopus',
+      path.join(config.uploadsDir, filename),
+    ]);
   } finally {
     await fs.unlink(input).catch(() => {});
   }
+
+  console.log(`[upload] transcoded ${file.originalname} in ${Date.now() - startedAt}ms`);
   return { ...file, filename, mimetype: 'video/webm' };
+};
+
+const convertMediaList = async (files) => {
+  const images = files.filter((file) => file.mimetype.startsWith('image/'));
+  const videos = files.filter((file) => file.mimetype.startsWith('video/'));
+
+  const [convertedImages, convertedVideos] = await Promise.all([
+    Promise.all(images.map(convertImage)),
+    runLimited(videos, VIDEO_CONCURRENCY, convertVideo),
+  ]);
+
+  return files.map((original) => {
+    const isImage = original.mimetype.startsWith('image/');
+    const pool = isImage ? convertedImages : convertedVideos;
+    const sourcePool = isImage ? images : videos;
+    const poolIndex = sourcePool.indexOf(original);
+    return pool[poolIndex];
+  });
 };
 
 export const convertUploadedMedia = async (req, _res, next) => {
   try {
     if (Array.isArray(req.files)) {
-      const convertedFiles = [];
-      for (const file of req.files) {
-        convertedFiles.push(await convertFile(file));
-      }
-      req.files = convertedFiles;
+      req.files = await convertMediaList(req.files);
     } else if (req.files) {
-      for (const [field, files] of Object.entries(req.files)) {
-        const convertedFiles = [];
-        for (const file of files) {
-          convertedFiles.push(await convertFile(file));
-        }
-        req.files[field] = convertedFiles;
-      }
+      const entries = Object.entries(req.files);
+      const convertedEntries = await Promise.all(
+        entries.map(async ([field, files]) => [field, await convertMediaList(files)]),
+      );
+      req.files = Object.fromEntries(convertedEntries);
     }
     next();
   } catch (error) {
