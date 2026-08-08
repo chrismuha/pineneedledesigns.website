@@ -6,6 +6,7 @@ import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
+import { queueVideoTranscode } from '../services/videoTranscoder.js';
 
 const COMFORT_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
 const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'];
@@ -439,6 +440,13 @@ export const createProduct = async (req, res) => {
     optionPlaceholders: data.optionPlaceholders,
   });
 
+  // Fire-and-forget: any videos too large to safely transcode inline were
+  // saved raw (see middleware/upload.js). Kick off background transcoding
+  // now but do NOT await it — the whole point is not to block this response
+  // on a slow ffmpeg encode. The product already has a playable video path;
+  // the background job swaps it for the optimized .webm when it finishes.
+  queueVideoTranscode({ productId: product._id, files: req.files?.videos || [] });
+
   const populated = await product.populate(productPopulatePaths);
   res.status(201).json(populated);
 };
@@ -537,6 +545,11 @@ export const updateProduct = async (req, res) => {
   }
 
   await product.save();
+
+  // Fire-and-forget, same as createProduct: large videos were saved raw so
+  // this response isn't held up by ffmpeg; the background job finishes the
+  // transcode and swaps the path in the now-saved document.
+  queueVideoTranscode({ productId: product._id, files: req.files?.videos || [] });
 
   const removedPhotos = previousPhotos.filter(
     (photo) => String(photo).startsWith('/uploads/') && !product.photos.includes(photo),

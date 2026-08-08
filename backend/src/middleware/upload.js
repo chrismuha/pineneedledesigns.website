@@ -22,6 +22,8 @@ const upload = multer({
 
 const uniqueBase = () => `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
+export const SYNC_TRANSCODE_MAX_BYTES = 15 * 1024 * 1024;
+
 const VIDEO_CONCURRENCY = Math.max(1, os.cpus().length - 1);
 
 const runLimited = async (items, limit, worker) => {
@@ -41,13 +43,30 @@ const runLimited = async (items, limit, worker) => {
   return results;
 };
 
+export const transcodeToWebm = async (inputPath, outputPath) => {
+  await run(ffmpeg.path, [
+    '-y',
+    '-i', inputPath,
+    '-c:v', 'libvpx-vp9',
+    '-crf', '32',
+    '-b:v', '0',
+    '-deadline', 'realtime',
+    '-cpu-used', '5',
+    '-threads', '2',
+    '-row-mt', '1',
+    '-c:a', 'libopus',
+    outputPath,
+  ]);
+};
+
 const convertImage = async (file) => {
   const filename = `${uniqueBase()}.webp`;
   await sharp(file.buffer).rotate().webp({ quality: 85 }).toFile(path.join(config.uploadsDir, filename));
-  return { ...file, filename, mimetype: 'image/webp' };
+  return { ...file, filename, mimetype: 'image/webp', pendingTranscode: false };
 };
 
-const convertVideo = async (file) => {
+// Small video: transcode synchronously and return the final .webm right away.
+const convertVideoSync = async (file) => {
   const base = uniqueBase();
   const input = path.join(config.uploadsDir, `${base}${path.extname(file.originalname) || '.video'}`);
   const filename = `${base}.webm`;
@@ -55,26 +74,29 @@ const convertVideo = async (file) => {
 
   await fs.writeFile(input, file.buffer);
   try {
-    await run(ffmpeg.path, [
-      '-y',
-      '-i', input,
-      '-c:v', 'libvpx-vp9',
-      '-crf', '32',
-      '-b:v', '0',
-      '-deadline', 'realtime',
-      '-cpu-used', '5',
-      '-threads', '2',
-      '-row-mt', '1',
-      '-c:a', 'libopus',
-      path.join(config.uploadsDir, filename),
-    ]);
+    await transcodeToWebm(input, path.join(config.uploadsDir, filename));
   } finally {
     await fs.unlink(input).catch(() => {});
   }
 
-  console.log(`[upload] transcoded ${file.originalname} in ${Date.now() - startedAt}ms`);
-  return { ...file, filename, mimetype: 'video/webm' };
+  console.log(`[upload] sync-transcoded ${file.originalname} in ${Date.now() - startedAt}ms`);
+  return { ...file, filename, mimetype: 'video/webm', pendingTranscode: false };
 };
+
+const persistVideoRaw = async (file) => {
+  const base = uniqueBase();
+  const extension = path.extname(file.originalname) || '.video';
+  const filename = `${base}${extension}`;
+
+  await fs.writeFile(path.join(config.uploadsDir, filename), file.buffer);
+
+  console.log(`[upload] deferring transcode for ${file.originalname} (${(file.buffer.length / 1024 / 1024).toFixed(1)}MB > sync threshold)`);
+  return { ...file, filename, mimetype: file.mimetype, pendingTranscode: true };
+};
+
+const convertVideo = (file) => (
+  file.buffer.length <= SYNC_TRANSCODE_MAX_BYTES ? convertVideoSync(file) : persistVideoRaw(file)
+);
 
 const convertMediaList = async (files) => {
   const images = files.filter((file) => file.mimetype.startsWith('image/'));
