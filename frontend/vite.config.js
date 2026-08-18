@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/',
   server: {
     host: '127.0.0.1',
-    port: 5193,
+    port: Number(process.env.VITE_PORT || 5193),
     strictPort: true,
     proxy: {
       '/api': {

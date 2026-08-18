@@ -5,7 +5,7 @@
     "backend"
   ],
   "scripts": {
-    "dev": "concurrently \"NODE_ENV=development APP_BASE_URL=http://localhost:5193 PAYPAL_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development APP_BASE_URL=http://localhost:5194 CLOVER_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"cross-env VITE_PORT=5194 npm run dev -w frontend\"",
     "dev:full": "npm run dev",
     "dev:vite": "npm run dev -w frontend",
     "build": "npm run build -w frontend",
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.4",
+    "cross-env": "^10.1.0",
     "nodemailer": "^9.0.5"
   },
   "overrides": {

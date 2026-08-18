@@ -305,8 +305,10 @@
           <p v-if="checkoutError" class="checkout-error">{{ checkoutError }}</p>
 
           <div class="checkout-actions">
-            <button type="button" class="btn btn-secondary" @click="showCheckoutForm = false">Cancel</button>
-            <button type="button" class="btn btn-primary" @click="submitCheckout">Proceed to payment</button>
+            <button type="button" class="btn btn-secondary" @click="showCheckoutForm = false" :disabled="checkoutLoading">Cancel</button>
+            <button type="button" class="btn btn-primary" @click="submitCheckout" :disabled="checkoutLoading">
+              {{ checkoutLoading ? 'Starting Clover checkout…' : 'Proceed to payment' }}
+            </button>
           </div>
         </div>
       </div>
@@ -352,6 +354,7 @@ const shippingZip = ref('')
 const shippingStateOpen = ref(false)
 const shippingCountyOpen = ref(false)
 const checkoutError = ref('')
+const checkoutLoading = ref(false)
 const shippingSettings = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 })
 
 const loadShippingSettings = async () => {
@@ -761,125 +764,128 @@ const handlePopupBackdropClick = () => {
 
 const submitCheckout = async () => {
   checkoutError.value = ''
+  checkoutLoading.value = true
 
-  const email = customerEmail.value.trim()
-  const phone = customerPhone.value.trim()
+  try {
+    const email = customerEmail.value.trim()
+    const phone = customerPhone.value.trim()
 
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    checkoutError.value = 'Please enter a valid email address.'
-    return
-  }
-
-  // US phone validation
-  const digitsOnly = phone.replace(/\D/g, '')
-
-// Accept 10-digit US numbers OR 11-digit starting with 1
-  if (!/^(1?\d{10})$/.test(digitsOnly)) {
-    checkoutError.value = 'Please enter a valid US phone number.'
-    return
-  }
-
-  // Accept:
-  // 5551234567
-  // (555) 123-4567
-  // 555-123-4567
-  // +1 555 123 4567
-  if (!customerEmail.value.trim() || !customerPhone.value.trim()) {
-    checkoutError.value = 'Please provide your email and phone number.'
-    return
-  }
-
-  if (!billingName.value.trim() || !billingAddress1.value.trim() || !billingCity.value.trim() || !billingState.value || !billingCounty.value || !billingZip.value.trim()) {
-    checkoutError.value = 'Please complete your billing address.'
-    return
-  }
-
-  if (billingState.value && !billingCountyOptions.value.includes(billingCounty.value)) {
-    checkoutError.value = 'Please select a valid billing county for the chosen state.'
-    return
-  }
-
-  if (!sameAsBilling.value) {
-    if (!shippingName.value.trim() || !shippingAddress1.value.trim() || !shippingCity.value.trim() || !shippingState.value || !shippingCounty.value || !shippingZip.value.trim()) {
-      checkoutError.value = 'Please complete your shipping address.'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      checkoutError.value = 'Please enter a valid email address.'
       return
     }
 
-    if (shippingState.value && !shippingCountyOptions.value.includes(shippingCounty.value)) {
-      checkoutError.value = 'Please select a valid shipping county for the chosen state.'
+    const digitsOnly = phone.replace(/\D/g, '')
+    if (!/^(1?\d{10})$/.test(digitsOnly)) {
+      checkoutError.value = 'Please enter a valid US phone number.'
       return
     }
-  }
 
-  const request = await fetch(`/api/checkout`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      code: cartStore.appliedDiscountCode,
-      customer: {
-        type: customerType.value,
-        email: customerEmail.value.trim(),
-        phone: digitsOnly.length === 11
-          ? `+${digitsOnly}`
-          : `+1${digitsOnly}`,
-      },
-      billingAddress: {
-        name: billingName.value.trim(),
-        address1: billingAddress1.value.trim(),
-        address2: billingAddress2.value.trim(),
-        city: billingCity.value.trim(),
-        state: billingState.value,
-        county: billingCounty.value,
-        zip: billingZip.value.trim(),
-      },
-      shippingAddress: sameAsBilling.value ? {
-        name: billingName.value.trim(),
-        address1: billingAddress1.value.trim(),
-        address2: billingAddress2.value.trim(),
-        city: billingCity.value.trim(),
-        state: billingState.value,
-        county: billingCounty.value,
-        zip: billingZip.value.trim(),
-      } : {
-        name: shippingName.value.trim(),
-        address1: shippingAddress1.value.trim(),
-        address2: shippingAddress2.value.trim(),
-        city: shippingCity.value.trim(),
-        state: shippingState.value,
-        county: shippingCounty.value,
-        zip: shippingZip.value.trim(),
-      },
-      summary: {
-        subtotal: cartStore.totalPrice,
-        discount: cartStore.discountAmount,
-        discountedTotal: cartStore.discountedTotal,
-        shipping: shippingAmount.value,
-        tax: totalTax.value,
-        finalTotal: finalTotalWithTax.value,
-      },
+    if (!customerEmail.value.trim() || !customerPhone.value.trim()) {
+      checkoutError.value = 'Please provide your email and phone number.'
+      return
+    }
 
-      lineItems: itemizedLineItems.value,
-      tax: {
-        rate: shippingTaxRate.value,
-        label: taxLocationLabel.value,
-        breakdown: taxBreakdownRows.value
+    if (!billingName.value.trim() || !billingAddress1.value.trim() || !billingCity.value.trim() || !billingState.value || !billingCounty.value || !billingZip.value.trim()) {
+      checkoutError.value = 'Please complete your billing address.'
+      return
+    }
+
+    if (billingState.value && !billingCountyOptions.value.includes(billingCounty.value)) {
+      checkoutError.value = 'Please select a valid billing county for the chosen state.'
+      return
+    }
+
+    if (!sameAsBilling.value) {
+      if (!shippingName.value.trim() || !shippingAddress1.value.trim() || !shippingCity.value.trim() || !shippingState.value || !shippingCounty.value || !shippingZip.value.trim()) {
+        checkoutError.value = 'Please complete your shipping address.'
+        return
+      }
+
+      if (shippingState.value && !shippingCountyOptions.value.includes(shippingCounty.value)) {
+        checkoutError.value = 'Please select a valid shipping county for the chosen state.'
+        return
+      }
+    }
+
+    const request = await fetch(`/api/payments/clover`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        code: cartStore.appliedDiscountCode,
+        customer: {
+          type: customerType.value,
+          email: customerEmail.value.trim(),
+          phone: digitsOnly.length === 11
+            ? `+${digitsOnly}`
+            : `+1${digitsOnly}`,
+        },
+        billingAddress: {
+          name: billingName.value.trim(),
+          address1: billingAddress1.value.trim(),
+          address2: billingAddress2.value.trim(),
+          city: billingCity.value.trim(),
+          state: billingState.value,
+          county: billingCounty.value,
+          zip: billingZip.value.trim(),
+        },
+        shippingAddress: sameAsBilling.value ? {
+          name: billingName.value.trim(),
+          address1: billingAddress1.value.trim(),
+          address2: billingAddress2.value.trim(),
+          city: billingCity.value.trim(),
+          state: billingState.value,
+          county: billingCounty.value,
+          zip: billingZip.value.trim(),
+        } : {
+          name: shippingName.value.trim(),
+          address1: shippingAddress1.value.trim(),
+          address2: shippingAddress2.value.trim(),
+          city: shippingCity.value.trim(),
+          state: shippingState.value,
+          county: shippingCounty.value,
+          zip: shippingZip.value.trim(),
+        },
+        summary: {
+          subtotal: cartStore.totalPrice,
+          discount: cartStore.discountAmount,
+          discountedTotal: cartStore.discountedTotal,
+          shipping: shippingAmount.value,
+          tax: totalTax.value,
+          finalTotal: finalTotalWithTax.value,
+        },
+        lineItems: itemizedLineItems.value,
+        tax: {
+          rate: shippingTaxRate.value,
+          label: taxLocationLabel.value,
+          breakdown: taxBreakdownRows.value,
+        },
+        idempotencyKey: `clover-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+      }),
     })
-  })
 
-  const data = await request.json();
+    const data = await request.json()
 
-  if (!request.ok) {
-    checkoutError.value = data.error || 'Unable to start checkout. Please try again.'
-    return
+    if (!request.ok || !data.success) {
+      checkoutError.value = data.message || data.error || 'Unable to start Clover checkout. Please try again.'
+      return
+    }
+
+    if (data.redirectUrl) {
+      window.location.href = data.redirectUrl
+      return
+    }
+
+    checkoutError.value = data.message || 'Unable to complete checkout. Please try again.'
+  } catch {
+    checkoutError.value = 'Unable to connect to the payment service. Please try again.'
+  } finally {
+    checkoutLoading.value = false
   }
-
-  window.location.href = data.url
 }
 </script>
 

@@ -7,6 +7,8 @@ const CollectionView = () => import('../views/CollectionView.vue')
 const StaticPageView = () => import('../views/StaticPageView.vue')
 const NotFoundView = () => import('../../404View.vue')
 const OrderSuccessView = () => import('../views/OrderSuccessView.vue')
+const OrderFailureView = () => import('../views/OrderFailureView.vue')
+const OrderCancelledView = () => import('../views/OrderCancelledView.vue')
 const BookingDepositView = () => import('../views/BookingDepositView.vue')
 const BookingPaymentSuccessView = () => import('../views/BookingPaymentSuccessView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
@@ -91,6 +93,18 @@ const routes = [
     path: '/order-success',
     name: 'OrderSuccess',
     component: OrderSuccessView,
+  },
+
+  {
+    path: '/order-failure',
+    name: 'OrderFailure',
+    component: OrderFailureView,
+  },
+
+  {
+    path: '/order-cancelled',
+    name: 'OrderCancelled',
+    component: OrderCancelledView,
   },
 
   {

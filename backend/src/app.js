@@ -10,6 +10,7 @@ import { config } from './config/index.js';
 import { setRevalidationHeaders } from './middleware/cacheControl.js';
 import { createSessionMiddleware } from './middleware/session.js';
 import { requireCloudflareAccess } from './middleware/cloudflareAccess.js';
+import { cloverWebhookHandler } from './controllers/paymentController.js';
 import apiRouter from './routes/index.js';
 
 export const createApp = () => {
@@ -38,6 +39,21 @@ export const createApp = () => {
   });
 
   app.use(bodyParser.urlencoded({ extended: false }));
+
+  app.post(
+    '/api/payments/clover/webhook',
+    express.raw({ type: 'application/json' }),
+    (req, _res, next) => {
+      req.rawBody = req.body;
+      try {
+        req.body = req.body?.length ? JSON.parse(req.body.toString('utf8')) : {};
+      } catch {
+        req.body = {};
+      }
+      next();
+    },
+    cloverWebhookHandler,
+  );
 
   app.use(express.json({ limit: '10mb' }));
   app.use('/dashboard', requireCloudflareAccess);

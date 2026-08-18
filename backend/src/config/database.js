@@ -12,6 +12,8 @@ import {
   extractSweaterSizes,
 } from '../utils/descriptionSizes.js';
 import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
+import { seedCatalog } from '../services/catalogSeed.js';
+import { Order } from '../models/Order.js';
 
 const removeDuplicateProductSizes = async () => {
   const products = await Product.find({
@@ -286,6 +288,60 @@ const backfillProductSubcollectionIds = async () => {
   console.log(`ℹ️ Backfilled subCollectionId for ${updates.length} products.`);
 };
 
+const hasPartialGtEmpty = (index, field) => (
+  index?.unique === true
+  && index?.partialFilterExpression?.[field]?.$gt === ''
+);
+
+const repairPaypalOrderIdIndex = async () => {
+  const unsetPaypal = await Order.updateMany(
+    { $or: [{ paypalOrderId: '' }, { paypalOrderId: null }] },
+    { $unset: { paypalOrderId: 1 } },
+  );
+  const unsetGateway = await Order.updateMany(
+    { $or: [{ gatewayOrderId: '' }, { gatewayOrderId: null }] },
+    { $unset: { gatewayOrderId: 1 } },
+  );
+  const cleared = Number(unsetPaypal.modifiedCount || 0) + Number(unsetGateway.modifiedCount || 0);
+  if (cleared) {
+    console.log(`ℹ️ Cleared empty PayPal/Clover payment IDs from ${cleared} order(s) so unique indexes ignore Clover records.`);
+  }
+
+  const indexes = await Order.collection.indexes();
+  const paypalIndex = indexes.find((index) => index.name === 'paypalOrderId_1');
+  if (paypalIndex && !hasPartialGtEmpty(paypalIndex, 'paypalOrderId')) {
+    await Order.collection.dropIndex('paypalOrderId_1');
+    console.log('ℹ️ Dropped obsolete unique paypalOrderId_1 index that blocked Clover orders with empty PayPal IDs.');
+  }
+
+  if (!paypalIndex || !hasPartialGtEmpty(paypalIndex, 'paypalOrderId')) {
+    await Order.collection.createIndex(
+      { paypalOrderId: 1 },
+      {
+        name: 'paypalOrderId_1',
+        unique: true,
+        partialFilterExpression: { paypalOrderId: { $type: 'string', $gt: '' } },
+      },
+    );
+    console.log('ℹ️ Recreated paypalOrderId_1 as a unique index for historical PayPal IDs only.');
+  }
+
+  const gatewayIndex = indexes.find((index) => index.name === 'gatewayOrderId_1');
+  if (gatewayIndex && !hasPartialGtEmpty(gatewayIndex, 'gatewayOrderId')) {
+    await Order.collection.dropIndex('gatewayOrderId_1');
+  }
+  if (!gatewayIndex || !hasPartialGtEmpty(gatewayIndex, 'gatewayOrderId')) {
+    await Order.collection.createIndex(
+      { gatewayOrderId: 1 },
+      {
+        name: 'gatewayOrderId_1',
+        unique: true,
+        partialFilterExpression: { gatewayOrderId: { $type: 'string', $gt: '' } },
+      },
+    );
+  }
+};
+
 const repairLegacyProductIndex = async () => {
   await Product.updateMany({ legacyId: null }, { $unset: { legacyId: '' } });
 
@@ -398,6 +454,21 @@ const backfillProductSizes = async () => {
   if (updated) console.log(`ℹ️ Backfilled and routed size dropdowns for ${updated} product(s) without changing descriptions.`);
 };
 
+const ensureCatalogSeeded = async () => {
+  const [collectionCount, productCount] = await Promise.all([
+    Collection.countDocuments({ isSystem: false }),
+    Product.countDocuments(),
+  ]);
+
+  if (collectionCount > 0 || productCount > 0) {
+    console.log(`ℹ️ Catalog data already present (${collectionCount} collections, ${productCount} products); skipping seed.`);
+    return;
+  }
+
+  await seedCatalog();
+  console.log('ℹ️ Seeded storefront catalog data from the project data files.');
+};
+
 const formatMongoConnectionError = (error) => {
   const message = String(error?.message || error);
   const hostname = (() => {
@@ -456,6 +527,7 @@ export const connectDatabase = async () => {
   }
 
   await migrateLegacySubcollectionFields();
+  await repairPaypalOrderIdIndex();
   await repairLegacyProductIndex();
   await backfillProductQuantities();
   await removeDuplicateProductSizes();
@@ -464,4 +536,5 @@ export const connectDatabase = async () => {
   await backfillNoBlingDescriptions();
   await ensureMyraBeltsSubcollection();
   await backfillProductSubcollectionIds();
+  await ensureCatalogSeeded();
 };

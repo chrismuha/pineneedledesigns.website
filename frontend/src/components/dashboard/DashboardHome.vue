@@ -125,7 +125,7 @@ onMounted(loadStats)
         <span class="notification-detail__eyebrow">Paid booking notification</span>
         <h2>{{ bookingDetails.title }}</h2>
         <p>Deposit received: <strong>{{ bookingDetails.amount }}</strong></p>
-        <p v-if="bookingDetails.payment" class="notification-detail__reference">PayPal reference: {{ bookingDetails.payment }}</p>
+        <p v-if="bookingDetails.payment" class="notification-detail__reference">Payment reference: {{ bookingDetails.payment }}</p>
       </div>
       <a class="btn-primary" :href="bookingDetails.calendarUrl" target="_blank" rel="noopener noreferrer">Open Booking Calendar</a>
     </section>

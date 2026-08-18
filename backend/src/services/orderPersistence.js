@@ -1,5 +1,24 @@
 import { Order } from '../models/Order.js';
+import { Product } from '../models/Product.js';
 import { getNextOrderNumber } from '../models/OrderCounter.js';
+
+export const deductCapturedInventory = async (inventoryLines = []) => {
+  for (const line of inventoryLines) {
+    const product = await Product.findOneAndUpdate(
+      { _id: line.productId, quantity: { $gte: line.quantity } },
+      { $inc: { quantity: -line.quantity } },
+      { new: true },
+    );
+    if (!product) {
+      console.error(`Inventory deduction failed for product ${line.productId}.`);
+      continue;
+    }
+    if (product.quantity === 0 && !product.outOfStock) {
+      product.outOfStock = true;
+      await product.save();
+    }
+  }
+};
 
 const normalizeSummary = (summary = {}) => {
   const subtotal = Number(summary.subtotal || 0);
@@ -23,8 +42,17 @@ const normalizeSummary = (summary = {}) => {
   };
 };
 
+const nonEmpty = (value) => {
+  const normalized = String(value || '').trim();
+  return normalized || undefined;
+};
+
 export const persistCapturedOrder = async ({
   paypalOrderId,
+  gatewayOrderId,
+  paymentProvider = 'clover',
+  paymentStatus = 'paid',
+  idempotencyKey,
   customer,
   billingAddress,
   shippingAddress,
@@ -47,19 +75,38 @@ export const persistCapturedOrder = async ({
     tax: tax || {},
   };
 
-  const existing = await Order.findOne({ paypalOrderId });
+  const nextPaypalOrderId = nonEmpty(paypalOrderId);
+  const nextGatewayOrderId = nonEmpty(gatewayOrderId);
+  const nextIdempotencyKey = nonEmpty(idempotencyKey);
+
+  const query = [];
+  if (nextPaypalOrderId) query.push({ paypalOrderId: nextPaypalOrderId });
+  if (nextGatewayOrderId) query.push({ gatewayOrderId: nextGatewayOrderId });
+  if (nextIdempotencyKey) query.push({ idempotencyKey: nextIdempotencyKey });
+
+  const existing = query.length ? await Order.findOne({ $or: query }) : null;
   if (existing) {
     existing.set(payload);
+    if (nextGatewayOrderId) existing.gatewayOrderId = nextGatewayOrderId;
+    if (paymentProvider) existing.paymentProvider = paymentProvider;
+    if (paymentStatus) existing.paymentStatus = paymentStatus;
+    if (nextIdempotencyKey) existing.idempotencyKey = nextIdempotencyKey;
+    if (nextPaypalOrderId) existing.paypalOrderId = nextPaypalOrderId;
     await existing.save();
     return existing;
   }
 
   const orderNumber = await getNextOrderNumber();
-  return Order.create({
+  const created = {
     orderNumber,
-    paypalOrderId,
+    paymentProvider,
+    paymentStatus,
     status: 'open',
     timeline: [{ label: 'Order submitted', at: new Date() }],
     ...payload,
-  });
+  };
+  if (nextPaypalOrderId) created.paypalOrderId = nextPaypalOrderId;
+  if (nextGatewayOrderId) created.gatewayOrderId = nextGatewayOrderId;
+  if (nextIdempotencyKey) created.idempotencyKey = nextIdempotencyKey;
+  return Order.create(created);
 };
