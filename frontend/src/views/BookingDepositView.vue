@@ -21,11 +21,11 @@
           <input v-model.trim="customer.phone" type="tel" autocomplete="tel" required />
         </label>
 
-        <p v-if="cancelled" class="booking-notice">PayPal checkout was cancelled. No deposit was charged.</p>
+        <p v-if="cancelled" class="booking-notice">Checkout was cancelled. No deposit was charged.</p>
         <p v-if="error" class="booking-error" role="alert" aria-live="assertive">{{ error }}</p>
 
         <button type="submit" :disabled="loading">
-          {{ loading ? 'Opening PayPal…' : `Pay $${details.amount} with PayPal` }}
+          {{ loading ? 'Opening secure checkout…' : `Pay $${details.amount} deposit` }}
         </button>
       </form>
 
@@ -85,12 +85,13 @@ const startPayment = async () => {
     })
     const data = await response.json().catch(() => ({}))
 
-    if (!response.ok || !data.url) {
-      throw new Error(data.error || 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.')
+    const checkoutUrl = data.redirectUrl || data.url
+    if (!response.ok || !checkoutUrl) {
+      throw new Error(data.error || 'We could not connect to the payment service right now. Please wait a moment and try again. You have not been charged.')
     }
-    window.location.assign(data.url)
+    window.location.assign(checkoutUrl)
   } catch (err) {
-    error.value = err.message || 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.'
+    error.value = err.message || 'We could not connect to the payment service right now. Please wait a moment and try again. You have not been charged.'
     loading.value = false
   }
 }

@@ -67,7 +67,7 @@ const orderLabel = (order) => {
   if (order.orderNumber) {
     return `#${order.orderNumber}`
   }
-  const suffix = order.paypalOrderId?.slice(-6) || order._id?.slice(-6) || '000000'
+  const suffix = order.paypalOrderId?.slice(-6) || order.gatewayOrderId?.slice(-6) || order._id?.slice(-6) || '000000'
   return `#${suffix.toUpperCase()}`
 }
 
@@ -194,7 +194,7 @@ watch(
 
     <p v-if="loading" class="status-text">Loading orders...</p>
     <p v-else-if="!orders.length" class="status-text">
-      No orders yet. Completed checkout orders will appear here after PayPal payment.
+      No orders yet. Completed checkout orders will appear here after Clover payment.
     </p>
     <p v-else-if="!filteredOrders.length" class="status-text">
       No {{ statusFilter }} orders found.
@@ -341,7 +341,10 @@ watch(
           </section>
 
           <p v-if="order.paypalOrderId" class="paypal-id">
-            PayPal order: {{ order.paypalOrderId }}
+            Legacy PayPal order: {{ order.paypalOrderId }}
+          </p>
+          <p v-else-if="order.gatewayOrderId" class="paypal-id">
+            Clover reference: {{ order.gatewayOrderId }}
           </p>
 
           <div class="order-actions">

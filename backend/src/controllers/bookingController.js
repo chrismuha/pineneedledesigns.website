@@ -1,24 +1,116 @@
 import { config } from '../config/index.js';
-import {
-  BOOKING_DEPOSITS,
-  ordersController,
-  PAYPAL_BOOKING_DEPOSITS_AVAILABLE,
-  paypal,
-} from '../services/paypal.js';
+import { isCloverConfigured } from '../config/clover.js';
+import { BOOKING_DEPOSITS } from '../constants/index.js';
+import { createHostedCheckoutSession, findSuccessfulPaymentForSession } from '../services/cloverService.js';
 import { getEmailRecipients, mailerConfigured, sendEmail } from '../services/mailer.js';
 import { sendPushNotification } from '../services/pushNotifications.js';
 
 const bookingDepositMap = new Map();
+const finalizedBookingDeposits = new Map();
+
+const splitCustomerName = (fullName = '') => {
+  const parts = String(fullName).trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return { firstName: 'Customer', lastName: '' };
+  if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+};
+
+export const CLOVER_BOOKING_DEPOSITS_AVAILABLE = () => (
+  config.clover.bookingDepositsEnabled && isCloverConfigured()
+);
+
+const buildBookingRedirectUrls = (service) => {
+  const baseUrl = String(config.appBaseUrl || '').replace(/\/$/, '');
+  if (baseUrl.startsWith('https://')) {
+    return {
+      success: `${baseUrl}/booking-payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      failure: `${baseUrl}/booking/${service}?cancelled=1`,
+      cancel: `${baseUrl}/booking/${service}?cancelled=1`,
+    };
+  }
+  if (!config.isProduction) {
+    return undefined;
+  }
+  return null;
+};
+
+const finalizeBookingDeposit = async ({
+  checkoutSessionId,
+  cloverPaymentId,
+  deposit,
+  booking,
+}) => {
+  const existing = finalizedBookingDeposits.get(checkoutSessionId);
+  if (existing) {
+    return existing;
+  }
+
+  if (deposit && mailerConfigured) {
+    sendEmail({
+      to: getEmailRecipients(),
+      subject: `${booking.title} paid by ${deposit.customer.name}`,
+      text: [
+        `${booking.title} paid: $${booking.amount}`,
+        `Name: ${deposit.customer.name}`,
+        `Email: ${deposit.customer.email}`,
+        `Phone: ${deposit.customer.phone}`,
+        `Clover payment: ${cloverPaymentId || checkoutSessionId}`,
+      ].join('\n'),
+    }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
+  }
+
+  if (deposit) {
+    try {
+      await sendPushNotification({
+        title: `New ${booking.title}`,
+        body: `${deposit.customer.name} paid $${booking.amount}. Tap for booking details.`,
+        url: `/dashboard?notice=booking&service=${encodeURIComponent(deposit.service)}&payment=${encodeURIComponent(cloverPaymentId || checkoutSessionId)}`,
+        tag: `booking-${checkoutSessionId}`,
+        type: 'booking',
+      });
+    } catch (pushErr) {
+      console.error('Booking push notification failed:', pushErr);
+    }
+  }
+
+  const result = {
+    success: true,
+    service: deposit.service,
+    title: booking.title,
+    amount: booking.amount,
+    bookingUrl: booking.calendarUrl,
+    paymentId: cloverPaymentId || checkoutSessionId,
+  };
+
+  finalizedBookingDeposits.set(checkoutSessionId, result);
+  bookingDepositMap.delete(checkoutSessionId);
+  return result;
+};
+
+export const tryFinalizeBookingDepositFromWebhook = async (checkoutSessionId, cloverPaymentId) => {
+  const deposit = bookingDepositMap.get(checkoutSessionId);
+  if (!deposit) return null;
+
+  const booking = BOOKING_DEPOSITS[deposit.service];
+  if (!booking) return null;
+
+  return finalizeBookingDeposit({
+    checkoutSessionId,
+    cloverPaymentId,
+    deposit,
+    booking,
+  });
+};
 
 export const getBookingDepositConfig = (_req, res) => {
-  res.json({ enabled: PAYPAL_BOOKING_DEPOSITS_AVAILABLE });
+  res.json({ enabled: CLOVER_BOOKING_DEPOSITS_AVAILABLE() });
 };
 
 export const createBookingDeposit = async (req, res) => {
   try {
-    if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
+    if (!CLOVER_BOOKING_DEPOSITS_AVAILABLE()) {
       return res.status(503).json({
-        error: 'PayPal checkout is temporarily unavailable. Please refresh the page or try again in a few minutes. You have not been charged.',
+        error: 'Online deposit checkout is temporarily unavailable. Please refresh the page or try again in a few minutes. You have not been charged.',
       });
     }
 
@@ -30,132 +122,128 @@ export const createBookingDeposit = async (req, res) => {
     }
 
     if (!customer?.name?.trim() || !customer?.email?.trim() || !customer?.phone?.trim()) {
-      return res.status(400).json({ error: 'Please enter your name, email address, and phone number before continuing to PayPal.' });
+      return res.status(400).json({ error: 'Please enter your name, email address, and phone number before continuing to payment.' });
     }
 
-    const order = await ordersController.createOrder({
-      prefer: 'return=representation',
-      body: {
-        intent: paypal.CheckoutPaymentIntent.Capture,
-        purchaseUnits: [{
-          referenceId: `booking-${service}`,
-          description: booking.title,
-          amount: {
-            currencyCode: 'USD',
-            value: booking.amount,
-            breakdown: {
-              itemTotal: { currencyCode: 'USD', value: booking.amount },
-              taxTotal: { currencyCode: 'USD', value: '0.00' },
-            },
-          },
-          items: [{
-            name: booking.title,
-            quantity: '1',
-            unitAmount: { currencyCode: 'USD', value: booking.amount },
-          }],
-        }],
-        applicationContext: {
-          returnUrl: `${config.appBaseUrl}/booking-payment-success`,
-          cancelUrl: `${config.appBaseUrl}/booking/${service}?cancelled=1`,
-        },
+    const redirectUrls = buildBookingRedirectUrls(service);
+    if (redirectUrls === null) {
+      return res.status(422).json({
+        error: 'Deposit checkout requires HTTPS. Please contact the store for assistance.',
+      });
+    }
+
+    const amountCents = Math.round(Number(booking.amount) * 100);
+    const { firstName, lastName } = splitCustomerName(customer.name);
+    const phoneDigits = String(customer.phone || '').replace(/\D/g, '').slice(-10);
+
+    const checkoutSession = await createHostedCheckoutSession({
+      lineItems: [{
+        name: booking.title,
+        price: amountCents,
+        unitQty: 1,
+      }],
+      customer: {
+        firstName,
+        lastName,
+        email: customer.email.trim(),
+        phoneNumber: phoneDigits,
       },
+      redirectUrls,
+      idempotencyKey: `booking-${service}-${Date.now()}`,
     });
 
-    const orderBody = JSON.parse(order.body);
-    const approvalLink = orderBody.links?.find((link) => link.rel === 'approve');
-
-    if (!approvalLink) {
-      throw new Error('PayPal did not return an approval link.');
+    const checkoutSessionId = String(checkoutSession?.checkoutSessionId || '');
+    const checkoutUrl = String(checkoutSession?.href || '');
+    if (!checkoutSessionId || !checkoutUrl) {
+      return res.status(502).json({ error: 'Payment checkout could not be started. Please try again.' });
     }
 
-    bookingDepositMap.set(orderBody.id, {
+    bookingDepositMap.set(checkoutSessionId, {
       service,
       customer: {
         name: customer.name.trim(),
         email: customer.email.trim(),
         phone: customer.phone.trim(),
       },
+      amountCents,
+      createdAt: new Date(),
     });
 
-    res.json({ url: approvalLink.href });
+    res.json({ url: checkoutUrl, redirectUrl: checkoutUrl, sessionId: checkoutSessionId });
   } catch (err) {
-    console.error('Error creating booking deposit:', err);
+    console.error('Error creating booking deposit checkout:', err);
     res.status(502).json({
-      error: 'We could not connect to PayPal right now. Please wait a moment and try again. You have not been charged.',
+      error: 'We could not connect to the payment service right now. Please wait a moment and try again. You have not been charged.',
     });
   }
 };
 
-export const captureBookingDeposit = async (req, res) => {
+export const confirmBookingDeposit = async (req, res) => {
   try {
-    if (!PAYPAL_BOOKING_DEPOSITS_AVAILABLE) {
+    if (!CLOVER_BOOKING_DEPOSITS_AVAILABLE()) {
       return res.status(503).json({
-        error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+        error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your receipt, then contact Pine Needle Designs for help.',
       });
     }
 
-    const { token } = req.params;
-    const capture = await ordersController.captureOrder({ id: token });
-    const order = JSON.parse(capture.body);
-    const purchaseUnit = order.purchase_units?.[0];
-    const service = String(purchaseUnit?.reference_id || '').replace(/^booking-/, '');
-    const booking = BOOKING_DEPOSITS[service];
-    const paid = purchaseUnit?.payments?.captures?.[0];
-
-    if (
-      !booking
-      || order.status !== 'COMPLETED'
-      || paid?.status !== 'COMPLETED'
-      || paid?.amount?.currency_code !== 'USD'
-      || paid?.amount?.value !== booking.amount
-    ) {
+    const sessionId = String(req.params.sessionId || '').trim();
+    if (!sessionId) {
       return res.status(400).json({
-        error: 'We could not confirm your deposit. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+        error: 'This confirmation link is incomplete. If you paid, please check your receipt and contact Pine Needle Designs for help.',
       });
     }
 
-    const deposit = bookingDepositMap.get(order.id);
-    bookingDepositMap.delete(order.id);
-
-    if (deposit && mailerConfigured) {
-      sendEmail({
-        to: getEmailRecipients(),
-        subject: `${booking.title} paid by ${deposit.customer.name}`,
-        text: [
-          `${booking.title} paid: $${booking.amount}`,
-          `Name: ${deposit.customer.name}`,
-          `Email: ${deposit.customer.email}`,
-          `Phone: ${deposit.customer.phone}`,
-          `PayPal order: ${order.id}`,
-        ].join('\n'),
-      }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
+    const cached = finalizedBookingDeposits.get(sessionId);
+    if (cached) {
+      return res.json(cached);
     }
 
-    if (deposit) {
-      try {
-        await sendPushNotification({
-          title: `New ${booking.title}`,
-          body: `${deposit.customer.name} paid $${booking.amount}. Tap for booking details.`,
-          url: `/dashboard?notice=booking&service=${encodeURIComponent(service)}&payment=${encodeURIComponent(order.id)}`,
-          tag: `booking-${order.id}`,
-          type: 'booking',
-        });
-      } catch (pushErr) {
-        console.error('Booking push notification failed:', pushErr);
-      }
+    const deposit = bookingDepositMap.get(sessionId);
+    if (!deposit) {
+      return res.status(404).json({
+        error: 'We could not find this deposit session. If you were charged, please contact Pine Needle Designs for help.',
+      });
     }
 
-    res.json({
-      success: true,
-      service,
-      title: booking.title,
-      amount: booking.amount,
-      bookingUrl: booking.calendarUrl,
+    const booking = BOOKING_DEPOSITS[deposit.service];
+    if (!booking) {
+      return res.status(400).json({ error: 'Invalid booking deposit type.' });
+    }
+
+    const cloverPayment = await findSuccessfulPaymentForSession({
+      checkoutSessionId: sessionId,
+      amountCents: deposit.amountCents,
+      createdAfter: deposit.createdAt,
     });
+
+    if (!cloverPayment) {
+      return res.status(202).json({
+        success: false,
+        message: 'Your deposit is still being confirmed. Please wait a moment and refresh.',
+        code: 'PAYMENT_PENDING',
+      });
+    }
+
+    const result = await finalizeBookingDeposit({
+      checkoutSessionId: sessionId,
+      cloverPaymentId: String(cloverPayment.id || ''),
+      deposit,
+      booking,
+    });
+
+    return res.json(result);
   } catch (err) {
-    console.error('Error capturing booking deposit:', err);
+    console.error('Error confirming booking deposit:', err);
     res.status(502).json({
-      error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.',
+      error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your receipt, then contact Pine Needle Designs for help.',
     });
   }
+};
+
+export const captureBookingDeposit = async (_req, res) => {
+  res.status(410).json({
+    success: false,
+    error: 'Legacy PayPal deposit confirmation is no longer supported. If you completed a Clover payment, return to the booking success page from your payment confirmation email or contact support.',
+    code: 'PAYPAL_BOOKING_CAPTURE_DISABLED',
+  });
 };

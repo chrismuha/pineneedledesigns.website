@@ -2,13 +2,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
-const envPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.env');
-dotenv.config({ path: envPath });
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '../../..');
+const backendDir = path.resolve(__dirname, '../..');
+const rootDir = path.resolve(backendDir, '..');
+
+// Load root .env first, then backend/.env overrides (monorepo layout).
+dotenv.config({ path: path.join(rootDir, '.env') });
+dotenv.config({ path: path.join(backendDir, '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pineneedledesigns';
 
@@ -33,8 +35,11 @@ export const config = {
   productionMediaOrigin: process.env.PRODUCTION_MEDIA_ORIGIN || 'https://pineneedledesigns.store',
   allowedOrigins: [
     'http://localhost:5193',
-    'http://localhost:3001',
+    'http://localhost:5194',
     'http://127.0.0.1:5193',
+    'http://127.0.0.1:5194',
+    'http://localhost:3001',
+    'http://127.0.0.1:3001',
     'https://pineneedledesigns.store',
     'https://www.pineneedledesigns.store',
   ],
@@ -51,6 +56,14 @@ export const config = {
     clientSecret: process.env.PAYPAL_CLIENT_SECRET,
     sandboxClientId: process.env.SANDBOX_PAYPAL_CLIENT_ID,
     sandboxClientSecret: process.env.SANDBOX_PAYPAL_CLIENT_SECRET,
+  },
+  clover: {
+    environment: process.env.CLOVER_ENVIRONMENT || 'sandbox',
+    merchantId: process.env.CLOVER_MERCHANT_ID,
+    accessToken: process.env.CLOVER_ACCESS_TOKEN || process.env.CLOVER_PRIVATE_TOKEN,
+    pageConfigUuid: process.env.CLOVER_PAGE_CONFIG_UUID,
+    webhookSecret: process.env.CLOVER_WEBHOOK_SECRET,
+    bookingDepositsEnabled: String(process.env.CLOVER_BOOKING_DEPOSITS_ENABLED || '').toLowerCase() === 'true',
   },
   webPush: {
     publicKey: process.env.VAPID_PUBLIC_KEY,

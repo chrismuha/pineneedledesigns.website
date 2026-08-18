@@ -7,6 +7,7 @@ import bookingRouter from './booking.js';
 import healthRouter from './health.js';
 import dashboardRouter from './dashboard.js';
 import ordersRouter from './orders.js';
+import paymentsRouter from './payments.js';
 import pushRouter from './push.js';
 import storefrontRouter from './storefront.js';
 import settingsRouter from './settings.js';
@@ -24,6 +25,7 @@ router.use('/booking-deposit', bookingRouter);
 router.use('/health', healthRouter);
 router.use('/dashboard', requireCloudflareAccess, dashboardRouter);
 router.use('/orders', requireCloudflareAccess, ordersRouter);
+router.use('/payments', paymentsRouter);
 router.use('/push', requireCloudflareAccess, pushRouter);
 
 export default router;

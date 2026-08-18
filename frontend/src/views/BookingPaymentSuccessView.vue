@@ -3,7 +3,7 @@
     <div class="booking-success-card">
       <template v-if="loading">
         <h1>Confirming your deposit…</h1>
-        <p>Please keep this page open while PayPal confirms your payment.</p>
+        <p>Please keep this page open while your payment is confirmed.</p>
       </template>
 
       <template v-else-if="error">
@@ -30,24 +30,52 @@ const loading = ref(true)
 const error = ref('')
 const result = reactive({ amount: '', bookingUrl: '' })
 
+const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); })
+
+const confirmDeposit = async (sessionId) => {
+  let attempts = 0
+  while (attempts < 8) {
+    const response = await fetch(`/api/booking-deposit/confirm/${encodeURIComponent(sessionId)}`)
+    const data = await response.json().catch(() => ({}))
+
+    if (response.ok && data.success) {
+      result.amount = data.amount
+      result.bookingUrl = data.bookingUrl
+      return
+    }
+
+    if (data.code !== 'PAYMENT_PENDING' && response.status !== 202) {
+      throw new Error(data.error || data.message || 'We cannot confirm your deposit right now.')
+    }
+
+    attempts += 1
+    await wait(1500)
+  }
+
+  throw new Error('Your deposit is still being confirmed. If you were charged, please contact Pine Needle Designs for help.')
+}
+
 onMounted(async () => {
-  const token = new URLSearchParams(window.location.search).get('token')
-  if (!token) {
-    error.value = 'This confirmation link is incomplete. If you paid through PayPal, please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.'
+  const params = new URLSearchParams(window.location.search)
+  const sessionId = params.get('session_id')
+  const legacyToken = params.get('token')
+
+  if (legacyToken && !sessionId) {
+    error.value = 'This confirmation link uses a legacy payment format. If you paid recently, please contact Pine Needle Designs for help.'
+    loading.value = false
+    return
+  }
+
+  if (!sessionId) {
+    error.value = 'This confirmation link is incomplete. If you paid, please check your receipt and contact Pine Needle Designs for help.'
     loading.value = false
     return
   }
 
   try {
-    const response = await fetch(`/api/booking-deposit/capture/${encodeURIComponent(token)}`)
-    const data = await response.json().catch(() => ({}))
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.')
-    }
-    result.amount = data.amount
-    result.bookingUrl = data.bookingUrl
+    await confirmDeposit(sessionId)
   } catch (err) {
-    error.value = err.message || 'We cannot confirm your deposit right now. Please do not submit another payment. Check your PayPal receipt, then contact Pine Needle Designs for help.'
+    error.value = err.message || 'We cannot confirm your deposit right now. Please do not submit another payment. Check your receipt, then contact Pine Needle Designs for help.'
   } finally {
     loading.value = false
   }

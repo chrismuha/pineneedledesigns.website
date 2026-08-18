@@ -23,8 +23,24 @@ const orderSchema = new mongoose.Schema({
   },
   paypalOrderId: {
     type: String,
-    required: true,
-    unique: true,
+    trim: true,
+  },
+  gatewayOrderId: {
+    type: String,
+    trim: true,
+  },
+  paymentProvider: {
+    type: String,
+    enum: ['paypal', 'clover', 'manual'],
+    default: 'clover',
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'processing', 'paid', 'failed', 'cancelled'],
+    default: 'pending',
+  },
+  idempotencyKey: {
+    type: String,
     trim: true,
   },
   status: {
@@ -70,9 +86,25 @@ const orderSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+  autoIndex: false,
 });
 
 orderSchema.index({ status: 1, createdAt: -1 });
 orderSchema.index({ orderNumber: -1 });
+orderSchema.index({ idempotencyKey: 1 }, {
+  unique: true,
+  sparse: true,
+  partialFilterExpression: { idempotencyKey: { $type: 'string', $gt: '' } },
+});
+orderSchema.index({ paypalOrderId: 1 }, {
+  unique: true,
+  name: 'paypalOrderId_1',
+  partialFilterExpression: { paypalOrderId: { $type: 'string', $gt: '' } },
+});
+orderSchema.index({ gatewayOrderId: 1 }, {
+  unique: true,
+  name: 'gatewayOrderId_1',
+  partialFilterExpression: { gatewayOrderId: { $type: 'string', $gt: '' } },
+});
 
 export const Order = mongoose.model('Order', orderSchema);

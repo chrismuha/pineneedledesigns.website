@@ -16,7 +16,7 @@ export const getDashboardStats = async (_req, res) => {
     Order.find()
       .sort({ createdAt: -1 })
       .limit(5)
-      .select('orderNumber status summary customer createdAt paypalOrderId')
+      .select('orderNumber status summary customer createdAt paypalOrderId gatewayOrderId paymentProvider')
       .lean(),
   ]);
 

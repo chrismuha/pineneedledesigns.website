@@ -2,17 +2,35 @@ import webpush from 'web-push';
 import { config } from '../config/index.js';
 import { PushSubscription } from '../models/PushSubscription.js';
 
-export const pushNotificationsConfigured = Boolean(
-  config.webPush.publicKey && config.webPush.privateKey,
-);
+const PLACEHOLDER_KEY_PATTERN = /generate-with|placeholder|your_|keep-this-secret/i;
 
-if (pushNotificationsConfigured) {
-  webpush.setVapidDetails(
-    config.webPush.subject,
-    config.webPush.publicKey,
-    config.webPush.privateKey,
-  );
-}
+const hasValidVapidKeys = () => {
+  const { publicKey, privateKey } = config.webPush;
+  if (!publicKey || !privateKey) return false;
+  if (PLACEHOLDER_KEY_PATTERN.test(publicKey) || PLACEHOLDER_KEY_PATTERN.test(privateKey)) {
+    return false;
+  }
+
+  try {
+    webpush.setVapidDetails(
+      config.webPush.subject,
+      publicKey,
+      privateKey,
+    );
+    return true;
+  } catch (error) {
+    if (!config.isProduction) {
+      console.warn(
+        'Web push disabled: invalid VAPID keys. Generate valid keys with: npx web-push generate-vapid-keys',
+      );
+    } else {
+      console.error('Web push disabled: invalid VAPID keys in production environment.');
+    }
+    return false;
+  }
+};
+
+export const pushNotificationsConfigured = hasValidVapidKeys();
 
 export const sendPushNotification = async ({
   title,
@@ -39,15 +57,11 @@ export const sendPushNotification = async ({
         endpoint: subscription.endpoint,
         keys: subscription.keys,
       }, payload, {
-        // Keep alerts available if the phone is temporarily offline and ask
-        // the push service to prioritize these time-sensitive store events.
         TTL: 24 * 60 * 60,
         urgency: 'high',
       });
       sent += 1;
     } catch (error) {
-      // 401/403 also mean this stored endpoint can no longer be used with the
-      // server's current VAPID credentials. The app will recreate and sync it.
       if ([401, 403, 404, 410].includes(error?.statusCode)) {
         await PushSubscription.deleteOne({ endpoint: subscription.endpoint });
         return;
