@@ -40,7 +40,7 @@ class Semaphore {
   }
 }
 
-const BACKGROUND_VIDEO_CONCURRENCY = Math.max(1, os.cpus().length - 1);
+const BACKGROUND_VIDEO_CONCURRENCY = 1;
 const backgroundSemaphore = new Semaphore(BACKGROUND_VIDEO_CONCURRENCY);
 
 const uploadsPathFor = (filename) => path.join(config.uploadsDir, filename);

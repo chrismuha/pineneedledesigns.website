@@ -1,4 +1,4 @@
-import { collectionCategoryOrder } from '../../../frontend/src/data/siteData.js';
+import { collectionCategoryOrder } from '../../../frontend/src/data/collectionCategoryOrder.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
@@ -224,7 +224,25 @@ const attachCollectionNavigation = (pages) => {
   };
 };
 
-export const getStorefrontCatalog = async () => {
+const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
+let storefrontCatalogCache = null;
+let storefrontCatalogBuiltAt = 0;
+let storefrontCatalogInFlight = null;
+
+const logStorefrontTiming = (label, startedAt, extra = '') => {
+  const suffix = extra ? ` ${extra}` : '';
+  console.log(`[storefrontCatalog] ${label} in ${Date.now() - startedAt}ms${suffix}`);
+};
+
+export const invalidateStorefrontCatalog = (reason = 'unknown') => {
+  storefrontCatalogCache = null;
+  storefrontCatalogBuiltAt = 0;
+  storefrontCatalogInFlight = null;
+  console.log(`[storefrontCatalog] cache invalidated (${reason})`);
+};
+
+const buildStorefrontCatalog = async () => {
+  const startedAt = Date.now();
   const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
   const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
@@ -249,7 +267,34 @@ export const getStorefrontCatalog = async () => {
     productsByCollectionId[String(collection._id)] || [],
   ));
 
-  return attachCollectionNavigation(collectionPages);
+  const catalog = attachCollectionNavigation(collectionPages);
+  logStorefrontTiming(
+    'rebuilt catalog',
+    startedAt,
+    `(collections=${collections.length}, subcollections=${subcollections.length}, products=${products.length})`,
+  );
+  return catalog;
+};
+
+export const getStorefrontCatalog = async () => {
+  const cacheAge = Date.now() - storefrontCatalogBuiltAt;
+  if (storefrontCatalogCache && cacheAge < STOREFRONT_CACHE_TTL_MS) {
+    return storefrontCatalogCache;
+  }
+
+  if (!storefrontCatalogInFlight) {
+    storefrontCatalogInFlight = buildStorefrontCatalog()
+      .then((catalog) => {
+        storefrontCatalogCache = catalog;
+        storefrontCatalogBuiltAt = Date.now();
+        return catalog;
+      })
+      .finally(() => {
+        storefrontCatalogInFlight = null;
+      });
+  }
+
+  return storefrontCatalogInFlight;
 };
 
 export const getStorefrontCollectionBySlug = async (slug) => {

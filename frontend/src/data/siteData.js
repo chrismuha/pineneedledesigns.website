@@ -1,3 +1,5 @@
+import { collectionCategoryOrder } from './collectionCategoryOrder.js'
+
 const collectionNavLinks = [
   { label: 'Adirondack Bridal', path: '/collections/adirondack-bridal', slug: 'adirondack-bridal' },
   { label: 'Adirondack Chic', path: '/collections/adirondack-chic', slug: 'adirondack-chic' },
@@ -21,21 +23,6 @@ const collectionNavLinks = [
   { label: 'Upcycled Logo', path: '/collections/upcycled-logo', slug: 'upcycled-logo' },
   { label: 'Upcycled Denim', path: '/collections/upcycled-denim', slug: 'upcycled-denim' },
   { label: 'Vests', path: '/collections/vests', slug: 'vests' },
-]
-
-export const collectionCategoryOrder = [
-  {
-    title: 'Clothing Collections',
-    slugs: ['jackets', 'shirts', 'shoes', 'vests', 'jeans', 'shorts', 'upcycled-collaboration', 'upcycled-logo', 'upcycled-denim'],
-  },
-  {
-    title: 'Jewelry & Accessories',
-    slugs: ['earrings', 'necklaces', 'bracelets', 'cuffs', 'hat-bands', 'boot-bands', 'purses'],
-  },
-  {
-    title: 'Specialty Collections',
-    slugs: ['adirondack-bridal', 'adirondack-chic', 'pooch-smooches', 'chic-jewelry'],
-  },
 ]
 
 export const collectionPages = [
