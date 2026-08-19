@@ -21,7 +21,7 @@ export default defineConfig({
   },
   build: {
     outDir: '../docs',
-    emptyOutDir: false,
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         entryFileNames: 'assets/index-[hash].js',

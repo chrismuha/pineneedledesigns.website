@@ -469,6 +469,42 @@ const ensureCatalogSeeded = async () => {
   console.log('ℹ️ Seeded storefront catalog data from the project data files.');
 };
 
+const ensureUncategorizedCollection = async () => {
+  const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
+  if (!uncategorized) {
+    await Collection.create({
+      name: 'Uncategorized',
+      slug: 'uncategorized',
+      sortOrder: Number.MAX_SAFE_INTEGER,
+      isSystem: true,
+    });
+    console.log('ℹ️ Created system Uncategorized collection');
+  }
+};
+
+const runTimedMaintenanceStep = async (label, task) => {
+  const startedAt = Date.now();
+  await task();
+  const elapsed = Date.now() - startedAt;
+  console.log(`ℹ️ Mongo maintenance step "${label}" completed in ${elapsed}ms.`);
+};
+
+export const runDatabaseMaintenance = async () => {
+  const startedAt = Date.now();
+  await runTimedMaintenanceStep('migrateLegacySubcollectionFields', migrateLegacySubcollectionFields);
+  await runTimedMaintenanceStep('repairPaypalOrderIdIndex', repairPaypalOrderIdIndex);
+  await runTimedMaintenanceStep('repairLegacyProductIndex', repairLegacyProductIndex);
+  await runTimedMaintenanceStep('backfillProductQuantities', backfillProductQuantities);
+  await runTimedMaintenanceStep('removeDuplicateProductSizes', removeDuplicateProductSizes);
+  await runTimedMaintenanceStep('backfillProductSizes', backfillProductSizes);
+  await runTimedMaintenanceStep('renameNaturalWhiteColors', renameNaturalWhiteColors);
+  await runTimedMaintenanceStep('backfillNoBlingDescriptions', backfillNoBlingDescriptions);
+  await runTimedMaintenanceStep('ensureMyraBeltsSubcollection', ensureMyraBeltsSubcollection);
+  await runTimedMaintenanceStep('backfillProductSubcollectionIds', backfillProductSubcollectionIds);
+  await runTimedMaintenanceStep('ensureCatalogSeeded', ensureCatalogSeeded);
+  console.log(`ℹ️ Mongo maintenance finished in ${Date.now() - startedAt}ms.`);
+};
+
 export const MONGO_CONNECT_OPTIONS = {
   serverSelectionTimeoutMS: 10000,
 };
@@ -536,6 +572,7 @@ export const disconnectDatabase = async () => {
 };
 
 export const connectDatabase = async () => {
+  const startedAt = Date.now();
   shutdownRequested = false;
   bindConnectionListeners();
 
@@ -561,26 +598,7 @@ export const connectDatabase = async () => {
     throw new Error('Production must not connect to local MongoDB.');
   }
 
-  const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
-  if (!uncategorized) {
-    await Collection.create({
-      name: 'Uncategorized',
-      slug: 'uncategorized',
-      sortOrder: Number.MAX_SAFE_INTEGER,
-      isSystem: true,
-    });
-    console.log('ℹ️ Created system Uncategorized collection');
-  }
-
-  await migrateLegacySubcollectionFields();
-  await repairPaypalOrderIdIndex();
-  await repairLegacyProductIndex();
-  await backfillProductQuantities();
-  await removeDuplicateProductSizes();
-  await backfillProductSizes();
-  await renameNaturalWhiteColors();
-  await backfillNoBlingDescriptions();
-  await ensureMyraBeltsSubcollection();
-  await backfillProductSubcollectionIds();
+  await ensureUncategorizedCollection();
   await ensureCatalogSeeded();
+  console.log(`ℹ️ MongoDB startup checks finished in ${Date.now() - startedAt}ms.`);
 };

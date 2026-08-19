@@ -24,9 +24,9 @@ const uniqueBase = () => `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
 export const SYNC_TRANSCODE_MAX_BYTES = 15 * 1024 * 1024;
 
-const VIDEO_CONCURRENCY = config.isProduction
-  ? 1
-  : Math.max(1, Math.min(2, os.cpus().length - 1));
+const CPU_COUNT = os.cpus().length;
+const IMAGE_CONCURRENCY = Math.max(1, Math.min(2, Math.ceil(CPU_COUNT / 4)));
+const VIDEO_CONCURRENCY = Math.max(1, Math.min(2, Math.ceil(CPU_COUNT / 4)));
 
 const runLimited = async (items, limit, worker) => {
   const results = new Array(items.length);
@@ -101,13 +101,19 @@ const convertVideo = (file) => (
 );
 
 const convertMediaList = async (files) => {
+  const startedAt = Date.now();
   const images = files.filter((file) => file.mimetype.startsWith('image/'));
   const videos = files.filter((file) => file.mimetype.startsWith('video/'));
 
   const [convertedImages, convertedVideos] = await Promise.all([
-    Promise.all(images.map(convertImage)),
+    runLimited(images, IMAGE_CONCURRENCY, convertImage),
     runLimited(videos, VIDEO_CONCURRENCY, convertVideo),
   ]);
+
+  console.log(
+    `[upload] converted ${images.length} image(s) and ${videos.length} video(s) in ${Date.now() - startedAt}ms `
+      + `(imageConcurrency=${IMAGE_CONCURRENCY}, videoConcurrency=${VIDEO_CONCURRENCY})`,
+  );
 
   return files.map((original) => {
     const isImage = original.mimetype.startsWith('image/');

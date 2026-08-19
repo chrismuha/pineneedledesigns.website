@@ -1,70 +1,10 @@
-import { collectionCategoryOrder } from '../../../frontend/src/data/siteData.js';
+import { collectionCategoryOrder } from '../../../frontend/src/data/collectionCategoryOrder.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { defaultShirtSizes, sortSizeOptions } from '../utils/sizeOptions.js';
 import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
-
-const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
-
-let storefrontCatalogCache = null;
-let storefrontCatalogCachedAt = 0;
-let storefrontCatalogPromise = null;
-
-const STOREFRONT_COLLECTION_FIELDS = [
-  '_id',
-  'name',
-  'slug',
-  'description',
-  'cardImage',
-  'hidden',
-  'showWhenEmpty',
-].join(' ');
-
-const STOREFRONT_SUBCOLLECTION_FIELDS = [
-  '_id',
-  'collectionId',
-  'name',
-  'slug',
-  'sortOrder',
-].join(' ');
-
-const STOREFRONT_PRODUCT_FIELDS = [
-  '_id',
-  'legacyId',
-  'collectionId',
-  'subCollectionId',
-  'name',
-  'price',
-  'sizePrices',
-  'blingPrice',
-  'noBlingPrice',
-  'hasBlingOptions',
-  'meta',
-  'description',
-  'noBlingDescription',
-  'generalDescription',
-  'optionPlaceholders',
-  'customProperties',
-  'color',
-  'size',
-  'sweatshirtSize',
-  'shoeSize',
-  'beltSize',
-  'comfortColors',
-  'photos',
-  'videos',
-  'videoPosters',
-  'imageWrapper',
-  'filters',
-  'bagTypes',
-  'shoeTypes',
-  'maker',
-  'outOfStock',
-  'quantity',
-  'shippingCost',
-].join(' ');
 
 const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
@@ -284,20 +224,28 @@ const attachCollectionNavigation = (pages) => {
   };
 };
 
+const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
+let storefrontCatalogCache = null;
+let storefrontCatalogBuiltAt = 0;
+let storefrontCatalogInFlight = null;
+
+const logStorefrontTiming = (label, startedAt, extra = '') => {
+  const suffix = extra ? ` ${extra}` : '';
+  console.log(`[storefrontCatalog] ${label} in ${Date.now() - startedAt}ms${suffix}`);
+};
+
+export const invalidateStorefrontCatalog = (reason = 'unknown') => {
+  storefrontCatalogCache = null;
+  storefrontCatalogBuiltAt = 0;
+  storefrontCatalogInFlight = null;
+  console.log(`[storefrontCatalog] cache invalidated (${reason})`);
+};
+
 const buildStorefrontCatalog = async () => {
-  const collections = await Collection.find({ isSystem: false })
-    .select(STOREFRONT_COLLECTION_FIELDS)
-    .sort({ name: 1 })
-    .lean();
-  const subcollections = await Subcollection.find()
-    .select(STOREFRONT_SUBCOLLECTION_FIELDS)
-    .sort({ sortOrder: 1, name: 1 })
-    .lean();
-  const products = await Product.find()
-    .select(STOREFRONT_PRODUCT_FIELDS)
-    .sort({ name: 1 })
-    .collation({ locale: 'en', strength: 2 })
-    .lean();
+  const startedAt = Date.now();
+  const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
+  const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
+  const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
 
   const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
     const key = String(subcollection.collectionId);
@@ -319,36 +267,34 @@ const buildStorefrontCatalog = async () => {
     productsByCollectionId[String(collection._id)] || [],
   ));
 
-  return attachCollectionNavigation(collectionPages);
+  const catalog = attachCollectionNavigation(collectionPages);
+  logStorefrontTiming(
+    'rebuilt catalog',
+    startedAt,
+    `(collections=${collections.length}, subcollections=${subcollections.length}, products=${products.length})`,
+  );
+  return catalog;
 };
 
-export const invalidateStorefrontCatalogCache = () => {
-  storefrontCatalogCache = null;
-  storefrontCatalogCachedAt = 0;
-  storefrontCatalogPromise = null;
-};
-
-export const getStorefrontCatalog = async ({ forceRefresh = false } = {}) => {
-  const now = Date.now();
-  if (!forceRefresh && storefrontCatalogCache && (now - storefrontCatalogCachedAt) < STOREFRONT_CACHE_TTL_MS) {
+export const getStorefrontCatalog = async () => {
+  const cacheAge = Date.now() - storefrontCatalogBuiltAt;
+  if (storefrontCatalogCache && cacheAge < STOREFRONT_CACHE_TTL_MS) {
     return storefrontCatalogCache;
   }
 
-  if (!forceRefresh && storefrontCatalogPromise) {
-    return storefrontCatalogPromise;
+  if (!storefrontCatalogInFlight) {
+    storefrontCatalogInFlight = buildStorefrontCatalog()
+      .then((catalog) => {
+        storefrontCatalogCache = catalog;
+        storefrontCatalogBuiltAt = Date.now();
+        return catalog;
+      })
+      .finally(() => {
+        storefrontCatalogInFlight = null;
+      });
   }
 
-  storefrontCatalogPromise = buildStorefrontCatalog()
-    .then((catalog) => {
-      storefrontCatalogCache = catalog;
-      storefrontCatalogCachedAt = Date.now();
-      return catalog;
-    })
-    .finally(() => {
-      storefrontCatalogPromise = null;
-    });
-
-  return storefrontCatalogPromise;
+  return storefrontCatalogInFlight;
 };
 
 export const getStorefrontCollectionBySlug = async (slug) => {
