@@ -6,7 +6,9 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "seed": "node src/scripts/seedCatalog.js",
+    "maintenance:mongo": "node src/scripts/runDatabaseMaintenance.js",
     "test:mongo": "node src/scripts/testMongoConnection.js",
+    "test:orders": "node src/scripts/verifyCloverOrderIndexes.js",
     "test:clover": "node src/scripts/testCloverConnection.js",
     "diagnose:clover": "node src/scripts/diagnoseCloverAuth.js",
     "inspect:mongo": "node src/scripts/inspectMongoDatabases.js"
@@ -22,9 +24,9 @@
     "express-rate-limit": "^8.6.2",
     "express-session": "^1.19.0",
     "jose": "^6.2.8",
-    "mongoose": "^9.9.1",
+    "mongoose": "^9.9.2",
     "multer": "^2.2.0",
-    "nodemailer": "^9.0.4",
+    "nodemailer": "^9.0.5",
     "session-file-store": "^1.5.0",
     "sharp": "^0.35.3",
     "web-push": "^3.6.7"

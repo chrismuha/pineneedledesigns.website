@@ -1,7 +1,6 @@
-import { connectDatabase } from '../config/database.js';
+import { connectDatabase, disconnectDatabase } from '../config/database.js';
 import { Order } from '../models/Order.js';
 import { persistCapturedOrder } from '../services/orderPersistence.js';
-import mongoose from 'mongoose';
 
 const run = async () => {
   await connectDatabase();
@@ -54,13 +53,13 @@ const run = async () => {
     throw new Error('Clover order uniqueness verification failed.');
   }
 
-  await mongoose.disconnect();
+  await disconnectDatabase();
 };
 
 run().catch(async (error) => {
   console.error(error.message);
   try {
-    await mongoose.disconnect();
+    await disconnectDatabase();
   } catch {
     // ignore
   }

@@ -1,5 +1,5 @@
 import { config } from './config/index.js';
-import { connectDatabase } from './config/database.js';
+import { connectDatabase, disconnectDatabase } from './config/database.js';
 import { createApp } from './app.js';
 import { logMailerStatus } from './services/mailer.js';
 import { isCloverConfigured } from './config/clover.js';
@@ -36,7 +36,38 @@ const start = async () => {
   // uploads mid-stream, which Multer/Busboy reports as "Unexpected end of form".
   server.requestTimeout = 11 * 60 * 1000;
 
-  setInterval(() => {}, 30000);
+  const keepAlive = setInterval(() => {}, 30000);
+  let shuttingDown = false;
+
+  const shutdown = async (signal) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.log(`ℹ️ ${signal} received, shutting down`);
+    clearInterval(keepAlive);
+
+    const forceExit = setTimeout(() => {
+      console.error('❌ Shutdown timed out');
+      process.exit(1);
+    }, 10000);
+    forceExit.unref();
+
+    server.close(async () => {
+      try {
+        await disconnectDatabase();
+        process.exit(0);
+      } catch (error) {
+        console.error('❌ Error while closing MongoDB:', error.message);
+        process.exit(1);
+      }
+    });
+  };
+
+  process.on('SIGINT', () => {
+    shutdown('SIGINT').catch(() => process.exit(1));
+  });
+  process.on('SIGTERM', () => {
+    shutdown('SIGTERM').catch(() => process.exit(1));
+  });
 
   return server;
 };

@@ -5,6 +5,7 @@ import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { config } from '../config/index.js';
 import { createUniqueSlug } from '../utils/slug.js';
+import { invalidateStorefrontCatalog } from '../services/storefrontCatalog.js';
 
 export const listCollections = async (_req, res) => {
   const collections = await Collection.find().sort({ isSystem: 1, name: 1 }).lean();
@@ -26,6 +27,8 @@ export const createCollection = async (req, res) => {
       slug,
       sortOrder: (maxSort?.sortOrder ?? -1) + 1,
     });
+
+    invalidateStorefrontCatalog('collection created');
 
     return res.status(201).json(collection);
   } catch (err) {
@@ -56,6 +59,7 @@ export const updateCollection = async (req, res) => {
     collection.name = name;
     collection.slug = await createUniqueSlug(Collection, name, collection._id);
     await collection.save();
+    invalidateStorefrontCatalog('collection updated');
 
     res.json(collection);
   } catch (err) {
@@ -92,6 +96,7 @@ export const deleteCollection = async (req, res) => {
   await Product.deleteMany({ _id: { $in: productIds } });
   await Subcollection.deleteMany({ collectionId: collection._id });
   await collection.deleteOne();
+  invalidateStorefrontCatalog('collection deleted');
 
   const remainingPhotoReferences = new Set(
     (await Product.find({ photos: { $in: uploadedPhotos } }).select('photos').lean())

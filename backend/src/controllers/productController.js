@@ -7,6 +7,7 @@ import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 import { queueVideoTranscode } from '../services/videoTranscoder.js';
+import { invalidateStorefrontCatalog } from '../services/storefrontCatalog.js';
 
 const COMFORT_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
 const RESERVED_PROPERTIES = ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'];
@@ -311,6 +312,7 @@ const formatProductForDashboard = (product) => ({
 });
 
 export const listProductsGrouped = async (_req, res) => {
+  const startedAt = Date.now();
   const collections = await Collection.find().sort({ isSystem: 1, name: 1 }).lean();
   const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
   const products = await Product.find()
@@ -320,18 +322,30 @@ export const listProductsGrouped = async (_req, res) => {
     .collation({ locale: 'en', strength: 2 })
     .lean();
 
+  const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
+    const key = String(subcollection.collectionId);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(subcollection);
+    return groups;
+  }, {});
+
+  const productsByCollectionId = products.reduce((groups, product) => {
+    const key = String(product.collectionId?._id || product.collectionId);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(product);
+    return groups;
+  }, {});
+
   const grouped = collections.map((collection) => ({
     ...collection,
-    subcollections: subcollections.filter(
-      (subcollection) => String(subcollection.collectionId) === String(collection._id),
-    ),
-    products: products
-      .filter((product) => String(product.collectionId?._id || product.collectionId) === String(collection._id))
+    subcollections: subcollectionsByCollectionId[String(collection._id)] || [],
+    products: (productsByCollectionId[String(collection._id)] || [])
       .map((product) => ({
         ...formatProductForDashboard(product),
         collectionName: collection.name,
       })),
   }));
+  console.log(`[productController] listProductsGrouped in ${Date.now() - startedAt}ms`);
   res.json(grouped);
 };
 
@@ -446,6 +460,7 @@ export const createProduct = async (req, res) => {
   // on a slow ffmpeg encode. The product already has a playable video path;
   // the background job swaps it for the optimized .webm when it finishes.
   queueVideoTranscode({ productId: product._id, files: req.files?.videos || [] });
+  invalidateStorefrontCatalog('product created');
 
   const populated = await product.populate(productPopulatePaths);
   res.status(201).json(populated);
@@ -545,6 +560,7 @@ export const updateProduct = async (req, res) => {
   }
 
   await product.save();
+  invalidateStorefrontCatalog('product updated');
 
   // Fire-and-forget, same as createProduct: large videos were saved raw so
   // this response isn't held up by ffmpeg; the background job finishes the
@@ -609,5 +625,6 @@ export const deleteProduct = async (req, res) => {
       })));
   }
 
+  invalidateStorefrontCatalog('product deleted');
   res.json({ success: true });
 };

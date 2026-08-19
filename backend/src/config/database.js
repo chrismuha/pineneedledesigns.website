@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { config } from './index.js';
+import { config, getMongoDatabaseName, maskMongoUri } from './index.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
@@ -469,6 +469,68 @@ const ensureCatalogSeeded = async () => {
   console.log('ℹ️ Seeded storefront catalog data from the project data files.');
 };
 
+const ensureUncategorizedCollection = async () => {
+  const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
+  if (!uncategorized) {
+    await Collection.create({
+      name: 'Uncategorized',
+      slug: 'uncategorized',
+      sortOrder: Number.MAX_SAFE_INTEGER,
+      isSystem: true,
+    });
+    console.log('ℹ️ Created system Uncategorized collection');
+  }
+};
+
+const runTimedMaintenanceStep = async (label, task) => {
+  const startedAt = Date.now();
+  await task();
+  const elapsed = Date.now() - startedAt;
+  console.log(`ℹ️ Mongo maintenance step "${label}" completed in ${elapsed}ms.`);
+};
+
+export const runDatabaseMaintenance = async () => {
+  const startedAt = Date.now();
+  await runTimedMaintenanceStep('migrateLegacySubcollectionFields', migrateLegacySubcollectionFields);
+  await runTimedMaintenanceStep('repairPaypalOrderIdIndex', repairPaypalOrderIdIndex);
+  await runTimedMaintenanceStep('repairLegacyProductIndex', repairLegacyProductIndex);
+  await runTimedMaintenanceStep('backfillProductQuantities', backfillProductQuantities);
+  await runTimedMaintenanceStep('removeDuplicateProductSizes', removeDuplicateProductSizes);
+  await runTimedMaintenanceStep('backfillProductSizes', backfillProductSizes);
+  await runTimedMaintenanceStep('renameNaturalWhiteColors', renameNaturalWhiteColors);
+  await runTimedMaintenanceStep('backfillNoBlingDescriptions', backfillNoBlingDescriptions);
+  await runTimedMaintenanceStep('ensureMyraBeltsSubcollection', ensureMyraBeltsSubcollection);
+  await runTimedMaintenanceStep('backfillProductSubcollectionIds', backfillProductSubcollectionIds);
+  await runTimedMaintenanceStep('ensureCatalogSeeded', ensureCatalogSeeded);
+  console.log(`ℹ️ Mongo maintenance finished in ${Date.now() - startedAt}ms.`);
+};
+
+export const MONGO_CONNECT_OPTIONS = {
+  serverSelectionTimeoutMS: 10000,
+};
+
+let shutdownRequested = false;
+let connectionListenersBound = false;
+
+const bindConnectionListeners = () => {
+  if (connectionListenersBound) return;
+  connectionListenersBound = true;
+
+  mongoose.connection.on('error', (error) => {
+    console.error('❌ MongoDB error:', error.message);
+  });
+
+  mongoose.connection.on('disconnected', () => {
+    if (!shutdownRequested) {
+      console.warn('⚠️ MongoDB disconnected');
+    }
+  });
+
+  mongoose.connection.on('reconnected', () => {
+    console.log('✅ MongoDB reconnected');
+  });
+};
+
 const formatMongoConnectionError = (error) => {
   const message = String(error?.message || error);
   const hostname = (() => {
@@ -502,39 +564,41 @@ const formatMongoConnectionError = (error) => {
   return error;
 };
 
+export const disconnectDatabase = async () => {
+  shutdownRequested = true;
+  if (mongoose.connection.readyState === 0) return;
+  await mongoose.disconnect();
+  console.log('ℹ️ MongoDB disconnected');
+};
+
 export const connectDatabase = async () => {
-  try {
-    await mongoose.connect(config.mongoUri, {
-      serverSelectionTimeoutMS: 10000,
-    });
-  } catch (error) {
-    throw formatMongoConnectionError(error);
+  const startedAt = Date.now();
+  shutdownRequested = false;
+  bindConnectionListeners();
+
+  if (mongoose.connection.readyState !== 1) {
+    try {
+      await mongoose.connect(config.mongoUri, MONGO_CONNECT_OPTIONS);
+    } catch (error) {
+      throw formatMongoConnectionError(error);
+    }
   }
 
   const connectedDb = mongoose.connection.name || '(unknown)';
   const connectedHost = mongoose.connection.host || '(unknown)';
   console.log(`✅ MongoDB connected (host=${connectedHost}, db=${connectedDb})`);
 
-  const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
-  if (!uncategorized) {
-    await Collection.create({
-      name: 'Uncategorized',
-      slug: 'uncategorized',
-      sortOrder: Number.MAX_SAFE_INTEGER,
-      isSystem: true,
-    });
-    console.log('ℹ️ Created system Uncategorized collection');
+  const uriDbName = getMongoDatabaseName(config.mongoUri);
+  if (uriDbName === 'admin') {
+    console.warn(
+      '⚠️ MONGODB_URI path is /admin (auth database). Application collections will live there unless the path is /pineneedledesigns. authSource=admin should stay in the query string.',
+    );
+  }
+  if (config.isProduction && maskMongoUri(config.mongoUri).includes('127.0.0.1')) {
+    throw new Error('Production must not connect to local MongoDB.');
   }
 
-  await migrateLegacySubcollectionFields();
-  await repairPaypalOrderIdIndex();
-  await repairLegacyProductIndex();
-  await backfillProductQuantities();
-  await removeDuplicateProductSizes();
-  await backfillProductSizes();
-  await renameNaturalWhiteColors();
-  await backfillNoBlingDescriptions();
-  await ensureMyraBeltsSubcollection();
-  await backfillProductSubcollectionIds();
+  await ensureUncategorizedCollection();
   await ensureCatalogSeeded();
+  console.log(`ℹ️ MongoDB startup checks finished in ${Date.now() - startedAt}ms.`);
 };

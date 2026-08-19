@@ -318,9 +318,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
+import { ref, watch, onUnmounted, onMounted, computed, shallowRef } from 'vue'
 import { useCartStore } from '../stores/cart'
-import countiesData from '../data/counties.json'
+import { getTaxLocationKey, loadTaxLocationData } from '../data/taxLocationData'
 
 const cartStore = useCartStore()
 const codeInput = ref('')
@@ -356,6 +356,18 @@ const shippingCountyOpen = ref(false)
 const checkoutError = ref('')
 const checkoutLoading = ref(false)
 const shippingSettings = ref({ freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 })
+const taxLocationData = shallowRef({
+  states: [],
+  countiesByState: new Map(),
+  taxByKey: new Map(),
+})
+const taxLocationDataLoaded = ref(false)
+
+const ensureTaxLocationData = async () => {
+  if (taxLocationDataLoaded.value) return
+  taxLocationData.value = await loadTaxLocationData()
+  taxLocationDataLoaded.value = true
+}
 
 const loadShippingSettings = async () => {
   try {
@@ -369,9 +381,10 @@ const loadShippingSettings = async () => {
 onMounted(loadShippingSettings)
 
 // Prevent background scrolling when modal is open
-watch(showCheckoutForm, (open) => {
+watch(showCheckoutForm, async (open) => {
   try {
     if (open) {
+      await ensureTaxLocationData()
       document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
     } else {
@@ -402,28 +415,28 @@ watch(customerPhone, (value) => {
   }
 })
 
-const uniqueStates = [...new Set(countiesData.map(item => item.state))].sort()
+const uniqueStates = computed(() => taxLocationData.value.states)
 const filteredStates = computed(() => {
   const query = billingStateQuery.value.trim().toLowerCase()
   return query
-    ? uniqueStates.filter(state => state.toLowerCase().includes(query))
-    : uniqueStates
+    ? uniqueStates.value.filter(state => state.toLowerCase().includes(query))
+    : uniqueStates.value
 })
 const filteredShippingStates = computed(() => {
   const query = shippingStateQuery.value.trim().toLowerCase()
   return query
-    ? uniqueStates.filter(state => state.toLowerCase().includes(query))
-    : uniqueStates
+    ? uniqueStates.value.filter(state => state.toLowerCase().includes(query))
+    : uniqueStates.value
 })
 const billingCountyOptions = computed(() => {
-  return billingState.value ? countiesData.filter(item => item.state === billingState.value).map(item => item.county) : []
+  return billingState.value ? (taxLocationData.value.countiesByState.get(billingState.value) || []) : []
 })
 const effectiveShippingState = computed(() => sameAsBilling.value ? billingState.value : shippingState.value)
 const effectiveShippingCounty = computed(() => sameAsBilling.value ? billingCounty.value : shippingCounty.value)
 const effectiveShippingCity = computed(() => sameAsBilling.value ? billingCity.value.trim() : shippingCity.value.trim())
 
 const shippingCountyOptions = computed(() => {
-  return effectiveShippingState.value ? countiesData.filter(item => item.state === effectiveShippingState.value).map(item => item.county) : []
+  return effectiveShippingState.value ? (taxLocationData.value.countiesByState.get(effectiveShippingState.value) || []) : []
 })
 const filteredBillingCounties = computed(() => {
   const query = billingCountyQuery.value.trim().toLowerCase()
@@ -440,7 +453,9 @@ const filteredShippingCounties = computed(() => {
 
 const shippingTaxRecord = computed(() => {
   if (!effectiveShippingState.value || !effectiveShippingCounty.value) return null
-  return countiesData.find(item => item.state === effectiveShippingState.value && item.county === effectiveShippingCounty.value) || null
+  return taxLocationData.value.taxByKey.get(
+    getTaxLocationKey(effectiveShippingState.value, effectiveShippingCounty.value),
+  ) || null
 })
 
 const shippingTaxRate = computed(() => {
@@ -633,7 +648,7 @@ watch(shippingState, (state) => {
 })
 
 watch(billingStateQuery, (query) => {
-  const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.trim().toLowerCase())
+  const exactMatch = uniqueStates.value.find(state => state.toLowerCase() === query.trim().toLowerCase())
   if (exactMatch) {
     billingState.value = exactMatch
   } else if (query.trim() === '') {
@@ -642,7 +657,7 @@ watch(billingStateQuery, (query) => {
 })
 
 watch(shippingStateQuery, (query) => {
-  const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.trim().toLowerCase())
+  const exactMatch = uniqueStates.value.find(state => state.toLowerCase() === query.trim().toLowerCase())
   if (exactMatch) {
     shippingState.value = exactMatch
   } else if (query.trim() === '') {
@@ -671,7 +686,7 @@ watch(shippingCountyQuery, (query) => {
 const onBillingStateBlur = () => {
   setTimeout(() => {
     const query = billingStateQuery.value.trim()
-    const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.toLowerCase())
+    const exactMatch = uniqueStates.value.find(state => state.toLowerCase() === query.toLowerCase())
     if (exactMatch) {
       selectBillingState(exactMatch)
       billingStateInvalid.value = false
@@ -704,7 +719,7 @@ const onBillingCountyBlur = () => {
 const onShippingStateBlur = () => {
   setTimeout(() => {
     const query = shippingStateQuery.value.trim()
-    const exactMatch = uniqueStates.find(state => state.toLowerCase() === query.toLowerCase())
+    const exactMatch = uniqueStates.value.find(state => state.toLowerCase() === query.toLowerCase())
     if (exactMatch) {
       selectShippingState(exactMatch)
       shippingStateInvalid.value = false
@@ -865,10 +880,19 @@ const submitCheckout = async () => {
           breakdown: taxBreakdownRows.value,
         },
         idempotencyKey: `clover-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+        // Send cart items so the server can recover if the session was reset.
+        cartItems: cartStore.items.map(item => ({
+          id: item.id,
+          cartItemId: item.cartItemId || String(item.id),
+          quantity: item.quantity,
+          price: item.price,
+          title: item.title || item.name,
+          storefrontId: item.storefrontId || item.id,
+        })),
       }),
     })
 
-    const data = await request.json()
+    const data = await request.json().catch(() => ({}))
 
     if (!request.ok || !data.success) {
       checkoutError.value = data.message || data.error || 'Unable to start Clover checkout. Please try again.'
@@ -881,8 +905,11 @@ const submitCheckout = async () => {
     }
 
     checkoutError.value = data.message || 'Unable to complete checkout. Please try again.'
-  } catch {
-    checkoutError.value = 'Unable to connect to the payment service. Please try again.'
+  } catch (error) {
+    const offline = error instanceof TypeError || /failed to fetch|networkerror|econnrefused|econnreset/i.test(String(error?.message || ''))
+    checkoutError.value = offline
+      ? 'Unable to connect to the payment service. Make sure the backend is running, then try again.'
+      : (error?.message || 'Unable to connect to the payment service. Please try again.')
   } finally {
     checkoutLoading.value = false
   }

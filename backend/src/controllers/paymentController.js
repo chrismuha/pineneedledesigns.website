@@ -13,7 +13,7 @@ import { Product } from '../models/Product.js';
 import { Order } from '../models/Order.js';
 import { Payment } from '../models/Payment.js';
 import { StoreSettings } from '../models/StoreSettings.js';
-import { isValidObjectId, Types } from 'mongoose';
+import mongoose, { isValidObjectId, Types } from 'mongoose';
 import { sendPushNotification } from '../services/pushNotifications.js';
 import { tryFinalizeBookingDepositFromWebhook } from '../controllers/bookingController.js';
 
@@ -202,6 +202,13 @@ const finalizePaidOrder = async ({ order, paymentRecord, cloverPaymentId, req })
 
 export const createCloverPaymentHandler = async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json(formatError({
+        message: 'The store is temporarily unavailable. Please try checkout again in a moment.',
+        code: 'DATABASE_UNAVAILABLE',
+      }));
+    }
+
     if (!isCloverConfigured()) {
       return res.status(503).json(formatError({
         message: 'Clover payment is not configured on the server.',
@@ -217,8 +224,19 @@ export const createCloverPaymentHandler = async (req, res) => {
       }));
     }
 
-    const { code, customer, billingAddress, shippingAddress } = req.body || {};
-    const cart = req.session.cart || [];
+    const { code, customer, billingAddress, shippingAddress, cartItems } = req.body || {};
+
+    // Use session cart. If the server restarted and the session is fresh,
+    // fall back to the cart items the client sent in the request body.
+    let cart = Array.isArray(req.session.cart) && req.session.cart.length > 0
+      ? req.session.cart
+      : Array.isArray(cartItems) ? cartItems : [];
+
+    // Sync the client-provided cart back into the session so downstream
+    // operations (e.g. inventory reserve) use a consistent source of truth.
+    if (cart.length && (!req.session.cart || !req.session.cart.length)) {
+      req.session.cart = cart;
+    }
 
     if (!cart.length) {
       return res.status(400).json(formatError({ message: 'Your cart is empty.', code: 'EMPTY_CART' }));
@@ -248,7 +266,7 @@ export const createCloverPaymentHandler = async (req, res) => {
     const settings = await StoreSettings.findOneAndUpdate(
       { key: 'store' },
       { $setOnInsert: { freeShippingEnabled: true, freeShippingMinimum: 28, fallbackShippingCost: 5 } },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
     ).lean();
     const qualifiesForFreeShipping = settings.freeShippingEnabled
       && Number.isFinite(settings.freeShippingMinimum)
