@@ -71,6 +71,13 @@ jobs:
               exit 1
             fi
 
+            # backend/.env is the deploy source of truth. Remove a leftover root
+            # MONGODB_URI so a stale password cannot win when someone runs npm start.
+            if [ -f .env ]; then
+              grep -v '^MONGODB_URI=' .env > .env.without-mongo || true
+              mv .env.without-mongo .env
+            fi
+
             # Write production env file so the app always loads DigitalOcean MongoDB
             umask 077
             printf '%s\n' \

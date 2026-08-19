@@ -7,7 +7,7 @@ export const deductCapturedInventory = async (inventoryLines = []) => {
     const product = await Product.findOneAndUpdate(
       { _id: line.productId, quantity: { $gte: line.quantity } },
       { $inc: { quantity: -line.quantity } },
-      { new: true },
+      { returnDocument: 'after' },
     );
     if (!product) {
       console.error(`Inventory deduction failed for product ${line.productId}.`);

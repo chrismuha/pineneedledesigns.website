@@ -1,11 +1,10 @@
-import { connectDatabase } from '../config/database.js';
-import mongoose from 'mongoose';
+import { connectDatabase, disconnectDatabase } from '../config/database.js';
 import { seedCatalog } from '../services/catalogSeed.js';
 
 const run = async () => {
   await connectDatabase();
   await seedCatalog();
-  await mongoose.disconnect();
+  await disconnectDatabase();
   process.exit(0);
 };
 

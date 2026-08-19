@@ -868,7 +868,7 @@ const submitCheckout = async () => {
       }),
     })
 
-    const data = await request.json()
+    const data = await request.json().catch(() => ({}))
 
     if (!request.ok || !data.success) {
       checkoutError.value = data.message || data.error || 'Unable to start Clover checkout. Please try again.'
@@ -881,8 +881,11 @@ const submitCheckout = async () => {
     }
 
     checkoutError.value = data.message || 'Unable to complete checkout. Please try again.'
-  } catch {
-    checkoutError.value = 'Unable to connect to the payment service. Please try again.'
+  } catch (error) {
+    const offline = error instanceof TypeError || /failed to fetch|networkerror|econnrefused|econnreset/i.test(String(error?.message || ''))
+    checkoutError.value = offline
+      ? 'Unable to connect to the payment service. Make sure the backend is running, then try again.'
+      : (error?.message || 'Unable to connect to the payment service. Please try again.')
   } finally {
     checkoutLoading.value = false
   }

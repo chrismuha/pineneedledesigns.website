@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { config } from '../config/index.js';
+import { MONGO_CONNECT_OPTIONS } from '../config/database.js';
 
 const toDbUri = (uri, dbName) => {
   const [withoutQuery, query = ''] = uri.split('?');
@@ -8,7 +9,7 @@ const toDbUri = (uri, dbName) => {
 };
 
 const summarize = async (uri) => {
-  await mongoose.connect(uri, { serverSelectionTimeoutMS: 15000 });
+  await mongoose.connect(uri, { ...MONGO_CONNECT_OPTIONS, serverSelectionTimeoutMS: 15000 });
   const db = mongoose.connection.db;
   const cols = await db.listCollections().toArray();
   const counts = {};
