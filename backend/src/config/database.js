@@ -507,6 +507,9 @@ export const runDatabaseMaintenance = async () => {
 
 export const MONGO_CONNECT_OPTIONS = {
   serverSelectionTimeoutMS: 10000,
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  maxConnecting: 2,
 };
 
 let shutdownRequested = false;

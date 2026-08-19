@@ -228,6 +228,7 @@ const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
 let storefrontCatalogCache = null;
 let storefrontCatalogBuiltAt = 0;
 let storefrontCatalogInFlight = null;
+let storefrontCatalogVersion = 0;
 
 const logStorefrontTiming = (label, startedAt, extra = '') => {
   const suffix = extra ? ` ${extra}` : '';
@@ -237,15 +238,25 @@ const logStorefrontTiming = (label, startedAt, extra = '') => {
 export const invalidateStorefrontCatalog = (reason = 'unknown') => {
   storefrontCatalogCache = null;
   storefrontCatalogBuiltAt = 0;
-  storefrontCatalogInFlight = null;
+  storefrontCatalogVersion += 1;
   console.log(`[storefrontCatalog] cache invalidated (${reason})`);
 };
 
 const buildStorefrontCatalog = async () => {
   const startedAt = Date.now();
-  const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
-  const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
-  const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
+  const collections = await Collection.find({ isSystem: false })
+    .select('name slug cardImage description hidden showWhenEmpty')
+    .sort({ name: 1 })
+    .lean();
+  const subcollections = await Subcollection.find()
+    .select('collectionId name slug sortOrder')
+    .sort({ sortOrder: 1, name: 1 })
+    .lean();
+  const products = await Product.find()
+    .select('name collectionId subCollectionId color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders')
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
+    .lean();
 
   const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
     const key = String(subcollection.collectionId);
@@ -283,10 +294,13 @@ export const getStorefrontCatalog = async () => {
   }
 
   if (!storefrontCatalogInFlight) {
+    const buildVersion = storefrontCatalogVersion;
     storefrontCatalogInFlight = buildStorefrontCatalog()
       .then((catalog) => {
-        storefrontCatalogCache = catalog;
-        storefrontCatalogBuiltAt = Date.now();
+        if (buildVersion === storefrontCatalogVersion) {
+          storefrontCatalogCache = catalog;
+          storefrontCatalogBuiltAt = Date.now();
+        }
         return catalog;
       })
       .finally(() => {

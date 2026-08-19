@@ -26,7 +26,9 @@ export const SYNC_TRANSCODE_MAX_BYTES = 15 * 1024 * 1024;
 
 const CPU_COUNT = os.cpus().length;
 const IMAGE_CONCURRENCY = Math.max(1, Math.min(2, Math.ceil(CPU_COUNT / 4)));
-const VIDEO_CONCURRENCY = Math.max(1, Math.min(2, Math.ceil(CPU_COUNT / 4)));
+const VIDEO_CONCURRENCY = config.isProduction
+  ? 1
+  : Math.max(1, Math.min(2, Math.ceil(CPU_COUNT / 4)));
 
 const runLimited = async (items, limit, worker) => {
   const results = new Array(items.length);
