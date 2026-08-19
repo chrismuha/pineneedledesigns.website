@@ -7,6 +7,7 @@
     "dev": "node --watch src/server.js",
     "seed": "node src/scripts/seedCatalog.js",
     "test:mongo": "node src/scripts/testMongoConnection.js",
+    "test:orders": "node src/scripts/verifyCloverOrderIndexes.js",
     "test:clover": "node src/scripts/testCloverConnection.js",
     "diagnose:clover": "node src/scripts/diagnoseCloverAuth.js",
     "inspect:mongo": "node src/scripts/inspectMongoDatabases.js"

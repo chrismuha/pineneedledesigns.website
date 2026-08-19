@@ -17,7 +17,7 @@ export const getNextOrderNumber = async () => {
   const counter = await OrderCounter.findOneAndUpdate(
     { _id: 'orders' },
     { $inc: { seq: 1 } },
-    { upsert: true, new: true, setDefaultsOnInsert: true },
+    { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
   );
 
   return counter.seq;

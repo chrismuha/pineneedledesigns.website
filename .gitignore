@@ -52,8 +52,13 @@ backend/uploads/*
 # Ignore the legacy HTML folder
 legacy-html/
 
-#Ignore dot env
+#Ignore environment files (never commit secrets)
 .env
+**/.env
+backend/.env
+!.env.example
+!**/.env.example
+!**/.env.production.example
 
 # Dropbox numbered dependency and conflict copies
 node_modules */

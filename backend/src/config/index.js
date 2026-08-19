@@ -7,10 +7,40 @@ const __dirname = path.dirname(__filename);
 const backendDir = path.resolve(__dirname, '../..');
 const rootDir = path.resolve(backendDir, '..');
 
-// Load root .env first, then backend/.env overrides (monorepo layout).
-dotenv.config({ path: path.join(rootDir, '.env') });
-dotenv.config({ path: path.join(backendDir, '.env') });
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+const captureProcessEnv = () => {
+  const captured = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value !== undefined && value !== '') captured[key] = value;
+  }
+  return captured;
+};
+
+const loadEnvFiles = () => {
+  // Host-injected values (PM2, systemd, GitHub Actions) always win.
+  const hostEnv = captureProcessEnv();
+
+  // backend/.env is the single source of truth for MONGODB_URI and server secrets.
+  dotenv.config({ path: path.join(backendDir, '.env') });
+  // Root .env may supply shared dev defaults (Clover, VAPID) without duplicating Mongo credentials.
+  dotenv.config({ path: path.join(rootDir, '.env'), override: false });
+
+  Object.assign(process.env, hostEnv);
+};
+
+loadEnvFiles();
+
+export const maskMongoUri = (uri = '') => String(uri).replace(/\/\/([^:/@]+):([^@]+)@/, '//$1:***@');
+
+export const getMongoDatabaseName = (uri = '') => {
+  try {
+    const normalized = String(uri)
+      .replace(/^mongodb\+srv:/i, 'https:')
+      .replace(/^mongodb:/i, 'https:');
+    return decodeURIComponent(new URL(normalized).pathname.replace(/^\//, '') || '');
+  } catch {
+    return '';
+  }
+};
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pineneedledesigns';
 
