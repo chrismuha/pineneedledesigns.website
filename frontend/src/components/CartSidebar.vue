@@ -865,6 +865,15 @@ const submitCheckout = async () => {
           breakdown: taxBreakdownRows.value,
         },
         idempotencyKey: `clover-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+        // Send cart items so the server can recover if the session was reset.
+        cartItems: cartStore.items.map(item => ({
+          id: item.id,
+          cartItemId: item.cartItemId || String(item.id),
+          quantity: item.quantity,
+          price: item.price,
+          title: item.title || item.name,
+          storefrontId: item.storefrontId || item.id,
+        })),
       }),
     })
 

@@ -224,8 +224,19 @@ export const createCloverPaymentHandler = async (req, res) => {
       }));
     }
 
-    const { code, customer, billingAddress, shippingAddress } = req.body || {};
-    const cart = req.session.cart || [];
+    const { code, customer, billingAddress, shippingAddress, cartItems } = req.body || {};
+
+    // Use session cart. If the server restarted and the session is fresh,
+    // fall back to the cart items the client sent in the request body.
+    let cart = Array.isArray(req.session.cart) && req.session.cart.length > 0
+      ? req.session.cart
+      : Array.isArray(cartItems) ? cartItems : [];
+
+    // Sync the client-provided cart back into the session so downstream
+    // operations (e.g. inventory reserve) use a consistent source of truth.
+    if (cart.length && (!req.session.cart || !req.session.cart.length)) {
+      req.session.cart = cart;
+    }
 
     if (!cart.length) {
       return res.status(400).json(formatError({ message: 'Your cart is empty.', code: 'EMPTY_CART' }));
