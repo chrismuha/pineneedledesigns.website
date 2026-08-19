@@ -6,6 +6,66 @@ import { isValidObjectId, Types } from 'mongoose';
 import { defaultShirtSizes, sortSizeOptions } from '../utils/sizeOptions.js';
 import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
 
+const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
+
+let storefrontCatalogCache = null;
+let storefrontCatalogCachedAt = 0;
+let storefrontCatalogPromise = null;
+
+const STOREFRONT_COLLECTION_FIELDS = [
+  '_id',
+  'name',
+  'slug',
+  'description',
+  'cardImage',
+  'hidden',
+  'showWhenEmpty',
+].join(' ');
+
+const STOREFRONT_SUBCOLLECTION_FIELDS = [
+  '_id',
+  'collectionId',
+  'name',
+  'slug',
+  'sortOrder',
+].join(' ');
+
+const STOREFRONT_PRODUCT_FIELDS = [
+  '_id',
+  'legacyId',
+  'collectionId',
+  'subCollectionId',
+  'name',
+  'price',
+  'sizePrices',
+  'blingPrice',
+  'noBlingPrice',
+  'hasBlingOptions',
+  'meta',
+  'description',
+  'noBlingDescription',
+  'generalDescription',
+  'optionPlaceholders',
+  'customProperties',
+  'color',
+  'size',
+  'sweatshirtSize',
+  'shoeSize',
+  'beltSize',
+  'comfortColors',
+  'photos',
+  'videos',
+  'videoPosters',
+  'imageWrapper',
+  'filters',
+  'bagTypes',
+  'shoeTypes',
+  'maker',
+  'outOfStock',
+  'quantity',
+  'shippingCost',
+].join(' ');
+
 const normalizeColorName = (value) => (
   /^white\s*\(natural\)$/i.test(String(value).trim()) ? 'Natural White' : String(value).trim()
 );
@@ -224,10 +284,20 @@ const attachCollectionNavigation = (pages) => {
   };
 };
 
-export const getStorefrontCatalog = async () => {
-  const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
-  const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
-  const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
+const buildStorefrontCatalog = async () => {
+  const collections = await Collection.find({ isSystem: false })
+    .select(STOREFRONT_COLLECTION_FIELDS)
+    .sort({ name: 1 })
+    .lean();
+  const subcollections = await Subcollection.find()
+    .select(STOREFRONT_SUBCOLLECTION_FIELDS)
+    .sort({ sortOrder: 1, name: 1 })
+    .lean();
+  const products = await Product.find()
+    .select(STOREFRONT_PRODUCT_FIELDS)
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
+    .lean();
 
   const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
     const key = String(subcollection.collectionId);
@@ -250,6 +320,35 @@ export const getStorefrontCatalog = async () => {
   ));
 
   return attachCollectionNavigation(collectionPages);
+};
+
+export const invalidateStorefrontCatalogCache = () => {
+  storefrontCatalogCache = null;
+  storefrontCatalogCachedAt = 0;
+  storefrontCatalogPromise = null;
+};
+
+export const getStorefrontCatalog = async ({ forceRefresh = false } = {}) => {
+  const now = Date.now();
+  if (!forceRefresh && storefrontCatalogCache && (now - storefrontCatalogCachedAt) < STOREFRONT_CACHE_TTL_MS) {
+    return storefrontCatalogCache;
+  }
+
+  if (!forceRefresh && storefrontCatalogPromise) {
+    return storefrontCatalogPromise;
+  }
+
+  storefrontCatalogPromise = buildStorefrontCatalog()
+    .then((catalog) => {
+      storefrontCatalogCache = catalog;
+      storefrontCatalogCachedAt = Date.now();
+      return catalog;
+    })
+    .finally(() => {
+      storefrontCatalogPromise = null;
+    });
+
+  return storefrontCatalogPromise;
 };
 
 export const getStorefrontCollectionBySlug = async (slug) => {

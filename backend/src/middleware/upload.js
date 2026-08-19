@@ -24,7 +24,9 @@ const uniqueBase = () => `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
 export const SYNC_TRANSCODE_MAX_BYTES = 15 * 1024 * 1024;
 
-const VIDEO_CONCURRENCY = Math.max(1, os.cpus().length - 1);
+const VIDEO_CONCURRENCY = config.isProduction
+  ? 1
+  : Math.max(1, Math.min(2, os.cpus().length - 1));
 
 const runLimited = async (items, limit, worker) => {
   const results = new Array(items.length);

@@ -1,6 +1,7 @@
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
+import { invalidateStorefrontCatalogCache } from '../services/storefrontCatalog.js';
 import { slugify } from '../utils/slug.js';
 
 const createUniqueSubcollectionSlug = async (collectionId, name, excludeId = null) => {
@@ -66,6 +67,7 @@ export const createSubcollection = async (req, res) => {
       sortOrder: (maxSort?.sortOrder ?? -1) + 1,
     });
 
+    invalidateStorefrontCatalogCache();
     res.status(201).json(subcollection);
   } catch (err) {
     if (err?.code === 11000) {
@@ -103,6 +105,7 @@ export const updateSubcollection = async (req, res) => {
     );
     await subcollection.save();
 
+    invalidateStorefrontCatalogCache();
     res.json(subcollection);
   } catch (err) {
     if (err?.code === 11000) {
@@ -131,5 +134,6 @@ export const deleteSubcollection = async (req, res) => {
     { $unset: { subCollectionId: '' } },
   );
 
+  invalidateStorefrontCatalogCache();
   res.json({ success: true });
 };

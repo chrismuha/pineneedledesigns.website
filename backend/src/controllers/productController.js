@@ -6,6 +6,7 @@ import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
+import { invalidateStorefrontCatalogCache } from '../services/storefrontCatalog.js';
 import { queueVideoTranscode } from '../services/videoTranscoder.js';
 
 const COMFORT_COLORS = ['Pepper', 'Butter', 'Ivory', 'White', 'Natural White'];
@@ -446,6 +447,7 @@ export const createProduct = async (req, res) => {
   // on a slow ffmpeg encode. The product already has a playable video path;
   // the background job swaps it for the optimized .webm when it finishes.
   queueVideoTranscode({ productId: product._id, files: req.files?.videos || [] });
+  invalidateStorefrontCatalogCache();
 
   const populated = await product.populate(productPopulatePaths);
   res.status(201).json(populated);
@@ -545,6 +547,7 @@ export const updateProduct = async (req, res) => {
   }
 
   await product.save();
+  invalidateStorefrontCatalogCache();
 
   // Fire-and-forget, same as createProduct: large videos were saved raw so
   // this response isn't held up by ffmpeg; the background job finishes the
@@ -609,5 +612,6 @@ export const deleteProduct = async (req, res) => {
       })));
   }
 
+  invalidateStorefrontCatalogCache();
   res.json({ success: true });
 };
