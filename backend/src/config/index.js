@@ -93,7 +93,7 @@ export const config = {
     accessToken: process.env.CLOVER_ACCESS_TOKEN || process.env.CLOVER_PRIVATE_TOKEN,
     pageConfigUuid: process.env.CLOVER_PAGE_CONFIG_UUID,
     webhookSecret: process.env.CLOVER_WEBHOOK_SECRET,
-    bookingDepositsEnabled: String(process.env.CLOVER_BOOKING_DEPOSITS_ENABLED || '').toLowerCase() === 'true',
+    bookingDepositsEnabled: String(process.env.CLOVER_BOOKING_DEPOSITS_ENABLED || 'true').toLowerCase() === 'true',
   },
   webPush: {
     publicKey: process.env.VAPID_PUBLIC_KEY,

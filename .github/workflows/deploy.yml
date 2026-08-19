@@ -96,7 +96,7 @@ jobs:
               "CLOVER_ACCESS_TOKEN=${CLOVER_ACCESS_TOKEN:-}" \
               "CLOVER_PAGE_CONFIG_UUID=${CLOVER_PAGE_CONFIG_UUID:-}" \
               "CLOVER_WEBHOOK_SECRET=${CLOVER_WEBHOOK_SECRET:-}" \
-              "CLOVER_BOOKING_DEPOSITS_ENABLED=${CLOVER_BOOKING_DEPOSITS_ENABLED:-false}" \
+              "CLOVER_BOOKING_DEPOSITS_ENABLED=${CLOVER_BOOKING_DEPOSITS_ENABLED:-true}" \
               "VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY:-}" \
               "VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY:-}" \
               "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
