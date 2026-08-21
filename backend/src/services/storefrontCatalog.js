@@ -101,11 +101,13 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const blingOptions = hasBlingOptions
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
+  const primarySizeName = allowBlingOptions ? 'Shirt Size' : 'Size';
+  const primarySizePlaceholder = allowBlingOptions ? 'Select shirt size' : 'Select size';
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
-    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: 'Size', values: sizeOptions, placeholder: placeholders.Size || 'Select size' }] : []),
+    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: primarySizeName, values: sizeOptions, placeholder: placeholders.Size || primarySizePlaceholder }] : []),
     ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),

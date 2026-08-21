@@ -111,7 +111,7 @@ const editIsDirty = computed(() => Boolean(
 ))
 
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Size ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${collectionAllowsBling(editingProduct.value.collectionId) ? 'Shirt Size' : 'Size'} ${size}` })),
   ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -1032,9 +1032,9 @@ const customPropertiesForDisplay = (properties = []) => sortedProperties(propert
 const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .filter(([, price]) => Number.isFinite(Number(price)))
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
-const sizePriceLabel = (key) => {
+const sizePriceLabel = (key, isShirt = false) => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: 'Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: isShirt ? 'Shirt Size' : 'Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1237,12 +1237,12 @@ onBeforeUnmount(() => {
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
-          <p v-if="product.size"><strong>Sizes:</strong> {{ product.size }}</p>
+          <p v-if="product.size"><strong>{{ collectionAllowsBling(collection._id) ? 'Shirt Sizes:' : 'Sizes:' }}</strong> {{ product.size }}</p>
           <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
-            <strong>{{ sizePriceLabel(key) }} Price:</strong> ${{ Number(price).toFixed(2) }}
+            <strong>{{ sizePriceLabel(key, collectionAllowsBling(collection._id)) }} Price:</strong> ${{ Number(price).toFixed(2) }}
           </p>
           <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
             <strong>General Description:</strong><br>
@@ -1446,15 +1446,15 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="field">
-          <label>Sizes</label>
-          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
-          <p class="hint">Use for general item sizes. This field is also the shared fallback when an item has no dedicated size field.</p>
+          <label>{{ collectionAllowsBling(editingProduct.collectionId) ? 'Shirt Sizes' : 'Sizes' }}</label>
+          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" :label="collectionAllowsBling(editingProduct.collectionId) ? 'shirt size' : 'size'" />
+          <p class="hint">{{ collectionAllowsBling(editingProduct.collectionId) ? 'Use for shirts.' : 'Use for general item sizes when no dedicated size field applies.' }}</p>
         </div>
 
         <div class="field">
           <label>Sweatshirt Sizes</label>
-          <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" />
-          <p class="hint">Use for sweatshirts. These replace the Size fallback on known sweatshirt items.</p>
+          <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" label="sweatshirt size" />
+          <p class="hint">Use for sweatshirts. These replace the primary size field on known sweatshirt items.</p>
         </div>
 
         <div class="field">

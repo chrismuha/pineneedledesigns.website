@@ -86,7 +86,7 @@ const collectionAllowsBling = computed(() => collections.value.find(
   (collection) => String(collection._id) === String(form.collectionId),
 )?.slug === 'shirts')
 const sizePriceRows = computed(() => [
-  ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `Size ${size}` })),
+  ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `${collectionAllowsBling.value ? 'Shirt Size' : 'Size'} ${size}` })),
   ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -608,15 +608,15 @@ watch(
           </div>
 
           <div class="field">
-            <label>Sizes</label>
-            <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
-            <p class="hint">Use for general item sizes. This field is also the shared fallback when an item has no dedicated size field.</p>
+            <label>{{ collectionAllowsBling ? 'Shirt Sizes' : 'Sizes' }}</label>
+            <SizeOptionEditor v-model="form.sizes" :disabled="loading" :label="collectionAllowsBling ? 'shirt size' : 'size'" />
+            <p class="hint">{{ collectionAllowsBling ? 'Use for shirts.' : 'Use for general item sizes when no dedicated size field applies.' }}</p>
           </div>
 
           <div class="field">
             <label>Sweatshirt Sizes</label>
-            <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" />
-            <p class="hint">Use for sweatshirts. These replace the Size fallback on known sweatshirt items.</p>
+            <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" label="sweatshirt size" />
+            <p class="hint">Use for sweatshirts. These replace the primary size field on known sweatshirt items.</p>
           </div>
 
           <div class="field">
