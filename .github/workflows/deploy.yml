@@ -49,6 +49,19 @@ jobs:
             set -euo pipefail
             cd ~/pineneedledesigns.website
 
+            # Preserve the credential already used by the healthy production
+            # process. This prevents a stale repository secret from replacing a
+            # rotated database password before the app can be reloaded.
+            RUNNING_MONGODB_URI="$(pm2 jlist | node -e '
+              let input = "";
+              process.stdin.on("data", (chunk) => { input += chunk; });
+              process.stdin.on("end", () => {
+                const processes = JSON.parse(input || "[]");
+                const server = processes.find((entry) => entry.name === "server");
+                process.stdout.write(server?.pm2_env?.MONGODB_URI || server?.pm2_env?.env?.MONGODB_URI || "");
+              });
+            ')"
+
             # Reclaim disposable server data before Git needs room to fetch and
             # unpack the new revision. Product uploads are left untouched.
             pm2 flush || true
@@ -69,6 +82,12 @@ jobs:
             if [ -z "${SESSION_SECRET:-}" ]; then
               echo "ERROR: SESSION_SECRET secret is empty. Set GitHub Actions secret SESSION_SECRET."
               exit 1
+            fi
+
+            if [ -n "$RUNNING_MONGODB_URI" ]; then
+              MONGODB_URI="$RUNNING_MONGODB_URI"
+              export MONGODB_URI
+              echo "Using the MongoDB credential from the healthy production process."
             fi
 
             # backend/.env is the deploy source of truth. Remove a leftover root
