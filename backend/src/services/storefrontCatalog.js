@@ -66,6 +66,9 @@ const primarySizeLabelFor = (collectionSlug) => ({
   shirts: 'Shirt Size',
   skirts: 'Skirt Size',
   jackets: 'Jacket Size',
+  jeans: 'Jeans Size',
+  sweaters: 'Sweater Size',
+  vests: 'Vest Size',
 }[collectionSlug] || 'Size');
 
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false, collectionSlug = '') => {
@@ -115,7 +118,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
     ...(!hasDedicatedSizeOptions && sizeOptions.length ? [{ name: primarySizeName, values: sizeOptions, placeholder: placeholders.Size || primarySizePlaceholder }] : []),
-    ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
+    ...(sweatshirtSizeOptions.length ? [{ name: collectionSlug === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: collectionSlug === 'sweaters' ? 'Select sweater size' : 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
     ...customOptions,

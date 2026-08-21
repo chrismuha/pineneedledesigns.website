@@ -4,9 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
-import SizeOptionEditor from './SizeOptionEditor.vue'
-import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
-import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
+import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
@@ -117,7 +115,7 @@ const editHasDedicatedSizeOptions = computed(() => editingProduct.value && [
 ].some((size) => String(size || '').trim()))
 const editSizePriceRows = computed(() => editingProduct.value ? [
   ...(!editHasDedicatedSizeOptions.value ? sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabelForCollection(editingProduct.value.collectionId)} ${size}` })) : []),
-  ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `${collectionSlugFor(editingProduct.value.collectionId) === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size'} ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ] : [])
@@ -766,8 +764,18 @@ const primarySizeLabelForCollection = (collectionId) => {
   const slug = groupedCollections.value.find(
     (item) => String(item._id) === String(collectionId),
   )?.slug
-  return { shirts: 'Shirt Size', skirts: 'Skirt Size', jackets: 'Jacket Size' }[slug] || 'Size'
+  return {
+    shirts: 'Shirt Size',
+    skirts: 'Skirt Size',
+    jackets: 'Jacket Size',
+    jeans: 'Jeans Size',
+    sweaters: 'Sweater Size',
+    vests: 'Vest Size',
+  }[slug] || 'Size'
 }
+const collectionSlugFor = (collectionId) => groupedCollections.value.find(
+  (item) => String(item._id) === String(collectionId),
+)?.slug || ''
 
 const handleEditCollectionChange = async () => {
   if (!editingProduct.value) return
@@ -1045,7 +1053,7 @@ const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
 const sizePriceLabel = (key, primarySizeLabel = 'Size') => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: primarySizeLabel, sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: primarySizeLabel, sweatshirt: primarySizeLabel === 'Sweater Size' ? 'Sweater Size' : 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1249,7 +1257,7 @@ onBeforeUnmount(() => {
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
           <p v-if="product.size"><strong>{{ primarySizeLabelForCollection(collection._id) }}s:</strong> {{ product.size }}</p>
-          <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
+          <p v-if="product.sweatshirtSize"><strong>{{ collection.slug === 'sweaters' ? 'Sweater Sizes:' : 'Sweatshirt Sizes:' }}</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
@@ -1456,28 +1464,16 @@ onBeforeUnmount(() => {
           <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown.</p>
         </div>
 
-        <div class="field">
-          <label>{{ primarySizeLabelForCollection(editingProduct.collectionId) }}s</label>
-          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" :label="primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()" />
-          <p class="hint">Use for {{ primarySizeLabelForCollection(editingProduct.collectionId) === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()}s` }}. Any dedicated sweatshirt, shoe, or belt size replaces this option on the storefront.</p>
-        </div>
-
-        <div class="field">
-          <label>Sweatshirt Sizes</label>
-          <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" label="sweatshirt size" />
-          <p class="hint">Use for sweatshirts. These replace the primary size field on known sweatshirt items.</p>
-        </div>
-
-        <div class="field">
-          <label>Shoe Sizes</label>
-          <ShoeSizeOptionEditor v-model="editingProduct.shoeSizes" :disabled="saving" />
-          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
-        </div>
-
-        <div class="field">
-          <label>Belt Sizes</label>
-          <BeltSizeOptionEditor v-model="editingProduct.beltSizes" :disabled="saving" />
-          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
+        <div class="field field--full">
+          <DashboardSizeSelector
+            v-model:primary-sizes="editingProduct.sizes"
+            v-model:sweatshirt-sizes="editingProduct.sweatshirtSizes"
+            v-model:shoe-sizes="editingProduct.shoeSizes"
+            v-model:belt-sizes="editingProduct.beltSizes"
+            :primary-label="primarySizeLabelForCollection(editingProduct.collectionId)"
+            :collection-slug="collectionSlugFor(editingProduct.collectionId)"
+            :disabled="saving"
+          />
         </div>
 
         <div v-if="editSizePriceRows.length" class="field">

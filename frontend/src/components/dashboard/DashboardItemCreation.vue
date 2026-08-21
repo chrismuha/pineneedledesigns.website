@@ -4,9 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
-import SizeOptionEditor from './SizeOptionEditor.vue'
-import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
-import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
+import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { deleteItemDraft, listItemDrafts, saveItemDraft } from '../../utils/itemDrafts.js'
@@ -92,6 +90,9 @@ const primarySizeLabel = computed(() => ({
   shirts: 'Shirt Size',
   skirts: 'Skirt Size',
   jackets: 'Jacket Size',
+  jeans: 'Jeans Size',
+  sweaters: 'Sweater Size',
+  vests: 'Vest Size',
 }[selectedCollectionSlug.value] || 'Size'))
 const hasDedicatedSizeOptions = computed(() => [
   ...form.sweatshirtSizes,
@@ -100,7 +101,7 @@ const hasDedicatedSizeOptions = computed(() => [
 ].some((size) => String(size || '').trim()))
 const sizePriceRows = computed(() => [
   ...(!hasDedicatedSizeOptions.value ? sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabel.value} ${size}` })) : []),
-  ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
+  ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `${selectedCollectionSlug.value === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size'} ${size}` })),
   ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ])
@@ -620,28 +621,16 @@ watch(
             <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown on the item page.</p>
           </div>
 
-          <div class="field">
-            <label>{{ primarySizeLabel }}s</label>
-            <SizeOptionEditor v-model="form.sizes" :disabled="loading" :label="primarySizeLabel.toLowerCase()" />
-            <p class="hint">Use for {{ primarySizeLabel === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabel.toLowerCase()}s` }}. Any dedicated sweatshirt, shoe, or belt size replaces this option on the storefront.</p>
-          </div>
-
-          <div class="field">
-            <label>Sweatshirt Sizes</label>
-            <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" label="sweatshirt size" />
-            <p class="hint">Use for sweatshirts. These replace the primary size field on known sweatshirt items.</p>
-          </div>
-
-          <div class="field">
-            <label>Shoe Sizes</label>
-            <ShoeSizeOptionEditor v-model="form.shoeSizes" :disabled="loading" />
-            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
-          </div>
-
-          <div class="field">
-            <label>Belt Sizes</label>
-            <BeltSizeOptionEditor v-model="form.beltSizes" :disabled="loading" />
-            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
+          <div class="field field--full">
+            <DashboardSizeSelector
+              v-model:primary-sizes="form.sizes"
+              v-model:sweatshirt-sizes="form.sweatshirtSizes"
+              v-model:shoe-sizes="form.shoeSizes"
+              v-model:belt-sizes="form.beltSizes"
+              :primary-label="primarySizeLabel"
+              :collection-slug="selectedCollectionSlug"
+              :disabled="loading"
+            />
           </div>
 
           <div v-if="sizePriceRows.length" class="field field--full">
