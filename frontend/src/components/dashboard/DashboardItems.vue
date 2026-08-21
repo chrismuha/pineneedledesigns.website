@@ -111,7 +111,7 @@ const editIsDirty = computed(() => Boolean(
 ))
 
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Size ${size}` })),
   ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -822,7 +822,7 @@ const saveProduct = async () => {
   if (editingProduct.value.customProperties.some((property) => (
     ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Shirt Size, Sweatshirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Size, Sweatshirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -1034,7 +1034,7 @@ const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
 const sizePriceLabel = (key) => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: 'Shirt Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: 'Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1237,7 +1237,7 @@ onBeforeUnmount(() => {
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
-          <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
+          <p v-if="product.size"><strong>Sizes:</strong> {{ product.size }}</p>
           <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
@@ -1446,15 +1446,15 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="field">
-          <label>Shirt Sizes</label>
+          <label>Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
-          <p class="hint">Use for T-shirts. This legacy field is also the shared fallback when a T-shirt or sweatshirt has no dedicated sizes.</p>
+          <p class="hint">Use for general item sizes. This field is also the shared fallback when an item has no dedicated size field.</p>
         </div>
 
         <div class="field">
           <label>Sweatshirt Sizes</label>
           <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" />
-          <p class="hint">Use for sweatshirts. These replace the Shirt Size fallback on known sweatshirt items.</p>
+          <p class="hint">Use for sweatshirts. These replace the Size fallback on known sweatshirt items.</p>
         </div>
 
         <div class="field">

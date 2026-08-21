@@ -105,7 +105,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
-    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
+    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: 'Size', values: sizeOptions, placeholder: placeholders.Size || 'Select size' }] : []),
     ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),

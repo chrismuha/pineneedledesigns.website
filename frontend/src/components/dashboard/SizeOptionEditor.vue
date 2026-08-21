@@ -92,7 +92,7 @@ const removeSize = (index) => {
           :aria-label="`Size ${index + 1}`"
           @change="selectChoice(index, $event.target.value)"
         >
-          <option value="">Select a shirt size</option>
+          <option value="">Select a size</option>
           <option v-for="option in dropdownOptions.filter((option) => optionAvailable(option, index))" :key="option.value" :value="option.value">
             {{ option.label }}
           </option>
@@ -110,7 +110,7 @@ const removeSize = (index) => {
       <button v-if="normalizeRows(modelValue).length > 1 || size" type="button" class="remove-size" :disabled="disabled" @click="removeSize(index)">Remove</button>
     </div>
     <button type="button" class="add-size" :disabled="disabled" @click="addSize">+ Add Size</button>
-    <p class="size-hint">Choose a shirt size template or select Custom to enter another size.</p>
+    <p class="size-hint">Choose a size template or select Custom to enter another size.</p>
   </div>
 </template>
 
