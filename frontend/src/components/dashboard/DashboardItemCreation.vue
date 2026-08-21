@@ -10,12 +10,14 @@ import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { deleteItemDraft, listItemDrafts, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
+import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashboardActivity.js'
 
 const router = useRouter()
 const route = useRoute()
 const collections = ref([])
 const pageLoading = ref(true)
 const loading = ref(false)
+const uploadProgress = ref(0)
 const error = ref('')
 const fieldErrors = reactive({
   subCollectionId: '',
@@ -476,10 +478,13 @@ const submitForm = async () => {
   }
 
   loading.value = true
+  uploadProgress.value = 0
   error.value = ''
 
   try {
-    await dashboardApi.createProduct(buildProductFormData())
+    await dashboardApi.createProduct(buildProductFormData(), {
+      onProgress: (progress) => { uploadProgress.value = progress },
+    })
     suppressAutoSave = true
     window.clearTimeout(autoSaveTimer)
     if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
@@ -510,11 +515,17 @@ onMounted(async () => {
 })
 
 watch([() => JSON.stringify(form), photoFiles, videoFiles], scheduleAutoSave, { deep: true })
+watch(
+  [() => JSON.stringify(form), photoFiles, videoFiles, loading],
+  () => setDashboardActivity('create-item', { dirty: hasDraftChanges(), uploading: loading.value }),
+  { deep: true, immediate: true },
+)
 
 onBeforeUnmount(() => {
   window.removeEventListener('pagehide', flushAutoSave)
   document.removeEventListener('visibilitychange', flushAutoSave)
   flushAutoSave()
+  clearDashboardActivity('create-item')
 })
 
 watch(
@@ -814,7 +825,8 @@ watch(
 
       <div class="actions">
         <div v-if="loading" class="media-progress" role="status" aria-live="polite">
-          <progress aria-label="Saving item and processing media"></progress>
+          <progress :value="uploadProgress || undefined" max="100" aria-label="Saving item and processing media"></progress>
+          <span>{{ uploadProgress ? `Uploading ${uploadProgress}%` : 'Preparing and processing media…' }}</span>
           <span>{{ mediaSaveStatus }}</span>
         </div>
         <button type="button" class="btn-outline save-draft-button" :disabled="savingDraft || loading" @click="saveDraft">

@@ -11,6 +11,7 @@ import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { deleteItemDraft, getItemDraft, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
+import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashboardActivity.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -52,6 +53,7 @@ const deletingProduct = ref(false)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
+const editUploadProgress = ref(0)
 const managingSubcollectionsFor = ref(null)
 const subcollectionForm = ref({ name: '' })
 const subcollectionFieldError = ref('')
@@ -851,6 +853,7 @@ const saveProduct = async () => {
   }
 
   saving.value = true
+  editUploadProgress.value = 0
   editModalError.value = ''
 
   try {
@@ -897,7 +900,9 @@ const saveProduct = async () => {
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
     editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
-    await dashboardApi.updateProduct(editingProduct.value._id, formData)
+    await dashboardApi.updateProduct(editingProduct.value._id, formData, {
+      onProgress: (progress) => { editUploadProgress.value = progress },
+    })
     suppressEditAutoSave = true
     window.clearTimeout(editAutoSaveTimer)
     await deleteItemDraft(editDraftId(editingProduct.value._id))
@@ -1064,6 +1069,11 @@ onMounted(() => {
 })
 watch([() => editingProduct.value && editSnapshot(editingProduct.value), editPhotoFiles, editVideoFiles], scheduleEditAutoSave, { deep: true })
 watch(
+  [editIsDirty, saving],
+  () => setDashboardActivity('edit-item', { dirty: editIsDirty.value, uploading: saving.value && Boolean(editingProduct.value) }),
+  { immediate: true },
+)
+watch(
   () => route.fullPath,
   () => {
     if (route.path === '/dashboard/items') {
@@ -1075,6 +1085,7 @@ watch(
 onBeforeUnmount(() => {
   window.removeEventListener('pagehide', flushEditAutoSave)
   document.removeEventListener('visibilitychange', flushEditAutoSave)
+  clearDashboardActivity('edit-item')
   flushEditAutoSave()
 })
 </script>
@@ -1684,7 +1695,8 @@ onBeforeUnmount(() => {
 
         <div class="modal-actions">
           <div v-if="saving" class="media-progress" role="status" aria-live="polite">
-            <progress aria-label="Saving item changes and processing media"></progress>
+            <progress :value="editUploadProgress || undefined" max="100" aria-label="Saving item changes and processing media"></progress>
+            <span>{{ editUploadProgress ? `Uploading ${editUploadProgress}%` : 'Preparing and processing media…' }}</span>
             <span>{{ editMediaSaveStatus }}</span>
           </div>
           <button type="button" class="btn-danger" :disabled="saving || savingEditDraft || deletingProduct" @click="requestProductDeletion(editingProduct)">
