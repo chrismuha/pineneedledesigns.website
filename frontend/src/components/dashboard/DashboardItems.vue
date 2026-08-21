@@ -110,8 +110,13 @@ const editIsDirty = computed(() => Boolean(
   && (editPhotoFiles.value.length > 0 || editVideoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
 ))
 
+const editHasDedicatedSizeOptions = computed(() => editingProduct.value && [
+  ...(editingProduct.value.sweatshirtSizes || []),
+  ...(editingProduct.value.shoeSizes || []),
+  ...(editingProduct.value.beltSizes || []),
+].some((size) => String(size || '').trim()))
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabelForCollection(editingProduct.value.collectionId)} ${size}` })),
+  ...(!editHasDedicatedSizeOptions.value ? sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabelForCollection(editingProduct.value.collectionId)} ${size}` })) : []),
   ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -1454,7 +1459,7 @@ onBeforeUnmount(() => {
         <div class="field">
           <label>{{ primarySizeLabelForCollection(editingProduct.collectionId) }}s</label>
           <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" :label="primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()" />
-          <p class="hint">Use for {{ primarySizeLabelForCollection(editingProduct.collectionId) === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()}s` }}.</p>
+          <p class="hint">Use for {{ primarySizeLabelForCollection(editingProduct.collectionId) === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()}s` }}. Any dedicated sweatshirt, shoe, or belt size replaces this option on the storefront.</p>
         </div>
 
         <div class="field">

@@ -94,12 +94,13 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const sizeOptions = storedSizeOptions.length || sweatshirtSizeOptions.length || !(isSweatshirt || isTShirt)
     ? storedSizeOptions
     : defaultShirtSizes;
-  const useDedicatedSweatshirtSizes = isSweatshirt
-    && sweatshirtSizeOptions.length > 0;
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortShoeSizes);
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortBeltSizes);
+  const hasDedicatedSizeOptions = sweatshirtSizeOptions.length > 0
+    || shoeSizeOptions.length > 0
+    || beltSizeOptions.length > 0;
   const hasBlingOptions = allowBlingOptions && (
     product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null
   );
@@ -113,7 +114,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
-    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: primarySizeName, values: sizeOptions, placeholder: placeholders.Size || primarySizePlaceholder }] : []),
+    ...(!hasDedicatedSizeOptions && sizeOptions.length ? [{ name: primarySizeName, values: sizeOptions, placeholder: placeholders.Size || primarySizePlaceholder }] : []),
     ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),

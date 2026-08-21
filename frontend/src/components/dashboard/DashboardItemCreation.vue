@@ -93,8 +93,13 @@ const primarySizeLabel = computed(() => ({
   skirts: 'Skirt Size',
   jackets: 'Jacket Size',
 }[selectedCollectionSlug.value] || 'Size'))
+const hasDedicatedSizeOptions = computed(() => [
+  ...form.sweatshirtSizes,
+  ...form.shoeSizes,
+  ...form.beltSizes,
+].some((size) => String(size || '').trim()))
 const sizePriceRows = computed(() => [
-  ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabel.value} ${size}` })),
+  ...(!hasDedicatedSizeOptions.value ? sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabel.value} ${size}` })) : []),
   ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -618,7 +623,7 @@ watch(
           <div class="field">
             <label>{{ primarySizeLabel }}s</label>
             <SizeOptionEditor v-model="form.sizes" :disabled="loading" :label="primarySizeLabel.toLowerCase()" />
-            <p class="hint">Use for {{ primarySizeLabel === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabel.toLowerCase()}s` }}.</p>
+            <p class="hint">Use for {{ primarySizeLabel === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabel.toLowerCase()}s` }}. Any dedicated sweatshirt, shoe, or belt size replaces this option on the storefront.</p>
           </div>
 
           <div class="field">
