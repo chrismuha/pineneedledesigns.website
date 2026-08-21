@@ -62,7 +62,13 @@ const storefrontMeta = (meta) => (Array.isArray(meta) ? meta : [meta].filter(Boo
   .map((item) => String(item).replace(/\b(?:with\s+)?free shipping\b/gi, '').trim())
   .filter(Boolean);
 
-const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
+const primarySizeLabelFor = (collectionSlug) => ({
+  shirts: 'Shirt Size',
+  skirts: 'Skirt Size',
+  jackets: 'Jacket Size',
+}[collectionSlug] || 'Size');
+
+const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false, collectionSlug = '') => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
@@ -101,8 +107,8 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const blingOptions = hasBlingOptions
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
-  const primarySizeName = allowBlingOptions ? 'Shirt Size' : 'Size';
-  const primarySizePlaceholder = allowBlingOptions ? 'Select shirt size' : 'Select size';
+  const primarySizeName = primarySizeLabelFor(collectionSlug);
+  const primarySizePlaceholder = `Select ${primarySizeName.toLowerCase()}`;
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
@@ -160,7 +166,7 @@ const buildCollectionPage = (collection, subcollections, products) => {
       ? ['Boa', 'T-Shirts']
       : [subcollectionName].filter(Boolean);
 
-    return mapProductToStorefront(product, categoryFilters, allowBlingOptions);
+    return mapProductToStorefront(product, categoryFilters, allowBlingOptions, collection.slug);
   });
 
   const count = storefrontProducts.length;
@@ -385,5 +391,5 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   // Pass only the product. Array#map also supplies the item index as the second
   // argument, which mapProductToStorefront would otherwise treat as an iterable
   // list of category filters and throw while building the response.
-  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts'));
+  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts', collection.slug));
 };

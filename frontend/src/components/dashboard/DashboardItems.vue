@@ -111,7 +111,7 @@ const editIsDirty = computed(() => Boolean(
 ))
 
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${collectionAllowsBling(editingProduct.value.collectionId) ? 'Shirt Size' : 'Size'} ${size}` })),
+  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabelForCollection(editingProduct.value.collectionId)} ${size}` })),
   ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
@@ -757,6 +757,12 @@ const collectionAllowsBling = (collectionId) => {
   )
   return collection?.slug === 'shirts'
 }
+const primarySizeLabelForCollection = (collectionId) => {
+  const slug = groupedCollections.value.find(
+    (item) => String(item._id) === String(collectionId),
+  )?.slug
+  return { shirts: 'Shirt Size', skirts: 'Skirt Size', jackets: 'Jacket Size' }[slug] || 'Size'
+}
 
 const handleEditCollectionChange = async () => {
   if (!editingProduct.value) return
@@ -1032,9 +1038,9 @@ const customPropertiesForDisplay = (properties = []) => sortedProperties(propert
 const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .filter(([, price]) => Number.isFinite(Number(price)))
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
-const sizePriceLabel = (key, isShirt = false) => {
+const sizePriceLabel = (key, primarySizeLabel = 'Size') => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: isShirt ? 'Shirt Size' : 'Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: primarySizeLabel, sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1237,12 +1243,12 @@ onBeforeUnmount(() => {
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
-          <p v-if="product.size"><strong>{{ collectionAllowsBling(collection._id) ? 'Shirt Sizes:' : 'Sizes:' }}</strong> {{ product.size }}</p>
+          <p v-if="product.size"><strong>{{ primarySizeLabelForCollection(collection._id) }}s:</strong> {{ product.size }}</p>
           <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
-            <strong>{{ sizePriceLabel(key, collectionAllowsBling(collection._id)) }} Price:</strong> ${{ Number(price).toFixed(2) }}
+            <strong>{{ sizePriceLabel(key, primarySizeLabelForCollection(collection._id)) }} Price:</strong> ${{ Number(price).toFixed(2) }}
           </p>
           <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
             <strong>General Description:</strong><br>
@@ -1446,9 +1452,9 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="field">
-          <label>{{ collectionAllowsBling(editingProduct.collectionId) ? 'Shirt Sizes' : 'Sizes' }}</label>
-          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" :label="collectionAllowsBling(editingProduct.collectionId) ? 'shirt size' : 'size'" />
-          <p class="hint">{{ collectionAllowsBling(editingProduct.collectionId) ? 'Use for shirts.' : 'Use for general item sizes when no dedicated size field applies.' }}</p>
+          <label>{{ primarySizeLabelForCollection(editingProduct.collectionId) }}s</label>
+          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" :label="primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()" />
+          <p class="hint">Use for {{ primarySizeLabelForCollection(editingProduct.collectionId) === 'Size' ? 'general item sizes when no dedicated size field applies' : `${primarySizeLabelForCollection(editingProduct.collectionId).toLowerCase()}s` }}.</p>
         </div>
 
         <div class="field">
