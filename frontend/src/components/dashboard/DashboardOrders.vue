@@ -11,6 +11,7 @@ const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
 const pendingResolution = ref(null)
+const pendingDeleteOrder = ref(null)
 const routeStatus = () => ['open', 'closed'].includes(String(route.query.status))
   ? String(route.query.status)
   : 'all'
@@ -148,6 +149,22 @@ const confirmResolution = async () => {
   const { order, resolution } = pendingResolution.value
   await resolveOrder(order, resolution)
   pendingResolution.value = null
+}
+const requestDelete = (order) => { pendingDeleteOrder.value = order }
+const confirmDelete = async () => {
+  if (!pendingDeleteOrder.value) return
+  const order = pendingDeleteOrder.value
+  savingOrderId.value = order._id
+  error.value = ''
+  try {
+    await dashboardApi.deleteOrder(order._id)
+    orders.value = orders.value.filter((entry) => entry._id !== order._id)
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+    pendingDeleteOrder.value = null
+  }
 }
 
 onMounted(() => {
@@ -370,6 +387,15 @@ watch(
             >
               Reopen Order
             </button>
+            <button
+              v-if="order.status === 'closed'"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="requestDelete(order)"
+            >
+              Delete Order Permanently
+            </button>
           </div>
         </div>
       </details>
@@ -382,6 +408,15 @@ watch(
       :busy="Boolean(savingOrderId)"
       @confirm="confirmResolution"
       @cancel="pendingResolution = null"
+    />
+    <DashboardConfirmDialog
+      :open="Boolean(pendingDeleteOrder)"
+      title="Delete order permanently?"
+      :message="`${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'This order'} will be permanently deleted. This action cannot be undone.`"
+      confirm-label="Delete Permanently"
+      :busy="Boolean(savingOrderId)"
+      @confirm="confirmDelete"
+      @cancel="pendingDeleteOrder = null"
     />
   </div>
 </template>

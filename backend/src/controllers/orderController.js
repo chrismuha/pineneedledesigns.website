@@ -26,6 +26,17 @@ export const getOrderById = async (req, res) => {
   res.json(order);
 };
 
+export const deleteOrder = async (req, res) => {
+  const order = await Order.findOneAndDelete({ _id: req.params.id, status: 'closed' });
+  if (!order) {
+    const existingOrder = await Order.findById(req.params.id).select('status');
+    if (!existingOrder) return res.status(404).json({ error: 'Order not found.' });
+    return res.status(409).json({ error: 'Only closed orders can be permanently deleted.' });
+  }
+
+  res.json({ success: true });
+};
+
 export const updateOrderStatus = async (req, res) => {
   
   const status = String(req.body?.status || '').toLowerCase();
