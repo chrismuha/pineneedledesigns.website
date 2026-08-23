@@ -16,6 +16,8 @@ import { StoreSettings } from '../models/StoreSettings.js';
 import mongoose, { isValidObjectId, Types } from 'mongoose';
 import { sendPushNotification } from '../services/pushNotifications.js';
 import { tryFinalizeBookingDepositFromWebhook } from '../controllers/bookingController.js';
+import { commitPendingOrderChange } from './orderController.js';
+import { sendOrderEventEmails } from '../services/orderEmails.js';
 
 const roundMoney = (value) => Number(Number(value || 0).toFixed(2));
 
@@ -438,14 +440,14 @@ export const confirmCloverPaymentHandler = async (req, res) => {
       return res.status(400).json(formatError({ message: 'Checkout session ID is required.', code: 'MISSING_SESSION_ID' }));
     }
 
+    const payment = await Payment.findOne({ paymentId: sessionId, provider: 'clover' });
     let order = await Order.findOne({ gatewayOrderId: sessionId, paymentProvider: 'clover' });
+    if (!order && payment?.orderId) order = await Order.findById(payment.orderId);
     if (!order) {
       return res.status(404).json(formatError({ message: 'Order not found for this checkout session.', code: 'ORDER_NOT_FOUND' }));
     }
 
-    const payment = await Payment.findOne({ paymentId: sessionId, provider: 'clover' });
-
-    if (order.paymentStatus !== 'paid') {
+    if (payment?.metadata?.kind === 'order_change' || order.paymentStatus !== 'paid') {
       const cloverPayment = await findSuccessfulPaymentForSession({
         checkoutSessionId: sessionId,
         amountCents: payment?.amount || Math.round(Number(order.summary?.finalTotal || 0) * 100),
@@ -459,13 +461,20 @@ export const confirmCloverPaymentHandler = async (req, res) => {
           payment.metadata = { ...payment.metadata, syncedPayment: cloverPayment };
           await payment.save();
         }
-        order = await finalizePaidOrder({
-          order,
-          paymentRecord: payment,
-          cloverPaymentId: String(cloverPayment.id || ''),
-          req,
-        });
+        order = payment?.metadata?.kind === 'order_change'
+          ? await commitPendingOrderChange(order, payment)
+          : await finalizePaidOrder({ order, paymentRecord: payment, cloverPaymentId: String(cloverPayment.id || ''), req });
       }
+    }
+
+    if (payment?.metadata?.kind === 'order_change' && payment.status === 'refunded') {
+      return res.json({
+        success: false,
+        status: 'refunded',
+        orderId: order._id,
+        message: 'The added item became unavailable. The additional payment was refunded and the original order was not changed.',
+        code: 'ORDER_CHANGE_REFUNDED',
+      });
     }
 
     if (order.paymentStatus === 'paid') {
@@ -525,7 +534,9 @@ export const cloverWebhookHandler = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Missing checkout session ID in webhook payload.' });
     }
 
-    const order = await Order.findOne({ gatewayOrderId: checkoutSessionId, paymentProvider: 'clover' });
+    const payment = await Payment.findOne({ paymentId: checkoutSessionId, provider: 'clover' });
+    let order = await Order.findOne({ gatewayOrderId: checkoutSessionId, paymentProvider: 'clover' });
+    if (!order && payment?.orderId) order = await Order.findById(payment.orderId);
     if (!order) {
       const bookingResult = await tryFinalizeBookingDepositFromWebhook(checkoutSessionId, cloverPaymentId);
       if (bookingResult) {
@@ -534,7 +545,6 @@ export const cloverWebhookHandler = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Order not found for webhook checkout session.' });
     }
 
-    const payment = await Payment.findOne({ paymentId: checkoutSessionId, provider: 'clover' });
     if (payment) {
       payment.status = normalizedStatus;
       payment.transactionId = cloverPaymentId || payment.transactionId;
@@ -544,14 +554,22 @@ export const cloverWebhookHandler = async (req, res) => {
     }
 
     if (normalizedStatus === 'paid') {
-      await finalizePaidOrder({ order, paymentRecord: payment, cloverPaymentId, req });
+      if (payment?.metadata?.kind === 'order_change') {
+        await commitPendingOrderChange(order, payment);
+      } else {
+        await finalizePaidOrder({ order, paymentRecord: payment, cloverPaymentId, req });
+      }
     } else if (normalizedStatus === 'failed') {
-      order.paymentStatus = 'failed';
+      if (payment?.metadata?.kind !== 'order_change') order.paymentStatus = 'failed';
       order.timeline = [
         ...(order.timeline || []),
-        { label: 'Clover payment failed', at: new Date() },
+        { label: payment?.metadata?.kind === 'order_change' ? 'Additional payment declined; order unchanged' : 'Clover payment failed', at: new Date() },
       ];
+      if (payment?.metadata?.kind === 'order_change') order.pendingChange = null;
       await order.save();
+      if (payment?.metadata?.kind === 'order_change') {
+        await sendOrderEventEmails(order, { kind: 'payment_failed', amount: Number(payment.amount || 0) / 100, reason: 'Clover declined the card.' });
+      }
     }
 
     return res.json({ success: true, status: normalizedStatus });

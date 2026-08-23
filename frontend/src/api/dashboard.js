@@ -107,7 +107,11 @@ export const dashboardApi = {
   getOrder: (id) => request(`/api/orders/${id}`),
   deleteOrder: (id) => request(`/api/orders/${id}`, {
     method: 'DELETE',
-  }, 'Order permanently deleted.'),
+  }, 'Order canceled, refund submitted, and customer notified.'),
+  changeOrder: (id, items) => request(`/api/orders/${id}/change`, {
+    method: 'POST',
+    body: JSON.stringify({ items }),
+  }, 'Order change processed successfully.'),
   updateOrderStatus: (id, status) => request(`/api/orders/${id}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ status }),

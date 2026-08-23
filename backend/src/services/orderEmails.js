@@ -112,3 +112,40 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
     console.error('Order email sending failed:', mailErr);
   }
 };
+
+export const sendOrderEventEmails = async (order, {
+  kind,
+  amount = 0,
+  paymentUrl = '',
+  reason = '',
+} = {}) => {
+  if (!mailerConfigured) {
+    console.warn('Order event emails skipped: mailer is not configured.');
+    return;
+  }
+  const label = order.orderNumber ? `#${order.orderNumber}` : String(order._id || '');
+  const customerEmail = order.customer?.email || '';
+  const names = {
+    payment_required: 'Order change awaiting payment',
+    payment_failed: 'Order change payment declined',
+    changed: 'Order updated',
+    canceled: 'Order canceled and refunded',
+  };
+  const title = names[kind] || 'Order update';
+  const action = paymentUrl
+    ? `<p><a href="${paymentUrl}" style="display:inline-block;padding:12px 18px;background:#166534;color:#fff;text-decoration:none;border-radius:8px;">Pay ${money(amount)} securely with Clover</a></p>`
+    : '';
+  const detail = kind === 'canceled'
+    ? `The order was canceled. A refund of ${money(amount)} was submitted to the original payment method.`
+    : kind === 'payment_failed'
+      ? `The attempted additional payment of ${money(amount)} was declined. The original order was not changed.${reason ? ` Reason: ${reason}` : ''}`
+      : kind === 'payment_required'
+        ? `Pine Needle Designs proposed an update that adds ${money(amount)}. The original order will remain unchanged until payment succeeds.`
+        : `The order was updated successfully.${amount ? ` Amount adjusted: ${money(Math.abs(amount))}.` : ''}`;
+  const html = `<div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px"><div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:28px;border-radius:10px"><h2>${title}</h2><p><strong>Order ${label}</strong></p><p>${detail}</p>${action}<p>— Pine Needle Designs</p></div></div>`;
+  const text = `${title}\nOrder ${label}\n${detail}${paymentUrl ? `\nPay securely: ${paymentUrl}` : ''}`;
+  await Promise.all([
+    sendEmail({ from: `"Pine Needle Designs" <${getEmailSender()}>`, to: getEmailRecipients(), subject: `${title}: ${label}`, html, text }),
+    customerEmail ? sendEmail({ to: customerEmail, subject: `${title}: ${label}`, html, text }) : Promise.resolve(null),
+  ]);
+};
