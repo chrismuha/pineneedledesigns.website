@@ -14,16 +14,21 @@ const orderLabel = (order) => order.orderNumber ? `#${order.orderNumber}` : Stri
 const buildOrderFilter = (query) => ['open', 'closed'].includes(String(query?.status || '').toLowerCase())
   ? { status: String(query.status).toLowerCase() } : {};
 
-const notifyEvent = async (order, details) => Promise.allSettled([
-  sendOrderEventEmails(order, details),
-  sendPushNotification({
-    title: `${details.kind === 'canceled' ? 'Canceled' : 'Updated'} order ${orderLabel(order)}`,
-    body: details.kind === 'canceled' ? `Refund submitted: $${Number(details.amount || 0).toFixed(2)}` : details.reason || 'The customer was notified.',
-    url: `/dashboard/orders?order=${order._id}`,
-    tag: `order-event-${order._id}-${Date.now()}`,
-    type: 'order',
-  }),
-]);
+const notifyEvent = async (order, details) => {
+  const results = await Promise.allSettled([
+    sendOrderEventEmails(order, details),
+    sendPushNotification({
+      title: `${details.kind === 'canceled' ? 'Canceled' : 'Updated'} order ${orderLabel(order)}`,
+      body: details.kind === 'canceled' ? `Refund submitted: $${Number(details.amount || 0).toFixed(2)}` : details.reason || 'The customer was notified.',
+      url: `/dashboard/orders?order=${order._id}`,
+      tag: `order-event-${order._id}-${Date.now()}`,
+      type: 'order',
+    }),
+  ]);
+  results.forEach((result) => {
+    if (result.status === 'rejected') console.error('Order event notification failed:', result.reason);
+  });
+};
 
 const discountFor = (subtotal, code) => {
   const rule = DISCOUNT_RULES[String(code || '').trim().toUpperCase()];

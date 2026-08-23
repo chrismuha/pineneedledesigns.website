@@ -63,7 +63,18 @@ export const getEmailRecipients = () => emailRecipients;
 
 export const logMailerStatus = async () => {
   if (emailProvider === 'resend') {
-    console.log('✅ Resend mailer configured (ready to send emails over HTTPS)');
+    try {
+      const response = await fetch('https://api.resend.com/domains', {
+        headers: { Authorization: `Bearer ${config.email.resendApiKey}` },
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.message || `Resend API returned ${response.status}`);
+      }
+      console.log('✅ Resend mailer verified (ready to send emails over HTTPS)');
+    } catch (err) {
+      console.error('❌ Resend mailer verification failed:', err.message);
+    }
     return;
   }
 

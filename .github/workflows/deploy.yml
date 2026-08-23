@@ -99,6 +99,11 @@ jobs:
               exit 1
             fi
 
+            if [ -z "${RESEND_API_KEY:-}" ]; then
+              echo "ERROR: RESEND_API_KEY GitHub secret is empty. Customer email cannot be delivered."
+              exit 1
+            fi
+
             if [ -n "$RUNNING_MONGODB_URI" ]; then
               MONGODB_URI="$RUNNING_MONGODB_URI"
               export MONGODB_URI
