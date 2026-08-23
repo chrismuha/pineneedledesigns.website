@@ -11,8 +11,7 @@ const money = (value) => `$${Number(value || 0).toFixed(2)}`;
 
 export const sendOrderConfirmationEmails = async (order, { transactionId = '' } = {}) => {
   if (!mailerConfigured) {
-    console.warn('Order emails skipped: mailer is not configured.');
-    return;
+    throw new Error('Order emails cannot be sent because the mailer is not configured.');
   }
 
   const customer = order.customer || {};
@@ -89,8 +88,7 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
 
   const text = `NEW ORDER ${orderLabel}\nCustomer: ${customer.email || ''}\nTotal: ${money(summary.finalTotal)}`;
 
-  try {
-    const [adminInfo, customerInfo] = await Promise.all([
+  const results = await Promise.allSettled([
       sendEmail({
         from: `"Pine Needle Designs" <${getEmailSender()}>`,
         to: getEmailRecipients(),
@@ -104,12 +102,13 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
         html: customerReceiptHtml,
         text: `Receipt for Order ${orderLabel} - Total: ${money(summary.finalTotal)}`,
       }) : Promise.resolve(null),
-    ]);
-
-    if (adminInfo?.messageId) console.log('Admin order email sent:', adminInfo.messageId);
-    if (customerInfo?.messageId) console.log('Customer receipt sent:', customerInfo.messageId);
-  } catch (mailErr) {
-    console.error('Order email sending failed:', mailErr);
+  ]);
+  const [adminResult, customerResult] = results;
+  if (adminResult.status === 'fulfilled' && adminResult.value?.messageId) console.log('Admin order email sent:', adminResult.value.messageId);
+  if (customerResult.status === 'fulfilled' && customerResult.value?.messageId) console.log('Customer receipt sent:', customerResult.value.messageId);
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length) {
+    throw new AggregateError(failures.map((result) => result.reason), 'One or more order emails failed to send.');
   }
 };
 

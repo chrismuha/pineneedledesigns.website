@@ -145,19 +145,15 @@ const buildRedirectUrls = () => {
 };
 
 const finalizePaidOrder = async ({ order, paymentRecord, cloverPaymentId, req }) => {
-  if (order.paymentStatus === 'paid') {
-    return order;
+  const newlyPaid = order.paymentStatus !== 'paid';
+  if (newlyPaid) {
+    await deductCapturedInventory(order.inventoryLines || []);
+    order.paymentStatus = 'paid';
+    order.status = 'closed';
+    order.gatewayOrderId = order.gatewayOrderId || paymentRecord?.paymentId || '';
+    order.timeline = [...(order.timeline || []), { label: 'Clover payment paid', at: new Date() }];
+    await order.save();
   }
-
-  await deductCapturedInventory(order.inventoryLines || []);
-  order.paymentStatus = 'paid';
-  order.status = 'closed';
-  order.gatewayOrderId = order.gatewayOrderId || paymentRecord?.paymentId || '';
-  order.timeline = [
-    ...(order.timeline || []),
-    { label: 'Clover payment paid', at: new Date() },
-  ];
-  await order.save();
 
   if (paymentRecord) {
     paymentRecord.status = 'paid';
@@ -173,7 +169,7 @@ const finalizePaidOrder = async ({ order, paymentRecord, cloverPaymentId, req })
     req.session.cart = [];
   }
 
-  try {
+  if (newlyPaid) try {
     await sendPushNotification({
       title: `New Clover order #${order.orderNumber}`,
       body: `${order.shippingAddress?.name || 'Customer'} placed an order for $${Number(order.summary?.finalTotal || 0).toFixed(2)}`,
@@ -187,7 +183,7 @@ const finalizePaidOrder = async ({ order, paymentRecord, cloverPaymentId, req })
 
   if (!paymentRecord?.metadata?.emailsSentAt) {
     try {
-      await sendOrderConfirmationEmails(order, { transactionId: cloverPaymentId });
+      await sendOrderConfirmationEmails(order, { transactionId: cloverPaymentId || paymentRecord?.transactionId });
       if (paymentRecord) {
         paymentRecord.metadata = {
           ...paymentRecord.metadata,
@@ -465,6 +461,8 @@ export const confirmCloverPaymentHandler = async (req, res) => {
           ? await commitPendingOrderChange(order, payment)
           : await finalizePaidOrder({ order, paymentRecord: payment, cloverPaymentId: String(cloverPayment.id || ''), req });
       }
+    } else if (!payment?.metadata?.emailsSentAt) {
+      order = await finalizePaidOrder({ order, paymentRecord: payment, cloverPaymentId: payment?.transactionId || '', req });
     }
 
     if (payment?.metadata?.kind === 'order_change' && payment.status === 'refunded') {

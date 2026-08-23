@@ -11,6 +11,7 @@ const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
 const pendingDeleteOrder = ref(null)
+const pendingPermanentDelete = ref(null)
 const cancelConfirmationStep = ref(1)
 const editingOrderId = ref('')
 const editItems = ref([])
@@ -165,6 +166,20 @@ const cancelDeleteConfirmation = () => {
   }
   pendingDeleteOrder.value = null
 }
+const permanentlyDeleteOrder = async () => {
+  const order = pendingPermanentDelete.value
+  if (!order) return
+  savingOrderId.value = order._id
+  try {
+    await dashboardApi.permanentlyDeleteOrder(order._id)
+    orders.value = orders.value.filter((entry) => entry._id !== order._id)
+    pendingPermanentDelete.value = null
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
+}
 
 const beginEdit = async (order) => {
   error.value = ''
@@ -279,6 +294,9 @@ watch(
         </summary>
 
         <div class="order-content">
+          <div v-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
+            NOT PAID — The customer started checkout, but Clover has not confirmed any payment for this order.
+          </div>
           <section class="order-section">
             <h3>Customer Information</h3>
 
@@ -449,6 +467,13 @@ watch(
             >
               Cancel Order &amp; Refund
             </button>
+            <button
+              v-if="order.status === 'closed' && order.inventoryReturnedAt && order.resolution !== 'active'"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="pendingPermanentDelete = order"
+            >Delete Order Permanently</button>
           </div>
         </div>
       </details>
@@ -465,6 +490,16 @@ watch(
       :busy="Boolean(savingOrderId)"
       @confirm="confirmDelete"
       @cancel="cancelDeleteConfirmation"
+    />
+    <DashboardConfirmDialog
+      :open="Boolean(pendingPermanentDelete)"
+      title="Permanently delete this order?"
+      message="This removes the order and website payment record forever. It does not send another Clover refund and cannot be undone."
+      confirm-label="Delete Permanently"
+      cancel-label="Keep Order"
+      :busy="Boolean(savingOrderId)"
+      @confirm="permanentlyDeleteOrder"
+      @cancel="pendingPermanentDelete = null"
     />
   </div>
 </template>
@@ -590,6 +625,8 @@ watch(
 .badge-paid {
   background: var(--dashboard-orders-badge-paid-surface);
 }
+
+.unpaid-notice { margin-bottom: 20px; border: 3px solid #b91c1c; border-radius: 10px; background: #fef2f2; color: #7f1d1d; padding: 14px 16px; font-weight: 900; font-size: 1.05rem; }
 
 .badge-open {
   background: var(--dashboard-orders-badge-open-surface);

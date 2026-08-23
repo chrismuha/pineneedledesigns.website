@@ -237,6 +237,17 @@ export const deleteOrder = async (req, res) => {
   }
 };
 
+export const permanentlyDeleteOrder = async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) return res.status(404).json({ error: 'Order not found.' });
+  if (order.status !== 'closed' || !order.inventoryReturnedAt || order.resolution === 'active') {
+    return res.status(409).json({ error: 'Close and cancel/refund the order before permanently deleting it.' });
+  }
+  await Payment.deleteMany({ orderId: order._id });
+  await order.deleteOne();
+  return res.json({ success: true, id: String(order._id) });
+};
+
 export const updateOrderStatus = async (req, res) => {
   const status = String(req.body?.status || '').toLowerCase();
   if (!['open', 'closed'].includes(status)) return res.status(400).json({ error: 'Status must be open or closed.' });
