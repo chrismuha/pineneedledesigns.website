@@ -11,6 +11,7 @@ const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
 const pendingDeleteOrder = ref(null)
+const cancelConfirmationStep = ref(1)
 const editingOrderId = ref('')
 const editItems = ref([])
 const products = ref([])
@@ -133,9 +134,16 @@ const updateStatus = async (order, status) => {
   }
 }
 
-const requestDelete = (order) => { pendingDeleteOrder.value = order }
+const requestDelete = (order) => {
+  pendingDeleteOrder.value = order
+  cancelConfirmationStep.value = 1
+}
 const confirmDelete = async () => {
   if (!pendingDeleteOrder.value) return
+  if (cancelConfirmationStep.value === 1) {
+    cancelConfirmationStep.value = 2
+    return
+  }
   const order = pendingDeleteOrder.value
   savingOrderId.value = order._id
   error.value = ''
@@ -147,7 +155,15 @@ const confirmDelete = async () => {
   } finally {
     savingOrderId.value = ''
     pendingDeleteOrder.value = null
+    cancelConfirmationStep.value = 1
   }
+}
+const cancelDeleteConfirmation = () => {
+  if (cancelConfirmationStep.value === 2) {
+    cancelConfirmationStep.value = 1
+    return
+  }
+  pendingDeleteOrder.value = null
 }
 
 const beginEdit = async (order) => {
@@ -439,12 +455,16 @@ watch(
     </div>
     <DashboardConfirmDialog
       :open="Boolean(pendingDeleteOrder)"
-      title="Cancel order and refund payment?"
-      :message="`${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'This order'} will be canceled, refunded through Clover, restocked, and the customer will be notified. If the refund fails, the order will remain unchanged.`"
-      confirm-label="Cancel & Refund"
+      :step-label="`Confirmation ${cancelConfirmationStep} of 2`"
+      :title="cancelConfirmationStep === 1 ? `Cancel ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
+      :message="cancelConfirmationStep === 1
+        ? 'This is not a simple deletion. Pine Needle will submit refunds for all remaining refundable Clover charges, return the inventory, close the order, and notify the customer. The order record will be retained so the payment and cancellation remain traceable.'
+        : 'This cancellation cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain this order should be canceled.'"
+      :confirm-label="cancelConfirmationStep === 1 ? 'Continue' : 'Cancel Order & Refund'"
+      :cancel-label="cancelConfirmationStep === 1 ? 'Keep Order' : 'Go Back'"
       :busy="Boolean(savingOrderId)"
       @confirm="confirmDelete"
-      @cancel="pendingDeleteOrder = null"
+      @cancel="cancelDeleteConfirmation"
     />
   </div>
 </template>
