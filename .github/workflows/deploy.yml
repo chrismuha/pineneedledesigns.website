@@ -84,6 +84,21 @@ jobs:
               exit 1
             fi
 
+            if [ -z "${CLOVER_MERCHANT_ID:-}" ]; then
+              echo "ERROR: CLOVER_MERCHANT_ID GitHub secret is empty."
+              exit 1
+            fi
+
+            if [ -z "${CLOVER_ACCESS_TOKEN:-}" ]; then
+              echo "ERROR: CLOVER_ACCESS_TOKEN GitHub secret is empty."
+              exit 1
+            fi
+
+            if [ -z "${CLOVER_WEBHOOK_SECRET:-}" ]; then
+              echo "ERROR: CLOVER_WEBHOOK_SECRET GitHub secret is empty."
+              exit 1
+            fi
+
             if [ -n "$RUNNING_MONGODB_URI" ]; then
               MONGODB_URI="$RUNNING_MONGODB_URI"
               export MONGODB_URI
