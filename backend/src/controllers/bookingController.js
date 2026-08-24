@@ -1,12 +1,10 @@
 import { config } from '../config/index.js';
 import { isCloverConfigured } from '../config/clover.js';
 import { BOOKING_DEPOSITS } from '../constants/index.js';
+import { BookingDeposit } from '../models/BookingDeposit.js';
 import { createHostedCheckoutSession, findSuccessfulPaymentForSession } from '../services/cloverService.js';
 import { getEmailRecipients, mailerConfigured, sendEmail } from '../services/mailer.js';
 import { sendPushNotification } from '../services/pushNotifications.js';
-
-const bookingDepositMap = new Map();
-const finalizedBookingDeposits = new Map();
 
 const splitCustomerName = (fullName = '') => {
   const parts = String(fullName).trim().split(/\s+/).filter(Boolean);
@@ -34,15 +32,91 @@ const buildBookingRedirectUrls = (service) => {
   return null;
 };
 
+const depositRecordToPayload = (record) => ({
+  service: record.service,
+  customer: {
+    name: record.customer?.name || '',
+    email: record.customer?.email || '',
+    phone: record.customer?.phone || '',
+  },
+  amountCents: record.amountCents,
+  createdAt: record.createdAt,
+});
+
+const buildFinalizedResponse = (record, booking, cloverPaymentId = '') => ({
+  success: true,
+  service: record.service,
+  title: booking.title,
+  amount: booking.amount,
+  bookingUrl: booking.calendarUrl,
+  paymentId: cloverPaymentId || record.cloverPaymentId || record.checkoutSessionId,
+});
+
+const recoverDepositFromClover = async (checkoutSessionId) => {
+  const lookback = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  for (const [service, booking] of Object.entries(BOOKING_DEPOSITS)) {
+    const amountCents = Math.round(Number(booking.amount) * 100);
+    const cloverPayment = await findSuccessfulPaymentForSession({
+      checkoutSessionId,
+      amountCents,
+      createdAfter: lookback,
+    });
+    if (!cloverPayment) continue;
+
+    return {
+      service,
+      customer: { name: 'Customer', email: '', phone: '' },
+      amountCents,
+      createdAt: lookback,
+      cloverPaymentId: String(cloverPayment.id || ''),
+    };
+  }
+
+  return null;
+};
+
+const loadDepositContext = async (checkoutSessionId) => {
+  const record = await BookingDeposit.findOne({ checkoutSessionId });
+  if (record) {
+    return { record, deposit: depositRecordToPayload(record) };
+  }
+
+  const recovered = await recoverDepositFromClover(checkoutSessionId);
+  if (!recovered) {
+    return { record: null, deposit: null };
+  }
+
+  const upserted = await BookingDeposit.findOneAndUpdate(
+    { checkoutSessionId },
+    {
+      $setOnInsert: {
+        checkoutSessionId,
+        service: recovered.service,
+        customer: recovered.customer,
+        amountCents: recovered.amountCents,
+        status: 'pending',
+      },
+    },
+    { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
+  );
+
+  return {
+    record: upserted,
+    deposit: depositRecordToPayload(upserted),
+    recoveredCloverPaymentId: recovered.cloverPaymentId,
+  };
+};
+
 const finalizeBookingDeposit = async ({
   checkoutSessionId,
   cloverPaymentId,
   deposit,
   booking,
+  record,
 }) => {
-  const existing = finalizedBookingDeposits.get(checkoutSessionId);
-  if (existing) {
-    return existing;
+  if (record?.status === 'paid') {
+    return buildFinalizedResponse(record, booking, record.cloverPaymentId);
   }
 
   if (deposit && mailerConfigured) {
@@ -73,32 +147,42 @@ const finalizeBookingDeposit = async ({
     }
   }
 
-  const result = {
-    success: true,
-    service: deposit.service,
-    title: booking.title,
-    amount: booking.amount,
-    bookingUrl: booking.calendarUrl,
-    paymentId: cloverPaymentId || checkoutSessionId,
-  };
+  const finalizedAt = new Date();
+  const updatedRecord = await BookingDeposit.findOneAndUpdate(
+    { checkoutSessionId },
+    {
+      $set: {
+        status: 'paid',
+        cloverPaymentId: cloverPaymentId || '',
+        finalizedAt,
+        ...(deposit?.customer ? { customer: deposit.customer } : {}),
+        ...(deposit?.service ? { service: deposit.service } : {}),
+        ...(deposit?.amountCents ? { amountCents: deposit.amountCents } : {}),
+      },
+    },
+    { returnDocument: 'after' },
+  );
 
-  finalizedBookingDeposits.set(checkoutSessionId, result);
-  bookingDepositMap.delete(checkoutSessionId);
-  return result;
+  return buildFinalizedResponse(updatedRecord || record, booking, cloverPaymentId);
 };
 
 export const tryFinalizeBookingDepositFromWebhook = async (checkoutSessionId, cloverPaymentId) => {
-  const deposit = bookingDepositMap.get(checkoutSessionId);
+  const { record, deposit } = await loadDepositContext(checkoutSessionId);
   if (!deposit) return null;
 
   const booking = BOOKING_DEPOSITS[deposit.service];
   if (!booking) return null;
+
+  if (record?.status === 'paid') {
+    return buildFinalizedResponse(record, booking, record.cloverPaymentId);
+  }
 
   return finalizeBookingDeposit({
     checkoutSessionId,
     cloverPaymentId,
     deposit,
     booking,
+    record,
   });
 };
 
@@ -158,16 +242,24 @@ export const createBookingDeposit = async (req, res) => {
       return res.status(502).json({ error: 'Payment checkout could not be started. Please try again.' });
     }
 
-    bookingDepositMap.set(checkoutSessionId, {
-      service,
-      customer: {
-        name: customer.name.trim(),
-        email: customer.email.trim(),
-        phone: customer.phone.trim(),
+    await BookingDeposit.findOneAndUpdate(
+      { checkoutSessionId },
+      {
+        $set: {
+          service,
+          customer: {
+            name: customer.name.trim(),
+            email: customer.email.trim(),
+            phone: customer.phone.trim(),
+          },
+          amountCents,
+          status: 'pending',
+          cloverPaymentId: '',
+          finalizedAt: null,
+        },
       },
-      amountCents,
-      createdAt: new Date(),
-    });
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
+    );
 
     res.json({ url: checkoutUrl, redirectUrl: checkoutUrl, sessionId: checkoutSessionId });
   } catch (err) {
@@ -193,12 +285,7 @@ export const confirmBookingDeposit = async (req, res) => {
       });
     }
 
-    const cached = finalizedBookingDeposits.get(sessionId);
-    if (cached) {
-      return res.json(cached);
-    }
-
-    const deposit = bookingDepositMap.get(sessionId);
+    const { record, deposit, recoveredCloverPaymentId } = await loadDepositContext(sessionId);
     if (!deposit) {
       return res.status(404).json({
         error: 'We could not find this deposit session. If you were charged, please contact Pine Needle Designs for help.',
@@ -208,6 +295,21 @@ export const confirmBookingDeposit = async (req, res) => {
     const booking = BOOKING_DEPOSITS[deposit.service];
     if (!booking) {
       return res.status(400).json({ error: 'Invalid booking deposit type.' });
+    }
+
+    if (record?.status === 'paid') {
+      return res.json(buildFinalizedResponse(record, booking, record.cloverPaymentId));
+    }
+
+    if (recoveredCloverPaymentId) {
+      const result = await finalizeBookingDeposit({
+        checkoutSessionId: sessionId,
+        cloverPaymentId: recoveredCloverPaymentId,
+        deposit,
+        booking,
+        record,
+      });
+      return res.json(result);
     }
 
     const cloverPayment = await findSuccessfulPaymentForSession({
@@ -229,6 +331,7 @@ export const confirmBookingDeposit = async (req, res) => {
       cloverPaymentId: String(cloverPayment.id || ''),
       deposit,
       booking,
+      record,
     });
 
     return res.json(result);

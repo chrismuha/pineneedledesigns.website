@@ -9,6 +9,11 @@
       <template v-else-if="error">
         <h1>We couldn’t confirm your deposit</h1>
         <p class="error" role="alert">{{ error }}</p>
+        <p class="important">If your payment went through, you can still choose your appointment time below.</p>
+        <div class="calendar-fallback">
+          <a class="calendar-button" href="https://calendar.app.google/NU1nzMP69Vjz7JU4A">First Fitting Calendar</a>
+          <a class="calendar-button" href="https://calendar.app.google/EU8HAuemRhmr4zBY6">Bridal Calendar</a>
+        </div>
         <router-link to="/">Return home</router-link>
       </template>
 
@@ -89,4 +94,5 @@ onMounted(async () => {
 .calendar-button { display: inline-flex; min-height: 50px; margin: 18px 0 8px; padding: 12px 26px; align-items: center; border-radius: 999px; background: var(--booking-payment-success-view-calendar-button-surface); color: var(--booking-payment-success-view-calendar-button-text); font-weight: 800; text-decoration: none; }
 .important { color: var(--booking-payment-success-view-important-text); font-size: 10.8pt; }
 .error { color: var(--booking-payment-success-view-error-text); font-weight: 700; }
+.calendar-fallback { display: grid; gap: 10px; margin: 16px 0; }
 </style>
