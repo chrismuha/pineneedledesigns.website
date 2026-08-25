@@ -536,7 +536,9 @@ export const cloverWebhookHandler = async (req, res) => {
     let order = await Order.findOne({ gatewayOrderId: checkoutSessionId, paymentProvider: 'clover' });
     if (!order && payment?.orderId) order = await Order.findById(payment.orderId);
     if (!order) {
-      const bookingResult = await tryFinalizeBookingDepositFromWebhook(checkoutSessionId, cloverPaymentId);
+      const bookingResult = normalizedStatus === 'paid'
+        ? await tryFinalizeBookingDepositFromWebhook(checkoutSessionId, cloverPaymentId)
+        : null;
       if (bookingResult) {
         return res.json({ success: true, status: normalizedStatus, type: 'booking_deposit' });
       }
