@@ -76,7 +76,7 @@ export const config = {
   email: {
     sender: process.env.EMAIL,
     recipients: process.env.ORDER_EMAILS,
-    resendFrom: process.env.RESEND_FROM || 'orders@pineneedledesigns.store',
+    resendFrom: process.env.RESEND_FROM || 'notifications@notifications.pineneedledesigns.store',
     resendApiKey: process.env.RESEND_API_KEY,
     appPassword: process.env.EMAIL_APP_PASSWORD,
   },

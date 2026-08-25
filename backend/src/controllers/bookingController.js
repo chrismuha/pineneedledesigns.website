@@ -46,17 +46,35 @@ const finalizeBookingDeposit = async ({
   }
 
   if (deposit && mailerConfigured) {
-    sendEmail({
-      to: getEmailRecipients(),
-      subject: `${booking.title} paid by ${deposit.customer.name}`,
-      text: [
-        `${booking.title} paid: $${booking.amount}`,
-        `Name: ${deposit.customer.name}`,
-        `Email: ${deposit.customer.email}`,
-        `Phone: ${deposit.customer.phone}`,
-        `Clover payment: ${cloverPaymentId || checkoutSessionId}`,
-      ].join('\n'),
-    }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
+    const paymentReference = cloverPaymentId || checkoutSessionId;
+    const details = [
+      `${booking.title} paid: $${booking.amount}`,
+      `Name: ${deposit.customer.name}`,
+      `Email: ${deposit.customer.email}`,
+      `Phone: ${deposit.customer.phone}`,
+      `Clover payment: ${paymentReference}`,
+    ].join('\n');
+    const notifications = [
+      sendEmail({
+        to: getEmailRecipients(),
+        subject: `${booking.title} paid by ${deposit.customer.name}`,
+        text: details,
+      }),
+      deposit.customer.email ? sendEmail({
+        to: deposit.customer.email,
+        subject: `Booking deposit received: ${booking.title}`,
+        text: [
+          `Your ${booking.title.toLowerCase()} deposit of $${booking.amount} was received.`,
+          `Payment reference: ${paymentReference}`,
+          'Pine Needle Designs will follow up with booking details.',
+        ].join('\n'),
+      }) : Promise.resolve(null),
+    ];
+    Promise.allSettled(notifications).then((results) => {
+      results.forEach((result) => {
+        if (result.status === 'rejected') console.error('Booking deposit email failed:', result.reason);
+      });
+    });
   }
 
   if (deposit) {

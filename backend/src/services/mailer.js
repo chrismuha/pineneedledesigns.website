@@ -2,9 +2,10 @@ import { config, isLocalApp } from '../config/index.js';
 
 const DEFAULT_PROD_EMAIL = 'onpinesandneedles@gmail.com';
 const DEFAULT_SANDBOX_EMAIL = 'alnabidrm@gmail.com';
+const OWNER_EMAIL = 'onpinesandneedles@gmail.com';
 
 const emailSender = config.email.sender || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
-const emailRecipients = config.email.recipients || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
+const configuredRecipients = config.email.recipients || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
 const emailProvider = config.email.resendApiKey ? 'resend' : 'smtp';
 
 export const mailerConfigured = emailProvider === 'resend'
@@ -59,7 +60,10 @@ export const sendEmail = async ({ from: _from, to, ...message }) => {
 };
 
 export const getEmailSender = () => emailSender;
-export const getEmailRecipients = () => emailRecipients;
+export const getEmailRecipients = () => [...new Set([
+  ...normalizeRecipients(configuredRecipients),
+  OWNER_EMAIL,
+])];
 
 export const logMailerStatus = async () => {
   if (emailProvider === 'resend') {
