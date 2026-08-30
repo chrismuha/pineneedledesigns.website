@@ -51,6 +51,10 @@
     <section class="home-product-collections" aria-label="Featured product collections">
       <div class="container">
         <CollectionProductSlider
+          v-if="recentProductsCollection.products.length"
+          :collection="recentProductsCollection"
+        />
+        <CollectionProductSlider
           v-for="collection in featuredProductCollections"
           :key="collection.slug"
           :collection="collection"
@@ -130,6 +134,29 @@ const featuredCollectionSlugs = [
   'upcycled-collaboration',
   'denim-and-lace',
 ]
+
+const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isProductSold = (product) => (
+  product.sold
+  || product.soldOut
+  || (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim()))
+  || (typeof product.availability === 'string' && /^sold(?:\s*out)?$/i.test(product.availability.trim()))
+  || productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
+)
+
+const recentProductsCollection = computed(() => ({
+  slug: 'recently-added',
+  title: 'New Arrivals',
+  path: '/collections',
+  products: catalogStore.collectionPages
+    .flatMap((collection) => collection.products.map((product) => ({
+      ...product,
+      path: `${collection.path}#product-${product.id}`,
+    })))
+    .filter((product) => !product.placeholder && product.images?.length && !isProductSold(product))
+    .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime())
+    .slice(0, 10),
+}))
 
 const featuredProductCollections = computed(() =>
   featuredCollectionSlugs

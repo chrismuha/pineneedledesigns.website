@@ -155,6 +155,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     sold: product.outOfStock || undefined,
     availableQuantity: Number.isInteger(product.quantity) ? product.quantity : 1,
     shippingCost: Number(product.shippingCost || 0),
+    createdAt: product.createdAt,
   };
 };
 
@@ -265,7 +266,7 @@ const buildStorefrontCatalog = async () => {
     .sort({ sortOrder: 1, name: 1 })
     .lean();
   const products = await Product.find()
-    .select('name collectionId subCollectionId color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders')
+    .select('name collectionId subCollectionId color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders createdAt')
     .sort({ name: 1 })
     .collation({ locale: 'en', strength: 2 })
     .lean();
