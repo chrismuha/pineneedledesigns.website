@@ -5,7 +5,7 @@
     "backend"
   ],
   "scripts": {
-    "dev": "concurrently \"cross-env NODE_ENV=development APP_BASE_URL=http://localhost:5196 CLOVER_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"cross-env VITE_PORT=5196 npm run dev -w frontend\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development APP_BASE_URL=http://localhost:5203 CLOVER_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"cross-env VITE_PORT=5203 npm run dev -w frontend\"",
     "dev:full": "npm run dev",
     "dev:vite": "npm run dev -w frontend",
     "build": "npm run build -w frontend",

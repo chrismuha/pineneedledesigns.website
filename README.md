@@ -43,7 +43,7 @@ npm run dev:full
 
 This will start:
 - Backend API server on `http://localhost:3001`
-- Frontend dev server on `http://localhost:5196`
+- Frontend dev server on `http://localhost:5203`
 
 #### Individual Services
 
@@ -57,8 +57,8 @@ Server runs on `http://localhost:3001`
 ```bash
 npm run dev
 ```
-When started from the repository root, the dev server runs on `http://localhost:5196`.
-When started directly from the `frontend` workspace, it also defaults to `http://localhost:5196`.
+When started from the repository root, the dev server runs on `http://localhost:5203`.
+When started directly from the `frontend` workspace, it also defaults to `http://localhost:5203`.
 
 #### Production Build
 
