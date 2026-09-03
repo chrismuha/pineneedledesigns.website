@@ -8,6 +8,9 @@ updates:
     commit-message:
       prefix: "deps"
     rebase-strategy: "auto"
+    ignore:
+      - dependency-name: "cropperjs"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
