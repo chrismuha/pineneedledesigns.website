@@ -20,7 +20,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../docs',
+    outDir: process.env.PINE_BUILD_OUT_DIR || '../docs',
     emptyOutDir: true,
     rollupOptions: {
       output: {

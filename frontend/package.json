@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node ./scripts/postbuild.mjs",
+    "build": "cross-env PINE_BUILD_OUT_DIR=dist vite build",
+    "build:release": "npm run build && node ./scripts/publish-build.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

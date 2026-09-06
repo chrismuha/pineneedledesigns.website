@@ -1,4 +1,3 @@
-import path from 'path';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import cors from 'cors';
@@ -12,6 +11,8 @@ import { createSessionMiddleware } from './middleware/session.js';
 import { requireCloudflareAccess } from './middleware/cloudflareAccess.js';
 import { cloverWebhookHandler } from './controllers/paymentController.js';
 import apiRouter from './routes/index.js';
+import { createSeoMiddleware } from './middleware/seo.js';
+import { getStorefrontCatalog } from './services/storefrontCatalog.js';
 
 export const createApp = () => {
   const app = express();
@@ -57,6 +58,7 @@ export const createApp = () => {
 
   app.use(express.json({ limit: '10mb' }));
   app.use('/dashboard', requireCloudflareAccess);
+  app.use(createSeoMiddleware({ docsDir: config.docsDir, getCatalog: getStorefrontCatalog }));
   app.use(express.static(config.docsDir, {
     setHeaders(res) {
       setRevalidationHeaders(res);
@@ -102,7 +104,7 @@ export const createApp = () => {
 
   app.use((req, res) => {
     setRevalidationHeaders(res);
-    res.sendFile(path.join(config.docsDir, 'index.html'));
+    res.status(404).set('X-Robots-Tag', 'noindex').type('text/plain').send('Not found.');
   });
 
   return app;

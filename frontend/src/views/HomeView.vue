@@ -1,5 +1,9 @@
 <template>
   <div class="home-page">
+    <section class="container home-intro">
+      <h1>One-of-a-Kind Upcycled Clothing &amp; Accessories</h1>
+      <p>Boho, country and Adirondack chic designs by Wende Maliani, made in the USA.</p>
+    </section>
     <!-- <section id="dashboard-access" class="dashboard-signin">
       <div class="container dashboard-signin__content">
         <h2>Dashboard</h2>
@@ -33,6 +37,7 @@
                 decoding="async"
                 class="media"
                 :src="card.image"
+                :alt="card.title"
               />
             </router-link>
             <div class="body">
@@ -81,6 +86,7 @@
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
+                :alt="collection.title"
               />
               <div class="body">
                 <h3>{{ uppercase(collection.title) }}</h3>
@@ -94,6 +100,7 @@
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
+                :alt="collection.title"
               />
               <div class="body">
                 <h3>{{ uppercase(collection.title) }}</h3>
@@ -182,6 +189,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.home-intro { padding-top: 24px; padding-bottom: 12px; text-align: center; }
+.home-intro h1 { font-size: clamp(1.35rem, 3vw, 2rem); }
+
 .dashboard-signin {
   padding: clamp(32px, 5vw, 56px) 0;
   background: linear-gradient(180deg, var(--pale-blue), var(--pale-blue-2));

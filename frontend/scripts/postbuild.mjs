@@ -6,7 +6,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const frontendDir = path.resolve(__dirname, '..')
 const rootDir = path.resolve(frontendDir, '..')
-const docsDir = path.join(rootDir, 'docs')
+const docsDir = process.env.PINE_BUILD_OUT_DIR
+  ? path.resolve(process.env.PINE_BUILD_OUT_DIR)
+  : path.join(rootDir, 'docs')
 
 const removeStaleBuildAssets = async () => {
   const assetsDir = path.join(docsDir, 'assets')

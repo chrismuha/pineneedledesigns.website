@@ -9,6 +9,7 @@
     "dev:full": "npm run dev",
     "dev:vite": "npm run dev -w frontend",
     "build": "npm run build -w frontend",
+    "build:release": "npm run build:release -w frontend",
     "preview": "npm run preview -w frontend",
     "server": "npm run start -w backend",
     "start": "npm run start -w backend"
