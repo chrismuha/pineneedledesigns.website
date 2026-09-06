@@ -142,8 +142,6 @@ jobs:
               > backend/.env
 
             npm install --omit=dev --ignore-scripts
-            npm run seed -w backend
-
             # Nginx defaults to a 1 MB request body, which rejects normal product
             # photos before they can reach the app's media upload middleware.
             sudo tee /etc/nginx/conf.d/pineneedledesigns-uploads.conf >/dev/null <<'NGINX'

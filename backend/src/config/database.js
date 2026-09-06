@@ -12,7 +12,6 @@ import {
   extractSweaterSizes,
 } from '../utils/descriptionSizes.js';
 import { isSweatshirtProduct, isTShirtProduct } from '../utils/productSizeType.js';
-import { seedCatalog } from '../services/catalogSeed.js';
 import { Order } from '../models/Order.js';
 
 const removeDuplicateProductSizes = async () => {
@@ -454,21 +453,6 @@ const backfillProductSizes = async () => {
   if (updated) console.log(`ℹ️ Backfilled and routed size dropdowns for ${updated} product(s) without changing descriptions.`);
 };
 
-const ensureCatalogSeeded = async () => {
-  const [collectionCount, productCount] = await Promise.all([
-    Collection.countDocuments({ isSystem: false }),
-    Product.countDocuments(),
-  ]);
-
-  if (collectionCount > 0 || productCount > 0) {
-    console.log(`ℹ️ Catalog data already present (${collectionCount} collections, ${productCount} products); skipping seed.`);
-    return;
-  }
-
-  await seedCatalog();
-  console.log('ℹ️ Seeded storefront catalog data from the project data files.');
-};
-
 const ensureUncategorizedCollection = async () => {
   const uncategorized = await Collection.findOne({ isSystem: true, slug: 'uncategorized' });
   if (!uncategorized) {
@@ -501,7 +485,6 @@ export const runDatabaseMaintenance = async () => {
   await runTimedMaintenanceStep('backfillNoBlingDescriptions', backfillNoBlingDescriptions);
   await runTimedMaintenanceStep('ensureMyraBeltsSubcollection', ensureMyraBeltsSubcollection);
   await runTimedMaintenanceStep('backfillProductSubcollectionIds', backfillProductSubcollectionIds);
-  await runTimedMaintenanceStep('ensureCatalogSeeded', ensureCatalogSeeded);
   console.log(`ℹ️ Mongo maintenance finished in ${Date.now() - startedAt}ms.`);
 };
 
@@ -602,6 +585,5 @@ export const connectDatabase = async () => {
   }
 
   await ensureUncategorizedCollection();
-  await ensureCatalogSeeded();
   console.log(`ℹ️ MongoDB startup checks finished in ${Date.now() - startedAt}ms.`);
 };

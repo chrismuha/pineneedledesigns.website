@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { sitePages } from '../data/siteData'
+import { sitePages } from '../data/siteContent'
 
 const props = defineProps({
   slug: String,

@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "seed": "node src/scripts/seedCatalog.js",
     "maintenance:mongo": "node src/scripts/runDatabaseMaintenance.js",
     "test:mongo": "node src/scripts/testMongoConnection.js",
     "test:orders": "node src/scripts/verifyCloverOrderIndexes.js",

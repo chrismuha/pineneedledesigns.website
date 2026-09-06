@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { shirtColorTemplates } from '../../data/siteData.js'
+import { shirtColorTemplates } from '../../data/productTemplates.js'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 
 const CUSTOM_VALUE = '__custom__'

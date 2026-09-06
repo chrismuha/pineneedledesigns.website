@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import { sitePages } from '../data/siteData'
+import { sitePages } from '../data/siteContent'
 import { useCatalogStore } from '../stores/catalog.js'
 import { applyPageSeo, getPageSeo } from '../seo/metadata.js'
 
@@ -35,7 +35,7 @@ const routes = [
     alias: ['/collections.html'],
   },
 
-  ...sitePages.filter((page) => page.path !== '/collections').map((page) => ({
+  ...sitePages.map((page) => ({
     path: page.path,
     name: `page-${page.slug}`,
     component: StaticPageView,

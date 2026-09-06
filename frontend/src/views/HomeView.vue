@@ -128,11 +128,11 @@
 import { computed, onMounted } from 'vue'
 import CollectionProductSlider from '../components/CollectionProductSlider.vue'
 import ImageSlider from '../components/ImageSlider.vue'
-import { homeSections } from '../data/siteData'
 import { useCatalogStore } from '../stores/catalog.js'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
 const catalogStore = useCatalogStore()
+const homeSections = []
 
 const featuredCollectionSlugs = [
   'shirts',

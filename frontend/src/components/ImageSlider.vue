@@ -24,7 +24,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { sliderSlides } from '../data/siteData'
+import { sliderSlides } from '../data/siteContent'
 import { useSliderGestures } from '../composables/useSliderGestures'
 
 const currentIndex = ref(0)

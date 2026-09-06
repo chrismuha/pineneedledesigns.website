@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { shirtSizeTemplates } from '../../data/siteData.js'
+import { shirtSizeTemplates } from '../../data/productTemplates.js'
 
 const CUSTOM_VALUE = '__custom__'
 
