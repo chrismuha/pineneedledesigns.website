@@ -1,12 +1,43 @@
 export const SITE_ORIGIN = 'https://pineneedledesigns.store'
 export const SITE_NAME = 'Pine Needle Designs'
-export const HOME_DESCRIPTION = 'Explore one-of-a-kind upcycled clothing, denim jackets, jewelry and handbags by Wende Maliani. Boho, country and Adirondack chic designs made in the USA.'
+export const HOME_DESCRIPTION = 'Discover one-of-a-kind upcycled clothing, denim jackets, jewelry and handbags by Wende Maliani in Remsen, NY, serving Central New York and shipping nationwide.'
 export const INDEX_ROBOTS = 'index, follow, max-image-preview:large'
 
+export const LOCAL_SERVICE_AREAS = [
+  'Remsen',
+  'Barneveld',
+  'Holland Patent',
+  'Prospect',
+  'Boonville',
+  'Trenton',
+  'Marcy',
+  'Whitesboro',
+  'Deerfield',
+  'Utica',
+  'Rome',
+  'New Hartford',
+  'West Leyden',
+  'Port Leyden',
+  'Lowville',
+  'Croghan',
+  'Camden',
+  'Syracuse',
+]
+
+export const LOCAL_SERVICE_REGIONS = [
+  'Central New York',
+  'Mohawk Valley',
+  'Black River Valley',
+  'Hudson Valley',
+  'Tug Hill Region',
+  'North Country',
+  'Adirondack Region',
+]
+
 export const publicPages = [
-  { path: '/', title: 'Pine Needle Designs | Upcycled Clothing & Accessories', description: HOME_DESCRIPTION },
+  { path: '/', title: 'Upcycled Clothing in Remsen, NY | Pine Needle Designs', description: HOME_DESCRIPTION },
   { path: '/collections', title: 'Clothing, Jewelry & Handbag Collections | Pine Needle Designs', description: 'Browse Pine Needle Designs collections of upcycled clothing, embellished denim, jewelry, handbags and one-of-a-kind accessories.' },
-  { path: '/about', title: 'About Pine Needle Designs | Wende Maliani', description: 'Discover Pine Needle Designs: one-of-a-kind upcycled clothing and accessories combining boho style, vintage details and artisan embellishments.' },
+  { path: '/about', title: 'Remsen, NY Fashion Designer | Pine Needle Designs', description: 'Meet Wende Maliani of Pine Needle Designs in Remsen, NY, creating one-of-a-kind upcycled clothing and accessories for Central New York and customers nationwide.' },
   { path: '/privacy-policy', title: 'Privacy Policy | Pine Needle Designs', description: 'Read the Pine Needle Designs privacy policy.' },
   { path: '/refund-policy', title: 'Refund Policy | Pine Needle Designs', description: 'Review the Pine Needle Designs refund policy before placing your order.' },
   { path: '/shipping-policy', title: 'Shipping Policy | Pine Needle Designs', description: 'Read about shipping for Pine Needle Designs clothing and accessories.' },
@@ -69,7 +100,28 @@ export function renderSeoHead(seo) {
   if (seo.canonical) tags.push(`<link data-seo rel="canonical" href="${escapeHtml(seo.canonical)}">`, meta('property', 'og:url', seo.canonical))
   if (seo.robots === INDEX_ROBOTS) {
     const data = { '@context': 'https://schema.org', '@graph': [
-      { '@type': 'Organization', '@id': `${SITE_ORIGIN}/#organization`, name: SITE_NAME, url: `${SITE_ORIGIN}/` },
+      {
+        '@type': 'Store',
+        '@id': `${SITE_ORIGIN}/#organization`,
+        name: SITE_NAME,
+        url: `${SITE_ORIGIN}/`,
+        description: HOME_DESCRIPTION,
+        image: `${SITE_ORIGIN}/images/wende-ai.webp`,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Remsen',
+          addressRegion: 'NY',
+          addressCountry: 'US',
+        },
+        areaServed: [
+          ...LOCAL_SERVICE_AREAS.map((name) => ({ '@type': 'City', name: `${name}, New York` })),
+          ...LOCAL_SERVICE_REGIONS.map((name) => ({ '@type': 'Place', name })),
+        ],
+        makesOffer: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'One-of-a-kind upcycled clothing and accessories' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Personal fittings and bridal appointments' } },
+        ],
+      },
       { '@type': 'WebSite', '@id': `${SITE_ORIGIN}/#website`, name: SITE_NAME, url: `${SITE_ORIGIN}/`, publisher: { '@id': `${SITE_ORIGIN}/#organization` } },
     ] }
     tags.push(`<script data-seo type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`)

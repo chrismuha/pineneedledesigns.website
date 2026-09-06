@@ -2,7 +2,8 @@
   <div class="home-page">
     <section class="container home-intro">
       <h1>One-of-a-Kind Upcycled Clothing &amp; Accessories</h1>
-      <p>Boho, country and Adirondack chic designs by Wende Maliani, made in the USA.</p>
+      <p>Boho, country and Adirondack chic designs by Wende Maliani in Remsen, New York, made in the USA and shipped nationwide.</p>
+      <p class="home-intro__service-area">Locally serving Remsen, Barneveld, Holland Patent, Prospect, Boonville, Trenton, Marcy, Whitesboro, Deerfield, Utica, Rome, New Hartford, West Leyden, Port Leyden, Lowville, Croghan, Camden, and Syracuse—with customers throughout Central New York, the Mohawk and Black River valleys, the Hudson Valley, Tug Hill, the North Country, and the Adirondacks.</p>
     </section>
     <!-- <section id="dashboard-access" class="dashboard-signin">
       <div class="container dashboard-signin__content">
@@ -191,6 +192,7 @@ onMounted(() => {
 <style scoped>
 .home-intro { padding-top: 24px; padding-bottom: 12px; text-align: center; }
 .home-intro h1 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.home-intro__service-area { max-width: 900px; margin: 8px auto 0; line-height: 1.6; }
 
 .dashboard-signin {
   padding: clamp(32px, 5vw, 56px) 0;

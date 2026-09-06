@@ -12,10 +12,12 @@ export const sitePages = [
     path: '/about',
     title: 'About Pine Needle Designs',
     content: `
-      <p>Pine Needle Designs crafts unique, upcycled clothing and accessories that blend boho spirit with sophisticated tailoring.</p>
+      <p>Pine Needle Designs is a Remsen, New York studio crafting unique, upcycled clothing and accessories that blend boho spirit with sophisticated tailoring.</p>
       <p>Every piece is made in the USA using responsibly sourced denim, vintage trims, and artisan-made embellishments.</p>
       <p>Our studio is rooted in confident expression: we build garments to feel like celebration outfits for every body.</p>
       <p>We believe in slow design, hand-finishing details, and giving unused textiles a new life so you can wear something genuinely one-of-a-kind.</p>
+      <h2>Serving Remsen and Central New York</h2>
+      <p>Our local community includes Remsen, Barneveld, Holland Patent, Prospect, Boonville, Trenton, Marcy, Whitesboro, Deerfield, Utica, Rome, New Hartford, West Leyden, Port Leyden, Lowville, Croghan, Camden, and Syracuse. We serve customers across Central New York, the Mohawk Valley, Black River Valley, Hudson Valley, Tug Hill, the North Country, and the Adirondacks, and ship our one-of-a-kind designs throughout the United States.</p>
     `,
   },
   {
