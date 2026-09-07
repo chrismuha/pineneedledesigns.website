@@ -43,7 +43,7 @@ npm run dev:full
 
 This will start:
 - Backend API server on `http://localhost:3001`
-- Frontend dev server on `http://localhost:5177`
+- Frontend dev server on `http://localhost:5203`
 
 #### Individual Services
 
@@ -57,7 +57,8 @@ Server runs on `http://localhost:3001`
 ```bash
 npm run dev
 ```
-Dev server runs on `http://localhost:5177` (or next available port)
+When started from the repository root, the dev server runs on `http://localhost:5203`.
+When started directly from the `frontend` workspace, it also defaults to `http://localhost:5203`.
 
 #### Production Build
 
@@ -66,11 +67,14 @@ npm run build
 npm run preview
 ```
 
-### Production Catalog Seeding
+`npm run build` writes disposable verification output to `frontend/dist`. Use
+`npm run build:release` when the committed production files in `docs` need to be updated.
 
-Every push to `main` runs the catalog seed during the production deployment. Products defined in
-`frontend/src/data/siteData.js` are added to or updated in MongoDB before the application restarts.
-Products created only through the dashboard are not removed or written back to GitHub.
+### Production Catalog
+
+MongoDB is the source of truth for collections and products. Manage catalog records and new product
+media through the dashboard. Existing products can still reference the legacy static media retained
+in `docs/images` and `docs/videos`.
 
 ## API Endpoints
 
@@ -122,7 +126,7 @@ Sessions are stored in the ignored `.sessions` directory so carts survive server
 ## Project Structure
 
 ```
-├── src/
+├── frontend/src/
 │   ├── components/
 │   │   ├── CartSidebar.vue    # Cart sidebar component
 │   │   ├── GlobalHeader.vue   # Site header with cart icon
@@ -133,10 +137,12 @@ Sessions are stored in the ignored `.sessions` directory so carts survive server
 │   │   ├── CollectionView.vue # Product collection pages
 │   │   └── ...
 │   ├── data/
-│   │   └── siteData.js        # Product and site data
+│   │   ├── siteContent.js     # Static policy/about content and homepage slides
+│   │   └── productTemplates.js # Reusable dashboard option templates
 │   └── router/
 │       └── index.js           # Vue Router configuration
-├── server.js                  # Express backend server
+├── backend/src/               # Express API and MongoDB catalog
+├── docs/                      # Published storefront and legacy static product media
 ├── package.json
 └── README.md
 ```

@@ -163,6 +163,33 @@ export const findSuccessfulPaymentForSession = async ({
   return amountMatches[0] || null;
 };
 
+export const refundCloverPayment = async ({ paymentId, amountCents, idempotencyKey }) => {
+  if (!fetchClient) throw new Error('A fetch implementation is required by Clover service. Use Node 18+.');
+  assertCloverConfigured();
+  const amount = Math.round(Number(amountCents || 0));
+  if (!paymentId || amount < 1) throw new Error('A Clover payment ID and positive refund amount are required.');
+
+  const response = await fetch(
+    `${cloverConfig.isProduction ? 'https://scl.clover.com' : 'https://scl-sandbox.dev.clover.com'}/v1/refunds`,
+    {
+      method: 'POST',
+      headers: {
+        ...buildHeaders(),
+        ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+      },
+      body: JSON.stringify({ charge: paymentId, amount, reason: 'requested_by_customer' }),
+    },
+  );
+  const payload = await parseJsonResponse(response);
+  if (!response.ok || String(payload?.status || '').toLowerCase() !== 'succeeded') {
+    const error = new Error(payload?.message || payload?.error?.message || 'Clover refund failed.');
+    error.code = payload?.error?.code || payload?.code || response.status;
+    error.details = payload;
+    throw error;
+  }
+  return payload;
+};
+
 export const verifyCloverWebhookSignature = ({ rawBody, signatureHeader }) => {
   if (!cloverConfig.webhookSecret) {
     return false;

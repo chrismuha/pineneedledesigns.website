@@ -2,9 +2,10 @@ import { config, isLocalApp } from '../config/index.js';
 
 const DEFAULT_PROD_EMAIL = 'onpinesandneedles@gmail.com';
 const DEFAULT_SANDBOX_EMAIL = 'alnabidrm@gmail.com';
+const OWNER_EMAIL = 'onpinesandneedles@gmail.com';
 
 const emailSender = config.email.sender || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
-const emailRecipients = config.email.recipients || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
+const configuredRecipients = config.email.recipients || (isLocalApp ? DEFAULT_SANDBOX_EMAIL : DEFAULT_PROD_EMAIL);
 const emailProvider = config.email.resendApiKey ? 'resend' : 'smtp';
 
 export const mailerConfigured = emailProvider === 'resend'
@@ -59,11 +60,25 @@ export const sendEmail = async ({ from: _from, to, ...message }) => {
 };
 
 export const getEmailSender = () => emailSender;
-export const getEmailRecipients = () => emailRecipients;
+export const getEmailRecipients = () => [...new Set([
+  ...normalizeRecipients(configuredRecipients),
+  OWNER_EMAIL,
+])];
 
 export const logMailerStatus = async () => {
   if (emailProvider === 'resend') {
-    console.log('✅ Resend mailer configured (ready to send emails over HTTPS)');
+    try {
+      const response = await fetch('https://api.resend.com/domains', {
+        headers: { Authorization: `Bearer ${config.email.resendApiKey}` },
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.message || `Resend API returned ${response.status}`);
+      }
+      console.log('✅ Resend mailer verified (ready to send emails over HTTPS)');
+    } catch (err) {
+      console.error('❌ Resend mailer verification failed:', err.message);
+    }
     return;
   }
 

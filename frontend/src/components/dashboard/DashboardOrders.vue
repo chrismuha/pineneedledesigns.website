@@ -10,7 +10,12 @@ const loading = ref(true)
 const error = ref('')
 const savingOrderId = ref('')
 const statusFilter = ref('all')
-const pendingResolution = ref(null)
+const pendingDeleteOrder = ref(null)
+const pendingPermanentDelete = ref(null)
+const cancelConfirmationStep = ref(1)
+const editingOrderId = ref('')
+const editItems = ref([])
+const products = ref([])
 const routeStatus = () => ['open', 'closed'].includes(String(route.query.status))
   ? String(route.query.status)
   : 'all'
@@ -130,24 +135,83 @@ const updateStatus = async (order, status) => {
   }
 }
 
-const resolveOrder = async (order, resolution) => {
+const requestDelete = (order) => {
+  pendingDeleteOrder.value = order
+  cancelConfirmationStep.value = 1
+}
+const confirmDelete = async () => {
+  if (!pendingDeleteOrder.value) return
+  if (cancelConfirmationStep.value === 1) {
+    cancelConfirmationStep.value = 2
+    return
+  }
+  const order = pendingDeleteOrder.value
   savingOrderId.value = order._id
   error.value = ''
   try {
-    const updated = await dashboardApi.resolveOrder(order._id, resolution)
+    const updated = await dashboardApi.deleteOrder(order._id)
     orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+    pendingDeleteOrder.value = null
+    cancelConfirmationStep.value = 1
+  }
+}
+const cancelDeleteConfirmation = () => {
+  if (cancelConfirmationStep.value === 2) {
+    cancelConfirmationStep.value = 1
+    return
+  }
+  pendingDeleteOrder.value = null
+}
+const permanentlyDeleteOrder = async () => {
+  const order = pendingPermanentDelete.value
+  if (!order) return
+  savingOrderId.value = order._id
+  try {
+    await dashboardApi.permanentlyDeleteOrder(order._id)
+    orders.value = orders.value.filter((entry) => entry._id !== order._id)
+    pendingPermanentDelete.value = null
   } catch (err) {
     error.value = err.message
   } finally {
     savingOrderId.value = ''
   }
 }
-const requestResolution = (order, resolution) => { pendingResolution.value = { order, resolution } }
-const confirmResolution = async () => {
-  if (!pendingResolution.value) return
-  const { order, resolution } = pendingResolution.value
-  await resolveOrder(order, resolution)
-  pendingResolution.value = null
+
+const beginEdit = async (order) => {
+  error.value = ''
+  try {
+    if (!products.value.length) products.value = await dashboardApi.getProducts()
+    editItems.value = (order.inventoryLines || []).map((line) => ({
+      productId: String(line.productId),
+      quantity: Number(line.quantity || 1),
+    }))
+    editingOrderId.value = order._id
+  } catch (err) {
+    error.value = err.message
+  }
+}
+const addEditItem = () => {
+  const available = products.value.find((product) => !editItems.value.some((item) => item.productId === product._id))
+  if (available) editItems.value.push({ productId: available._id, quantity: 1 })
+}
+const removeEditItem = (index) => editItems.value.splice(index, 1)
+const saveOrderChange = async (order) => {
+  savingOrderId.value = order._id
+  error.value = ''
+  try {
+    const result = await dashboardApi.changeOrder(order._id, editItems.value)
+    const updated = result.order
+    orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
+    editingOrderId.value = ''
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
 }
 
 onMounted(() => {
@@ -192,6 +256,8 @@ watch(
       </button>
     </div>
 
+    <p v-if="error" class="error-banner">{{ error }}</p>
+
     <p v-if="loading" class="status-text">Loading orders...</p>
     <p v-else-if="!orders.length" class="status-text">
       No orders yet. Completed checkout orders will appear here after Clover payment.
@@ -228,6 +294,9 @@ watch(
         </summary>
 
         <div class="order-content">
+          <div v-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
+            NOT PAID — The customer started checkout, but Clover has not confirmed any payment for this order.
+          </div>
           <section class="order-section">
             <h3>Customer Information</h3>
 
@@ -246,6 +315,25 @@ watch(
                 <label>Customer Type</label>
                 <p>{{ order.customer?.type || '—' }}</p>
               </div>
+            </div>
+          </section>
+
+          <section v-if="editingOrderId === order._id" class="order-section order-editor">
+            <h3>Edit Order Items</h3>
+            <p class="editor-note">A higher total sends the customer a secure Clover payment link. A lower total is refunded before the order changes.</p>
+            <div v-for="(item, index) in editItems" :key="`edit-${order._id}-${index}`" class="editor-row">
+              <select v-model="item.productId" class="form-input">
+                <option v-for="product in products" :key="product._id" :value="product._id">
+                  {{ product.name }} — {{ formatMoney(product.price) }} ({{ product.quantity }} available)
+                </option>
+              </select>
+              <input v-model.number="item.quantity" class="form-input quantity-input" type="number" min="1" step="1" aria-label="Quantity">
+              <button type="button" class="btn-outline" @click="removeEditItem(index)">Remove</button>
+            </div>
+            <div class="editor-actions">
+              <button type="button" class="btn-outline" @click="addEditItem">Add Item</button>
+              <button type="button" class="btn-primary" :disabled="savingOrderId === order._id || !editItems.length" @click="saveOrderChange(order)">Save Order Change</button>
+              <button type="button" class="btn-outline" @click="editingOrderId = ''">Cancel Editing</button>
             </div>
           </section>
 
@@ -348,11 +436,11 @@ watch(
           </p>
 
           <div class="order-actions">
-            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="requestResolution(order, 'canceled')">Cancel &amp; Restock</button>
-            <button v-if="!order.inventoryReturnedAt" type="button" class="btn-danger" :disabled="savingOrderId === order._id" @click="requestResolution(order, 'refunded')">Refund &amp; Restock</button>
-            <span v-else class="badge badge-closed">Inventory returned</span>
+            <button v-if="!order.inventoryReturnedAt && !order.pendingChange" type="button" class="btn-primary" :disabled="savingOrderId === order._id" @click="beginEdit(order)">Add or Change Items</button>
+            <span v-if="order.pendingChange" class="badge badge-paid">Awaiting additional payment</span>
+            <span v-if="order.inventoryReturnedAt" class="badge badge-closed">Canceled · inventory returned</span>
             <button
-              v-if="order.status === 'open'"
+              v-if="order.resolution === 'active' && order.status === 'open'"
               type="button"
               class="btn-danger"
               :disabled="savingOrderId === order._id"
@@ -362,7 +450,7 @@ watch(
             </button>
 
             <button
-              v-else
+              v-else-if="order.resolution === 'active'"
               type="button"
               class="btn-primary"
               :disabled="savingOrderId === order._id"
@@ -370,18 +458,48 @@ watch(
             >
               Reopen Order
             </button>
+            <button
+              v-if="!order.inventoryReturnedAt && !order.pendingChange"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="requestDelete(order)"
+            >
+              Cancel Order &amp; Refund
+            </button>
+            <button
+              v-if="order.status === 'closed' && order.inventoryReturnedAt && order.resolution !== 'active'"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="pendingPermanentDelete = order"
+            >Delete Order Permanently</button>
           </div>
         </div>
       </details>
     </div>
     <DashboardConfirmDialog
-      :open="Boolean(pendingResolution)"
-      :title="pendingResolution?.resolution === 'refunded' ? 'Refund and restock order?' : 'Cancel and restock order?'"
-      :message="`${pendingResolution ? orderLabel(pendingResolution.order) : 'This order'} will have its inventory returned exactly once.`"
-      :confirm-label="pendingResolution?.resolution === 'refunded' ? 'Refund & Restock' : 'Cancel & Restock'"
+      :open="Boolean(pendingDeleteOrder)"
+      :step-label="`Confirmation ${cancelConfirmationStep} of 2`"
+      :title="cancelConfirmationStep === 1 ? `Cancel ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
+      :message="cancelConfirmationStep === 1
+        ? 'This is not a simple deletion. Pine Needle will submit refunds for all remaining refundable Clover charges, return the inventory, close the order, and notify the customer. The order record will be retained so the payment and cancellation remain traceable.'
+        : 'This cancellation cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain this order should be canceled.'"
+      :confirm-label="cancelConfirmationStep === 1 ? 'Continue' : 'Cancel Order & Refund'"
+      :cancel-label="cancelConfirmationStep === 1 ? 'Keep Order' : 'Go Back'"
       :busy="Boolean(savingOrderId)"
-      @confirm="confirmResolution"
-      @cancel="pendingResolution = null"
+      @confirm="confirmDelete"
+      @cancel="cancelDeleteConfirmation"
+    />
+    <DashboardConfirmDialog
+      :open="Boolean(pendingPermanentDelete)"
+      title="Permanently delete this order?"
+      message="This removes the order and website payment record forever. It does not send another Clover refund and cannot be undone."
+      confirm-label="Delete Permanently"
+      cancel-label="Keep Order"
+      :busy="Boolean(savingOrderId)"
+      @confirm="permanentlyDeleteOrder"
+      @cancel="pendingPermanentDelete = null"
     />
   </div>
 </template>
@@ -508,6 +626,8 @@ watch(
   background: var(--dashboard-orders-badge-paid-surface);
 }
 
+.unpaid-notice { margin-bottom: 20px; border: 3px solid #b91c1c; border-radius: 10px; background: #fef2f2; color: #7f1d1d; padding: 14px 16px; font-weight: 900; font-size: 1.05rem; }
+
 .badge-open {
   background: var(--dashboard-orders-badge-open-surface);
 }
@@ -563,6 +683,12 @@ watch(
   margin-bottom: 16px;
 }
 
+.order-editor { padding: 18px; border: 1px solid var(--dashboard-orders-order-card-border); border-radius: 10px; }
+.editor-note { color: var(--dashboard-orders-paypal-id-text); }
+.editor-row { display: grid; grid-template-columns: minmax(220px, 1fr) 90px auto; gap: 10px; margin: 10px 0; }
+.form-input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--dashboard-orders-items-table-td-border); border-radius: 8px; }
+.editor-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
 @media (max-width: 768px) {
   .page-header > div {
     width: 100%;
@@ -576,6 +702,7 @@ watch(
   .order-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .items-table { min-width: 680px; }
   .order-actions { flex-direction: column; align-items: stretch; }
+  .editor-row { grid-template-columns: 1fr; }
   .order-actions button { width: 100%; min-height: 46px; }
 }
 </style>

@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import { sitePages } from '../data/siteData'
+import { sitePages } from '../data/siteContent'
+import { useCatalogStore } from '../stores/catalog.js'
+import { applyPageSeo, getPageSeo } from '../seo/metadata.js'
 
 const CollectionsView = () => import('../views/CollectionsView.vue')
 const CollectionView = () => import('../views/CollectionView.vue')
@@ -168,6 +170,15 @@ const router = createRouter({
       behavior: 'instant',
     }
   },
+})
+
+router.afterEach((to, _from, failure) => {
+  if (failure) return
+  const catalog = useCatalogStore()
+  applyPageSeo(getPageSeo(to.path, {
+    collection: catalog.visibleCollectionPages.find((page) => page.slug === to.params.slug),
+    catalogReady: catalog.initialized,
+  }))
 })
 
 export default router

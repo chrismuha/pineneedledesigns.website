@@ -28,6 +28,7 @@ const findProductByStorefrontId = async (id) => {
 const productPriceForCartItem = (product, item) => {
   const selected = item.selectedOptions || {};
   const sizeKeys = [
+    ['Size', 'shirt'],
     ['Shirt Size', 'shirt'],
     ['Sweatshirt Size', 'sweatshirt'],
     ['Shoe Size', 'shoe'],

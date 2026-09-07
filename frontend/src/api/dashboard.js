@@ -1,4 +1,5 @@
 import { showDashboardToast } from '../utils/dashboardToast.js';
+import { getCsrfToken } from './csrf.js';
 
 const jsonHeaders = {
   'Content-Type': 'application/json',
@@ -65,6 +66,36 @@ const request = async (url, options = {}, successMessage = '') => {
   return data;
 };
 
+const uploadRequest = async (url, method, formData, onProgress, successMessage) => {
+  const token = await getCsrfToken();
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader('x-csrf-token', token);
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) onProgress?.(Math.round((event.loaded / event.total) * 100));
+    });
+    xhr.addEventListener('load', () => {
+      let data = {};
+      try { data = JSON.parse(xhr.responseText || '{}'); } catch {}
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(100);
+        if (successMessage) showDashboardToast(successMessage, { type: 'success', title: 'Success' });
+        resolve(data);
+        return;
+      }
+      const error = new Error(data.error || data.message || statusMessages[xhr.status] || 'The upload failed. Your local draft is still available; retry when ready.');
+      error.status = xhr.status;
+      showDashboardToast(error.message, { title: 'Upload failed' });
+      reject(error);
+    });
+    xhr.addEventListener('error', () => reject(new Error('The upload was interrupted. Your local draft is still available; check the connection and retry.')));
+    xhr.addEventListener('abort', () => reject(new Error('The upload was paused. Your local draft is still available to retry.')));
+    xhr.send(formData);
+  });
+};
+
 export const dashboardApi = {
   getStats: () => request('/api/dashboard/stats'),
   getSettings: () => request('/api/settings'),
@@ -74,6 +105,16 @@ export const dashboardApi = {
   }, 'Store settings saved successfully.'),
   getOrders: (status = 'all') => request(`/api/orders${status && status !== 'all' ? `?status=${status}` : ''}`),
   getOrder: (id) => request(`/api/orders/${id}`),
+  deleteOrder: (id) => request(`/api/orders/${id}`, {
+    method: 'DELETE',
+  }, 'Order canceled, refund submitted, and customer notified.'),
+  permanentlyDeleteOrder: (id) => request(`/api/orders/${id}/permanent`, {
+    method: 'DELETE',
+  }, 'Order permanently deleted.'),
+  changeOrder: (id, items) => request(`/api/orders/${id}/change`, {
+    method: 'POST',
+    body: JSON.stringify({ items }),
+  }, 'Order change processed successfully.'),
   updateOrderStatus: (id, status) => request(`/api/orders/${id}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ status }),
@@ -104,14 +145,10 @@ export const dashboardApi = {
     method: 'DELETE',
     body: JSON.stringify({ confirmDelete: true, confirmName }),
   }, 'Collection deleted successfully.'),
-  createProduct: (formData) => request('/api/products', {
-    method: 'POST',
-    body: formData,
-  }, 'Item and media uploaded successfully.'),
-  updateProduct: (id, payload) => request(`/api/products/${id}`, {
-    method: 'PUT',
-    body: payload instanceof FormData ? payload : JSON.stringify(payload),
-  }, 'Item changes and media saved successfully.'),
+  createProduct: (formData, options = {}) => uploadRequest('/api/products', 'POST', formData, options.onProgress, 'Item and media uploaded successfully.'),
+  updateProduct: (id, payload, options = {}) => payload instanceof FormData
+    ? uploadRequest(`/api/products/${id}`, 'PUT', payload, options.onProgress, 'Item changes and media saved successfully.')
+    : request(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(payload) }, 'Item changes and media saved successfully.'),
   deleteProduct: (id) => request(`/api/products/${id}`, {
     method: 'DELETE',
   }, 'Item removed successfully.'),

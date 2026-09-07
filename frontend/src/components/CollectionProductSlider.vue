@@ -67,6 +67,7 @@
         <img
           class="collection-product-slider__image"
           :src="currentProduct.images[0]"
+          :alt="currentProduct.title"
           loading="lazy"
           decoding="async"
         />
@@ -164,6 +165,10 @@ const collectionPresentations = {
     eyebrow: 'New Drop',
     heading: 'Denim & Lace yes please ✨',
   },
+  'recently-added': {
+    eyebrow: 'Just In',
+    heading: 'New Arrivals ✨',
+  },
 }
 const presentation = computed(() => collectionPresentations[props.collection.slug] || {
   eyebrow: 'Featured Collection',
@@ -198,7 +203,7 @@ const { isDragging, pointerDown, pointerMove, pointerUp, pointerCancel, wheel, c
   previous,
   enabled: () => products.value.length > 1,
 })
-const productPath = (product) => `${props.collection.path}#product-${product.id}`
+const productPath = (product) => product.path || `${props.collection.path}#product-${product.id}`
 
 watch(
   () => props.collection.slug,

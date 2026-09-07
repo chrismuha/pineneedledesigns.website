@@ -1,5 +1,10 @@
 <template>
   <div class="home-page">
+    <section class="container home-intro">
+      <h1>One-of-a-Kind Upcycled Clothing &amp; Accessories</h1>
+      <p>Boho, country and Adirondack chic designs by Wende Maliani in Remsen, New York, made in the USA and shipped nationwide.</p>
+      <p class="home-intro__service-area">Locally serving Remsen, Barneveld, Holland Patent, Prospect, Boonville, Trenton, Marcy, Whitesboro, Deerfield, Utica, Rome, New Hartford, West Leyden, Port Leyden, Lowville, Croghan, Camden, and Syracuse—with customers throughout Central New York, the Mohawk and Black River valleys, the Hudson Valley, Tug Hill, the North Country, and the Adirondacks.</p>
+    </section>
     <!-- <section id="dashboard-access" class="dashboard-signin">
       <div class="container dashboard-signin__content">
         <h2>Dashboard</h2>
@@ -33,6 +38,7 @@
                 decoding="async"
                 class="media"
                 :src="card.image"
+                :alt="card.title"
               />
             </router-link>
             <div class="body">
@@ -50,6 +56,10 @@
 
     <section class="home-product-collections" aria-label="Featured product collections">
       <div class="container">
+        <CollectionProductSlider
+          v-if="recentProductsCollection.products.length"
+          :collection="recentProductsCollection"
+        />
         <CollectionProductSlider
           v-for="collection in featuredProductCollections"
           :key="collection.slug"
@@ -77,6 +87,7 @@
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
+                :alt="collection.title"
               />
               <div class="body">
                 <h3>{{ uppercase(collection.title) }}</h3>
@@ -90,6 +101,7 @@
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
+                :alt="collection.title"
               />
               <div class="body">
                 <h3>{{ uppercase(collection.title) }}</h3>
@@ -117,11 +129,11 @@
 import { computed, onMounted } from 'vue'
 import CollectionProductSlider from '../components/CollectionProductSlider.vue'
 import ImageSlider from '../components/ImageSlider.vue'
-import { homeSections } from '../data/siteData'
 import { useCatalogStore } from '../stores/catalog.js'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
 const catalogStore = useCatalogStore()
+const homeSections = []
 
 const featuredCollectionSlugs = [
   'shirts',
@@ -130,6 +142,29 @@ const featuredCollectionSlugs = [
   'upcycled-collaboration',
   'denim-and-lace',
 ]
+
+const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
+const isProductSold = (product) => (
+  product.sold
+  || product.soldOut
+  || (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim()))
+  || (typeof product.availability === 'string' && /^sold(?:\s*out)?$/i.test(product.availability.trim()))
+  || productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
+)
+
+const recentProductsCollection = computed(() => ({
+  slug: 'recently-added',
+  title: 'New Arrivals',
+  path: '/collections',
+  products: catalogStore.collectionPages
+    .flatMap((collection) => collection.products.map((product) => ({
+      ...product,
+      path: `${collection.path}#product-${product.id}`,
+    })))
+    .filter((product) => !product.placeholder && product.images?.length && !isProductSold(product))
+    .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime())
+    .slice(0, 10),
+}))
 
 const featuredProductCollections = computed(() =>
   featuredCollectionSlugs
@@ -155,6 +190,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.home-intro { padding-top: 24px; padding-bottom: 12px; text-align: center; }
+.home-intro h1 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.home-intro__service-area { max-width: 900px; margin: 8px auto 0; line-height: 1.6; }
+
 .dashboard-signin {
   padding: clamp(32px, 5vw, 56px) 0;
   background: linear-gradient(180deg, var(--pale-blue), var(--pale-blue-2));

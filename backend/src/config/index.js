@@ -58,16 +58,14 @@ export const config = {
   sessionSecret: process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'local-development-only'),
   appBaseUrl: process.env.APP_BASE_URL || (process.env.NODE_ENV === 'production'
     ? 'https://pineneedledesigns.store'
-    : 'http://localhost:5193'),
+    : 'http://localhost:5203'),
   docsDir: path.join(rootDir, 'docs'),
   sessionDir: path.join(rootDir, '.sessions'),
   uploadsDir: path.join(rootDir, 'backend', 'uploads'),
   productionMediaOrigin: process.env.PRODUCTION_MEDIA_ORIGIN || 'https://pineneedledesigns.store',
   allowedOrigins: [
-    'http://localhost:5193',
-    'http://localhost:5194',
-    'http://127.0.0.1:5193',
-    'http://127.0.0.1:5194',
+    'http://localhost:5203',
+    'http://127.0.0.1:5203',
     'http://localhost:3001',
     'http://127.0.0.1:3001',
     'https://pineneedledesigns.store',
@@ -76,7 +74,7 @@ export const config = {
   email: {
     sender: process.env.EMAIL,
     recipients: process.env.ORDER_EMAILS,
-    resendFrom: process.env.RESEND_FROM || 'orders@pineneedledesigns.store',
+    resendFrom: process.env.RESEND_FROM || 'notifications@notifications.pineneedledesigns.store',
     resendApiKey: process.env.RESEND_API_KEY,
     appPassword: process.env.EMAIL_APP_PASSWORD,
   },

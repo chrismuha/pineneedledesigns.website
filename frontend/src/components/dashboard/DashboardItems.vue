@@ -4,15 +4,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
-import SizeOptionEditor from './SizeOptionEditor.vue'
-import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
-import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
+import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { deleteItemDraft, getItemDraft, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
+import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashboardActivity.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -54,6 +53,7 @@ const deletingProduct = ref(false)
 const collectionForm = ref({ name: '' })
 const editingCollection = ref(null)
 const saving = ref(false)
+const editUploadProgress = ref(0)
 const managingSubcollectionsFor = ref(null)
 const subcollectionForm = ref({ name: '' })
 const subcollectionFieldError = ref('')
@@ -110,9 +110,14 @@ const editIsDirty = computed(() => Boolean(
   && (editPhotoFiles.value.length > 0 || editVideoFiles.value.length > 0 || editSnapshot(editingProduct.value) !== editInitialSnapshot.value),
 ))
 
+const editHasDedicatedSizeOptions = computed(() => editingProduct.value && [
+  ...(editingProduct.value.sweatshirtSizes || []),
+  ...(editingProduct.value.shoeSizes || []),
+  ...(editingProduct.value.beltSizes || []),
+].some((size) => String(size || '').trim()))
 const editSizePriceRows = computed(() => editingProduct.value ? [
-  ...sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
-  ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
+  ...(!editHasDedicatedSizeOptions.value ? sortSizeOptions(editingProduct.value.sizes || []).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabelForCollection(editingProduct.value.collectionId)} ${size}` })) : []),
+  ...sortSizeOptions(editingProduct.value.sweatshirtSizes || []).map((size) => ({ key: `sweatshirt:${size}`, label: `${collectionSlugFor(editingProduct.value.collectionId) === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size'} ${size}` })),
   ...uniqueOptions(editingProduct.value.shoeSizes || []).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(editingProduct.value.beltSizes || []).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ] : [])
@@ -757,6 +762,22 @@ const collectionAllowsBling = (collectionId) => {
   )
   return collection?.slug === 'shirts'
 }
+const primarySizeLabelForCollection = (collectionId) => {
+  const slug = groupedCollections.value.find(
+    (item) => String(item._id) === String(collectionId),
+  )?.slug
+  return {
+    shirts: 'Shirt Size',
+    skirts: 'Skirt Size',
+    jackets: 'Jacket Size',
+    jeans: 'Jeans Size',
+    sweaters: 'Sweater Size',
+    vests: 'Vest Size',
+  }[slug] || 'Size'
+}
+const collectionSlugFor = (collectionId) => groupedCollections.value.find(
+  (item) => String(item._id) === String(collectionId),
+)?.slug || ''
 
 const handleEditCollectionChange = async () => {
   if (!editingProduct.value) return
@@ -822,7 +843,7 @@ const saveProduct = async () => {
   if (editingProduct.value.customProperties.some((property) => (
     ['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(String(property.name || '').trim().toLowerCase())
   ))) {
-    editModalError.value = 'Color, Shirt Size, Sweatshirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
+    editModalError.value = 'Color, Size, Sweatshirt Size, Shoe Size, Belt Size, Style, and Comfort Colors are built-in properties and cannot be added as custom properties.'
     return
   }
 
@@ -832,6 +853,7 @@ const saveProduct = async () => {
   }
 
   saving.value = true
+  editUploadProgress.value = 0
   editModalError.value = ''
 
   try {
@@ -878,7 +900,9 @@ const saveProduct = async () => {
     editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
     editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
 
-    await dashboardApi.updateProduct(editingProduct.value._id, formData)
+    await dashboardApi.updateProduct(editingProduct.value._id, formData, {
+      onProgress: (progress) => { editUploadProgress.value = progress },
+    })
     suppressEditAutoSave = true
     window.clearTimeout(editAutoSaveTimer)
     await deleteItemDraft(editDraftId(editingProduct.value._id))
@@ -1032,9 +1056,9 @@ const customPropertiesForDisplay = (properties = []) => sortedProperties(propert
 const sizePriceEntries = (product) => Object.entries(product.sizePrices || {})
   .filter(([, price]) => Number.isFinite(Number(price)))
   .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
-const sizePriceLabel = (key) => {
+const sizePriceLabel = (key, primarySizeLabel = 'Size') => {
   const [type, size] = String(key).split(':')
-  const labels = { shirt: 'Shirt Size', sweatshirt: 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
+  const labels = { shirt: primarySizeLabel, sweatshirt: primarySizeLabel === 'Sweater Size' ? 'Sweater Size' : 'Sweatshirt Size', shoe: 'Shoe Size', belt: 'Belt Size' }
   return `${labels[type] || 'Size'} ${size}`
 }
 
@@ -1044,6 +1068,11 @@ onMounted(() => {
   void loadItems()
 })
 watch([() => editingProduct.value && editSnapshot(editingProduct.value), editPhotoFiles, editVideoFiles], scheduleEditAutoSave, { deep: true })
+watch(
+  [editIsDirty, saving],
+  () => setDashboardActivity('edit-item', { dirty: editIsDirty.value, uploading: saving.value && Boolean(editingProduct.value) }),
+  { immediate: true },
+)
 watch(
   () => route.fullPath,
   () => {
@@ -1056,6 +1085,7 @@ watch(
 onBeforeUnmount(() => {
   window.removeEventListener('pagehide', flushEditAutoSave)
   document.removeEventListener('visibilitychange', flushEditAutoSave)
+  clearDashboardActivity('edit-item')
   flushEditAutoSave()
 })
 </script>
@@ -1237,12 +1267,12 @@ onBeforeUnmount(() => {
           <p v-if="collectionAllowsBling(collection._id) && hasStyleSpecificPrice(product)"><strong>Style:</strong> Bling, No Bling</p>
           <p><strong>Quantity Available:</strong> {{ product.quantity ?? 1 }}</p>
           <p v-if="product.color"><strong>Color:</strong> {{ product.color }}</p>
-          <p v-if="product.size"><strong>Shirt Sizes:</strong> {{ product.size }}</p>
-          <p v-if="product.sweatshirtSize"><strong>Sweatshirt Sizes:</strong> {{ product.sweatshirtSize }}</p>
+          <p v-if="product.size"><strong>{{ primarySizeLabelForCollection(collection._id) }}s:</strong> {{ product.size }}</p>
+          <p v-if="product.sweatshirtSize"><strong>{{ collection.slug === 'sweaters' ? 'Sweater Sizes:' : 'Sweatshirt Sizes:' }}</strong> {{ product.sweatshirtSize }}</p>
           <p v-if="product.shoeSize"><strong>Shoe Sizes:</strong> {{ product.shoeSize }}</p>
           <p v-if="product.beltSize"><strong>Belt Sizes:</strong> {{ product.beltSize }}</p>
           <p v-for="([key, price]) in sizePriceEntries(product)" :key="key">
-            <strong>{{ sizePriceLabel(key) }} Price:</strong> ${{ Number(price).toFixed(2) }}
+            <strong>{{ sizePriceLabel(key, primarySizeLabelForCollection(collection._id)) }} Price:</strong> ${{ Number(price).toFixed(2) }}
           </p>
           <p v-if="collectionAllowsBling(collection._id) && (product.hasBlingOptions || hasStyleSpecificPrice(product))">
             <strong>General Description:</strong><br>
@@ -1445,28 +1475,16 @@ onBeforeUnmount(() => {
           <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown.</p>
         </div>
 
-        <div class="field">
-          <label>Shirt Sizes</label>
-          <SizeOptionEditor v-model="editingProduct.sizes" :disabled="saving" />
-          <p class="hint">Use for T-shirts. This legacy field is also the shared fallback when a T-shirt or sweatshirt has no dedicated sizes.</p>
-        </div>
-
-        <div class="field">
-          <label>Sweatshirt Sizes</label>
-          <SizeOptionEditor v-model="editingProduct.sweatshirtSizes" :disabled="saving" />
-          <p class="hint">Use for sweatshirts. These replace the Shirt Size fallback on known sweatshirt items.</p>
-        </div>
-
-        <div class="field">
-          <label>Shoe Sizes</label>
-          <ShoeSizeOptionEditor v-model="editingProduct.shoeSizes" :disabled="saving" />
-          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
-        </div>
-
-        <div class="field">
-          <label>Belt Sizes</label>
-          <BeltSizeOptionEditor v-model="editingProduct.beltSizes" :disabled="saving" />
-          <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
+        <div class="field field--full">
+          <DashboardSizeSelector
+            v-model:primary-sizes="editingProduct.sizes"
+            v-model:sweatshirt-sizes="editingProduct.sweatshirtSizes"
+            v-model:shoe-sizes="editingProduct.shoeSizes"
+            v-model:belt-sizes="editingProduct.beltSizes"
+            :primary-label="primarySizeLabelForCollection(editingProduct.collectionId)"
+            :collection-slug="collectionSlugFor(editingProduct.collectionId)"
+            :disabled="saving"
+          />
         </div>
 
         <div v-if="editSizePriceRows.length" class="field">
@@ -1677,7 +1695,8 @@ onBeforeUnmount(() => {
 
         <div class="modal-actions">
           <div v-if="saving" class="media-progress" role="status" aria-live="polite">
-            <progress aria-label="Saving item changes and processing media"></progress>
+            <progress :value="editUploadProgress || undefined" max="100" aria-label="Saving item changes and processing media"></progress>
+            <span>{{ editUploadProgress ? `Uploading ${editUploadProgress}%` : 'Preparing and processing media…' }}</span>
             <span>{{ editMediaSaveStatus }}</span>
           </div>
           <button type="button" class="btn-danger" :disabled="saving || savingEditDraft || deletingProduct" @click="requestProductDeletion(editingProduct)">

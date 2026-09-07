@@ -71,6 +71,10 @@ const orderSchema = new mongoose.Schema({
     default: 'active',
   },
   inventoryReturnedAt: { type: Date, default: null },
+  pendingChange: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null,
+  },
   summary: {
     subtotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },

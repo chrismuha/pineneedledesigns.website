@@ -5,18 +5,19 @@
     "backend"
   ],
   "scripts": {
-    "dev": "concurrently \"cross-env NODE_ENV=development APP_BASE_URL=http://localhost:5194 CLOVER_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"cross-env VITE_PORT=5194 npm run dev -w frontend\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development APP_BASE_URL=http://localhost:5203 CLOVER_BOOKING_DEPOSITS_ENABLED=false npm run dev -w backend\" \"cross-env VITE_PORT=5203 npm run dev -w frontend\"",
     "dev:full": "npm run dev",
     "dev:vite": "npm run dev -w frontend",
     "build": "npm run build -w frontend",
+    "build:release": "npm run build:release -w frontend",
     "preview": "npm run preview -w frontend",
     "server": "npm run start -w backend",
     "start": "npm run start -w backend"
   },
   "devDependencies": {
-    "concurrently": "^10.0.4",
+    "concurrently": "^10.0.5",
     "cross-env": "^10.1.0",
-    "nodemailer": "^9.0.5"
+    "nodemailer": "^9.1.1"
   },
   "overrides": {
     "nanoid": "3.3.18"

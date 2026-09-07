@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/',
   server: {
     host: '127.0.0.1',
-    port: Number(process.env.VITE_PORT || 5193),
+    port: Number(process.env.VITE_PORT || 5203),
     strictPort: true,
     proxy: {
       '/api': {
@@ -20,7 +20,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../docs',
+    outDir: process.env.PINE_BUILD_OUT_DIR || '../docs',
     emptyOutDir: true,
     rollupOptions: {
       output: {

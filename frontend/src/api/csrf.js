@@ -2,7 +2,7 @@ let csrfTokenPromise;
 
 const originalFetch = window.fetch.bind(window);
 
-const getCsrfToken = async () => {
+export const getCsrfToken = async () => {
   if (!csrfTokenPromise) {
     csrfTokenPromise = originalFetch('/api/csrf-token', { credentials: 'include' })
       .then(async (response) => {

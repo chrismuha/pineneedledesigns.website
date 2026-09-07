@@ -246,6 +246,15 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   if (body?.quantity !== undefined && (!Number.isInteger(Number(body.quantity)) || Number(body.quantity) < 0)) {
     errors.push('Quantity must be a whole number of zero or greater.');
   }
+  const populatedSizeTypes = [
+    ['Size', body?.size],
+    ['Sweatshirt Size', body?.sweatshirtSize],
+    ['Shoe Size', body?.shoeSize],
+    ['Belt Size', body?.beltSize],
+  ].filter(([, value]) => String(value || '').split(',').some((size) => size.trim()));
+  if (populatedSizeTypes.length > 1) {
+    errors.push(`Choose only one size type. Clear: ${populatedSizeTypes.slice(1).map(([label]) => label).join(', ')}.`);
+  }
 
   return {
     errors,
@@ -481,6 +490,15 @@ export const updateProduct = async (req, res) => {
   const { errors, data } = validateProductPayload(body, { requireAll: false });
   if (errors.length) {
     return res.status(400).json({ error: errors.join(' ') });
+  }
+  const resultingSizeTypes = [
+    req.body?.size !== undefined ? data.size : product.size,
+    req.body?.sweatshirtSize !== undefined ? data.sweatshirtSize : product.sweatshirtSize,
+    req.body?.shoeSize !== undefined ? data.shoeSize : product.shoeSize,
+    req.body?.beltSize !== undefined ? data.beltSize : product.beltSize,
+  ].filter((value) => String(value || '').split(',').some((size) => size.trim()));
+  if (resultingSizeTypes.length > 1) {
+    return res.status(400).json({ error: 'Choose only one size type before saving this item.' });
   }
 
   if (data.name) product.name = data.name;

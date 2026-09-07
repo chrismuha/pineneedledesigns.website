@@ -13,6 +13,7 @@
               <img
                 :class="['collection-card__image', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
                 :src="collection.cardImage"
+                :alt="collection.title"
                 :loading="collectionImageLoading(groupIndex, collectionIndex)"
                 :fetchpriority="collectionImagePriority(groupIndex, collectionIndex)"
                 decoding="async"

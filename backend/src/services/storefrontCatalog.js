@@ -62,7 +62,16 @@ const storefrontMeta = (meta) => (Array.isArray(meta) ? meta : [meta].filter(Boo
   .map((item) => String(item).replace(/\b(?:with\s+)?free shipping\b/gi, '').trim())
   .filter(Boolean);
 
-const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false) => {
+const primarySizeLabelFor = (collectionSlug) => ({
+  shirts: 'Shirt Size',
+  skirts: 'Skirt Size',
+  jackets: 'Jacket Size',
+  jeans: 'Jeans Size',
+  sweaters: 'Sweater Size',
+  vests: 'Vest Size',
+}[collectionSlug] || 'Size');
+
+const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false, collectionSlug = '') => {
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
@@ -88,12 +97,13 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const sizeOptions = storedSizeOptions.length || sweatshirtSizeOptions.length || !(isSweatshirt || isTShirt)
     ? storedSizeOptions
     : defaultShirtSizes;
-  const useDedicatedSweatshirtSizes = isSweatshirt
-    && sweatshirtSizeOptions.length > 0;
   const shoeSizeOptions = String(product.shoeSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortShoeSizes);
   const beltSizeOptions = String(product.beltSize || '').split(',').map((value) => value.trim()).filter(Boolean)
     .sort(sortBeltSizes);
+  const hasDedicatedSizeOptions = sweatshirtSizeOptions.length > 0
+    || shoeSizeOptions.length > 0
+    || beltSizeOptions.length > 0;
   const hasBlingOptions = allowBlingOptions && (
     product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null
   );
@@ -101,12 +111,14 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
   const blingOptions = hasBlingOptions
     ? [{ name: 'Style', values: ['Bling', 'No Bling'], placeholder: placeholders.Style || 'Select style' }]
     : [];
+  const primarySizeName = primarySizeLabelFor(collectionSlug);
+  const primarySizePlaceholder = `Select ${primarySizeName.toLowerCase()}`;
   const options = [
     ...blingOptions,
     ...(colorOptions.length ? [{ name: 'Color', values: colorOptions, placeholder: placeholders.Color || 'Select color' }] : []),
     ...(product.comfortColors?.length ? [{ name: 'Comfort Colors', values: product.comfortColors.map(normalizeColorName), placeholder: 'Select a comfort color' }] : []),
-    ...(!useDedicatedSweatshirtSizes && sizeOptions.length ? [{ name: 'Shirt Size', values: sizeOptions, placeholder: placeholders.Size || 'Select shirt size' }] : []),
-    ...(sweatshirtSizeOptions.length ? [{ name: 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: 'Select sweatshirt size' }] : []),
+    ...(!hasDedicatedSizeOptions && sizeOptions.length ? [{ name: primarySizeName, values: sizeOptions, placeholder: placeholders.Size || primarySizePlaceholder }] : []),
+    ...(sweatshirtSizeOptions.length ? [{ name: collectionSlug === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size', values: sweatshirtSizeOptions, placeholder: collectionSlug === 'sweaters' ? 'Select sweater size' : 'Select sweatshirt size' }] : []),
     ...(shoeSizeOptions.length ? [{ name: 'Shoe Size', values: shoeSizeOptions, placeholder: 'Select shoe size' }] : []),
     ...(beltSizeOptions.length ? [{ name: 'Belt Size', values: beltSizeOptions, placeholder: 'Select belt size' }] : []),
     ...customOptions,
@@ -143,6 +155,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     sold: product.outOfStock || undefined,
     availableQuantity: Number.isInteger(product.quantity) ? product.quantity : 1,
     shippingCost: Number(product.shippingCost || 0),
+    createdAt: product.createdAt,
   };
 };
 
@@ -158,7 +171,7 @@ const buildCollectionPage = (collection, subcollections, products) => {
       ? ['Boa', 'T-Shirts']
       : [subcollectionName].filter(Boolean);
 
-    return mapProductToStorefront(product, categoryFilters, allowBlingOptions);
+    return mapProductToStorefront(product, categoryFilters, allowBlingOptions, collection.slug);
   });
 
   const count = storefrontProducts.length;
@@ -228,6 +241,7 @@ const STOREFRONT_CACHE_TTL_MS = 5 * 60 * 1000;
 let storefrontCatalogCache = null;
 let storefrontCatalogBuiltAt = 0;
 let storefrontCatalogInFlight = null;
+let storefrontCatalogVersion = 0;
 
 const logStorefrontTiming = (label, startedAt, extra = '') => {
   const suffix = extra ? ` ${extra}` : '';
@@ -237,15 +251,25 @@ const logStorefrontTiming = (label, startedAt, extra = '') => {
 export const invalidateStorefrontCatalog = (reason = 'unknown') => {
   storefrontCatalogCache = null;
   storefrontCatalogBuiltAt = 0;
-  storefrontCatalogInFlight = null;
+  storefrontCatalogVersion += 1;
   console.log(`[storefrontCatalog] cache invalidated (${reason})`);
 };
 
 const buildStorefrontCatalog = async () => {
   const startedAt = Date.now();
-  const collections = await Collection.find({ isSystem: false }).sort({ name: 1 }).lean();
-  const subcollections = await Subcollection.find().sort({ sortOrder: 1, name: 1 }).lean();
-  const products = await Product.find().sort({ name: 1 }).collation({ locale: 'en', strength: 2 }).lean();
+  const collections = await Collection.find({ isSystem: false })
+    .select('name slug cardImage description hidden showWhenEmpty')
+    .sort({ name: 1 })
+    .lean();
+  const subcollections = await Subcollection.find()
+    .select('collectionId name slug sortOrder')
+    .sort({ sortOrder: 1, name: 1 })
+    .lean();
+  const products = await Product.find()
+    .select('name collectionId subCollectionId color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders createdAt')
+    .sort({ name: 1 })
+    .collation({ locale: 'en', strength: 2 })
+    .lean();
 
   const subcollectionsByCollectionId = subcollections.reduce((groups, subcollection) => {
     const key = String(subcollection.collectionId);
@@ -283,10 +307,13 @@ export const getStorefrontCatalog = async () => {
   }
 
   if (!storefrontCatalogInFlight) {
+    const buildVersion = storefrontCatalogVersion;
     storefrontCatalogInFlight = buildStorefrontCatalog()
       .then((catalog) => {
-        storefrontCatalogCache = catalog;
-        storefrontCatalogBuiltAt = Date.now();
+        if (buildVersion === storefrontCatalogVersion) {
+          storefrontCatalogCache = catalog;
+          storefrontCatalogBuiltAt = Date.now();
+        }
         return catalog;
       })
       .finally(() => {
@@ -369,5 +396,5 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   // Pass only the product. Array#map also supplies the item index as the second
   // argument, which mapProductToStorefront would otherwise treat as an iterable
   // list of category filters and throw while building the response.
-  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts'));
+  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts', collection.slug));
 };

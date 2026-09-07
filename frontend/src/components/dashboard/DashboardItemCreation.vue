@@ -4,20 +4,20 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
-import SizeOptionEditor from './SizeOptionEditor.vue'
-import ShoeSizeOptionEditor from './ShoeSizeOptionEditor.vue'
-import BeltSizeOptionEditor from './BeltSizeOptionEditor.vue'
+import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
 import { deleteItemDraft, listItemDrafts, saveItemDraft } from '../../utils/itemDrafts.js'
 import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
+import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashboardActivity.js'
 
 const router = useRouter()
 const route = useRoute()
 const collections = ref([])
 const pageLoading = ref(true)
 const loading = ref(false)
+const uploadProgress = ref(0)
 const error = ref('')
 const fieldErrors = reactive({
   subCollectionId: '',
@@ -85,9 +85,25 @@ const requiresSubcollection = computed(() => subcollections.value.length > 0)
 const collectionAllowsBling = computed(() => collections.value.find(
   (collection) => String(collection._id) === String(form.collectionId),
 )?.slug === 'shirts')
+const selectedCollectionSlug = computed(() => collections.value.find(
+  (collection) => String(collection._id) === String(form.collectionId),
+)?.slug || '')
+const primarySizeLabel = computed(() => ({
+  shirts: 'Shirt Size',
+  skirts: 'Skirt Size',
+  jackets: 'Jacket Size',
+  jeans: 'Jeans Size',
+  sweaters: 'Sweater Size',
+  vests: 'Vest Size',
+}[selectedCollectionSlug.value] || 'Size'))
+const hasDedicatedSizeOptions = computed(() => [
+  ...form.sweatshirtSizes,
+  ...form.shoeSizes,
+  ...form.beltSizes,
+].some((size) => String(size || '').trim()))
 const sizePriceRows = computed(() => [
-  ...sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `Shirt Size ${size}` })),
-  ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `Sweatshirt Size ${size}` })),
+  ...(!hasDedicatedSizeOptions.value ? sortSizeOptions(form.sizes).map((size) => ({ key: `shirt:${size}`, label: `${primarySizeLabel.value} ${size}` })) : []),
+  ...sortSizeOptions(form.sweatshirtSizes).map((size) => ({ key: `sweatshirt:${size}`, label: `${selectedCollectionSlug.value === 'sweaters' ? 'Sweater Size' : 'Sweatshirt Size'} ${size}` })),
   ...uniqueOptions(form.shoeSizes).map((size) => ({ key: `shoe:${size}`, label: `Shoe Size ${size}` })),
   ...uniqueOptions(form.beltSizes).map((size) => ({ key: `belt:${size}`, label: `Belt Size ${size}` })),
 ])
@@ -462,10 +478,13 @@ const submitForm = async () => {
   }
 
   loading.value = true
+  uploadProgress.value = 0
   error.value = ''
 
   try {
-    await dashboardApi.createProduct(buildProductFormData())
+    await dashboardApi.createProduct(buildProductFormData(), {
+      onProgress: (progress) => { uploadProgress.value = progress },
+    })
     suppressAutoSave = true
     window.clearTimeout(autoSaveTimer)
     if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
@@ -496,11 +515,17 @@ onMounted(async () => {
 })
 
 watch([() => JSON.stringify(form), photoFiles, videoFiles], scheduleAutoSave, { deep: true })
+watch(
+  [() => JSON.stringify(form), photoFiles, videoFiles, loading],
+  () => setDashboardActivity('create-item', { dirty: hasDraftChanges(), uploading: loading.value }),
+  { deep: true, immediate: true },
+)
 
 onBeforeUnmount(() => {
   window.removeEventListener('pagehide', flushAutoSave)
   document.removeEventListener('visibilitychange', flushAutoSave)
   flushAutoSave()
+  clearDashboardActivity('create-item')
 })
 
 watch(
@@ -607,28 +632,16 @@ watch(
             <p class="hint">Choose presets or add custom choices for the Comfort Colors dropdown on the item page.</p>
           </div>
 
-          <div class="field">
-            <label>Shirt Sizes</label>
-            <SizeOptionEditor v-model="form.sizes" :disabled="loading" />
-            <p class="hint">Use for T-shirts. This legacy field is also the shared fallback when a T-shirt or sweatshirt has no dedicated sizes.</p>
-          </div>
-
-          <div class="field">
-            <label>Sweatshirt Sizes</label>
-            <SizeOptionEditor v-model="form.sweatshirtSizes" :disabled="loading" />
-            <p class="hint">Use for sweatshirts. These replace the Shirt Size fallback on known sweatshirt items.</p>
-          </div>
-
-          <div class="field">
-            <label>Shoe Sizes</label>
-            <ShoeSizeOptionEditor v-model="form.shoeSizes" :disabled="loading" />
-            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
-          </div>
-
-          <div class="field">
-            <label>Belt Sizes</label>
-            <BeltSizeOptionEditor v-model="form.beltSizes" :disabled="loading" />
-            <p class="hint">Select a preset or choose Custom Size / Measurement to enter another size.</p>
+          <div class="field field--full">
+            <DashboardSizeSelector
+              v-model:primary-sizes="form.sizes"
+              v-model:sweatshirt-sizes="form.sweatshirtSizes"
+              v-model:shoe-sizes="form.shoeSizes"
+              v-model:belt-sizes="form.beltSizes"
+              :primary-label="primarySizeLabel"
+              :collection-slug="selectedCollectionSlug"
+              :disabled="loading"
+            />
           </div>
 
           <div v-if="sizePriceRows.length" class="field field--full">
@@ -812,7 +825,8 @@ watch(
 
       <div class="actions">
         <div v-if="loading" class="media-progress" role="status" aria-live="polite">
-          <progress aria-label="Saving item and processing media"></progress>
+          <progress :value="uploadProgress || undefined" max="100" aria-label="Saving item and processing media"></progress>
+          <span>{{ uploadProgress ? `Uploading ${uploadProgress}%` : 'Preparing and processing media…' }}</span>
           <span>{{ mediaSaveStatus }}</span>
         </div>
         <button type="button" class="btn-outline save-draft-button" :disabled="savingDraft || loading" @click="saveDraft">

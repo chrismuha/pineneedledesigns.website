@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { installCsrfFetch } from './api/csrf.js'
+import { isDashboardBusy } from './utils/dashboardActivity.js'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
@@ -67,6 +68,12 @@ if ('serviceWorker' in navigator) {
 
     const promptForUpdate = (registration, { immediate = false } = {}) => {
       if (!registration.waiting || updatePromptShown) return
+
+      if (isDashboardBusy()) {
+        setUpdateAvailable(registration, true)
+        announceUpdateAvailability(true)
+        return
+      }
 
       // Regular website visits update immediately: activate the new worker
       // immediately. Only the installed app asks before replacing its version.
@@ -235,6 +242,10 @@ if ('serviceWorker' in navigator) {
               promptForUpdate(registration)
             }
           })
+        })
+
+        window.addEventListener('dashboard-activity-change', () => {
+          if (!isDashboardBusy() && registration.waiting) promptForUpdate(registration)
         })
 
         // Check when the app is reopened and while a long-running installed PWA
