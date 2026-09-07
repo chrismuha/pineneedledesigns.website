@@ -114,7 +114,7 @@ export const findSuccessfulPaymentForSession = async ({
   assertCloverConfigured();
 
   const response = await fetch(
-    buildUrl(`/v3/merchants/${encodeURIComponent(cloverConfig.merchantId)}/payments?limit=50`),
+    buildUrl(`/v3/merchants/${encodeURIComponent(cloverConfig.merchantId)}/payments?limit=100`),
     { method: 'GET', headers: buildHeaders() },
   );
 
@@ -124,7 +124,10 @@ export const findSuccessfulPaymentForSession = async ({
   }
 
   const payments = payload?.elements || payload?.data || [];
-  const since = createdAfter ? new Date(createdAfter).getTime() : 0;
+  // Hosted Checkout payments can lag a few minutes behind the success redirect.
+  const since = createdAfter
+    ? Math.max(0, new Date(createdAfter).getTime() - (5 * 60 * 1000))
+    : 0;
   const sessionNeedle = String(checkoutSessionId || '').toLowerCase();
 
   for (const payment of payments) {
@@ -138,7 +141,9 @@ export const findSuccessfulPaymentForSession = async ({
       payment.referenceId,
       payment.note,
       payment.orderId,
+      payment.id,
       JSON.stringify(payment.externalPaymentId || ''),
+      JSON.stringify(payment),
     ].join(' ').toLowerCase();
 
     if (sessionNeedle && haystack.includes(sessionNeedle)) {
@@ -146,14 +151,16 @@ export const findSuccessfulPaymentForSession = async ({
     }
   }
 
-  // Fallback: single successful payment with matching amount in the recent window.
-  const amountMatches = payments.filter((payment) => {
-    const createdTime = Number(payment.createdTime || 0);
-    if (since && createdTime && createdTime < since) return false;
-    return Number(payment.amount || 0) === Number(amountCents || 0) && isSuccessfulCloverPayment(payment);
-  });
+  // Fallback: newest successful payment with matching amount in the recent window.
+  const amountMatches = payments
+    .filter((payment) => {
+      const createdTime = Number(payment.createdTime || 0);
+      if (since && createdTime && createdTime < since) return false;
+      return Number(payment.amount || 0) === Number(amountCents || 0) && isSuccessfulCloverPayment(payment);
+    })
+    .sort((left, right) => Number(right.createdTime || 0) - Number(left.createdTime || 0));
 
-  return amountMatches.length === 1 ? amountMatches[0] : null;
+  return amountMatches[0] || null;
 };
 
 export const refundCloverPayment = async ({ paymentId, amountCents, idempotencyKey }) => {
