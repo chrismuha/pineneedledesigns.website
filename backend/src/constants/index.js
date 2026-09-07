@@ -15,6 +15,14 @@ export const BOOKING_DEPOSITS = Object.freeze({
 
 export const REPEAT_CUSTOMER_CALENDAR_URL = 'https://calendar.app.google/CJqD3qRvcjUuq2HB7';
 
+export const DISCOUNT_RULES = {
+  B$: { type: 'fixed', value: 20 },
+  W$: { type: 'fixed', value: 25 },
+  FAM: { type: 'percent', value: 40 },
+  SURPRISE: { type: 'percent', value: 20 },
+  SEW: { type: 'percent', value: 10 },
+};
+
 export const getBookingDepositPublicConfig = (enabled) => ({
   enabled: Boolean(enabled),
   services: {
