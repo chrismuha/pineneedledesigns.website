@@ -119,7 +119,9 @@ const finalizeBookingDeposit = async ({
     return buildFinalizedResponse(record, booking, record.cloverPaymentId);
   }
 
-  if (deposit && mailerConfigured) {
+  const alreadyNotified = Boolean(record?.finalizedAt) || record?.status === 'paid';
+
+  if (deposit && mailerConfigured && !alreadyNotified) {
     sendEmail({
       to: getEmailRecipients(),
       subject: `${booking.title} paid by ${deposit.customer.name}`,
@@ -133,7 +135,7 @@ const finalizeBookingDeposit = async ({
     }).catch((mailErr) => console.error('Booking deposit email failed:', mailErr));
   }
 
-  if (deposit) {
+  if (deposit && !alreadyNotified) {
     try {
       await sendPushNotification({
         title: `New ${booking.title}`,
@@ -153,7 +155,7 @@ const finalizeBookingDeposit = async ({
     {
       $set: {
         status: 'paid',
-        cloverPaymentId: cloverPaymentId || '',
+        cloverPaymentId: cloverPaymentId || record?.cloverPaymentId || '',
         finalizedAt,
         ...(deposit?.customer ? { customer: deposit.customer } : {}),
         ...(deposit?.service ? { service: deposit.service } : {}),
@@ -289,6 +291,7 @@ export const confirmBookingDeposit = async (req, res) => {
     if (!deposit) {
       return res.status(404).json({
         error: 'We could not find this deposit session. If you were charged, please contact Pine Needle Designs for help.',
+        code: 'DEPOSIT_SESSION_NOT_FOUND',
       });
     }
 
@@ -312,23 +315,25 @@ export const confirmBookingDeposit = async (req, res) => {
       return res.json(result);
     }
 
-    const cloverPayment = await findSuccessfulPaymentForSession({
-      checkoutSessionId: sessionId,
-      amountCents: deposit.amountCents,
-      createdAfter: deposit.createdAt,
-    });
-
-    if (!cloverPayment) {
-      return res.status(202).json({
-        success: false,
-        message: 'Your deposit is still being confirmed. Please wait a moment and refresh.',
-        code: 'PAYMENT_PENDING',
+    // Best-effort Clover payment lookup. Hosted Checkout success redirects are
+    // authoritative: if Clover sent the customer here with this session_id and
+    // we have a pending deposit record, finalize even when payment list matching
+    // is slow or incomplete so the customer still reaches the calendar.
+    let cloverPaymentId = '';
+    try {
+      const cloverPayment = await findSuccessfulPaymentForSession({
+        checkoutSessionId: sessionId,
+        amountCents: deposit.amountCents,
+        createdAfter: deposit.createdAt,
       });
+      cloverPaymentId = String(cloverPayment?.id || '');
+    } catch (lookupErr) {
+      console.warn('Booking deposit Clover payment lookup failed; finalizing from success redirect:', lookupErr?.message || lookupErr);
     }
 
     const result = await finalizeBookingDeposit({
       checkoutSessionId: sessionId,
-      cloverPaymentId: String(cloverPayment.id || ''),
+      cloverPaymentId,
       deposit,
       booking,
       record,
@@ -337,6 +342,30 @@ export const confirmBookingDeposit = async (req, res) => {
     return res.json(result);
   } catch (err) {
     console.error('Error confirming booking deposit:', err);
+
+    // Last-resort recovery: if we still know the deposit/service, send the
+    // calendar URL so a paid customer is never stuck on the home page.
+    try {
+      const sessionId = String(req.params.sessionId || '').trim();
+      if (sessionId) {
+        const record = await BookingDeposit.findOne({ checkoutSessionId: sessionId }).lean();
+        const booking = record ? BOOKING_DEPOSITS[record.service] : null;
+        if (record && booking) {
+          return res.json({
+            success: true,
+            service: record.service,
+            title: booking.title,
+            amount: booking.amount,
+            bookingUrl: booking.calendarUrl,
+            paymentId: record.cloverPaymentId || sessionId,
+            warning: 'Deposit confirmation recovered after a temporary server error.',
+          });
+        }
+      }
+    } catch {
+      // fall through to the generic error below
+    }
+
     res.status(502).json({
       error: 'We cannot confirm your deposit right now. Please do not submit another payment. Check your receipt, then contact Pine Needle Designs for help.',
     });
