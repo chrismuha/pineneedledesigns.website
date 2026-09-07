@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
@@ -26,23 +26,46 @@ const hasStyleSpecificPrice = (product) => product.blingPrice != null || product
 
 const orderLabel = (order) => (order.orderNumber ? `#${order.orderNumber}` : 'Order')
 const recentItemsSection = ref(null)
+const bookingCalendars = reactive({
+  fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+  brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+})
+const bookingAmounts = reactive({
+  fitting: '$10.00',
+  brides: '$25.00',
+})
+const bookingTitles = reactive({
+  fitting: 'First Fitting Deposit',
+  brides: 'Bridal Appointment Deposit',
+})
 const bookingDetails = computed(() => {
   if (route.query.notice !== 'booking') return null
-  const details = {
-    fitting: {
-      title: 'First Fitting Deposit',
-      amount: '$10.00',
-      calendarUrl: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
-    },
-    brides: {
-      title: 'Bridal Appointment Deposit',
-      amount: '$25.00',
-      calendarUrl: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
-    },
-  }[String(route.query.service || '')]
-  if (!details) return null
-  return { ...details, payment: String(route.query.payment || '') }
+  const service = String(route.query.service || '')
+  if (!bookingTitles[service]) return null
+  return {
+    title: bookingTitles[service],
+    amount: bookingAmounts[service],
+    calendarUrl: bookingCalendars[service],
+    payment: String(route.query.payment || ''),
+  }
 })
+
+const loadBookingConfig = async () => {
+  try {
+    const response = await fetch('/api/booking-deposit/config', { credentials: 'include' })
+    const config = await response.json().catch(() => ({}))
+    if (config?.services?.fitting) {
+      bookingCalendars.fitting = config.services.fitting.calendarUrl || bookingCalendars.fitting
+      bookingAmounts.fitting = `$${config.services.fitting.amount}`
+      bookingTitles.fitting = config.services.fitting.title || bookingTitles.fitting
+    }
+    if (config?.services?.brides) {
+      bookingCalendars.brides = config.services.brides.calendarUrl || bookingCalendars.brides
+      bookingAmounts.brides = `$${config.services.brides.amount}`
+      bookingTitles.brides = config.services.brides.title || bookingTitles.brides
+    }
+  } catch {}
+}
 
 const scrollToRecentItems = () => {
   recentItemsSection.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -103,7 +126,10 @@ const formatDate = (value) => {
   })
 }
 
-onMounted(loadStats)
+onMounted(() => {
+  loadStats()
+  loadBookingConfig()
+})
 </script>
 
 <template>

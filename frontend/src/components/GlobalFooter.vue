@@ -36,7 +36,7 @@
               <span>For bridal styling, gown details, and wedding appointments.</span>
             </span>
           </a>
-          <a href="https://calendar.app.google/CJqD3qRvcjUuq2HB7" @click="closeCalendarMenu">
+          <a :href="calendarLinks.repeat" @click="closeCalendarMenu">
             <span class="calendar-menu__emoji" aria-hidden="true">👚</span>
             <span class="calendar-choice__copy">
               <strong>Repeat Customers</strong>
@@ -158,6 +158,7 @@
 
 <script setup>
 import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+
 import { useRoute } from 'vue-router'
 
 defineProps({
@@ -171,19 +172,25 @@ const route = useRoute()
 const bookingDepositsEnabled = ref(false)
 const calendarMenuOpen = ref(false)
 const bookingControl = ref(null)
-const calendarLinks = {
+const calendarLinks = reactive({
   fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
   brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
-}
+  repeat: 'https://calendar.app.google/CJqD3qRvcjUuq2HB7',
+})
 
 onMounted(async () => {
   document.addEventListener('pointerdown', handleOutsidePointerDown)
   document.addEventListener('keydown', handleEscape)
 
   try {
-    const response = await fetch('/api/booking-deposit/config')
+    const response = await fetch('/api/booking-deposit/config', { credentials: 'include' })
     const config = await response.json()
     bookingDepositsEnabled.value = response.ok && config.enabled === true
+    if (config?.calendars?.fitting) calendarLinks.fitting = config.calendars.fitting
+    if (config?.calendars?.brides) calendarLinks.brides = config.calendars.brides
+    if (config?.calendars?.repeat || config?.repeatCustomersCalendarUrl) {
+      calendarLinks.repeat = config.calendars?.repeat || config.repeatCustomersCalendarUrl
+    }
   } catch {
     bookingDepositsEnabled.value = false
   }

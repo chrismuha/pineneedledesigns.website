@@ -10,7 +10,7 @@
         <h1>Deposit received — finish booking</h1>
         <p class="error" role="alert">{{ error }}</p>
         <p class="important">
-          Your payment was accepted by Clover. Choose the correct calendar below to reserve your appointment time.
+          If your card was charged, your deposit was taken. Choose your appointment time below so your booking is completed.
         </p>
         <div class="calendar-fallback">
           <a
@@ -39,25 +39,49 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 
-const FITTING_CALENDAR = 'https://calendar.app.google/NU1nzMP69Vjz7JU4A'
-const BRIDES_CALENDAR = 'https://calendar.app.google/EU8HAuemRhmr4zBY6'
+const DEFAULT_CALENDARS = {
+  fitting: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
+  brides: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
+}
 
 const loading = ref(true)
 const error = ref('')
 const result = reactive({ amount: '', bookingUrl: '', service: '' })
+const calendars = reactive({ ...DEFAULT_CALENDARS })
 
 const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); })
 
+const readSessionId = () => {
+  const params = new URLSearchParams(window.location.search)
+  return (
+    params.get('session_id')
+    || params.get('checkoutSessionId')
+    || params.get('checkout_session_id')
+    || ''
+  ).trim()
+}
+
+const rememberLocalBooking = () => {
+  try {
+    const service = window.sessionStorage.getItem('pine-needle-booking-service') || ''
+    const calendar = window.sessionStorage.getItem('pine-needle-booking-calendar') || ''
+    const amount = window.sessionStorage.getItem('pine-needle-booking-amount') || ''
+    if (service) result.service = service
+    if (calendar) result.bookingUrl = calendar
+    if (amount) result.amount = amount
+  } catch {}
+}
+
 const fallbackCalendars = computed(() => {
-  if (result.service === 'fitting') {
-    return [{ label: 'Open First Fitting Calendar', href: FITTING_CALENDAR }]
+  if (result.service === 'fitting' || result.bookingUrl === calendars.fitting) {
+    return [{ label: 'Open First Fitting Calendar', href: calendars.fitting }]
   }
-  if (result.service === 'brides') {
-    return [{ label: 'Open Bridal Calendar', href: BRIDES_CALENDAR }]
+  if (result.service === 'brides' || result.bookingUrl === calendars.brides) {
+    return [{ label: 'Open Bridal Calendar', href: calendars.brides }]
   }
   return [
-    { label: 'First Fitting Calendar', href: FITTING_CALENDAR },
-    { label: 'Bridal Calendar', href: BRIDES_CALENDAR },
+    { label: 'First Fitting Calendar', href: calendars.fitting },
+    { label: 'Bridal Calendar', href: calendars.brides },
   ]
 })
 
@@ -66,49 +90,78 @@ const goToCalendar = (url) => {
   window.location.assign(url)
 }
 
+const applyCalendars = (payload = {}) => {
+  if (payload.calendars?.fitting) calendars.fitting = payload.calendars.fitting
+  if (payload.calendars?.brides) calendars.brides = payload.calendars.brides
+  if (payload.bookingUrl) result.bookingUrl = payload.bookingUrl
+  if (payload.service) result.service = payload.service
+  if (payload.amount) result.amount = payload.amount
+}
+
 const confirmDeposit = async (sessionId) => {
   let attempts = 0
-  while (attempts < 12) {
-    const response = await fetch(`/api/booking-deposit/confirm/${encodeURIComponent(sessionId)}`)
+  let lastError = ''
+
+  while (attempts < 10) {
+    const response = await fetch(`/api/booking-deposit/confirm/${encodeURIComponent(sessionId)}`, {
+      credentials: 'include',
+    })
     const data = await response.json().catch(() => ({}))
+    applyCalendars(data)
 
-    if (response.ok && data.success && data.bookingUrl) {
-      result.amount = data.amount
-      result.bookingUrl = data.bookingUrl
-      result.service = data.service || ''
-      return data
-    }
-
-    // Even when confirmation is still pending, keep the known service/calendar.
-    if (data.bookingUrl) {
+    if ((response.ok && data.success && data.bookingUrl) || data.bookingUrl) {
+      result.amount = data.amount || result.amount
       result.bookingUrl = data.bookingUrl
       result.service = data.service || result.service
-      result.amount = data.amount || result.amount
+      return {
+        success: true,
+        bookingUrl: data.bookingUrl,
+        amount: data.amount || result.amount,
+        service: data.service || result.service,
+      }
     }
 
+    lastError = data.error || data.message || 'We cannot confirm your deposit right now.'
+
     if (data.code !== 'PAYMENT_PENDING' && response.status !== 202) {
-      if (data.service) result.service = data.service
-      if (data.bookingUrl) {
-        result.bookingUrl = data.bookingUrl
-        return data
+      if (result.bookingUrl) {
+        return {
+          success: true,
+          bookingUrl: result.bookingUrl,
+          amount: result.amount,
+          service: result.service,
+        }
       }
-      throw new Error(data.error || data.message || 'We cannot confirm your deposit right now.')
+      throw new Error(lastError)
     }
 
     attempts += 1
-    await wait(1500)
+    await wait(1200)
   }
 
   if (result.bookingUrl) {
-    return { success: true, bookingUrl: result.bookingUrl, amount: result.amount, service: result.service }
+    return {
+      success: true,
+      bookingUrl: result.bookingUrl,
+      amount: result.amount,
+      service: result.service,
+    }
   }
 
-  throw new Error('Your deposit is still being confirmed. Use the calendar link below to finish booking your appointment.')
+  throw new Error(lastError || 'Your deposit is still being confirmed. Use the calendar link below to finish booking your appointment.')
 }
 
 onMounted(async () => {
+  rememberLocalBooking()
+
+  try {
+    const configResponse = await fetch('/api/booking-deposit/config', { credentials: 'include' })
+    const config = await configResponse.json().catch(() => ({}))
+    applyCalendars(config)
+  } catch {}
+
   const params = new URLSearchParams(window.location.search)
-  const sessionId = params.get('session_id')
+  const sessionId = readSessionId()
   const legacyToken = params.get('token')
 
   if (legacyToken && !sessionId) {
@@ -127,8 +180,7 @@ onMounted(async () => {
     const data = await confirmDeposit(sessionId)
     loading.value = false
     if (data?.bookingUrl) {
-      // Give the success message a moment, then continue to the calendar.
-      await wait(900)
+      await wait(700)
       goToCalendar(data.bookingUrl)
       return
     }

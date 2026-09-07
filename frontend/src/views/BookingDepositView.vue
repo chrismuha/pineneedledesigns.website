@@ -2,7 +2,7 @@
   <section class="booking-deposit-page">
     <div v-if="ready" class="booking-deposit-card">
       <p class="booking-eyebrow">Reserve your appointment</p>
-      <h1>{{ details.title }}</h1>
+      <h1>{{ details.displayTitle || details.title }}</h1>
       <p class="booking-intro">
         A <strong>${{ details.amount }} deposit</strong> is required before choosing and confirming your appointment time.
       </p>
@@ -39,19 +39,22 @@ import { computed, onMounted, reactive, ref } from 'vue'
 
 const props = defineProps({ service: { type: String, required: true } })
 
-const services = {
+const fallbackServices = {
   fitting: {
-    title: 'First Fitting',
+    title: 'First Fitting Deposit',
+    displayTitle: 'First Fitting',
     amount: '10.00',
     calendarUrl: 'https://calendar.app.google/NU1nzMP69Vjz7JU4A',
   },
   brides: {
-    title: 'Bridal Appointment',
+    title: 'Bridal Appointment Deposit',
+    displayTitle: 'Bridal Appointment',
     amount: '25.00',
     calendarUrl: 'https://calendar.app.google/EU8HAuemRhmr4zBY6',
   },
 }
 
+const services = reactive({ ...fallbackServices })
 const details = computed(() => services[props.service] || services.fitting)
 const customer = reactive({ name: '', email: '', phone: '' })
 const loading = ref(false)
@@ -61,8 +64,12 @@ const cancelled = new URLSearchParams(window.location.search).get('cancelled') =
 
 onMounted(async () => {
   try {
-    const response = await fetch('/api/booking-deposit/config')
-    const config = await response.json()
+    const response = await fetch('/api/booking-deposit/config', { credentials: 'include' })
+    const config = await response.json().catch(() => ({}))
+
+    if (config?.services?.fitting) Object.assign(services.fitting, config.services.fitting)
+    if (config?.services?.brides) Object.assign(services.brides, config.services.brides)
+
     if (!response.ok || config.enabled !== true) {
       window.location.replace(details.value.calendarUrl)
       return
@@ -80,6 +87,7 @@ const startPayment = async () => {
   try {
     const response = await fetch('/api/booking-deposit', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ service: props.service, customer }),
     })
@@ -89,6 +97,14 @@ const startPayment = async () => {
     if (!response.ok || !checkoutUrl) {
       throw new Error(data.error || 'We could not connect to the payment service right now. Please wait a moment and try again. You have not been charged.')
     }
+
+    // Remember the expected calendar for this browser in case confirmation needs a fallback.
+    try {
+      window.sessionStorage.setItem('pine-needle-booking-service', props.service)
+      window.sessionStorage.setItem('pine-needle-booking-calendar', details.value.calendarUrl)
+      window.sessionStorage.setItem('pine-needle-booking-amount', details.value.amount)
+    } catch {}
+
     window.location.assign(checkoutUrl)
   } catch (err) {
     error.value = err.message || 'We could not connect to the payment service right now. Please wait a moment and try again. You have not been charged.'
