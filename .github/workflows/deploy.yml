@@ -141,7 +141,12 @@ jobs:
               "VAPID_SUBJECT=mailto:orders@pineneedledesigns.store" \
               > backend/.env
 
-            npm install --omit=dev --ignore-scripts
+            # Build the storefront/dashboard on the server after pulling the
+            # new revision. The Express app serves docs/, so pulling source
+            # without publishing a fresh Vite build leaves the old UI live.
+            npm install --include=dev --ignore-scripts
+            npm run build:release
+            npm prune --omit=dev --ignore-scripts
             # Nginx defaults to a 1 MB request body, which rejects normal product
             # photos before they can reach the app's media upload middleware.
             sudo tee /etc/nginx/conf.d/pineneedledesigns-uploads.conf >/dev/null <<'NGINX'
