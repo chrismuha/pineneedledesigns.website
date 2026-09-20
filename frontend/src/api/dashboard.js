@@ -129,6 +129,10 @@ export const dashboardApi = {
     method: 'PATCH',
     body: JSON.stringify({ status }),
   }, `Payment marked ${status === 'paid' ? 'Paid' : 'Not Paid'}.`),
+  updateOrderNumber: (id, orderNumber) => request(`/api/orders/${id}/order-number`, {
+    method: 'PATCH',
+    body: JSON.stringify({ orderNumber }),
+  }),
   resolveOrder: (id, resolution) => request(`/api/orders/${id}/resolve`, {
     method: 'POST',
     body: JSON.stringify({ resolution }),

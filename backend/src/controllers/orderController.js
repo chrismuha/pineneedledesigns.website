@@ -1,11 +1,12 @@
 import crypto from 'crypto';
 import { Order } from '../models/Order.js';
+import { OrderCounter } from '../models/OrderCounter.js';
 import { Payment } from '../models/Payment.js';
 import { Product } from '../models/Product.js';
 import { StoreSettings } from '../models/StoreSettings.js';
 import { DISCOUNT_RULES } from '../constants/index.js';
 import { config } from '../config/index.js';
-import { createHostedCheckoutSession, refundCloverPayment } from '../services/cloverService.js';
+import { createHostedCheckoutSession, refundCloverPayment, updateCloverOrderReference } from '../services/cloverService.js';
 import { sendOrderEventEmails } from '../services/orderEmails.js';
 import { sendPushNotification } from '../services/pushNotifications.js';
 
@@ -177,6 +178,40 @@ export const verifyOrderPayment = async (req, res) => {
   });
   await order.save();
   return res.json(order);
+};
+
+export const updateOrderNumber = async (req, res) => {
+  const orderNumber = Number(req.body?.orderNumber);
+  if (!Number.isSafeInteger(orderNumber) || orderNumber < 1) {
+    return res.status(400).json({ error: 'Order number must be a positive whole number.' });
+  }
+  const order = await Order.findById(req.params.id);
+  if (!order) return res.status(404).json({ error: 'Order not found.' });
+  const duplicate = await Order.exists({ _id: { $ne: order._id }, orderNumber });
+  if (duplicate) return res.status(409).json({ error: `Order #${orderNumber} already exists.` });
+
+  const previousNumber = order.orderNumber;
+  order.orderNumber = orderNumber;
+  order.timeline.push({ label: `Order number changed from #${previousNumber || 'unassigned'} to #${orderNumber}`, at: new Date() });
+  await order.save();
+  await OrderCounter.findOneAndUpdate({ _id: 'orders' }, { $max: { seq: orderNumber } }, { upsert: true });
+
+  const payment = await Payment.findOne({ orderId: order._id, provider: 'clover' }).sort({ createdAt: -1 }).lean();
+  const syncedPayment = payment?.metadata?.syncedPayment || {};
+  const cloverOrderId = String(
+    syncedPayment?.order?.id
+    || syncedPayment?.orderId
+    || syncedPayment?.order?.uuid
+    || '',
+  ).trim();
+  let cloverSync;
+  try {
+    cloverSync = await updateCloverOrderReference({ cloverOrderId, orderNumber });
+  } catch (error) {
+    console.error('Clover order-reference update failed:', error);
+    cloverSync = { synced: false, reason: error.message || 'Clover could not be updated.' };
+  }
+  return res.json({ order, cloverSync });
 };
 
 export const changeOrder = async (req, res) => {

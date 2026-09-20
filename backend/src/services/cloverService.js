@@ -163,6 +163,31 @@ export const findSuccessfulPaymentForSession = async ({
   return amountMatches[0] || null;
 };
 
+export const updateCloverOrderReference = async ({ cloverOrderId, orderNumber }) => {
+  if (!cloverOrderId) return { synced: false, reason: 'No matching Clover order ID is stored for this order.' };
+  assertCloverConfigured();
+  const label = `Pine Needle Order #${orderNumber}`;
+  const response = await fetch(
+    buildUrl(`/v3/merchants/${encodeURIComponent(cloverConfig.merchantId)}/orders/${encodeURIComponent(cloverOrderId)}`),
+    {
+      method: 'POST',
+      headers: buildHeaders(),
+      body: JSON.stringify({
+        title: label,
+        externalReferenceId: String(orderNumber),
+        note: label,
+      }),
+    },
+  );
+  const payload = await parseJsonResponse(response);
+  if (!response.ok) {
+    const error = new Error(payload?.message || payload?.error?.message || 'Clover did not accept the updated order reference.');
+    error.status = response.status;
+    throw error;
+  }
+  return { synced: true, cloverOrderId };
+};
+
 export const refundCloverPayment = async ({ paymentId, amountCents, idempotencyKey }) => {
   if (!fetchClient) throw new Error('A fetch implementation is required by Clover service. Use Node 18+.');
   assertCloverConfigured();

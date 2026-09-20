@@ -14,6 +14,8 @@ const statusFilter = ref('all')
 const pendingDeleteOrder = ref(null)
 const pendingPermanentDelete = ref(null)
 const pendingPaymentVerification = ref(null)
+const pendingRenumber = ref(null)
+const orderNumberEdits = ref({})
 const cancelConfirmationStep = ref(1)
 const editingOrderId = ref('')
 const editItems = ref([])
@@ -205,6 +207,38 @@ const verifyPayment = async () => {
     const updated = await dashboardApi.verifyOrderPayment(pending.order._id, pending.status)
     orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
     pendingPaymentVerification.value = null
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
+}
+
+const requestRenumber = (order) => {
+  const orderNumber = Number(orderNumberEdits.value[order._id] ?? order.orderNumber)
+  if (!Number.isSafeInteger(orderNumber) || orderNumber < 1 || orderNumber === order.orderNumber) return
+  pendingRenumber.value = { order, orderNumber }
+}
+
+const renumberOrder = async () => {
+  const pending = pendingRenumber.value
+  if (!pending) return
+  savingOrderId.value = pending.order._id
+  try {
+    const result = await dashboardApi.updateOrderNumber(pending.order._id, pending.orderNumber)
+    orders.value = orders.value.map((entry) => entry._id === result.order._id ? result.order : entry)
+    orderNumberEdits.value[result.order._id] = result.order.orderNumber
+    pendingRenumber.value = null
+    showDashboardToast(
+      result.cloverSync?.synced
+        ? `Order changed to #${result.order.orderNumber} in Pine Needle and its Clover title/reference was updated.`
+        : `Order changed to #${result.order.orderNumber} in Pine Needle. Clover was not changed: ${result.cloverSync?.reason || 'no matching Clover order was found.'}`,
+      {
+        type: result.cloverSync?.synced ? 'success' : 'warning',
+        title: result.cloverSync?.synced ? 'Order number updated everywhere' : 'Dashboard number updated only',
+        duration: 12000,
+      },
+    )
   } catch (err) {
     error.value = err.message
   } finally {
@@ -503,6 +537,27 @@ watch(
             Clover reference: {{ order.gatewayOrderId }}
           </p>
 
+          <section class="order-number-editor" aria-label="Change order number">
+            <div>
+              <strong>Order number</strong>
+              <p>Changes Pine Needle’s number and updates Clover’s title/reference when a matching Clover order ID is available.</p>
+            </div>
+            <input
+              :value="orderNumberEdits[order._id] ?? order.orderNumber"
+              type="number"
+              min="1"
+              step="1"
+              :aria-label="`New number for ${orderLabel(order)}`"
+              @input="orderNumberEdits[order._id] = $event.target.value"
+            >
+            <button
+              type="button"
+              class="btn-outline"
+              :disabled="savingOrderId === order._id || Number(orderNumberEdits[order._id] ?? order.orderNumber) === order.orderNumber"
+              @click="requestRenumber(order)"
+            >Change Number</button>
+          </section>
+
           <div class="order-actions">
             <button v-if="!order.inventoryReturnedAt && !order.pendingChange" type="button" class="btn-primary" :disabled="savingOrderId === order._id" @click="beginEdit(order)">Add or Change Items</button>
             <span v-if="order.pendingChange" class="badge badge-paid">Awaiting additional payment</span>
@@ -530,6 +585,16 @@ watch(
         </div>
       </details>
     </div>
+    <DashboardConfirmDialog
+      :open="Boolean(pendingRenumber)"
+      :title="pendingRenumber ? `Change ${orderLabel(pendingRenumber.order)} to #${pendingRenumber.orderNumber}?` : 'Change order number?'"
+      message="The new number must be unique. Pine Needle will also try to update the matching Clover order title/reference; if Clover cannot be matched or updated, the dashboard will clearly report that only Pine Needle changed."
+      confirm-label="Change Order Number"
+      cancel-label="Keep Current Number"
+      :busy="Boolean(savingOrderId)"
+      @confirm="renumberOrder"
+      @cancel="pendingRenumber = null"
+    />
     <DashboardConfirmDialog
       :open="Boolean(pendingPaymentVerification)"
       :title="pendingPaymentVerification?.status === 'paid' ? 'Confirm Clover shows this order as paid?' : 'Confirm Clover shows no successful payment?'"
@@ -745,6 +810,9 @@ watch(
 .order-delete-bar strong { color: var(--dashboard-destructive-action-color); }
 .order-delete-bar p { margin: 3px 0 0; color: var(--dashboard-orders-paypal-id-text); font-size: 9.6pt; line-height: 1.45; }
 .order-delete-bar .btn-danger { flex: 0 0 auto; }
+.order-number-editor { display: grid; grid-template-columns: minmax(0, 1fr) 110px auto; align-items: center; gap: 12px; margin-bottom: 18px; padding: 14px 16px; border: 1px solid var(--dashboard-orders-order-card-border); border-radius: 10px; }
+.order-number-editor p { margin: 3px 0 0; color: var(--dashboard-orders-paypal-id-text); font-size: 9.6pt; }
+.order-number-editor input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--dashboard-orders-items-table-td-border); border-radius: 8px; font: inherit; }
 .editor-note { color: var(--dashboard-orders-paypal-id-text); }
 .editor-row { display: grid; grid-template-columns: minmax(220px, 1fr) 90px auto; gap: 10px; margin: 10px 0; }
 .form-input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--dashboard-orders-items-table-td-border); border-radius: 8px; }
@@ -765,6 +833,7 @@ watch(
   .order-actions { flex-direction: column; align-items: stretch; }
   .order-delete-bar { align-items: stretch; flex-direction: column; }
   .order-delete-bar .btn-danger { width: 100%; }
+  .order-number-editor { grid-template-columns: 1fr; }
   .editor-row { grid-template-columns: 1fr; }
   .order-actions button { width: 100%; min-height: 46px; }
 }
