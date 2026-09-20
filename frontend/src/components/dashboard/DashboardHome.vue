@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import { resetDashboardSession } from '../../api/csrf.js'
+import { showDashboardToast } from '../../utils/dashboardToast.js'
 
 const loading = ref(true)
 const route = useRoute()
@@ -136,7 +137,7 @@ const resetSession = async () => {
     await resetDashboardSession()
     window.location.reload()
   } catch (err) {
-    error.value = err.message
+    showDashboardToast(err.message, { title: 'Session reset failed' })
     resettingSession.value = false
     showSessionReset.value = false
   }
@@ -176,8 +177,6 @@ onMounted(() => {
     </section>
 
     <p v-if="loading" class="status-text">Loading dashboard...</p>
-    <p v-if="error" class="error-banner">{{ error }}</p>
-
     <section v-else class="stats-grid">
       <RouterLink to="/dashboard/items" class="stat-card stat-card-link">
         <h2>{{ stats.productCount }}</h2>
@@ -461,13 +460,6 @@ onMounted(() => {
 
 .recent-card h3 {
   margin: 0 0 4px;
-}
-
-.error-banner {
-  background: var(--dashboard-home-error-banner-surface);
-  color: var(--dashboard-home-error-banner-text);
-  padding: 12px 16px;
-  border-radius: 8px;
 }
 
 @media (max-width: 1100px) {

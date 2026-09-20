@@ -1309,8 +1309,6 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
-        <p v-if="modalError" class="error-banner">{{ modalError }}</p>
-
         <div v-if="!editingCollection" class="field">
           <label>New Collection</label>
             <div class="inline-field">
@@ -1376,7 +1374,6 @@ onBeforeUnmount(() => {
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <p v-if="modalError" class="error-banner">{{ modalError }}</p>
         <div class="field">
           <label for="collection-rename-input">Collection Name</label>
           <input
@@ -1416,8 +1413,6 @@ onBeforeUnmount(() => {
             <span aria-hidden="true">×</span>
           </button>
         </div>
-
-        <p v-if="editModalError" class="error-banner">{{ editModalError }}</p>
 
         <div class="field">
           <label>Item Name</label>
@@ -1720,7 +1715,6 @@ onBeforeUnmount(() => {
           <button type="button" class="clear-btn" :disabled="saving" @click="closeQuickCollection">Cancel</button>
         </div>
         <p>Create a collection for this item. Existing collections are managed separately.</p>
-        <p v-if="quickCollectionError" class="error-banner" role="alert">{{ quickCollectionError }}</p>
         <form class="quick-collection-form" @submit.prevent="createQuickCollection">
           <div class="field">
             <label for="quick-collection-name">Collection name</label>
@@ -1776,7 +1770,6 @@ onBeforeUnmount(() => {
           These appear as filter chips on the storefront collection page.
         </p>
 
-        <p v-if="subcollectionsError" class="error-banner">{{ subcollectionsError }}</p>
         <p v-if="subcollectionsLoading" class="status-text">Loading filters/sub-collections...</p>
 
         <div class="field">

@@ -3,6 +3,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { getDashboardDarkPhotoEditorEnabled } from '../../utils/dashboardAppearance.js'
+import { showDashboardToast } from '../../utils/dashboardToast.js'
 
 const props = defineProps({
   file: { type: File, required: true },
@@ -129,7 +130,9 @@ const confirmCrop = async (useFullPhoto = false) => {
       },
     })
   } catch (err) {
-    error.value = err.message || 'The cropped photo could not be created.'
+    showDashboardToast(err.message || 'The cropped photo could not be created.', {
+      title: 'Photo could not be prepared',
+    })
   } finally {
     working.value = false
   }
@@ -199,7 +202,6 @@ onBeforeUnmount(() => {
           <button type="button" @click="rotatePhoto"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Rotate</button>
           <button type="button" @click="resetCrop"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
         </div>
-        <p v-if="error" class="crop-error" role="alert">{{ error }}</p>
       </div>
 
       <div class="crop-footer">

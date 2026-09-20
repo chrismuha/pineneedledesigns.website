@@ -256,8 +256,6 @@ watch(
       </button>
     </div>
 
-    <p v-if="error" class="error-banner">{{ error }}</p>
-
     <p v-if="loading" class="status-text">Loading orders...</p>
     <p v-else-if="!orders.length" class="status-text">
       No orders yet. Completed checkout orders will appear here after Clover payment.
@@ -672,14 +670,6 @@ watch(
 
 .paypal-id {
   font-size: 10.8pt;
-  margin-bottom: 16px;
-}
-
-.error-banner {
-  background: var(--dashboard-orders-error-banner-surface);
-  color: var(--dashboard-orders-error-banner-text);
-  padding: 12px 16px;
-  border-radius: 8px;
   margin-bottom: 16px;
 }
 

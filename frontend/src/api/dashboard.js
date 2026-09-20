@@ -1,5 +1,5 @@
 import { showDashboardToast } from '../utils/dashboardToast.js';
-import { getCsrfToken } from './csrf.js';
+import { clearCsrfToken, getCsrfToken } from './csrf.js';
 
 const jsonHeaders = {
   'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const request = async (url, options = {}, successMessage = '') => {
   return data;
 };
 
-const uploadRequest = async (url, method, formData, onProgress, successMessage) => {
+const uploadRequest = async (url, method, formData, onProgress, successMessage, retryingExpiredToken = false) => {
   const token = await getCsrfToken();
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -85,7 +85,13 @@ const uploadRequest = async (url, method, formData, onProgress, successMessage) 
         resolve(data);
         return;
       }
-      const error = new Error(data.error || data.message || statusMessages[xhr.status] || 'The upload failed. Your local draft is still available; retry when ready.');
+      const message = data.error || data.message || statusMessages[xhr.status] || 'The upload failed. Your local draft is still available; retry when ready.';
+      if (xhr.status === 403 && !retryingExpiredToken && /token expired|csrf/i.test(String(message))) {
+        clearCsrfToken();
+        uploadRequest(url, method, formData, onProgress, successMessage, true).then(resolve, reject);
+        return;
+      }
+      const error = new Error(message);
       error.status = xhr.status;
       showDashboardToast(error.message, { title: 'Upload failed' });
       reject(error);

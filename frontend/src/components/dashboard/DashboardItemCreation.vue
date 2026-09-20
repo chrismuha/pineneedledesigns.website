@@ -845,7 +845,6 @@ watch(
           <button type="button" class="clear-btn" :disabled="creatingCollection" @click="closeCreateCollection">Cancel</button>
         </div>
         <p class="hint">Create a collection for this item. Existing collections are managed from the Items page.</p>
-        <p v-if="collectionError" class="error-banner" role="alert">{{ collectionError }}</p>
         <form @submit.prevent="createCollection">
           <div class="field">
             <label for="new-collection-name">Collection name</label>
