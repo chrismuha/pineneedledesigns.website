@@ -72,9 +72,10 @@ npm run preview
 
 ### Production Catalog
 
-MongoDB is the source of truth for collections and products. Manage catalog records and new product
-media through the dashboard. Existing products can still reference the legacy static media retained
-in `docs/images` and `docs/videos`.
+MongoDB is the source of truth for collections, products, and their managed media URLs. Manage
+catalog records and product media through the dashboard. Uploaded media files live in the ignored
+`backend/uploads` directory on the application server and are served from `/uploads`; catalog media
+is not committed to the repository.
 
 ## API Endpoints
 
@@ -142,7 +143,7 @@ Sessions are stored in the ignored `.sessions` directory so carts survive server
 │   └── router/
 │       └── index.js           # Vue Router configuration
 ├── backend/src/               # Express API and MongoDB catalog
-├── docs/                      # Published storefront and legacy static product media
+├── docs/                      # Published storefront build
 ├── package.json
 └── README.md
 ```

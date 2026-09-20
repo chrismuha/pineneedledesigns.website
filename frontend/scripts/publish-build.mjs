@@ -13,7 +13,7 @@ await mkdir(docsDir, { recursive: true })
 
 // Overlay a fully completed Vite build. The build never clears docs, so a
 // Dropbox placeholder or interrupted build cannot make the deployed tree look
-// deleted. Static product media already in docs is preserved.
+// deleted. Product media lives in backend/uploads and is not part of this build.
 for (const entry of await readdir(buildDir, { withFileTypes: true })) {
   await cp(
     path.join(buildDir, entry.name),
