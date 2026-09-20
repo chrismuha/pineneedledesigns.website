@@ -465,7 +465,7 @@ watch(
               :disabled="savingOrderId === order._id"
               @click="requestDelete(order)"
             >
-              Cancel Order &amp; Refund
+              Delete Order
             </button>
             <button
               v-if="order.status === 'closed' && order.inventoryReturnedAt && order.resolution !== 'active'"
@@ -481,10 +481,10 @@ watch(
     <DashboardConfirmDialog
       :open="Boolean(pendingDeleteOrder)"
       :step-label="`Confirmation ${cancelConfirmationStep} of 2`"
-      :title="cancelConfirmationStep === 1 ? `Cancel ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
+      :title="cancelConfirmationStep === 1 ? `Delete ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
       :message="cancelConfirmationStep === 1
-        ? 'This is not a simple deletion. Pine Needle will submit refunds for all remaining refundable Clover charges, return the inventory, close the order, and notify the customer. The order record will be retained so the payment and cancellation remain traceable.'
-        : 'This cancellation cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain this order should be canceled.'"
+        ? 'Deleting an active order first cancels it: Pine Needle will refund all remaining refundable Clover charges, return its items to inventory, close it, and notify the customer. Its record is kept for payment history; after that, a separate permanent-delete button becomes available.'
+        : 'This cancellation and any successful refund cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain.'"
       :confirm-label="cancelConfirmationStep === 1 ? 'Continue' : 'Cancel Order & Refund'"
       :cancel-label="cancelConfirmationStep === 1 ? 'Keep Order' : 'Go Back'"
       :busy="Boolean(savingOrderId)"

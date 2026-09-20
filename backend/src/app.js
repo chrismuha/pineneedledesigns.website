@@ -69,6 +69,19 @@ export const createApp = () => {
   app.get('/api/csrf-token', (req, res) => {
     res.json({ token: generateToken(req) });
   });
+  // This intentionally sits before CSRF protection so a stale CSRF token can
+  // always be repaired. Cloudflare Access still protects dashboard users.
+  app.post('/api/session/reset', requireCloudflareAccess, (req, res, next) => {
+    req.session.destroy((error) => {
+      if (error) return next(error);
+      res.clearCookie('connect.sid', {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: config.isProduction && config.appBaseUrl.startsWith('https://'),
+      });
+      return res.json({ success: true });
+    });
+  });
   app.use('/api', csrfSynchronisedProtection);
   app.use('/uploads', express.static(config.uploadsDir));
   if (!config.isProduction) {

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
+import { resetDashboardSession } from '../../api/csrf.js'
 
 const loading = ref(true)
 const route = useRoute()
@@ -12,6 +13,8 @@ const draftCount = ref(0)
 const pendingProductDelete = ref(null)
 const productDeleteStep = ref(0)
 const deletingProduct = ref(false)
+const showSessionReset = ref(false)
+const resettingSession = ref(false)
 const stats = ref({
   productCount: 0,
   collectionCount: 0,
@@ -126,6 +129,19 @@ const formatDate = (value) => {
   })
 }
 
+const resetSession = async () => {
+  resettingSession.value = true
+  error.value = ''
+  try {
+    await resetDashboardSession()
+    window.location.reload()
+  } catch (err) {
+    error.value = err.message
+    resettingSession.value = false
+    showSessionReset.value = false
+  }
+}
+
 onMounted(() => {
   loadStats()
   loadBookingConfig()
@@ -142,6 +158,9 @@ onMounted(() => {
         <a class="website-btn btn-outline" href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
           Go to Website <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
         </a>
+        <button type="button" class="session-reset-btn btn-outline" title="Fix an expired dashboard session" @click="showSessionReset = true">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Fix Expired Session
+        </button>
       </div>
     </div>
 
@@ -250,6 +269,17 @@ onMounted(() => {
     </section>
 
     <DashboardConfirmDialog
+      :open="showSessionReset"
+      title="Fix an expired dashboard session?"
+      message="This resets only Pine Needle Designs’ dashboard security session, then reloads this page. It does not clear other websites, delete orders or items, or remove your locally saved drafts."
+      confirm-label="Reset & Reload Dashboard"
+      cancel-label="Cancel"
+      :busy="resettingSession"
+      @confirm="resetSession"
+      @cancel="showSessionReset = false"
+    />
+
+    <DashboardConfirmDialog
       :open="Boolean(pendingProductDelete)"
       :step-label="`Confirmation ${productDeleteStep} of 2`"
       :title="productDeleteStep === 1 ? `Delete ${pendingProductDelete?.name || 'item'}?` : 'Permanently delete this item?'"
@@ -284,6 +314,13 @@ onMounted(() => {
   justify-content: center;
   gap: 7px;
   text-decoration: none;
+}
+
+.session-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
 
 .notification-detail { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-bottom: 24px; padding: 20px; border: 1px solid var(--dashboard-home-notification-detail-border); border-radius: 14px; background: var(--dashboard-home-notification-detail-surface); }
