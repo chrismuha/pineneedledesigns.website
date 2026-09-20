@@ -16,6 +16,8 @@ const pendingPermanentDelete = ref(null)
 const pendingPaymentVerification = ref(null)
 const pendingRenumber = ref(null)
 const orderNumberEdits = ref({})
+const pendingCloverRefund = ref(null)
+const cloverRefundStep = ref(1)
 const cancelConfirmationStep = ref(1)
 const editingOrderId = ref('')
 const editItems = ref([])
@@ -246,6 +248,49 @@ const renumberOrder = async () => {
   }
 }
 
+const requestCloverOnlyRefund = (order) => {
+  pendingCloverRefund.value = order
+  cloverRefundStep.value = 1
+}
+
+const confirmCloverOnlyRefund = async () => {
+  if (!pendingCloverRefund.value) return
+  if (cloverRefundStep.value === 1) {
+    cloverRefundStep.value = 2
+    return
+  }
+  const order = pendingCloverRefund.value
+  savingOrderId.value = order._id
+  try {
+    const result = await dashboardApi.refundOrderInCloverOnly(order._id)
+    orders.value = orders.value.map((entry) => entry._id === result.order._id ? result.order : entry)
+    pendingCloverRefund.value = null
+    cloverRefundStep.value = 1
+    showDashboardToast(
+      result.notification?.customerNotified
+        ? `${formatMoney(result.refunded)} was submitted for refund in Clover. The dashboard order and inventory were retained, and the customer email was accepted by the email service.`
+        : `${formatMoney(result.refunded)} was submitted for refund in Clover. The dashboard order and inventory were retained, but the customer was not emailed; contact them separately.`,
+      {
+        type: result.notification?.customerNotified ? 'success' : 'warning',
+        title: result.notification?.customerNotified ? 'Clover refund submitted' : 'Refund submitted — customer not emailed',
+        duration: 12000,
+      },
+    )
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
+}
+
+const cancelCloverOnlyRefund = () => {
+  if (cloverRefundStep.value === 2) {
+    cloverRefundStep.value = 1
+    return
+  }
+  pendingCloverRefund.value = null
+}
+
 const beginEdit = async (order) => {
   error.value = ''
   try {
@@ -357,7 +402,10 @@ watch(
         </summary>
 
         <div class="order-content">
-          <div v-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
+          <div v-if="order.paymentStatus === 'refunded'" class="refunded-notice" role="status">
+            CLOVER PAYMENT REFUNDED — {{ formatMoney(order.cloverRefundedAmount) }} refunded. This dashboard order was retained and inventory was not returned.
+          </div>
+          <div v-else-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
             <template v-if="(order.paymentVerification?.status || 'unknown') === 'unknown'">
               PAYMENT UNCONFIRMED — Check this order in Clover, then mark it Paid or Not Paid. It cannot be deleted until verified.
               <div class="payment-verification-actions">
@@ -560,6 +608,13 @@ watch(
 
           <div class="order-actions">
             <button v-if="!order.inventoryReturnedAt && !order.pendingChange" type="button" class="btn-primary" :disabled="savingOrderId === order._id" @click="beginEdit(order)">Add or Change Items</button>
+            <button
+              v-if="order.paymentStatus === 'paid' && !order.pendingChange"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="requestCloverOnlyRefund(order)"
+            >Refund in Clover Only</button>
             <span v-if="order.pendingChange" class="badge badge-paid">Awaiting additional payment</span>
             <span v-if="order.inventoryReturnedAt" class="badge badge-closed">Canceled · inventory returned</span>
             <button
@@ -586,9 +641,22 @@ watch(
       </details>
     </div>
     <DashboardConfirmDialog
+      :open="Boolean(pendingCloverRefund)"
+      :step-label="`Confirmation ${cloverRefundStep} of 2`"
+      :title="cloverRefundStep === 1 ? `Refund ${pendingCloverRefund ? orderLabel(pendingCloverRefund) : 'this order'} in Clover only?` : 'Final confirmation: refund real money?'"
+      :message="cloverRefundStep === 1
+        ? 'This submits a full refund of all remaining refundable Clover payments. The Pine Needle dashboard order will remain, its open/closed status will not change, and its inventory will stay deducted. The customer will be emailed about the refund.'
+        : 'This sends real money back to the original payment method and cannot be undone from the dashboard. Inventory will NOT be returned. Continue only if you intentionally want to refund payment while retaining the order and current inventory counts.'"
+      :confirm-label="cloverRefundStep === 1 ? 'Continue' : 'Submit Clover Refund'"
+      :cancel-label="cloverRefundStep === 1 ? 'Do Not Refund' : 'Go Back'"
+      :busy="Boolean(savingOrderId)"
+      @confirm="confirmCloverOnlyRefund"
+      @cancel="cancelCloverOnlyRefund"
+    />
+    <DashboardConfirmDialog
       :open="Boolean(pendingRenumber)"
       :title="pendingRenumber ? `Change ${orderLabel(pendingRenumber.order)} to #${pendingRenumber.orderNumber}?` : 'Change order number?'"
-      message="The new number must be unique. Pine Needle will also try to update the matching Clover order title/reference; if Clover cannot be matched or updated, the dashboard will clearly report that only Pine Needle changed."
+      message="The new number must be unique. Changing to a higher number also advances the automatic counter, so the next new order will be higher; changing to a lower number does not move the counter backward or reuse gaps. Pine Needle will also try to update the matching Clover order title/reference."
       confirm-label="Change Order Number"
       cancel-label="Keep Current Number"
       :busy="Boolean(savingOrderId)"
@@ -756,6 +824,7 @@ watch(
 }
 
 .unpaid-notice { margin-bottom: 20px; border: 3px solid #b91c1c; border-radius: 10px; background: #fef2f2; color: #7f1d1d; padding: 14px 16px; font-weight: 900; font-size: 1.05rem; }
+.refunded-notice { margin-bottom: 20px; border: 2px solid #2563eb; border-radius: 10px; background: #eff6ff; color: #1e3a8a; padding: 14px 16px; font-weight: 800; }
 .payment-verification-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 
 .badge-open {

@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'processing', 'paid', 'failed', 'cancelled'],
+    enum: ['pending', 'processing', 'paid', 'failed', 'cancelled', 'refunded'],
     default: 'pending',
   },
   paymentVerification: {
@@ -79,6 +79,8 @@ const orderSchema = new mongoose.Schema({
     default: 'active',
   },
   inventoryReturnedAt: { type: Date, default: null },
+  cloverRefundedAt: { type: Date, default: null },
+  cloverRefundedAmount: { type: Number, default: 0 },
   pendingChange: {
     type: mongoose.Schema.Types.Mixed,
     default: null,

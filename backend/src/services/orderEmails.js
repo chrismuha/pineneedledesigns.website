@@ -132,6 +132,7 @@ export const sendOrderEventEmails = async (order, {
     payment_failed: 'Order change payment declined',
     changed: 'Order updated',
     canceled: 'Order canceled and refunded',
+    refunded_only: 'Order payment refunded',
   };
   const title = names[kind] || 'Order update';
   const action = paymentUrl
@@ -139,6 +140,8 @@ export const sendOrderEventEmails = async (order, {
     : '';
   const detail = kind === 'canceled'
     ? `The order was canceled. A refund of ${money(amount)} was submitted to the original payment method.`
+    : kind === 'refunded_only'
+      ? `A refund of ${money(amount)} was submitted to the original payment method. The order itself remains on file.`
     : kind === 'payment_failed'
       ? `The attempted additional payment of ${money(amount)} was declined. The original order was not changed.${reason ? ` Reason: ${reason}` : ''}`
       : kind === 'payment_required'

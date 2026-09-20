@@ -117,6 +117,9 @@ export const dashboardApi = {
   permanentlyDeleteOrder: (id) => request(`/api/orders/${id}/permanent`, {
     method: 'DELETE',
   }, 'Order permanently deleted.'),
+  refundOrderInCloverOnly: (id) => request(`/api/orders/${id}/refund-clover-only`, {
+    method: 'POST',
+  }),
   changeOrder: (id, items) => request(`/api/orders/${id}/change`, {
     method: 'POST',
     body: JSON.stringify({ items }),

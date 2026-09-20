@@ -284,7 +284,7 @@ export const deleteOrder = async (req, res) => {
     }
     const payments = await Payment.find({ orderId: order._id, status: { $in: ['paid', 'refunded'] } });
     const paidCents = payments.reduce((sum, payment) => sum + Math.max(0, Number(payment.amount || 0) - Number(payment.metadata?.refundedAmountCents || 0)), 0);
-    if (verification === 'paid' && paidCents <= 0) {
+    if (verification === 'paid' && paidCents <= 0 && order.paymentStatus !== 'refunded') {
       return res.status(409).json({ error: 'This order was marked Paid, but Pine Needle has no refundable Clover payment record. Verify or refund it directly in Clover before deleting this order.' });
     }
     await applyInventoryChange(order.inventoryLines || [], []);
@@ -306,6 +306,33 @@ export const deleteOrder = async (req, res) => {
   } catch (error) {
     console.error('Cancel and refund failed:', error);
     return res.status(error.status || 500).json({ error: error.message || 'The order was not canceled because the refund could not be completed.' });
+  }
+};
+
+export const refundOrderInCloverOnly = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found.' });
+    if (order.pendingChange) return res.status(409).json({ error: 'Finish the pending order change before refunding this order.' });
+    const payments = await Payment.find({ orderId: order._id, status: { $in: ['paid', 'refunded'] } });
+    const paidCents = payments.reduce((sum, payment) => sum + Math.max(0, Number(payment.amount || 0) - Number(payment.metadata?.refundedAmountCents || 0)), 0);
+    if (paidCents <= 0) return res.status(409).json({ error: 'No refundable Clover payment remains for this order.' });
+
+    await refundAcrossPayments(order, paidCents);
+    order.paymentStatus = 'refunded';
+    order.paymentVerification = { status: 'paid', verifiedAt: new Date() };
+    order.cloverRefundedAt = new Date();
+    order.cloverRefundedAmount = roundMoney(Number(order.cloverRefundedAmount || 0) + (paidCents / 100));
+    order.timeline.push({
+      label: `Clover-only refund submitted for $${(paidCents / 100).toFixed(2)}; dashboard order retained and inventory unchanged`,
+      at: new Date(),
+    });
+    await order.save();
+    const notification = await notifyEvent(order, { kind: 'refunded_only', amount: paidCents / 100, reason: 'The Clover payment was refunded; the dashboard order and inventory were left unchanged.' });
+    return res.json({ order, refunded: paidCents / 100, notification });
+  } catch (error) {
+    console.error('Clover-only refund failed:', error);
+    return res.status(error.status || 500).json({ error: error.message || 'The Clover refund could not be completed.' });
   }
 };
 
