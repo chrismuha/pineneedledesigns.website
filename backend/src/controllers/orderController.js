@@ -161,6 +161,24 @@ export const getOrderById = async (req, res) => {
   return order ? res.json(order) : res.status(404).json({ error: 'Order not found.' });
 };
 
+export const verifyOrderPayment = async (req, res) => {
+  const status = String(req.body?.status || '').toLowerCase();
+  if (!['paid', 'not_paid'].includes(status)) {
+    return res.status(400).json({ error: 'Payment verification must be Paid or Not Paid.' });
+  }
+  const order = await Order.findById(req.params.id);
+  if (!order) return res.status(404).json({ error: 'Order not found.' });
+  order.paymentVerification = { status, verifiedAt: new Date() };
+  order.timeline.push({
+    label: status === 'paid'
+      ? 'Clover payment manually verified as paid'
+      : 'Clover payment manually verified as not paid',
+    at: new Date(),
+  });
+  await order.save();
+  return res.json(order);
+};
+
 export const changeOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -225,8 +243,15 @@ export const deleteOrder = async (req, res) => {
     if (!order) return res.status(404).json({ error: 'Order not found.' });
     if (order.resolution !== 'active') return res.status(409).json({ error: 'This order has already been canceled or refunded.' });
     if (order.pendingChange) return res.status(409).json({ error: 'This order has an additional payment awaiting the customer. Wait for it to finish before canceling.' });
+    const verification = order.paymentVerification?.status || 'unknown';
+    if (order.paymentStatus !== 'paid' && verification === 'unknown') {
+      return res.status(409).json({ error: 'Verify this order as Paid or Not Paid in Clover before deleting it.' });
+    }
     const payments = await Payment.find({ orderId: order._id, status: { $in: ['paid', 'refunded'] } });
     const paidCents = payments.reduce((sum, payment) => sum + Math.max(0, Number(payment.amount || 0) - Number(payment.metadata?.refundedAmountCents || 0)), 0);
+    if (verification === 'paid' && paidCents <= 0) {
+      return res.status(409).json({ error: 'This order was marked Paid, but Pine Needle has no refundable Clover payment record. Verify or refund it directly in Clover before deleting this order.' });
+    }
     await applyInventoryChange(order.inventoryLines || [], []);
     try {
       if (paidCents > 0) await refundAcrossPayments(order, paidCents);
@@ -254,6 +279,17 @@ export const permanentlyDeleteOrder = async (req, res) => {
   if (!order) return res.status(404).json({ error: 'Order not found.' });
   if (order.status !== 'closed' || !order.inventoryReturnedAt || order.resolution === 'active') {
     return res.status(409).json({ error: 'Close and cancel/refund the order before permanently deleting it.' });
+  }
+  if (order.paymentStatus !== 'paid' && (order.paymentVerification?.status || 'unknown') === 'unknown') {
+    return res.status(409).json({ error: 'Verify this order as Paid or Not Paid in Clover before permanently deleting it.' });
+  }
+  const outstandingPayment = await Payment.exists({
+    orderId: order._id,
+    status: 'paid',
+    $expr: { $gt: ['$amount', { $ifNull: ['$metadata.refundedAmountCents', 0] }] },
+  });
+  if (outstandingPayment) {
+    return res.status(409).json({ error: 'This order still has an unrefunded payment record and cannot be permanently deleted.' });
   }
   await Payment.deleteMany({ orderId: order._id });
   await order.deleteOne();

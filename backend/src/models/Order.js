@@ -39,6 +39,14 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'processing', 'paid', 'failed', 'cancelled'],
     default: 'pending',
   },
+  paymentVerification: {
+    status: {
+      type: String,
+      enum: ['unknown', 'paid', 'not_paid'],
+      default: 'unknown',
+    },
+    verifiedAt: { type: Date, default: null },
+  },
   idempotencyKey: {
     type: String,
     trim: true,

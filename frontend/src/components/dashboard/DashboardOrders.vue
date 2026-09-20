@@ -13,6 +13,7 @@ const savingOrderId = ref('')
 const statusFilter = ref('all')
 const pendingDeleteOrder = ref(null)
 const pendingPermanentDelete = ref(null)
+const pendingPaymentVerification = ref(null)
 const cancelConfirmationStep = ref(1)
 const editingOrderId = ref('')
 const editItems = ref([])
@@ -196,6 +197,21 @@ const permanentlyDeleteOrder = async () => {
   }
 }
 
+const verifyPayment = async () => {
+  const pending = pendingPaymentVerification.value
+  if (!pending) return
+  savingOrderId.value = pending.order._id
+  try {
+    const updated = await dashboardApi.verifyOrderPayment(pending.order._id, pending.status)
+    orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
+    pendingPaymentVerification.value = null
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    savingOrderId.value = ''
+  }
+}
+
 const beginEdit = async (order) => {
   error.value = ''
   try {
@@ -308,12 +324,27 @@ watch(
 
         <div class="order-content">
           <div v-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
-            NOT PAID — The customer started checkout, but Clover has not confirmed any payment for this order.
+            <template v-if="(order.paymentVerification?.status || 'unknown') === 'unknown'">
+              PAYMENT UNCONFIRMED — Check this order in Clover, then mark it Paid or Not Paid. It cannot be deleted until verified.
+              <div class="payment-verification-actions">
+                <button type="button" class="btn-outline" :disabled="savingOrderId === order._id" @click="pendingPaymentVerification = { order, status: 'paid' }">Mark Paid</button>
+                <button type="button" class="btn-primary" :disabled="savingOrderId === order._id" @click="pendingPaymentVerification = { order, status: 'not_paid' }">Mark Not Paid</button>
+              </div>
+            </template>
+            <template v-else-if="order.paymentVerification.status === 'paid'">
+              PAYMENT MANUALLY VERIFIED AS PAID — Deletion requires a matching refundable Clover payment record.
+            </template>
+            <template v-else>
+              PAYMENT MANUALLY VERIFIED AS NOT PAID — Cancellation will not submit a refund.
+            </template>
           </div>
           <div class="order-delete-bar">
             <div>
               <strong>Delete this order</strong>
-              <p v-if="!order.inventoryReturnedAt && !order.pendingChange">
+              <p v-if="order.paymentStatus !== 'paid' && (order.paymentVerification?.status || 'unknown') === 'unknown'">
+                Verify the payment in Clover before this order can be deleted.
+              </p>
+              <p v-else-if="!order.inventoryReturnedAt && !order.pendingChange">
                 Cancels the order, refunds eligible Clover payments, returns inventory, and notifies the customer.
               </p>
               <p v-else-if="order.pendingChange">This order cannot be deleted while an additional payment is pending.</p>
@@ -323,7 +354,7 @@ watch(
               v-if="!order.inventoryReturnedAt && !order.pendingChange"
               type="button"
               class="btn-danger"
-              :disabled="savingOrderId === order._id"
+              :disabled="savingOrderId === order._id || (order.paymentStatus !== 'paid' && (order.paymentVerification?.status || 'unknown') === 'unknown')"
               @click="requestDelete(order)"
             >Delete Order</button>
             <button
@@ -500,6 +531,18 @@ watch(
       </details>
     </div>
     <DashboardConfirmDialog
+      :open="Boolean(pendingPaymentVerification)"
+      :title="pendingPaymentVerification?.status === 'paid' ? 'Confirm Clover shows this order as paid?' : 'Confirm Clover shows no successful payment?'"
+      :message="pendingPaymentVerification?.status === 'paid'
+        ? 'Only mark this Paid after confirming the charge directly in Clover. Pine Needle will still block deletion unless it has a matching refundable payment record.'
+        : 'Only mark this Not Paid after confirming there is no successful charge in Clover. Canceling the order will return inventory without submitting a refund.'"
+      :confirm-label="pendingPaymentVerification?.status === 'paid' ? 'Mark Paid' : 'Mark Not Paid'"
+      cancel-label="Go Back"
+      :busy="Boolean(savingOrderId)"
+      @confirm="verifyPayment"
+      @cancel="pendingPaymentVerification = null"
+    />
+    <DashboardConfirmDialog
       :open="Boolean(pendingDeleteOrder)"
       :step-label="`Confirmation ${cancelConfirmationStep} of 2`"
       :title="cancelConfirmationStep === 1 ? `Delete ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
@@ -648,6 +691,7 @@ watch(
 }
 
 .unpaid-notice { margin-bottom: 20px; border: 3px solid #b91c1c; border-radius: 10px; background: #fef2f2; color: #7f1d1d; padding: 14px 16px; font-weight: 900; font-size: 1.05rem; }
+.payment-verification-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 
 .badge-open {
   background: var(--dashboard-orders-badge-open-surface);
