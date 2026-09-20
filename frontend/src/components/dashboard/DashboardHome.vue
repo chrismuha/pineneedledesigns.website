@@ -4,8 +4,9 @@ import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { listItemDrafts } from '../../utils/itemDrafts.js'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
-import { resetDashboardSession } from '../../api/csrf.js'
+import { refreshDashboardApp, resetDashboardSession } from '../../api/csrf.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
+import { getDashboardLoginResetEnabled } from '../../utils/dashboardTroubleshooting.js'
 
 const loading = ref(true)
 const route = useRoute()
@@ -16,6 +17,9 @@ const productDeleteStep = ref(0)
 const deletingProduct = ref(false)
 const showSessionReset = ref(false)
 const resettingSession = ref(false)
+const showAppRefresh = ref(false)
+const refreshingApp = ref(false)
+const loginResetEnabled = ref(false)
 const stats = ref({
   productCount: 0,
   collectionCount: 0,
@@ -143,7 +147,21 @@ const resetSession = async () => {
   }
 }
 
+const refreshApp = async () => {
+  refreshingApp.value = true
+  error.value = ''
+  try {
+    await refreshDashboardApp()
+    window.location.reload()
+  } catch (err) {
+    showDashboardToast(err.message, { title: 'Refresh failed' })
+    refreshingApp.value = false
+    showAppRefresh.value = false
+  }
+}
+
 onMounted(() => {
+  loginResetEnabled.value = getDashboardLoginResetEnabled()
   loadStats()
   loadBookingConfig()
 })
@@ -159,8 +177,11 @@ onMounted(() => {
         <a class="website-btn btn-outline" href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
           Go to Website <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
         </a>
-        <button type="button" class="session-reset-btn btn-outline" title="Fix an expired dashboard session" @click="showSessionReset = true">
-          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Fix Expired Session
+        <button type="button" class="session-reset-btn btn-outline" title="Clear cached app files and refresh" @click="showAppRefresh = true">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Fix &amp; Refresh
+        </button>
+        <button v-if="loginResetEnabled" type="button" class="session-reset-btn btn-outline" title="Reset login and sign out" @click="showSessionReset = true">
+          <i class="bi bi-box-arrow-right" aria-hidden="true"></i> Reset Login
         </button>
       </div>
     </div>
@@ -268,10 +289,21 @@ onMounted(() => {
     </section>
 
     <DashboardConfirmDialog
+      :open="showAppRefresh"
+      title="Fix and refresh the dashboard?"
+      message="This clears Pine Needle Designs app caches, unregisters the Pine Needle service worker, and reloads the latest app. It does not clear login cookies, reset your security session, sign you out of Cloudflare Access, or affect saved drafts and preferences."
+      confirm-label="Fix & Refresh"
+      cancel-label="Cancel"
+      :busy="refreshingApp"
+      @confirm="refreshApp"
+      @cancel="showAppRefresh = false"
+    />
+
+    <DashboardConfirmDialog
       :open="showSessionReset"
-      title="Fix an expired dashboard session?"
-      message="This clears Pine Needle Designs cookies and browser caches, unregisters the Pine Needle service worker, resets the dashboard security session, and signs out of Cloudflare Access. You will need to sign in again. It does not affect other websites, your cart, locally saved item drafts, or dashboard preferences."
-      confirm-label="Clear Data & Sign Out"
+      title="Reset login and sign out?"
+      message="This clears Pine Needle Designs cookies and app caches, resets the dashboard security session, and signs out of Cloudflare Access. A one-time PIN or another sign-in may be required. Use this only for login problems."
+      confirm-label="Reset Login & Sign Out"
       cancel-label="Cancel"
       :busy="resettingSession"
       @confirm="resetSession"

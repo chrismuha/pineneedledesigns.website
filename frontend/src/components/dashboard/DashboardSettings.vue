@@ -22,6 +22,10 @@ import {
 import { setDashboardToastTimeout, showDashboardToast } from '../../utils/dashboardToast.js'
 import { isInstalledPwa } from '../../utils/pwaDisplayMode.js'
 import {
+  getDashboardLoginResetEnabled,
+  setDashboardLoginResetEnabled,
+} from '../../utils/dashboardTroubleshooting.js'
+import {
   disablePushNotifications,
   enablePushNotifications,
   getPushAlertPreferences,
@@ -56,6 +60,7 @@ const form = ref({
   darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
   footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
   statusBarColorEnabled: getDashboardStatusBarColorEnabled(),
+  loginResetEnabled: getDashboardLoginResetEnabled(),
 })
 const savedSettings = ref('')
 const settingsSnapshot = (settings) => JSON.stringify({
@@ -69,6 +74,7 @@ const settingsSnapshot = (settings) => JSON.stringify({
   darkPhotoEditorEnabled: Boolean(settings.darkPhotoEditorEnabled),
   footerButtonDepthEnabled: Boolean(settings.footerButtonDepthEnabled),
   statusBarColorEnabled: Boolean(settings.statusBarColorEnabled),
+  loginResetEnabled: Boolean(settings.loginResetEnabled),
 })
 const hasChanges = computed(() => settingsSnapshot(form.value) !== savedSettings.value)
 
@@ -204,6 +210,7 @@ const loadSettings = async () => {
       darkPhotoEditorEnabled: getDashboardDarkPhotoEditorEnabled(),
       footerButtonDepthEnabled: getDashboardFooterButtonDepthEnabled(),
       statusBarColorEnabled: getDashboardStatusBarColorEnabled(),
+      loginResetEnabled: getDashboardLoginResetEnabled(),
     }
     setDashboardToastTimeout(form.value.toastTimeoutSeconds)
     savedSettings.value = settingsSnapshot(form.value)
@@ -241,6 +248,7 @@ const saveSettings = async () => {
     setDashboardDarkPhotoEditorEnabled(form.value.darkPhotoEditorEnabled)
     setDashboardFooterButtonDepthEnabled(form.value.footerButtonDepthEnabled)
     setDashboardStatusBarColorEnabled(form.value.statusBarColorEnabled)
+    setDashboardLoginResetEnabled(form.value.loginResetEnabled)
     savedSettings.value = settingsSnapshot(form.value)
   } catch (err) {
     error.value = err.message
@@ -447,6 +455,22 @@ onBeforeUnmount(() => {
           <small>Use the original charcoal appearance when cropping and rotating photos.</small>
         </span>
         <input v-model="form.darkPhotoEditorEnabled" class="toggle-input" type="checkbox" role="switch">
+      </label>
+
+      <div class="section-heading troubleshooting-heading">
+        <div>
+          <span class="eyebrow">Troubleshooting</span>
+          <h2>Login recovery</h2>
+        </div>
+        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+      </div>
+
+      <label class="toggle-row">
+        <span>
+          <strong>Show Reset Login button</strong>
+          <small>Adds a separate dashboard button that clears login cookies, resets the security session, and signs out of Cloudflare Access. Keep this off unless login recovery is needed.</small>
+        </span>
+        <input v-model="form.loginResetEnabled" class="toggle-input" type="checkbox" role="switch">
       </label>
 
       <div class="settings-actions">

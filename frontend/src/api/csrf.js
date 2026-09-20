@@ -21,14 +21,7 @@ export const clearCsrfToken = () => {
   csrfTokenPromise = undefined;
 };
 
-export const resetDashboardSession = async () => {
-  const response = await originalFetch('/api/session/reset', {
-    method: 'POST',
-    credentials: 'include',
-  });
-  if (!response.ok) throw new Error('The dashboard session could not be reset. Please try again.');
-  clearCsrfToken();
-
+const clearDashboardAppCaches = async () => {
   if ('caches' in window) {
     const cacheNames = await window.caches.keys();
     await Promise.all(cacheNames.map((name) => window.caches.delete(name)));
@@ -37,6 +30,27 @@ export const resetDashboardSession = async () => {
     const registrations = await navigator.serviceWorker.getRegistrations();
     await Promise.all(registrations.map((registration) => registration.unregister()));
   }
+};
+
+export const refreshDashboardApp = async () => {
+  const response = await originalFetch('/api/app/refresh', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('The dashboard could not be refreshed. Please try again.');
+  clearCsrfToken();
+  await clearDashboardAppCaches();
+};
+
+export const resetDashboardSession = async () => {
+  const response = await originalFetch('/api/session/reset', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('The dashboard session could not be reset. Please try again.');
+  clearCsrfToken();
+
+  await clearDashboardAppCaches();
   document.cookie.split(';').forEach((cookie) => {
     const name = cookie.split('=')[0]?.trim();
     if (name) document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`;

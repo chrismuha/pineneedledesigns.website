@@ -69,6 +69,13 @@ export const createApp = () => {
   app.get('/api/csrf-token', (req, res) => {
     res.json({ token: generateToken(req) });
   });
+  // Refresh app assets without touching the Express session or Cloudflare
+  // Access cookies. This remains before CSRF protection so it can repair a
+  // dashboard whose cached CSRF token is stale.
+  app.post('/api/app/refresh', requireCloudflareAccess, (_req, res) => {
+    res.set('Clear-Site-Data', '"cache"');
+    return res.json({ success: true });
+  });
   // This intentionally sits before CSRF protection so a stale CSRF token can
   // always be repaired. Cloudflare Access still protects dashboard users.
   app.post('/api/session/reset', requireCloudflareAccess, (req, res, next) => {
