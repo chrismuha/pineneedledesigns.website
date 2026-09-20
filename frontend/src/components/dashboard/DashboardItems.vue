@@ -866,41 +866,51 @@ const saveProduct = async () => {
         options: (property.options || []).map((option) => String(option || '').trim()).filter(Boolean),
       }))
       .filter((property) => property.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
-    const formData = new FormData()
-    formData.append('name', editingProduct.value.name)
-    formData.append('collectionId', editingProduct.value.collectionId)
-    formData.append('subCollectionId', editingProduct.value.subCollectionId || '')
-    formData.append('color', colors.join(', '))
-    formData.append('size', sizes.join(', '))
-    formData.append('sweatshirtSize', sortSizeOptions(editingProduct.value.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '))
-    formData.append('shoeSize', editingProduct.value.shoeSizes.filter(Boolean).join(', '))
-    formData.append('beltSize', editingProduct.value.beltSizes.filter(Boolean).join(', '))
-    formData.append('sizePrices', JSON.stringify(editSizePriceRows.value.reduce((prices, row) => {
+    const payload = {
+      name: editingProduct.value.name,
+      collectionId: editingProduct.value.collectionId,
+      subCollectionId: editingProduct.value.subCollectionId || '',
+      color: colors.join(', '),
+      size: sizes.join(', '),
+      sweatshirtSize: sortSizeOptions(editingProduct.value.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '),
+      shoeSize: editingProduct.value.shoeSizes.filter(Boolean).join(', '),
+      beltSize: editingProduct.value.beltSizes.filter(Boolean).join(', '),
+      sizePrices: editSizePriceRows.value.reduce((prices, row) => {
       const value = editingProduct.value.sizePrices[row.key]
       if (value !== '' && value != null) prices[row.key] = Number(value)
       return prices
-    }, {})))
-    formData.append('comfortColors', JSON.stringify(editingProduct.value.comfortColors || []))
-    formData.append('description', editingProduct.value.description)
-    formData.append('generalDescription', editingProduct.value.hasBlingOptions
-      ? String(editingProduct.value.generalDescription || editingProduct.value.description || '').trim()
-      : '')
-    const fallbackPrice = editingProduct.value.price
-    formData.append('price', String(Number(fallbackPrice)))
-    formData.append('hasBlingOptions', String(editingProduct.value.hasBlingOptions && collectionAllowsBling(editingProduct.value.collectionId)))
-    formData.append('blingPrice', editingProduct.value.hasBlingOptions ? String(editingProduct.value.blingPrice ?? '') : '')
-    formData.append('noBlingPrice', editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingPrice ?? '') : '')
-    formData.append('noBlingDescription', editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingDescription || '').trim() : '')
-    formData.append('shippingCost', String(Number(editingProduct.value.shippingCost || 0)))
-    formData.append('outOfStock', String(editingProduct.value.outOfStock))
-    formData.append('quantity', String(editingProduct.value.quantity ?? 1))
-    formData.append('customProperties', JSON.stringify(customProperties))
-    formData.append('photos', JSON.stringify(editingProduct.value.photos || []))
-    formData.append('videos', JSON.stringify(String(editingProduct.value.videos || '').split('\n').filter(Boolean)))
-    editPhotoFiles.value.forEach(({ file }) => formData.append('photos', file))
-    editVideoFiles.value.forEach(({ file }) => formData.append('videos', file))
+      }, {}),
+      comfortColors: editingProduct.value.comfortColors || [],
+      description: editingProduct.value.description,
+      generalDescription: editingProduct.value.hasBlingOptions
+        ? String(editingProduct.value.generalDescription || editingProduct.value.description || '').trim()
+        : '',
+      price: Number(editingProduct.value.price),
+      hasBlingOptions: editingProduct.value.hasBlingOptions && collectionAllowsBling(editingProduct.value.collectionId),
+      blingPrice: editingProduct.value.hasBlingOptions ? editingProduct.value.blingPrice ?? '' : '',
+      noBlingPrice: editingProduct.value.hasBlingOptions ? editingProduct.value.noBlingPrice ?? '' : '',
+      noBlingDescription: editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingDescription || '').trim() : '',
+      shippingCost: Number(editingProduct.value.shippingCost || 0),
+      outOfStock: Boolean(editingProduct.value.outOfStock),
+      quantity: editingProduct.value.quantity ?? 1,
+      customProperties,
+      photos: editingProduct.value.photos || [],
+      videos: Array.isArray(editingProduct.value.videos)
+        ? editingProduct.value.videos.filter(Boolean)
+        : String(editingProduct.value.videos || '').split('\n').filter(Boolean),
+    }
 
-    await dashboardApi.updateProduct(editingProduct.value._id, formData, {
+    const hasNewMedia = editPhotoFiles.value.length > 0 || editVideoFiles.value.length > 0
+    const requestPayload = hasNewMedia ? new FormData() : payload
+    if (hasNewMedia) {
+      Object.entries(payload).forEach(([key, value]) => {
+        requestPayload.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value))
+      })
+      editPhotoFiles.value.forEach(({ file }) => requestPayload.append('photos', file))
+      editVideoFiles.value.forEach(({ file }) => requestPayload.append('videos', file))
+    }
+
+    await dashboardApi.updateProduct(editingProduct.value._id, requestPayload, {
       onProgress: (progress) => { editUploadProgress.value = progress },
     })
     suppressEditAutoSave = true
