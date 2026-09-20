@@ -28,6 +28,19 @@ export const resetDashboardSession = async () => {
   });
   if (!response.ok) throw new Error('The dashboard session could not be reset. Please try again.');
   clearCsrfToken();
+
+  if ('caches' in window) {
+    const cacheNames = await window.caches.keys();
+    await Promise.all(cacheNames.map((name) => window.caches.delete(name)));
+  }
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+  }
+  document.cookie.split(';').forEach((cookie) => {
+    const name = cookie.split('=')[0]?.trim();
+    if (name) document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`;
+  });
 };
 
 export const installCsrfFetch = () => {

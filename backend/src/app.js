@@ -74,6 +74,7 @@ export const createApp = () => {
   app.post('/api/session/reset', requireCloudflareAccess, (req, res, next) => {
     req.session.destroy((error) => {
       if (error) return next(error);
+      res.set('Clear-Site-Data', '"cache", "cookies"');
       res.clearCookie('connect.sid', {
         httpOnly: true,
         sameSite: 'lax',

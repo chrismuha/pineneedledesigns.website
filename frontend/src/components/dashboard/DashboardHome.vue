@@ -135,7 +135,7 @@ const resetSession = async () => {
   error.value = ''
   try {
     await resetDashboardSession()
-    window.location.reload()
+    window.location.assign('/cdn-cgi/access/logout')
   } catch (err) {
     showDashboardToast(err.message, { title: 'Session reset failed' })
     resettingSession.value = false
@@ -270,8 +270,8 @@ onMounted(() => {
     <DashboardConfirmDialog
       :open="showSessionReset"
       title="Fix an expired dashboard session?"
-      message="This resets only Pine Needle Designs’ dashboard security session, then reloads this page. It does not clear other websites, delete orders or items, or remove your locally saved drafts."
-      confirm-label="Reset & Reload Dashboard"
+      message="This clears Pine Needle Designs cookies and browser caches, unregisters the Pine Needle service worker, resets the dashboard security session, and signs out of Cloudflare Access. You will need to sign in again. It does not affect other websites, your cart, locally saved item drafts, or dashboard preferences."
+      confirm-label="Clear Data & Sign Out"
       cancel-label="Cancel"
       :busy="resettingSession"
       @confirm="resetSession"
