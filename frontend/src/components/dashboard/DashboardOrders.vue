@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
+import { showDashboardToast } from '../../utils/dashboardToast.js'
 
 const route = useRoute()
 const orders = ref([])
@@ -149,8 +150,22 @@ const confirmDelete = async () => {
   savingOrderId.value = order._id
   error.value = ''
   try {
-    const updated = await dashboardApi.deleteOrder(order._id)
+    const result = await dashboardApi.deleteOrder(order._id)
+    const updated = result.order
     orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
+    if (result.notification?.customerNotified) {
+      showDashboardToast('The order was canceled, its refund was submitted, inventory was returned, and the customer email was accepted by the email service.', {
+        type: 'success',
+        title: 'Order canceled and customer emailed',
+      })
+    } else {
+      showDashboardToast(
+        result.notification?.customerNotificationAttempted
+          ? 'The order was canceled, its refund was submitted, and inventory was returned, but the customer email failed. Contact the customer separately.'
+          : 'The order was canceled, its refund was submitted, and inventory was returned. No customer email was sent because this order has no email address.',
+        { type: 'warning', title: 'Order canceled — customer not emailed', duration: 12000 },
+      )
+    }
   } catch (err) {
     error.value = err.message
   } finally {

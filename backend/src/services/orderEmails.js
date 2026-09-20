@@ -120,7 +120,10 @@ export const sendOrderEventEmails = async (order, {
 } = {}) => {
   if (!mailerConfigured) {
     console.warn('Order event emails skipped: mailer is not configured.');
-    return;
+    return {
+      customerNotificationAttempted: Boolean(order.customer?.email),
+      customerNotified: false,
+    };
   }
   const label = order.orderNumber ? `#${order.orderNumber}` : String(order._id || '');
   const customerEmail = order.customer?.email || '';
@@ -143,8 +146,19 @@ export const sendOrderEventEmails = async (order, {
         : `The order was updated successfully.${amount ? ` Amount adjusted: ${money(Math.abs(amount))}.` : ''}`;
   const html = `<div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px"><div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:28px;border-radius:10px"><h2>${title}</h2><p><strong>Order ${label}</strong></p><p>${detail}</p>${action}<p>— Pine Needle Designs</p></div></div>`;
   const text = `${title}\nOrder ${label}\n${detail}${paymentUrl ? `\nPay securely: ${paymentUrl}` : ''}`;
-  await Promise.all([
+  const results = await Promise.allSettled([
     sendEmail({ from: `"Pine Needle Designs" <${getEmailSender()}>`, to: getEmailRecipients(), subject: `${title}: ${label}`, html, text }),
     customerEmail ? sendEmail({ to: customerEmail, subject: `${title}: ${label}`, html, text }) : Promise.resolve(null),
   ]);
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length) {
+    const error = new AggregateError(failures.map((result) => result.reason), 'One or more order-event emails failed to send.');
+    error.customerNotificationAttempted = Boolean(customerEmail);
+    error.customerNotified = Boolean(customerEmail) && results[1].status === 'fulfilled';
+    throw error;
+  }
+  return {
+    customerNotificationAttempted: Boolean(customerEmail),
+    customerNotified: Boolean(customerEmail),
+  };
 };

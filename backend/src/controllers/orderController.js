@@ -28,6 +28,13 @@ const notifyEvent = async (order, details) => {
   results.forEach((result) => {
     if (result.status === 'rejected') console.error('Order event notification failed:', result.reason);
   });
+  const emailResult = results[0];
+  return emailResult.status === 'fulfilled'
+    ? emailResult.value
+    : {
+      customerNotificationAttempted: Boolean(emailResult.reason?.customerNotificationAttempted),
+      customerNotified: Boolean(emailResult.reason?.customerNotified),
+    };
 };
 
 const discountFor = (subtotal, code) => {
@@ -234,8 +241,8 @@ export const deleteOrder = async (req, res) => {
     order.pendingChange = null;
     order.timeline.push({ label: paidCents > 0 ? `Order canceled; $${(paidCents / 100).toFixed(2)} refunded and inventory returned` : 'Order canceled; inventory returned', at: new Date() });
     await order.save();
-    await notifyEvent(order, { kind: 'canceled', amount: paidCents / 100 });
-    return res.json(order);
+    const notification = await notifyEvent(order, { kind: 'canceled', amount: paidCents / 100 });
+    return res.json({ order, notification });
   } catch (error) {
     console.error('Cancel and refund failed:', error);
     return res.status(error.status || 500).json({ error: error.message || 'The order was not canceled because the refund could not be completed.' });

@@ -113,7 +113,7 @@ export const dashboardApi = {
   getOrder: (id) => request(`/api/orders/${id}`),
   deleteOrder: (id) => request(`/api/orders/${id}`, {
     method: 'DELETE',
-  }, 'Order canceled, refund submitted, and customer notified.'),
+  }),
   permanentlyDeleteOrder: (id) => request(`/api/orders/${id}/permanent`, {
     method: 'DELETE',
   }, 'Order permanently deleted.'),
