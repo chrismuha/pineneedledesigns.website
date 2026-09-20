@@ -295,6 +295,30 @@ watch(
           <div v-if="order.paymentStatus !== 'paid'" class="unpaid-notice" role="alert">
             NOT PAID — The customer started checkout, but Clover has not confirmed any payment for this order.
           </div>
+          <div class="order-delete-bar">
+            <div>
+              <strong>Delete this order</strong>
+              <p v-if="!order.inventoryReturnedAt && !order.pendingChange">
+                Cancels the order, refunds eligible Clover payments, returns inventory, and notifies the customer.
+              </p>
+              <p v-else-if="order.pendingChange">This order cannot be deleted while an additional payment is pending.</p>
+              <p v-else>Removes this canceled order and its website payment record permanently.</p>
+            </div>
+            <button
+              v-if="!order.inventoryReturnedAt && !order.pendingChange"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="requestDelete(order)"
+            >Delete Order</button>
+            <button
+              v-else-if="order.status === 'closed' && order.inventoryReturnedAt && order.resolution !== 'active'"
+              type="button"
+              class="btn-danger"
+              :disabled="savingOrderId === order._id"
+              @click="pendingPermanentDelete = order"
+            >Delete Permanently</button>
+          </div>
           <section class="order-section">
             <h3>Customer Information</h3>
 
@@ -456,22 +480,6 @@ watch(
             >
               Reopen Order
             </button>
-            <button
-              v-if="!order.inventoryReturnedAt && !order.pendingChange"
-              type="button"
-              class="btn-danger"
-              :disabled="savingOrderId === order._id"
-              @click="requestDelete(order)"
-            >
-              Delete Order
-            </button>
-            <button
-              v-if="order.status === 'closed' && order.inventoryReturnedAt && order.resolution !== 'active'"
-              type="button"
-              class="btn-danger"
-              :disabled="savingOrderId === order._id"
-              @click="pendingPermanentDelete = order"
-            >Delete Order Permanently</button>
           </div>
         </div>
       </details>
@@ -674,6 +682,10 @@ watch(
 }
 
 .order-editor { padding: 18px; border: 1px solid var(--dashboard-orders-order-card-border); border-radius: 10px; }
+.order-delete-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; padding: 14px 16px; border: 1px solid var(--dashboard-destructive-action-color); border-radius: 10px; background: var(--dashboard-destructive-action-soft-surface); }
+.order-delete-bar strong { color: var(--dashboard-destructive-action-color); }
+.order-delete-bar p { margin: 3px 0 0; color: var(--dashboard-orders-paypal-id-text); font-size: 9.6pt; line-height: 1.45; }
+.order-delete-bar .btn-danger { flex: 0 0 auto; }
 .editor-note { color: var(--dashboard-orders-paypal-id-text); }
 .editor-row { display: grid; grid-template-columns: minmax(220px, 1fr) 90px auto; gap: 10px; margin: 10px 0; }
 .form-input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--dashboard-orders-items-table-td-border); border-radius: 8px; }
@@ -692,6 +704,8 @@ watch(
   .order-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .items-table { min-width: 680px; }
   .order-actions { flex-direction: column; align-items: stretch; }
+  .order-delete-bar { align-items: stretch; flex-direction: column; }
+  .order-delete-bar .btn-danger { width: 100%; }
   .editor-row { grid-template-columns: 1fr; }
   .order-actions button { width: 100%; min-height: 46px; }
 }
