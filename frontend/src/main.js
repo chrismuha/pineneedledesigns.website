@@ -27,8 +27,13 @@ const bootstrap = async () => {
   // Some older iOS home-screen installations retain the page that was open
   // when the icon was created instead of adopting the manifest start_url.
   // The installed Pine Needle app is the dashboard, so repair root launches.
-  if (isInstalledPwa() && router.currentRoute.value.path === '/') {
+  // Dashboard links use ?view=website to distinguish an intentional storefront
+  // visit from an old home-screen launch URL.
+  const openingStorefront = router.currentRoute.value.query.view === 'website'
+  if (isInstalledPwa() && router.currentRoute.value.path === '/' && !openingStorefront) {
     await router.replace('/dashboard')
+  } else if (openingStorefront) {
+    await router.replace('/')
   }
   app.mount('#app')
 }

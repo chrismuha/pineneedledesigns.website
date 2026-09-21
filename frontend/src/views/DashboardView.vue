@@ -197,7 +197,7 @@ const isActive = (path) => {
           <div class="sidebar-footer">
             <div class="external-site">
               <p>Pine Needle Designs</p>
-              <a href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
+              <a href="/?view=website" target="_blank" rel="noopener noreferrer">
                 <i class="bi bi-arrow-up-right-circle-fill"></i>
                 <span class="info-box">External Site</span>
               </a>

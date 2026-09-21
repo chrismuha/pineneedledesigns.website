@@ -174,7 +174,7 @@ onMounted(() => {
       <div class="header-actions">
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">Add New Item</RouterLink>
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/items">Edit Items</RouterLink>
-        <a class="website-btn btn-outline" href="https://pineneedledesigns.store/" target="_blank" rel="noopener noreferrer">
+        <a class="website-btn btn-outline" href="/?view=website" target="_blank" rel="noopener noreferrer">
           Go to Website <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
         </a>
         <button type="button" class="session-reset-btn btn-outline" title="Clear cached app files and refresh" @click="showAppRefresh = true">
