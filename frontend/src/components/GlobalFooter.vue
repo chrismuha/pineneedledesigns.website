@@ -151,6 +151,9 @@
     </div>
 
     <div class="container copyright" role="contentinfo" style="text-align:center">
+      <p class="footer-contact">
+        Questions? <a href="mailto:onpinesandneedles@gmail.com">onpinesandneedles@gmail.com</a>
+      </p>
       <span>© 2025 Pine Needle Designs <br /> All Rights Reserved.</span>
     </div>
   </footer>
@@ -228,3 +231,15 @@ watch(
   () => closeCalendarMenu()
 )
 </script>
+
+<style scoped>
+.footer-contact {
+  margin: 0 0 10px;
+}
+
+.footer-contact a {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-underline-offset: 3px;
+}
+</style>
