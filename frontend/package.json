@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --strictPort",
-    "build": "cross-env PINE_BUILD_OUT_DIR=dist vite build",
+    "build": "vite build",
     "build:release": "npm run build && node ./scripts/publish-build.mjs",
     "preview": "vite preview --host 127.0.0.1 --strictPort"
   },

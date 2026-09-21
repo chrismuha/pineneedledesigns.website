@@ -67,7 +67,7 @@ npm run build
 npm run preview
 ```
 
-`npm run build` writes disposable verification output to `frontend/dist`. Use
+`npm run build` writes disposable verification output outside Dropbox in the system temporary directory. Use
 `npm run build:release` when the committed production files in `docs` need to be updated.
 
 ### Production Catalog

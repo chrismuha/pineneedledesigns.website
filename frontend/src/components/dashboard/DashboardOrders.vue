@@ -82,6 +82,16 @@ const orderLabel = (order) => {
   return `#${suffix.toUpperCase()}`
 }
 
+const cancellationWillRefund = (order) => {
+  if (!order) return false
+  if (order.paymentVerification?.status === 'not_paid') return false
+  return order.paymentStatus === 'paid' || order.paymentVerification?.status === 'paid'
+}
+
+const cancellationAction = (order) => cancellationWillRefund(order)
+  ? 'Cancel Order & Refund'
+  : 'Cancel Order'
+
 const addressesMatch = (order) => {
   const billing = order.billingAddress || {}
   const shipping = order.shippingAddress || {}
@@ -157,17 +167,20 @@ const confirmDelete = async () => {
   try {
     const result = await dashboardApi.deleteOrder(order._id)
     const updated = result.order
+    const refunded = updated.resolution === 'refunded'
     orders.value = orders.value.map((entry) => entry._id === updated._id ? updated : entry)
     if (result.notification?.customerNotified) {
-      showDashboardToast('The order was canceled, its refund was submitted, inventory was returned, and the customer email was accepted by the email service.', {
+      showDashboardToast(refunded
+        ? 'The order was canceled, its refund was submitted, inventory was returned, and the customer email was accepted by the email service.'
+        : 'The unpaid order was canceled, inventory was returned, and the customer email was accepted by the email service.', {
         type: 'success',
         title: 'Order canceled and customer emailed',
       })
     } else {
       showDashboardToast(
         result.notification?.customerNotificationAttempted
-          ? 'The order was canceled, its refund was submitted, and inventory was returned, but the customer email failed. Contact the customer separately.'
-          : 'The order was canceled, its refund was submitted, and inventory was returned. No customer email was sent because this order has no email address.',
+          ? `The order was canceled, ${refunded ? 'its refund was submitted, and ' : ''}inventory was returned, but the customer email failed. Contact the customer separately.`
+          : `The order was canceled, ${refunded ? 'its refund was submitted, and ' : ''}inventory was returned. No customer email was sent because this order has no email address.`,
         { type: 'warning', title: 'Order canceled — customer not emailed', duration: 12000 },
       )
     }
@@ -427,7 +440,9 @@ watch(
                 Verify the payment in Clover before this order can be deleted.
               </p>
               <p v-else-if="!order.inventoryReturnedAt && !order.pendingChange">
-                Cancels the order, refunds eligible Clover payments, returns inventory, and notifies the customer.
+                {{ cancellationWillRefund(order)
+                  ? 'Cancels the order, refunds eligible Clover payments, returns inventory, and notifies the customer.'
+                  : 'Cancels this unpaid order without a refund, returns inventory, and notifies the customer.' }}
               </p>
               <p v-else-if="order.pendingChange">This order cannot be deleted while an additional payment is pending.</p>
               <p v-else>Removes this canceled order and its website payment record permanently.</p>
@@ -678,11 +693,17 @@ watch(
     <DashboardConfirmDialog
       :open="Boolean(pendingDeleteOrder)"
       :step-label="`Confirmation ${cancelConfirmationStep} of 2`"
-      :title="cancelConfirmationStep === 1 ? `Delete ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?` : 'Final confirmation: cancel and refund?'"
+      :title="cancelConfirmationStep === 1
+        ? `Delete ${pendingDeleteOrder ? orderLabel(pendingDeleteOrder) : 'this order'}?`
+        : cancellationWillRefund(pendingDeleteOrder) ? 'Final confirmation: cancel and refund?' : 'Final confirmation: cancel this unpaid order?'"
       :message="cancelConfirmationStep === 1
-        ? 'Deleting an active order first cancels it: Pine Needle will refund all remaining refundable Clover charges, return its items to inventory, close it, and notify the customer. Its record is kept for payment history; after that, a separate permanent-delete button becomes available.'
-        : 'This cancellation and any successful refund cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain.'"
-      :confirm-label="cancelConfirmationStep === 1 ? 'Continue' : 'Cancel Order & Refund'"
+        ? cancellationWillRefund(pendingDeleteOrder)
+          ? 'Deleting this active order first cancels it: Pine Needle will refund all remaining refundable Clover charges, return its items to inventory, close it, and notify the customer. Its record is kept for payment history; after that, a separate permanent-delete button becomes available.'
+          : 'Deleting this active unpaid order first cancels it without submitting a refund: Pine Needle will return its items to inventory, close it, and notify the customer. Its record is kept for order history; after that, a separate permanent-delete button becomes available.'
+        : cancellationWillRefund(pendingDeleteOrder)
+          ? 'This cancellation and any successful refund cannot be undone from the dashboard. If Clover rejects the refund, the order and inventory will remain unchanged. Continue only if you are certain.'
+          : 'This cancellation cannot be undone from the dashboard. No refund will be submitted. The items will be returned to inventory and the customer will be notified. Continue only if you are certain.'"
+      :confirm-label="cancelConfirmationStep === 1 ? 'Continue' : cancellationAction(pendingDeleteOrder)"
       :cancel-label="cancelConfirmationStep === 1 ? 'Keep Order' : 'Go Back'"
       :busy="Boolean(savingOrderId)"
       @confirm="confirmDelete"

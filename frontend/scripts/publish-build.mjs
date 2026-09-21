@@ -1,11 +1,12 @@
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const frontendDir = path.resolve(__dirname, '..')
 const rootDir = path.resolve(frontendDir, '..')
-const buildDir = path.join(frontendDir, 'dist')
+const buildDir = path.join(os.tmpdir(), 'pineneedledesigns-frontend-dist')
 const docsDir = path.join(rootDir, 'docs')
 
 await stat(path.join(buildDir, 'index.html'))

@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import os from 'node:os'
+import path from 'node:path'
+
+const disposableBuildDir = path.join(os.tmpdir(), 'pineneedledesigns-frontend-dist')
 
 export default defineConfig({
   plugins: [vue()],
@@ -20,7 +24,9 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: process.env.PINE_BUILD_OUT_DIR || '../docs',
+    // Verification builds are disposable and must stay outside the Dropbox-backed
+    // repository. Release builds explicitly copy this completed output into docs.
+    outDir: process.env.PINE_BUILD_OUT_DIR || disposableBuildDir,
     emptyOutDir: true,
     rollupOptions: {
       output: {
