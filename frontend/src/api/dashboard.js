@@ -52,7 +52,7 @@ const request = async (url, options = {}, successMessage = '') => {
 
   if (!response.ok) {
     const fallbackMessage = statusMessages[response.status]
-      || `The request failed with server response ${response.status}. Please try again.`;
+      || 'An unknown error occurred. Please try again.';
     const error = new Error(data.error || data.message || fallbackMessage);
     error.status = response.status;
     showDashboardToast(error.message, { title: 'Request failed' });
@@ -85,7 +85,8 @@ const uploadRequest = async (url, method, formData, onProgress, successMessage, 
         resolve(data);
         return;
       }
-      const message = data.error || data.message || statusMessages[xhr.status] || 'The upload failed. Your local draft is still available; retry when ready.';
+      const message = data.error || data.message || statusMessages[xhr.status]
+        || 'An unknown error occurred while uploading the media. Your local draft is still available; please try again.';
       if (xhr.status === 403 && !retryingExpiredToken && /token expired|csrf/i.test(String(message))) {
         clearCsrfToken();
         uploadRequest(url, method, formData, onProgress, successMessage, true).then(resolve, reject);

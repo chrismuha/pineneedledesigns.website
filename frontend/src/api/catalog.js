@@ -6,7 +6,7 @@ const request = async (url) => {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const error = new Error(data.error || data.message || 'Request failed.');
+    const error = new Error(data.error || data.message || 'An unknown error occurred. Please try again.');
     error.status = response.status;
     throw error;
   }
