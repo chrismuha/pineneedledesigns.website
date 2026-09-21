@@ -16,8 +16,9 @@ const liquidGlassEnabled = ref(getDashboardLiquidGlassEnabled())
 const liquidGlassIntensity = ref(getDashboardLiquidGlassIntensity())
 const footerButtonDepthEnabled = ref(getDashboardFooterButtonDepthEnabled())
 const statusBarColorEnabled = ref(getDashboardStatusBarColorEnabled())
+const installedApp = isInstalledPwa()
 const updateAvailable = ref(
-  isInstalledPwa() && window.localStorage.getItem('pine-needle-update-ready') === 'true'
+  installedApp && window.localStorage.getItem('pine-needle-update-ready') === 'true'
 )
 let nextToastId = 0
 
@@ -197,7 +198,11 @@ const isActive = (path) => {
           <div class="sidebar-footer">
             <div class="external-site">
               <p>Pine Needle Designs</p>
-              <a href="/?view=website" target="_blank" rel="noopener noreferrer">
+              <a
+                href="/?view=website"
+                :target="installedApp ? undefined : '_blank'"
+                :rel="installedApp ? undefined : 'noopener noreferrer'"
+              >
                 <i class="bi bi-arrow-up-right-circle-fill"></i>
                 <span class="info-box">External Site</span>
               </a>

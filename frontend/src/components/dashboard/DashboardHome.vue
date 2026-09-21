@@ -7,9 +7,11 @@ import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
 import { refreshDashboardApp, resetDashboardSession } from '../../api/csrf.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
 import { getDashboardLoginResetEnabled } from '../../utils/dashboardTroubleshooting.js'
+import { isInstalledPwa } from '../../utils/pwaDisplayMode.js'
 
 const loading = ref(true)
 const route = useRoute()
+const installedApp = isInstalledPwa()
 const error = ref('')
 const draftCount = ref(0)
 const pendingProductDelete = ref(null)
@@ -174,7 +176,12 @@ onMounted(() => {
       <div class="header-actions">
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/create">Add New Item</RouterLink>
         <RouterLink class="new-item-btn btn-primary" to="/dashboard/items">Edit Items</RouterLink>
-        <a class="website-btn btn-outline" href="/?view=website" target="_blank" rel="noopener noreferrer">
+        <a
+          class="website-btn btn-outline"
+          href="/?view=website"
+          :target="installedApp ? undefined : '_blank'"
+          :rel="installedApp ? undefined : 'noopener noreferrer'"
+        >
           Go to Website <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
         </a>
         <button type="button" class="session-reset-btn btn-outline" title="Clear cached app files and refresh" @click="showAppRefresh = true">

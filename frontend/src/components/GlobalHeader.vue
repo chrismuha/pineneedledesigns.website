@@ -7,6 +7,15 @@
         </router-link>
 
         <router-link
+          v-if="installedApp"
+          class="icon-btn"
+          to="/dashboard"
+          aria-label="Back to dashboard"
+        >
+          <i class="bi bi-speedometer2"></i>
+        </router-link>
+
+        <router-link
           class="icon-btn"
           to="/collections"
           aria-label="All collections"
@@ -73,11 +82,13 @@ import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
+import { isInstalledPwa } from '../utils/pwaDisplayMode.js'
 
 const menuOpen = ref(false)
 const route = useRoute()
 const cartStore = useCartStore()
 const catalogStore = useCatalogStore()
+const installedApp = isInstalledPwa()
 
 const navLinks = computed(() => catalogStore.navLinks.length
   ? catalogStore.navLinks
