@@ -57,7 +57,12 @@ export const createApp = () => {
   );
 
   app.use(express.json({ limit: '10mb' }));
-  app.use('/dashboard', requireCloudflareAccess);
+  app.use('/dashboard', rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+  }), requireCloudflareAccess);
   app.use(createSeoMiddleware({ docsDir: config.docsDir, getCatalog: getStorefrontCatalog }));
   app.use(express.static(config.docsDir, {
     setHeaders(res) {

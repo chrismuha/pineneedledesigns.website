@@ -2,14 +2,6 @@ import { config } from '../config/index.js';
 import { PushSubscription } from '../models/PushSubscription.js';
 import { pushNotificationsConfigured, sendPushNotification } from '../services/pushNotifications.js';
 
-const validSubscription = (subscription) => (
-  subscription
-  && typeof subscription.endpoint === 'string'
-  && subscription.endpoint.startsWith('https://')
-  && typeof subscription.keys?.p256dh === 'string'
-  && typeof subscription.keys?.auth === 'string'
-);
-
 export const getPushConfig = (_req, res) => {
   res.json({
     configured: pushNotificationsConfigured,
@@ -21,7 +13,9 @@ export const subscribeToPush = async (req, res) => {
   if (!pushNotificationsConfigured) {
     return res.status(503).json({ error: 'Phone notifications are not configured on the server yet.' });
   }
-  if (!validSubscription(req.body)) {
+  const { endpoint, keys } = req.body || {};
+  if (typeof endpoint !== 'string' || !endpoint.startsWith('https://')
+    || typeof keys?.p256dh !== 'string' || typeof keys?.auth !== 'string') {
     return res.status(400).json({ error: 'This device returned an invalid notification subscription.' });
   }
 
@@ -30,13 +24,13 @@ export const subscribeToPush = async (req, res) => {
     bookings: req.body?.preferences?.bookings !== false,
   };
   const subscription = await PushSubscription.findOneAndUpdate(
-    { endpoint: req.body.endpoint },
-    {
-      keys: req.body.keys,
+    { endpoint: { $eq: endpoint } },
+    { $set: {
+      keys: { p256dh: keys.p256dh, auth: keys.auth },
       userAgent: String(req.get('user-agent') || '').slice(0, 500),
       lastSeenAt: new Date(),
       preferences,
-    },
+    } },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
   res.status(201).json({ subscribed: true, id: subscription.id, preferences: subscription.preferences });
@@ -44,7 +38,7 @@ export const subscribeToPush = async (req, res) => {
 
 export const unsubscribeFromPush = async (req, res) => {
   const endpoint = String(req.body?.endpoint || '');
-  if (endpoint) await PushSubscription.deleteOne({ endpoint });
+  if (endpoint) await PushSubscription.deleteOne({ endpoint: { $eq: endpoint } });
   res.json({ subscribed: false });
 };
 

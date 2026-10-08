@@ -130,9 +130,10 @@ export function renderSeoHead(seo) {
 }
 
 export function renderSeoHtml(html, seo) {
-  return html.replace(/<title>[\s\S]*?<\/title>/gi, '')
-    .replace(/<(?:meta|link)\b[^>]*\bdata-seo(?:="[^"]*")?[^>]*>/gi, '')
-    .replace(/<script\b[^>]*\bdata-seo(?:="[^"]*")?[^>]*>[\s\S]*?<\/script>/gi, '')
+  // Leave a separator so removing a tag cannot join fragments into a new tag.
+  return html.replace(/<title>[\s\S]*?<\/title>/gi, ' ')
+    .replace(/<(?:meta|link)\b[^>]*\bdata-seo(?:="[^"]*")?[^>]*>/gi, ' ')
+    .replace(/<script\b[^>]*\bdata-seo(?:="[^"]*")?[^>]*>[\s\S]*?<\/script>/gi, ' ')
     .replace('</head>', `${renderSeoHead(seo)}\n</head>`)
 }
 
