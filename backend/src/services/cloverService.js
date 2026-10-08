@@ -273,7 +273,7 @@ export const verifyCloverHostedCheckoutAuth = async () => {
     try {
       const response = await fetch(url, { method: 'GET', headers: buildHeaders() });
       if (response.ok) {
-        if (url.includes('api.clover.com') && !cloverConfig.isProduction) {
+        if (new URL(url).origin === 'https://api.clover.com' && !cloverConfig.isProduction) {
           console.warn('Clover token is a production credential. Set CLOVER_ENVIRONMENT=production.');
           cloverConfig.environment = 'production';
           cloverConfig.isProduction = true;

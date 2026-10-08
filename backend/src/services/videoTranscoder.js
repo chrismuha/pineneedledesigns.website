@@ -48,7 +48,7 @@ const uploadsUrlFor = (filename) => `/uploads/${filename}`;
 
 const unlinkQuiet = async (filename) => {
   await fs.unlink(uploadsPathFor(filename)).catch((error) => {
-    if (error?.code !== 'ENOENT') console.error(`[videoTranscoder] failed to remove ${filename}:`, error);
+    if (error?.code !== 'ENOENT') console.error('[videoTranscoder] failed to remove %s:', filename, error);
   });
 };
 
@@ -77,16 +77,16 @@ const transcodeOne = async ({ productId, rawFilename }) => {
       // video was removed in a later edit) — the freshly-made file is
       // orphaned, so clean it up too instead of leaving it on disk forever.
       await unlinkQuiet(finalFilename);
-      console.log(`[videoTranscoder] ${rawFilename} transcoded but no longer referenced by product ${productId}; cleaned up.`);
+      console.log('[videoTranscoder] %s transcoded but no longer referenced by product %s; cleaned up.', rawFilename, productId);
       return;
     }
 
-    console.log(`[videoTranscoder] background-transcoded ${rawFilename} -> ${finalFilename} in ${Date.now() - startedAt}ms (product ${productId})`);
+    console.log('[videoTranscoder] background-transcoded %s -> %s in %dms (product %s)', rawFilename, finalFilename, Date.now() - startedAt, productId);
   } catch (error) {
     // Leave the raw file in place on failure — it's still a playable video
     // (just not the optimized webm), which is strictly better than losing
     // it. Log loudly so this shows up in your DO logs/monitoring.
-    console.error(`[videoTranscoder] failed to transcode ${rawFilename} for product ${productId}:`, error);
+    console.error('[videoTranscoder] failed to transcode %s for product %s:', rawFilename, productId, error);
   }
 };
 

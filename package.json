@@ -12,7 +12,8 @@
     "build:release": "npm run build:release -w frontend",
     "preview": "npm run preview -w frontend",
     "server": "npm run start -w backend",
-    "start": "npm run start -w backend"
+    "start": "npm run start -w backend",
+    "test": "node --experimental-test-module-mocks --test tests/*.test.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",
