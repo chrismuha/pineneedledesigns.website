@@ -1,65 +1,78 @@
+# Dependencies
+node_modules/
 
-**/.DS_Store
-**/._*
-/node_modules
-frontend/node_modules
-backend/node_modules
-# MongoDB
-.mongodb-data/
-*.lock
-# Logs
-logs
+# Logs and runtime files
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
-    
-node_modules
-.DS_Store
-dist
-frontend/dist
-dist-ssr
-coverage
+pids/
+*.pid
+*.pid.lock
+*.seed
+
+# Local environment files
+.env
+.env.*
+!.env.example
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
+# Test output
+coverage/
+.nyc_output/
+*.lcov
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-*.log
+# Tool caches
+.cache/
+.vite/
+.eslintcache
 *.tsbuildinfo
+.capacitor-sync-state.json
 
-# Lock files
-package-lock.json
-yarn.lock
+# Temporary workspaces and generated previews
+tmp/
+temp/
 
-# Runtime session data
-.sessions/
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 
-# Uploaded product images
-backend/uploads/*
-!backend/uploads/.gitkeep
+# Compiled and packaged output
+dist/
+dist-electron/
+dist_electron/
+out/
+.webpack/
+build/Release/
+release/*
+!release/.gitkeep
 
-# Ignore the legacy HTML folder
-legacy-html/
+# Native mobile build output
+/android/
+/ios/
+android/.gradle/
+android/**/build/
+ios/build/
+ios/DerivedData/
 
-#Ignore environment files (never commit secrets)
-.env
-**/.env
-backend/.env
-!.env.example
-!**/.env.example
-!**/.env.production.example
+# Generated packaging metadata
+*.tgz
+*.source.sha256
+Electron.app/
+Electron Framework.framework/
+
+# Operating system and editor files
+.DS_Store
+**/.DS_Store
+**/._*
+.idea/
+*.swp
+*.swo
 
 # Dropbox numbered dependency and conflict copies
 node_modules */
