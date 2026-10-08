@@ -1,3 +1,4 @@
+# BEGIN MCR shared ignore rules
 # Dependencies
 node_modules/
 
@@ -53,8 +54,6 @@ release/*
 !release/.gitkeep
 
 # Native mobile build output
-/android/
-/ios/
 android/.gradle/
 android/**/build/
 ios/build/
@@ -73,6 +72,73 @@ Electron Framework.framework/
 .idea/
 *.swp
 *.swo
+
+# Dropbox numbered dependency and conflict copies
+node_modules */
+*conflicted copy*
+# END MCR shared ignore rules
+
+**/.DS_Store
+**/._*
+/node_modules
+frontend/node_modules
+backend/node_modules
+# MongoDB
+.mongodb-data/
+*.lock
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+    
+node_modules
+.DS_Store
+dist
+frontend/dist
+dist-ssr
+coverage
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log
+*.tsbuildinfo
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Runtime session data
+.sessions/
+
+# Uploaded product images
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Ignore the legacy HTML folder
+legacy-html/
+
+#Ignore environment files (never commit secrets)
+.env
+**/.env
+backend/.env
+!.env.example
+!**/.env.example
+!**/.env.production.example
 
 # Dropbox numbered dependency and conflict copies
 node_modules */
