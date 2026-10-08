@@ -5,7 +5,7 @@ import session from 'express-session';
 import { once } from 'node:events';
 let authCalls = 0;
 mock.module('../backend/src/middleware/cloudflareAccess.js', { namedExports: { requireCloudflareAccess(_req, res) { authCalls += 1; res.sendStatus(401); } } });
-mock.module('../backend/src/middleware/session.js', { namedExports: { createSessionMiddleware: () => session({ secret: 'isolated-security-fixture', resave: false, saveUninitialized: false }) } });
+mock.module('../backend/src/middleware/session.js', { namedExports: { createSessionMiddleware: () => session({ secret: 'isolated-security-fixture', resave: false, saveUninitialized: false, cookie: { secure: true } }) } });
 mock.module('../backend/src/middleware/seo.js', { namedExports: { createSeoMiddleware: () => (_req, _res, next) => next() } });
 mock.module('../backend/src/routes/index.js', { defaultExport: express.Router() });
 const { createApp } = await import('../backend/src/app.js');
