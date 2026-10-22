@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Install the local five-minute media backup as a macOS LaunchAgent."""
+"""Install the local six-hour media backup as a macOS LaunchAgent."""
 import os
 from pathlib import Path
 import plistlib
@@ -21,10 +21,11 @@ job = {
     'Label': label,
     'ProgramArguments': ['/usr/bin/python3', str(script),
                          '--destination', str(destination),
-                         '--repository-copy', str(repo / 'backups/pineneedledesigns.website')],
+                         '--repository-copy', str(repo / 'backups/pineneedledesigns.website'),
+                         '--alerts', 'email', '--alert-email', 'muhachris297@gmail.com'],
     'WorkingDirectory': str(runtime),
     'RunAtLoad': True,
-    'StartInterval': 300,
+    'StartInterval': 21600,
     'ProcessType': 'Background',
     'LowPriorityIO': True,
     'StandardOutPath': str(destination / 'backup.log'),
@@ -35,4 +36,4 @@ subprocess.run(['launchctl', 'bootout', domain + '/' + label], capture_output=Tr
 with plist.open('wb') as stream:
     plistlib.dump(job, stream)
 subprocess.run(['launchctl', 'bootstrap', domain, str(plist)], check=True)
-print('Installed five-minute media backup: ' + str(plist))
+print('Installed six-hour media backup: ' + str(plist))

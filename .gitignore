@@ -123,6 +123,7 @@ package-lock.json
 yarn.lock
 
 # Runtime session data
+.uptime-state/
 .sessions/
 
 # Uploaded product images

@@ -16,6 +16,8 @@ import sys
 REMOTE_CATALOG = r"""
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 dotenv.config({ path: 'backend/.env', quiet: true });
 if (!process.env.MONGODB_URI) throw new Error('Server database configuration is missing');
 await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 15000, autoIndex: false });
@@ -24,6 +26,19 @@ try {
   for (const name of ['products', 'collections', 'subcollections', 'storesettings']) {
     result[name] = await mongoose.connection.db.collection(name).find({}).toArray();
   }
+  const mediaFiles = [];
+  async function listFiles(directory, prefix = '/uploads') {
+    let entries;
+    try { entries = await fs.readdir(directory, { withFileTypes: true }); }
+    catch (error) { if (error.code === 'ENOENT') return; throw error; }
+    for (const entry of entries) {
+      const url = prefix + '/' + entry.name;
+      if (entry.isDirectory()) await listFiles(path.join(directory, entry.name), url);
+      else if (entry.isFile()) mediaFiles.push(url);
+    }
+  }
+  await listFiles('backend/uploads');
+  result._mediaFiles = mediaFiles.sort();
   process.stdout.write(JSON.stringify(result));
 } finally { await mongoose.disconnect(); }
 """
@@ -33,8 +48,9 @@ def media_paths(value):
     """Only map website upload URLs to safe relative backup paths."""
     found = set()
     if isinstance(value, dict):
-        for item in value.values():
-            found.update(media_paths(item))
+        for key, item in value.items():
+            if key != '_mediaFiles':
+                found.update(media_paths(item))
     elif isinstance(value, list):
         for item in value:
             found.update(media_paths(item))
@@ -49,6 +65,111 @@ def write_json(destination, value):
     temporary = destination.with_name(destination.name + '.tmp')
     temporary.write_text(json.dumps(value, indent=2) + '\n')
     os.replace(temporary, destination)
+
+
+def catalog_changes(previous, catalog):
+    """Compare live inventory, not retained backup files; remember past deletions."""
+    files = set(catalog['_mediaFiles'])
+    records = {kind + ':' + str(record['_id']): record.get('name', record.get('key', 'Unnamed'))
+               for kind in ('products', 'collections', 'subcollections')
+               for record in catalog.get(kind, [])}
+    referenced = {'/' + relative for relative in media_paths(catalog)}
+    if previous is None:
+        return {'files': sorted(files), 'records': records,
+                'missingFiles': sorted(referenced - files), 'missingRecords': {}}, []
+    deleted_files = set(previous['files']) - files
+    restored_files = files & set(previous['missingFiles'])
+    deleted_records = {key: name for key, name in previous['records'].items() if key not in records}
+    restored_records = {key: name for key, name in records.items() if key in previous['missingRecords']}
+    missing_records = {**previous['missingRecords'], **deleted_records}
+    for key in restored_records:
+        missing_records.pop(key)
+    events = []
+    for event_type, items in [('media-deleted', sorted(deleted_files)),
+                              ('media-restored', sorted(restored_files)),
+                              ('catalog-deleted', deleted_records),
+                              ('catalog-restored', restored_records)]:
+        if items:
+            events.append({'type': event_type, 'items': items})
+    state = {'files': sorted(files), 'records': records,
+             'missingFiles': sorted((set(previous['missingFiles']) | deleted_files | referenced) - files),
+             'missingRecords': missing_records}
+    return state, events
+
+
+def monitor_catalog(root, catalog, stamp):
+    state_file = root / 'monitor-state.json'
+    previous = json.loads(state_file.read_text()) if state_file.exists() else None
+    state, events = catalog_changes(previous, catalog)
+    pending_file = root / 'pending-alerts.json'
+    pending = json.loads(pending_file.read_text()) if pending_file.exists() else []
+    for event in events:
+        event['detectedAt'] = stamp
+    if events:
+        with (root / 'activity.jsonl').open('a') as log:
+            for event in events:
+                log.write(json.dumps(event) + '\n')
+        write_json(pending_file, pending + events)
+    write_json(state_file, state)
+
+
+def deliver_mac_alerts(root):
+    pending_file = root / 'pending-alerts.json'
+    pending = json.loads(pending_file.read_text()) if pending_file.exists() else []
+    if not pending:
+        return
+    labels = {'media-deleted': 'media files deleted', 'media-restored': 'media files restored',
+              'catalog-deleted': 'catalog records deleted', 'catalog-restored': 'catalog records restored'}
+    summary = '; '.join(f'{len(event["items"])} {labels[event["type"]]}' for event in pending)
+    # Pass text as arguments so catalog text can never become AppleScript code.
+    script = 'on run argv\n display notification (item 1 of argv) with title "Pine Needle website alert"\nend run'
+    subprocess.run(['/usr/bin/osascript', '-e', script, summary + '. Details in activity.jsonl.'],
+                   check=True, capture_output=True, timeout=20)
+    write_json(pending_file, [])
+
+
+def email_alert(events, args):
+    labels = {'media-deleted': 'Media files deleted', 'media-restored': 'Media files restored',
+              'catalog-deleted': 'Catalog records deleted', 'catalog-restored': 'Catalog records restored',
+              'test': 'Alert test'}
+    details = ['Pine Needle Designs backup monitoring', '']
+    for event in events:
+        items = event['items']
+        details.extend([labels[event['type']] + f' ({len(items)})',
+                        'Detected: ' + event.get('detectedAt', 'test')])
+        if isinstance(items, dict):
+            details.extend(f'- {name} ({identifier})' for identifier, name in items.items())
+        else:
+            details.extend('- ' + item for item in items)
+        details.append('')
+    details.append('Checks run every six hours while Chris\'s Mac is awake and online. Existing missing files do not generate repeated alerts. The monitor reports changes; it does not automatically restore deleted files.')
+    subject = 'Pine Needle: ' + ('backup alert test' if events[0]['type'] == 'test' else 'website deletion/restoration alert')
+    code = r"""
+import dotenv from 'dotenv';
+dotenv.config({ path: 'backend/.env', quiet: true });
+process.env.NODE_ENV = 'production';
+// This is the verified Resend subdomain. The root domain configured by PM2
+// is unverified, so use the verified sender for backup alerts explicitly.
+process.env.RESEND_FROM = 'notifications@notifications.pineneedledesigns.store';
+const { sendEmail } = await import('./backend/src/services/mailer.js');
+let input = '';
+for await (const chunk of process.stdin) input += chunk;
+const message = JSON.parse(input);
+await sendEmail({ to: message.to, subject: message.subject, text: message.text });
+"""
+    ssh = ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-i', str(args.identity)]
+    command = 'cd ' + shlex.quote(args.remote_root) + ' && node --input-type=module -e ' + shlex.quote(code)
+    subprocess.run(ssh + [args.host, command],
+                   input=json.dumps({'to': args.alert_email, 'subject': subject, 'text': '\n'.join(details)}),
+                   text=True, capture_output=True, check=True, timeout=90)
+
+
+def deliver_email_alerts(root, args):
+    pending_file = root / 'pending-alerts.json'
+    pending = json.loads(pending_file.read_text()) if pending_file.exists() else []
+    if pending:
+        email_alert(pending, args)
+        write_json(pending_file, [])
 
 
 def folder_name(record):
@@ -162,7 +283,18 @@ def main():
     parser.add_argument('--organize-only', action='store_true', help='Organize the last successful backup without accessing production')
     parser.add_argument('--repository-copy', type=Path, help='Keep an additional private copy inside the repository')
     parser.add_argument('--mirror-only', action='store_true', help='Copy the existing backup to the repository without accessing production')
+    parser.add_argument('--alerts', choices=['off', 'mac', 'email'], default='off')
+    parser.add_argument('--alert-email', default='')
+    parser.add_argument('--test-alert', action='store_true')
     args = parser.parse_args()
+    if args.alerts == 'email' and not re.fullmatch(r'[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+', args.alert_email):
+        parser.error('--alerts email requires one valid --alert-email address')
+    if args.test_alert:
+        if args.alerts != 'email':
+            parser.error('--test-alert requires --alerts email')
+        email_alert([{'type': 'test', 'items': ['Email alerts are enabled for deleted and restored media and catalog records.']}], args)
+        print('Test alert accepted by the email service for ' + args.alert_email)
+        return
     if args.repository_copy:
         args.repository_copy = args.repository_copy.resolve()
     os.umask(0o077)
@@ -192,6 +324,15 @@ def main():
         result = subprocess.run(ssh + [args.host, remote], input=REMOTE_CATALOG,
                                 text=True, capture_output=True, check=True, timeout=90)
         catalog = json.loads(result.stdout)
+        monitor_catalog(root, catalog, stamp)
+        if args.alerts != 'off':
+            try:
+                if args.alerts == 'email':
+                    deliver_email_alerts(root, args)
+                else:
+                    deliver_mac_alerts(root)
+            except (OSError, subprocess.SubprocessError):
+                print('Notification delivery failed; alert is queued for the next run.', flush=True)
         references = media_paths(catalog)
         snapshots = root / 'catalog-snapshots'
         snapshots.mkdir(exist_ok=True)

@@ -80,7 +80,7 @@ is not committed to the repository.
 ### Automatic local media backup
 
 On Chris's Mac, `scripts/install-media-backup.py` installs a LaunchAgent that runs
-`scripts/backup-uploaded-media.py` at login and every five minutes while the Mac is
+`scripts/backup-uploaded-media.py` at login and every six hours while the Mac is
 awake and online. Install or update it with `/usr/bin/python3 scripts/install-media-backup.py`.
 The job connects over SSH using `~/.ssh/pineneedles_deploy`; database credentials
 stay on the production server. It reads all products and collections, including
@@ -112,6 +112,16 @@ the Dropbox checkout. Until then the regular local backup continues, and
 - `replaced-files/` retains previous files when an existing upload is replaced.
 - `backup-status.json` records the latest completed backup, SHA-256 checksums, and missing media links.
 - `backup.log` and `backup-error.log` show scheduled job results and failures.
+- `activity.jsonl` records detected media deletions/restorations and removed/restored
+  product, collection, and subcollection records. The scheduled job emails new
+  events to `muhachris297@gmail.com` through the server's existing mail service;
+  no mail credentials are copied to this Mac. The first run establishes a baseline so existing
+  missing files do not generate alerts; later recovery of those files does.
+  New uploads do not trigger restoration alerts. Unchanged damage does not repeat.
+  `monitor-state.json` remembers previously missing items and `pending-alerts.json`
+  retains notifications until the email service accepts them, retrying failures
+  on the next successful check. Checks require this Mac to be awake and online.
+  Manual runs can use `--alerts mac` for Mac notifications instead.
 
 Website deletions do not delete local backup files. Interrupted transfers do not
 replace completed files. An offline Mac cannot pull new files until it reconnects;
@@ -129,6 +139,23 @@ restore with `/usr/bin/python3 restore-uploaded-media.py` from that folder. Add
 records are preserved. `--snapshot catalog-snapshots/FILE.json` selects earlier
 catalog data. Restore verifies backup checksums and casts saved IDs/dates back to
 MongoDB types. It does not restore orders/payments or roll back existing records.
+
+## External uptime monitoring
+
+The `External Uptime Monitor` GitHub Actions workflow checks the public homepage
+and `/api/health` every six hours, at minute 17 in UTC, independently of DigitalOcean
+and both Macs. It retries failed probes three times and emails
+`muhachris297@gmail.com` through Resend when a confirmed outage starts and when the
+site recovers. It uses the verified notification sender and the repository's
+existing `RESEND_API_KEY` secret; no SSH connection to the website is required.
+Run it manually from Actions with `send_test_email` enabled to test delivery.
+
+Notification state is retained in GitHub's Actions cache, including when the site
+or mail service fails. Missing or evicted state may cause a repeated outage email.
+GitHub can delay or drop scheduled runs; in public repositories it disables
+schedules after 60 days without repository activity. This is a periodic external
+check, not a guaranteed real-time paging service. Outages between checks can be
+missed. View the workflow history to confirm the monitor itself is running.
 
 ## API Endpoints
 

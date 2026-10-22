@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+from types import SimpleNamespace
 
 spec = importlib.util.spec_from_file_location('backup', Path(__file__).resolve().parents[1] / 'scripts/backup-uploaded-media.py')
 backup = importlib.util.module_from_spec(spec)
@@ -15,6 +17,47 @@ restore_spec.loader.exec_module(restore)
 
 
 class MediaBackupTests(unittest.TestCase):
+    def test_email_alert_preserves_queue_on_failure_and_clears_after_acceptance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            events = [{'type': 'media-deleted', 'items': ['/uploads/photo.webp']}]
+            backup.write_json(root / 'pending-alerts.json', events)
+            with patch.object(backup, 'email_alert', side_effect=OSError('offline')):
+                with self.assertRaises(OSError):
+                    backup.deliver_email_alerts(root, None)
+            self.assertEqual(json.loads((root / 'pending-alerts.json').read_text()), events)
+            with patch.object(backup, 'email_alert') as sender:
+                backup.deliver_email_alerts(root, None)
+                sender.assert_called_once_with(events, None)
+            self.assertEqual(json.loads((root / 'pending-alerts.json').read_text()), [])
+
+    def test_email_is_addressed_only_to_selected_recipient(self):
+        args = SimpleNamespace(identity=Path('/tmp/test-key'), remote_root='/server',
+                               host='example', alert_email='muhachris297@gmail.com')
+        with patch.object(backup.subprocess, 'run') as run:
+            backup.email_alert([{'type': 'media-restored', 'items': ['/uploads/a.webp']}], args)
+        message = json.loads(run.call_args.kwargs['input'])
+        self.assertEqual(message['to'], 'muhachris297@gmail.com')
+        self.assertIn('Media files restored', message['text'])
+        self.assertNotIn('cc', message)
+
+    def test_alerts_baseline_deletions_restorations_and_no_repeat(self):
+        catalog = {'products': [{'_id': 'p1', 'name': 'Bag', 'photos': ['/uploads/old.webp']}],
+                   '_mediaFiles': ['/uploads/present.webp']}
+        baseline, events = backup.catalog_changes(None, catalog)
+        self.assertEqual(events, [])  # Pre-existing damage is a baseline, not a new incident.
+        deleted = {'products': [], '_mediaFiles': []}
+        state, events = backup.catalog_changes(baseline, deleted)
+        self.assertEqual({e['type'] for e in events}, {'media-deleted', 'catalog-deleted'})
+        repeated, events = backup.catalog_changes(state, deleted)
+        self.assertEqual(events, [])
+        catalog['_mediaFiles'] = ['/uploads/present.webp', '/uploads/old.webp', '/uploads/new.webp']
+        restored, events = backup.catalog_changes(repeated, catalog)
+        self.assertEqual({e['type'] for e in events}, {'media-restored', 'catalog-restored'})
+        self.assertEqual(next(e['items'] for e in events if e['type'] == 'media-restored'),
+                         ['/uploads/old.webp', '/uploads/present.webp'])
+        self.assertEqual(backup.catalog_changes(restored, catalog)[1], [])
+
     def test_repository_copy_keeps_removed_files(self):
         with tempfile.TemporaryDirectory(prefix='repository backup ') as directory:
             root = Path(directory)
