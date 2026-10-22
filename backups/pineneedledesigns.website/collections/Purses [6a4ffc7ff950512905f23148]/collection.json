@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc7ff950512905f23148",
+  "slug": "purses",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-6ba797ef2746762fe2cc.webp",
+  "createdAt": "2026-07-09T19:54:39.367Z",
+  "description": "Structured shape with mixed leather.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Purses",
+  "showWhenEmpty": false,
+  "sortOrder": 14,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

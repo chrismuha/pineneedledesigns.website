@@ -1,0 +1,14 @@
+{
+  "_id": "6a6eb656683c077a1ffcd111",
+  "name": "Skirts",
+  "slug": "skirts",
+  "sortOrder": 24,
+  "isSystem": false,
+  "description": "",
+  "cardImage": "",
+  "hidden": false,
+  "showWhenEmpty": false,
+  "createdAt": "2026-08-02T03:15:34.978Z",
+  "updatedAt": "2026-08-02T03:15:34.978Z",
+  "__v": 0
+}

@@ -1,0 +1,51 @@
+{
+  "_id": "6a4ffc8ff950512905f2315f",
+  "legacyId": 21,
+  "__v": 1,
+  "bagTypes": [
+    "Packs"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:55.807Z",
+  "customProperties": [],
+  "description": "Perfect for walking with a stroller or dog leash. Fanny pack sling pack bum pack.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "Made by jGypsie",
+  "meta": [
+    "Price: $79",
+    "Free shipping"
+  ],
+  "name": "Upcycled LV Canvas Pack",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-32a31951c86d42518808.webp",
+    "/uploads/legacy-fae2069d3c05196e25e9.webp",
+    "/uploads/legacy-98165e82f9c7f8fa3550.webp"
+  ],
+  "price": 79,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 1,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

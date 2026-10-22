@@ -1,0 +1,14 @@
+{
+  "_id": "6a71187428f61335d771da92",
+  "name": "Sweaters",
+  "slug": "sweaters",
+  "sortOrder": 25,
+  "isSystem": false,
+  "description": "",
+  "cardImage": "",
+  "hidden": false,
+  "showWhenEmpty": false,
+  "createdAt": "2026-08-03T22:38:44.228Z",
+  "updatedAt": "2026-08-03T22:38:44.228Z",
+  "__v": 0
+}

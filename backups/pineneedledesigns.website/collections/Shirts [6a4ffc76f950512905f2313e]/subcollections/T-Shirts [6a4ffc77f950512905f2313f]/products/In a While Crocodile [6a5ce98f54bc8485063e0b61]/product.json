@@ -1,0 +1,42 @@
+{
+  "_id": "6a5ce98f54bc8485063e0b61",
+  "name": "In a While Crocodile",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "color": "",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "shoeSize": "",
+  "beltSize": "",
+  "sizePrices": {},
+  "comfortColors": [],
+  "description": "Miss Croc is all glam but she will BITE. She likes to hide behind her hat and glasses and just watch. Added Bling knocks her sassy look out of the swamp!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1784473998935-499706426.webp"
+  ],
+  "price": 38,
+  "hasBlingOptions": false,
+  "blingPrice": null,
+  "shippingCost": 5,
+  "freeShipping": false,
+  "outOfStock": false,
+  "quantity": 88,
+  "sortOrder": 13,
+  "meta": [],
+  "videos": [
+    "/uploads/1788367213556-151018210.webm"
+  ],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "generalDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-19T15:13:19.380Z",
+  "updatedAt": "2026-09-21T00:12:02.036Z",
+  "__v": 1,
+  "sweatshirtSize": ""
+}

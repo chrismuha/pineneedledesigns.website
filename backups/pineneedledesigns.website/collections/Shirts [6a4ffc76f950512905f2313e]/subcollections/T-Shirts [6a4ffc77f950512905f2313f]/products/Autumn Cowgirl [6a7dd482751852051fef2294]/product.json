@@ -1,0 +1,42 @@
+{
+  "_id": "6a7dd482751852051fef2294",
+  "name": "Autumn Cowgirl",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "color": "Grey, Natural, White, Peach, Pink, Sand",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sweatshirtSize": "",
+  "shoeSize": "",
+  "beltSize": "",
+  "sizePrices": {},
+  "comfortColors": [],
+  "description": "Adirondack Chic this  country girl loves rocking her Fall colors. As well as her rhinestones. Bling, pictured leather, and cowboy hat with all the Cowgirl amenities! Priced the same for all sizes!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1787763423018-785382150.webp"
+  ],
+  "price": 38,
+  "hasBlingOptions": false,
+  "blingPrice": null,
+  "shippingCost": 5,
+  "freeShipping": false,
+  "outOfStock": false,
+  "quantity": 88,
+  "sortOrder": 15,
+  "meta": [],
+  "videos": [
+    "/uploads/1787763423043-843837897.webm"
+  ],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "generalDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-08-13T14:28:18.462Z",
+  "updatedAt": "2026-09-20T22:38:59.068Z",
+  "__v": 1
+}

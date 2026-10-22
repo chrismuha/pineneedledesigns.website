@@ -1,0 +1,43 @@
+{
+  "_id": "6a50f76421d68331ea2b070a",
+  "name": "Cheetah Boa",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a50df028fa3071924f9356c",
+  "color": "Gray, Pink, Sand, White",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "description": "Miss Cheetah tries to show off her softer side with her heart shape glasses and pink feather Boa. But looks can be so deceiving! Comes blinged out!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1783691108529-577199489.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "freeShipping": true,
+  "outOfStock": true,
+  "quantity": 30,
+  "sortOrder": 0,
+  "meta": [],
+  "videos": [],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [
+    "Boa",
+    "T-Shirts"
+  ],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-10T13:45:08.550Z",
+  "updatedAt": "2026-09-21T00:08:33.620Z",
+  "__v": 5,
+  "beltSize": "",
+  "comfortColors": [],
+  "generalDescription": "",
+  "hasBlingOptions": false,
+  "shoeSize": "",
+  "blingPrice": null,
+  "sizePrices": {},
+  "sweatshirtSize": ""
+}

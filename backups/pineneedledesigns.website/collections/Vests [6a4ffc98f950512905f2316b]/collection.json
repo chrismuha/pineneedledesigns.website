@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc98f950512905f2316b",
+  "slug": "vests",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-3497a7fca9532aa09594.webp",
+  "createdAt": "2026-07-09T19:55:04.878Z",
+  "description": "Edgy layers with artisanal trim.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Vests",
+  "showWhenEmpty": false,
+  "sortOrder": 21,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

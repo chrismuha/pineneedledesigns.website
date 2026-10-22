@@ -1,0 +1,58 @@
+{
+  "_id": "6a4ffc79f950512905f23141",
+  "legacyId": 6,
+  "__v": 2,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "Peach, Natural, Grey, Sand, White",
+  "createdAt": "2026-07-09T19:54:32.695Z",
+  "customProperties": [],
+  "description": "WENDE's CHOICE! On a Bad Day There's ALWAYS Lipstick! Blinged Out sweatshirt. Comes in Peach, Natural, Grey, Sand, and White.",
+  "filters": [
+    "Sweatshirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $58",
+    "Available in Peach, Natural, Grey, Sand, and White.",
+    "Free shipping"
+  ],
+  "name": "On a Bad Day there\u2019s Always Lipstick Blinged Out Sweatshirt",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "optionPlaceholders": {
+    "Style": "Select style",
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp",
+    "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1b.webp"
+  ],
+  "price": 58,
+  "shippingCost": 5,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 0,
+  "subCollectionId": "6a4ffc78f950512905f23140",
+  "updatedAt": "2026-09-21T00:14:48.310Z",
+  "videoPosters": [
+    "/uploads/legacy-e3689ed4d2f8efb06f22.webp"
+  ],
+  "videos": [
+    "/videos/shirts/wende-choice-blinged-out-sweatshirt/wende-choice.webm"
+  ],
+  "quantity": 44,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": "Small, Medium, Large, XL, 2X, 3X"
+}

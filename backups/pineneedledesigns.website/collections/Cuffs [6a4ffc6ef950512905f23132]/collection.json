@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc6ef950512905f23132",
+  "slug": "cuffs",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-6b1b766b7a3228c9a9a2.webp",
+  "createdAt": "2026-07-09T19:54:22.414Z",
+  "description": "Bold silhouette with tactile finish.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Cuffs",
+  "showWhenEmpty": false,
+  "sortOrder": 5,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

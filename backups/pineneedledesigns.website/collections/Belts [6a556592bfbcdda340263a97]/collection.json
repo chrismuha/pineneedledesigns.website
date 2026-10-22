@@ -1,0 +1,14 @@
+{
+  "_id": "6a556592bfbcdda340263a97",
+  "name": "Belts",
+  "slug": "belts",
+  "sortOrder": 23,
+  "isSystem": false,
+  "description": "",
+  "cardImage": "",
+  "hidden": false,
+  "showWhenEmpty": false,
+  "createdAt": "2026-07-13T22:24:18.613Z",
+  "updatedAt": "2026-07-13T22:24:18.613Z",
+  "__v": 0
+}

@@ -1,0 +1,43 @@
+{
+  "_id": "6a50f5eb21d68331ea2b053d",
+  "name": "Boo-Jee Boa",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a50df028fa3071924f9356c",
+  "color": "Gray, Peach, Sand, Pink, White",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "description": "For Holloween! Bling IT!!!She\u2019s not that scary with that outfit! Dressed to impress. Perfect for the holiday. No added price for plus sizes.",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1783690731684-51129312.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "freeShipping": true,
+  "outOfStock": false,
+  "quantity": 88,
+  "sortOrder": 8,
+  "meta": [],
+  "videos": [],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [
+    "Boa",
+    "T-Shirts"
+  ],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-10T13:38:51.718Z",
+  "updatedAt": "2026-09-21T00:08:02.780Z",
+  "__v": 3,
+  "beltSize": "",
+  "comfortColors": [],
+  "hasBlingOptions": false,
+  "shoeSize": "",
+  "sizePrices": {},
+  "blingPrice": null,
+  "generalDescription": "",
+  "sweatshirtSize": ""
+}

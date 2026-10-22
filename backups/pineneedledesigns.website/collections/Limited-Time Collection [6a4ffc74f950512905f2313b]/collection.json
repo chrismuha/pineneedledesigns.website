@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc74f950512905f2313b",
+  "slug": "limited-time",
+  "__v": 0,
+  "cardImage": "",
+  "createdAt": "2026-07-09T19:54:28.805Z",
+  "description": "A small-batch limited-time collection coming soon.",
+  "hidden": true,
+  "isSystem": false,
+  "name": "Limited-Time Collection",
+  "showWhenEmpty": false,
+  "sortOrder": 10,
+  "updatedAt": "2026-09-06T15:13:13.386Z"
+}

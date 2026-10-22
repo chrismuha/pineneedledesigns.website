@@ -77,6 +77,59 @@ catalog records and product media through the dashboard. Uploaded media files li
 `backend/uploads` directory on the application server and are served from `/uploads`; catalog media
 is not committed to the repository.
 
+### Automatic local media backup
+
+On Chris's Mac, `scripts/install-media-backup.py` installs a LaunchAgent that runs
+`scripts/backup-uploaded-media.py` at login and every five minutes while the Mac is
+awake and online. Install or update it with `/usr/bin/python3 scripts/install-media-backup.py`.
+The job connects over SSH using `~/.ssh/pineneedles_deploy`; database credentials
+stay on the production server. It reads all products and collections, including
+hidden and sold items, plus subcollections and store settings, directly from MongoDB.
+This backs up catalog records and uploaded media, not orders, payments, or the entire database.
+
+Backups live at `~/Website Backups/pineneedledesigns.website/`. The scheduled script
+is installed into `~/Library/Application Support/Muha Computer Repair/Media Backup/`
+because macOS blocks LaunchAgent access to this Dropbox checkout. These backups
+are also copied to `backups/pineneedledesigns.website/` inside this repository, where
+the media and catalog files can be committed to Git. Runtime locks and logs remain
+ignored. The backup sits outside the served `docs/` directory. Dropbox can sync this
+additional copy. macOS must grant Full Disk Access to
+`/Library/Developer/CommandLineTools/usr/bin/python3` for the scheduled job to access
+the Dropbox checkout. Until then the regular local backup continues, and
+`repository-copy-status.json` reports whether the additional copy succeeded.
+
+- `site/uploads/` mirrors website `/uploads/` URLs, including files no longer referenced by the catalog.
+- `collections/Collection Name [ID]/` groups collection metadata and cover media. Its
+  `products/` folders contain each item's `product.json`, readable `item-details.md`,
+  `media.json` mapping files to original website URLs, and available photos/videos
+  in `media/`. Products assigned to a subcollection appear under
+  `subcollections/Subcollection Name [ID]/products/`. Complete records retain tags/filters,
+  descriptions, sizes, prices, options, ordering, and original database relationships.
+  Media files are hard links to the original path backups, so they open normally
+  without duplicating video storage. IDs distinguish items with identical names.
+- `collections/index.json` lists current folders; folders for removed or renamed items remain.
+- `catalog-snapshots/` retains timestamped catalog records for restoring media associations.
+- `replaced-files/` retains previous files when an existing upload is replaced.
+- `backup-status.json` records the latest completed backup, SHA-256 checksums, and missing media links.
+- `backup.log` and `backup-error.log` show scheduled job results and failures.
+
+Website deletions do not delete local backup files. Interrupted transfers do not
+replace completed files. An offline Mac cannot pull new files until it reconnects;
+uploads deleted before the next successful pull cannot be recovered by this job.
+Existing missing media is reported rather than replaced with blank files. There is
+no automatic pruning of old snapshots or replacement files.
+
+Run a manual backup from the repository root with
+`/usr/bin/python3 scripts/backup-uploaded-media.py`.
+Verify backup retention with `python3 tests/media-backup.test.py`.
+
+The backup folder includes `RESTORE.md` and `restore-uploaded-media.py`. Preview a
+restore with `/usr/bin/python3 restore-uploaded-media.py` from that folder. Add
+`--apply` to restore missing media and catalog records; existing website files and
+records are preserved. `--snapshot catalog-snapshots/FILE.json` selects earlier
+catalog data. Restore verifies backup checksums and casts saved IDs/dates back to
+MongoDB types. It does not restore orders/payments or roll back existing records.
+
 ## API Endpoints
 
 The backend provides the following cart API endpoints:

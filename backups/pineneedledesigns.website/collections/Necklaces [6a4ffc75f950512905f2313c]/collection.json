@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc75f950512905f2313c",
+  "slug": "necklaces",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-55031764f4e61678f2cb.webp",
+  "createdAt": "2026-07-09T19:54:29.455Z",
+  "description": "Mix of chains and charms.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Necklaces",
+  "showWhenEmpty": false,
+  "sortOrder": 11,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

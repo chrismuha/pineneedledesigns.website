@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc6cf950512905f2312f",
+  "slug": "boot-bands",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-952d4cc1ef5bdb0fd41a.webp",
+  "createdAt": "2026-07-09T19:54:20.434Z",
+  "description": "Studded detail for every boot.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Boot Bands",
+  "showWhenEmpty": false,
+  "sortOrder": 2,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

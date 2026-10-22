@@ -1,0 +1,51 @@
+{
+  "_id": "6a4ffc8ff950512905f2315e",
+  "legacyId": 20,
+  "__v": 1,
+  "bagTypes": [],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:54.876Z",
+  "customProperties": [],
+  "description": "Lv leather French style. Hair clip brown.",
+  "filters": [
+    "Accessories"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "Made by jGypsie",
+  "meta": [
+    "Price: $49",
+    "Lv leather French style",
+    "Hair clip brown",
+    "Free shipping"
+  ],
+  "name": "Upcycled LOGO Barrette",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-93c6a8011c29b2f5e479.webp",
+    "/uploads/legacy-b06dbad0d23b0696b0d6.webp",
+    "/uploads/legacy-295645f8fda4da4ecfb3.webp"
+  ],
+  "price": 49,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 0,
+  "subCollectionId": "6a4ffc8ef950512905f2315d",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 2,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

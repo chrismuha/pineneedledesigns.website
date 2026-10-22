@@ -1,0 +1,58 @@
+{
+  "_id": "6a4ffc7af950512905f23142",
+  "legacyId": 7,
+  "__v": 1,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "Peach, Natural, Pink, Sand, White",
+  "createdAt": "2026-07-09T19:54:33.646Z",
+  "customProperties": [],
+  "description": "Turquoise Chick is Blinged Out with fused on rhinestones on her cowboy hat and parts of her jewelry. Rustic and Chic.",
+  "filters": [
+    "T-Shirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $38",
+    "Available in Peach, Natural, Pink, Sand, and White.",
+    "Free shipping"
+  ],
+  "name": "Turquoise Chic Blinged Out T-Shirt",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "optionPlaceholders": {
+    "Style": "Select style",
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-722c0e3a52a92872b4cf.webp",
+    "/uploads/legacy-1a389fd98f0c14d7af9c.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "shoeTypes": [],
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sortOrder": 1,
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "updatedAt": "2026-09-21T00:16:05.572Z",
+  "videoPosters": [
+    "/uploads/legacy-4eb166aaac93c68e939c.webp"
+  ],
+  "videos": [
+    "/uploads/legacy-4bc11d62236a8edb84b9.webm"
+  ],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

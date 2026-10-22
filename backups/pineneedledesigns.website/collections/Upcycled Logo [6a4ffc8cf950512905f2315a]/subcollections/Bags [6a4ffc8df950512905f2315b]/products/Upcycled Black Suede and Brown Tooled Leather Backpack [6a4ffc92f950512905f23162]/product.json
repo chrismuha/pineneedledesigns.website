@@ -1,0 +1,52 @@
+{
+  "_id": "6a4ffc92f950512905f23162",
+  "legacyId": 24,
+  "__v": 1,
+  "bagTypes": [
+    "Backpacks"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:58.057Z",
+  "customProperties": [],
+  "description": "Of course with the Lv logo! Great for school or a hike! Stitching is the famous boot stitch.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $160",
+    "Color: Black suede and brown tooled leather",
+    "Size: 15\u201dX9.5\u201dX5\u201d",
+    "Free shipping"
+  ],
+  "name": "Upcycled Black Suede and Brown Tooled Leather Backpack",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-5a30229486b846eba056.webp",
+    "/uploads/legacy-4b02e9dd6eef96f31040.webp"
+  ],
+  "price": 160,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 4,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

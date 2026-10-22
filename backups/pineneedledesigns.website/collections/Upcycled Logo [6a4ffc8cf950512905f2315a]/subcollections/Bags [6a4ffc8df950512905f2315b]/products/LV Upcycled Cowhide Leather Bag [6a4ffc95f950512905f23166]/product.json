@@ -1,0 +1,53 @@
+{
+  "_id": "6a4ffc95f950512905f23166",
+  "legacyId": 28,
+  "__v": 1,
+  "bagTypes": [
+    "Crossbody Bags",
+    "Clutches"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:55:01.247Z",
+  "customProperties": [],
+  "description": "Two bags in one. LV upcycled cowhide leather bag. Crossbody or handheld clutch. You choose. Comes with 2 straps: one short for your wrist or arm and one long strap. Beautiful golden brown.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $118",
+    "Color: Golden brown",
+    "Crossbody or handheld clutch",
+    "Comes with 2 straps",
+    "Free shipping"
+  ],
+  "name": "LV Upcycled Cowhide Leather Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-40d3aea797871e905856.webp"
+  ],
+  "price": 118,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 8,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

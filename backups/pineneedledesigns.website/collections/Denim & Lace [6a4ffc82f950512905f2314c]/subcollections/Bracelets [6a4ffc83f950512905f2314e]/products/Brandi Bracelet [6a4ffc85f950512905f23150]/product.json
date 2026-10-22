@@ -1,0 +1,53 @@
+{
+  "_id": "6a4ffc85f950512905f23150",
+  "legacyId": 14,
+  "__v": 0,
+  "bagTypes": [],
+  "collectionId": "6a4ffc82f950512905f2314c",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:44.886Z",
+  "customProperties": [],
+  "description": "Brandi is a bracelet with a denim band. She is trimmed in lace flowers and has an ivory floral brooch with 3 large pearls and scattered rhinestones. Attached is bridal leaf lace with a triple circle and tiny rhinestones.",
+  "filters": [
+    "Bracelets"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $29",
+    "Size: 7 to 7.5\"",
+    "Free shipping"
+  ],
+  "name": "Brandi Bracelet",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-a77b44ce0b4cdad490e0.webp",
+    "/uploads/legacy-26fda35654083171776b.webp",
+    "/uploads/legacy-3c83f109e5bbb12755f5.webp",
+    "/uploads/legacy-924695c87d7d8f1f7659.webp",
+    "/uploads/legacy-784b399d60ca91351dc3.webp"
+  ],
+  "price": 29,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 1,
+  "subCollectionId": "6a4ffc83f950512905f2314e",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [
+    "/uploads/legacy-5b355d6fa4c5116c1d22.webp"
+  ],
+  "videos": [
+    "/uploads/legacy-69a85e88135dadfa9c0c.webm"
+  ],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "sweatshirtSize": ""
+}

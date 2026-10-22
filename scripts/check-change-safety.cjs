@@ -64,7 +64,11 @@ if (!base || /^0+$/.test(base)) {
     if (forbiddenPath.test(file)) failures.push(`Unsafe generated or sensitive file added: ${file}`)
     try {
       const size = Number(git(['cat-file', '-s', `HEAD:${file}`]))
-      if (size > 10 * 1024 * 1024) failures.push(`Oversized file added (>10 MiB): ${file}`)
+      // Original catalog videos are intentionally versioned as recovery backups.
+      // Keep a cap below GitHub's 100 MiB file limit; other files retain 10 MiB.
+      const backupMedia = /^backups\/pineneedledesigns\.website\/(?:site\/uploads\/|collections\/.+\/media\/|replaced-files\/).+\.(?:webp|png|jpe?g|gif|avif|mp4|webm|mov|ogg)$/i.test(file)
+      const limitMiB = backupMedia ? 95 : 10
+      if (size > limitMiB * 1024 * 1024) failures.push(`Oversized file added (>${limitMiB} MiB): ${file}`)
       const content = size <= 1024 * 1024 ? git(['show', `HEAD:${file}`]) : ''
       if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/.test(content)) failures.push(`Private key material detected: ${file}`)
     } catch { /* Git will report malformed objects elsewhere. */ }

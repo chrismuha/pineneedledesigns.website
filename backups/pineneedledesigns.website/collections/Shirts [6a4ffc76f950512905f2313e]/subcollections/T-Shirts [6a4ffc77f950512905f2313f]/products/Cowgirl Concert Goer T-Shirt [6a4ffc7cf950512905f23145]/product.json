@@ -1,0 +1,54 @@
+{
+  "_id": "6a4ffc7cf950512905f23145",
+  "legacyId": 10,
+  "__v": 2,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "White, Grey, Sand, Natural, Pink",
+  "createdAt": "2026-07-09T19:54:36.525Z",
+  "customProperties": [],
+  "description": "Blinged out Tshirt.",
+  "filters": [
+    "T-Shirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $38",
+    "Sizes: S-3X",
+    "Comes in white, grey, sand, natural, and pink.",
+    "Free shipping"
+  ],
+  "name": "Cowgirl Concert Goer T-Shirt",
+  "noBlingDescription": "T-shirt.",
+  "noBlingPrice": 28,
+  "optionPlaceholders": {
+    "Style": "Select style",
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-21cf44afe9e1e81561a1.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "shoeTypes": [],
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sortOrder": 4,
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "updatedAt": "2026-09-21T00:09:03.791Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": true,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "Blinged out Tshirt.",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

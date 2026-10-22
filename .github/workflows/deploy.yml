@@ -72,7 +72,9 @@ jobs:
 
             git fetch origin main
             git reset --hard origin/main
-            git clean -fd
+            # Uploaded customer media must survive even if a future .gitignore
+            # change accidentally removes its ignore rule.
+            git clean -fd -e /backend/uploads/ -e /backups/
 
             if [ -z "${MONGODB_URI:-}" ]; then
               echo "ERROR: MONGODB_URI secret is empty. Set GitHub Actions secret MONGODB_URI to your DigitalOcean MongoDB connection string."

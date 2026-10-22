@@ -1,0 +1,50 @@
+{
+  "_id": "6a4ffc8bf950512905f23159",
+  "legacyId": 19,
+  "__v": 1,
+  "bagTypes": [
+    "Speedy Bags"
+  ],
+  "collectionId": "6a4ffc86f950512905f23152",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:51.617Z",
+  "customProperties": [],
+  "description": "Whether you are country Western or Adirondack Chic this bag is perfect for femininity and rustic style.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "Made by jGypsie",
+  "meta": [
+    "Price: $189",
+    "Free shipping"
+  ],
+  "name": "Pink Tooled Leather Speedy Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-c0601ad67e56ed8e6b0d.webp",
+    "/uploads/legacy-7b0fa32c7b6d8a8ec2e1.webp"
+  ],
+  "price": 189,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 3,
+  "subCollectionId": "6a4ffc87f950512905f23153",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

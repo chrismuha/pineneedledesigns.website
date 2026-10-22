@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc6df950512905f23130",
+  "slug": "bracelets",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-2e6420b592085f3b9beb.webp",
+  "createdAt": "2026-07-09T19:54:21.094Z",
+  "description": "Handwoven metals for texture.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Bracelets",
+  "showWhenEmpty": false,
+  "sortOrder": 3,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

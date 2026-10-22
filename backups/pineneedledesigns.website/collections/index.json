@@ -1,0 +1,406 @@
+{
+  "collections": [
+    {
+      "id": "6a4ecd53d2495416badfd5a4",
+      "name": "Uncategorized",
+      "folder": "collections/Uncategorized [6a4ecd53d2495416badfd5a4]"
+    },
+    {
+      "id": "6a4ffc6af950512905f2312c",
+      "name": "Adirondack Bridal Collection",
+      "folder": "collections/Adirondack Bridal Collection [6a4ffc6af950512905f2312c]"
+    },
+    {
+      "id": "6a4ffc6bf950512905f2312d",
+      "name": "Adirondack Chic",
+      "folder": "collections/Adirondack Chic [6a4ffc6bf950512905f2312d]"
+    },
+    {
+      "id": "6a4ffc6cf950512905f2312f",
+      "name": "Boot Bands",
+      "folder": "collections/Boot Bands [6a4ffc6cf950512905f2312f]"
+    },
+    {
+      "id": "6a4ffc6df950512905f23130",
+      "name": "Bracelets",
+      "folder": "collections/Bracelets [6a4ffc6df950512905f23130]"
+    },
+    {
+      "id": "6a4ffc6df950512905f23131",
+      "name": "Chic Jewelry",
+      "folder": "collections/Chic Jewelry [6a4ffc6df950512905f23131]"
+    },
+    {
+      "id": "6a4ffc6ef950512905f23132",
+      "name": "Cuffs",
+      "folder": "collections/Cuffs [6a4ffc6ef950512905f23132]"
+    },
+    {
+      "id": "6a4ffc6ff950512905f23133",
+      "name": "Earrings",
+      "folder": "collections/Earrings [6a4ffc6ff950512905f23133]"
+    },
+    {
+      "id": "6a4ffc70f950512905f23135",
+      "name": "Hat Bands",
+      "folder": "collections/Hat Bands [6a4ffc70f950512905f23135]"
+    },
+    {
+      "id": "6a4ffc71f950512905f23136",
+      "name": "Jackets",
+      "folder": "collections/Jackets [6a4ffc71f950512905f23136]"
+    },
+    {
+      "id": "6a4ffc74f950512905f2313a",
+      "name": "Jeans",
+      "folder": "collections/Jeans [6a4ffc74f950512905f2313a]"
+    },
+    {
+      "id": "6a4ffc74f950512905f2313b",
+      "name": "Limited-Time Collection",
+      "folder": "collections/Limited-Time Collection [6a4ffc74f950512905f2313b]"
+    },
+    {
+      "id": "6a4ffc75f950512905f2313c",
+      "name": "Necklaces",
+      "folder": "collections/Necklaces [6a4ffc75f950512905f2313c]"
+    },
+    {
+      "id": "6a4ffc76f950512905f2313d",
+      "name": "The Pooch Smooches Collection",
+      "folder": "collections/The Pooch Smooches Collection [6a4ffc76f950512905f2313d]"
+    },
+    {
+      "id": "6a4ffc76f950512905f2313e",
+      "name": "Shirts",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]"
+    },
+    {
+      "id": "6a4ffc7ff950512905f23148",
+      "name": "Purses",
+      "folder": "collections/Purses [6a4ffc7ff950512905f23148]"
+    },
+    {
+      "id": "6a4ffc80f950512905f23149",
+      "name": "Shoes",
+      "folder": "collections/Shoes [6a4ffc80f950512905f23149]"
+    },
+    {
+      "id": "6a4ffc81f950512905f2314b",
+      "name": "Shorts",
+      "folder": "collections/Shorts [6a4ffc81f950512905f2314b]"
+    },
+    {
+      "id": "6a4ffc82f950512905f2314c",
+      "name": "Denim & Lace",
+      "folder": "collections/Denim & Lace [6a4ffc82f950512905f2314c]"
+    },
+    {
+      "id": "6a4ffc86f950512905f23152",
+      "name": "Upcycled Collaboration",
+      "folder": "collections/Upcycled Collaboration [6a4ffc86f950512905f23152]"
+    },
+    {
+      "id": "6a4ffc8cf950512905f2315a",
+      "name": "Upcycled Logo",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]"
+    },
+    {
+      "id": "6a4ffc98f950512905f2316a",
+      "name": "Upcycled Denim",
+      "folder": "collections/Upcycled Denim [6a4ffc98f950512905f2316a]"
+    },
+    {
+      "id": "6a4ffc98f950512905f2316b",
+      "name": "Vests",
+      "folder": "collections/Vests [6a4ffc98f950512905f2316b]"
+    },
+    {
+      "id": "6a54fbf1fa9d8328987ce2bc",
+      "name": "MYRA",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]"
+    },
+    {
+      "id": "6a556592bfbcdda340263a97",
+      "name": "Belts",
+      "folder": "collections/Belts [6a556592bfbcdda340263a97]"
+    },
+    {
+      "id": "6a6eb656683c077a1ffcd111",
+      "name": "Skirts",
+      "folder": "collections/Skirts [6a6eb656683c077a1ffcd111]"
+    },
+    {
+      "id": "6a71187428f61335d771da92",
+      "name": "Sweaters",
+      "folder": "collections/Sweaters [6a71187428f61335d771da92]"
+    }
+  ],
+  "products": [
+    {
+      "id": "6a4ffc6bf950512905f2312e",
+      "name": "Turquoise and White Leather Speedy Bag",
+      "folder": "collections/Adirondack Chic [6a4ffc6bf950512905f2312d]/products/Turquoise and White Leather Speedy Bag [6a4ffc6bf950512905f2312e]"
+    },
+    {
+      "id": "6a4ffc6ff950512905f23134",
+      "name": "Red Flower",
+      "folder": "collections/Earrings [6a4ffc6ff950512905f23133]/products/Red Flower [6a4ffc6ff950512905f23134]"
+    },
+    {
+      "id": "6a4ffc72f950512905f23137",
+      "name": "America She's Beautiful",
+      "folder": "collections/Jackets [6a4ffc71f950512905f23136]/products/America She's Beautiful [6a4ffc72f950512905f23137]"
+    },
+    {
+      "id": "6a4ffc72f950512905f23138",
+      "name": "Ruby Lee",
+      "folder": "collections/Jackets [6a4ffc71f950512905f23136]/products/Ruby Lee [6a4ffc72f950512905f23138]"
+    },
+    {
+      "id": "6a4ffc73f950512905f23139",
+      "name": "Carmen",
+      "folder": "collections/Jackets [6a4ffc71f950512905f23136]/products/Carmen [6a4ffc73f950512905f23139]"
+    },
+    {
+      "id": "6a4ffc79f950512905f23141",
+      "name": "On a Bad Day there\u2019s Always Lipstick Blinged Out Sweatshirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/Sweatshirts [6a4ffc78f950512905f23140]/products/On a Bad Day there\u2019s Always Lipstick Blinged Out Sweatshirt [6a4ffc79f950512905f23141]"
+    },
+    {
+      "id": "6a4ffc7af950512905f23142",
+      "name": "Turquoise Chic Blinged Out T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Turquoise Chic Blinged Out T-Shirt [6a4ffc7af950512905f23142]"
+    },
+    {
+      "id": "6a4ffc7bf950512905f23143",
+      "name": "On a Bad Day there\u2019s Always Lipstick Blinged Out T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/On a Bad Day there\u2019s Always Lipstick Blinged Out T-Shirt [6a4ffc7bf950512905f23143]"
+    },
+    {
+      "id": "6a4ffc7bf950512905f23144",
+      "name": "Don't Burst My Bubble Blinged Out T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Don't Burst My Bubble Blinged Out T-Shirt [6a4ffc7bf950512905f23144]"
+    },
+    {
+      "id": "6a4ffc7cf950512905f23145",
+      "name": "Cowgirl Concert Goer T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Cowgirl Concert Goer T-Shirt [6a4ffc7cf950512905f23145]"
+    },
+    {
+      "id": "6a4ffc7df950512905f23146",
+      "name": "Guts, Grit And Lipstick Blinged Out T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Guts, Grit And Lipstick Blinged Out T-Shirt [6a4ffc7df950512905f23146]"
+    },
+    {
+      "id": "6a4ffc7ef950512905f23147",
+      "name": "Happy Girls are the PRETTIEST! Blinged Out T-Shirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Happy Girls are the PRETTIEST! Blinged Out T-Shirt [6a4ffc7ef950512905f23147]"
+    },
+    {
+      "id": "6a4ffc80f950512905f2314a",
+      "name": "Betsey Johnson Blush Satin Heels",
+      "folder": "collections/Shoes [6a4ffc80f950512905f23149]/products/Betsey Johnson Blush Satin Heels [6a4ffc80f950512905f2314a]"
+    },
+    {
+      "id": "6a4ffc84f950512905f2314f",
+      "name": "The Crowned Hare Vest",
+      "folder": "collections/Denim & Lace [6a4ffc82f950512905f2314c]/subcollections/Vests [6a4ffc82f950512905f2314d]/products/The Crowned Hare Vest [6a4ffc84f950512905f2314f]"
+    },
+    {
+      "id": "6a4ffc85f950512905f23150",
+      "name": "Brandi Bracelet",
+      "folder": "collections/Denim & Lace [6a4ffc82f950512905f2314c]/subcollections/Bracelets [6a4ffc83f950512905f2314e]/products/Brandi Bracelet [6a4ffc85f950512905f23150]"
+    },
+    {
+      "id": "6a4ffc86f950512905f23151",
+      "name": "Adeline Bracelet",
+      "folder": "collections/Denim & Lace [6a4ffc82f950512905f2314c]/subcollections/Bracelets [6a4ffc83f950512905f2314e]/products/Adeline Bracelet [6a4ffc86f950512905f23151]"
+    },
+    {
+      "id": "6a4ffc89f950512905f23156",
+      "name": "Adirondack Chic Leather and Cowhide Overnight Duffel Bag",
+      "folder": "collections/Upcycled Collaboration [6a4ffc86f950512905f23152]/subcollections/Bags [6a4ffc87f950512905f23153]/products/Adirondack Chic Leather and Cowhide Overnight Duffel Bag [6a4ffc89f950512905f23156]"
+    },
+    {
+      "id": "6a4ffc8af950512905f23157",
+      "name": "Leather Fanny Pack with Fringe",
+      "folder": "collections/Upcycled Collaboration [6a4ffc86f950512905f23152]/subcollections/Fanny Packs [6a4ffc88f950512905f23154]/products/Leather Fanny Pack with Fringe [6a4ffc8af950512905f23157]"
+    },
+    {
+      "id": "6a4ffc8bf950512905f23158",
+      "name": "Cowhide Leather Checkered Wallet Wristlet",
+      "folder": "collections/Upcycled Collaboration [6a4ffc86f950512905f23152]/subcollections/Wallets [6a4ffc88f950512905f23155]/products/Cowhide Leather Checkered Wallet Wristlet [6a4ffc8bf950512905f23158]"
+    },
+    {
+      "id": "6a4ffc8bf950512905f23159",
+      "name": "Pink Tooled Leather Speedy Bag",
+      "folder": "collections/Upcycled Collaboration [6a4ffc86f950512905f23152]/subcollections/Bags [6a4ffc87f950512905f23153]/products/Pink Tooled Leather Speedy Bag [6a4ffc8bf950512905f23159]"
+    },
+    {
+      "id": "6a4ffc8ff950512905f2315e",
+      "name": "Upcycled LOGO Barrette",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Accessories [6a4ffc8ef950512905f2315d]/products/Upcycled LOGO Barrette [6a4ffc8ff950512905f2315e]"
+    },
+    {
+      "id": "6a4ffc8ff950512905f2315f",
+      "name": "Upcycled LV Canvas Pack",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Upcycled LV Canvas Pack [6a4ffc8ff950512905f2315f]"
+    },
+    {
+      "id": "6a4ffc90f950512905f23160",
+      "name": "Upcycled LV Tooled Wristlet or Makeup Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Upcycled LV Tooled Wristlet or Makeup Bag [6a4ffc90f950512905f23160]"
+    },
+    {
+      "id": "6a4ffc91f950512905f23161",
+      "name": "The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag [6a4ffc91f950512905f23161]"
+    },
+    {
+      "id": "6a4ffc92f950512905f23162",
+      "name": "Upcycled Black Suede and Brown Tooled Leather Backpack",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Upcycled Black Suede and Brown Tooled Leather Backpack [6a4ffc92f950512905f23162]"
+    },
+    {
+      "id": "6a4ffc93f950512905f23163",
+      "name": "Cowhide Lv Faux Leather Shoulder Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Cowhide Lv Faux Leather Shoulder Bag [6a4ffc93f950512905f23163]"
+    },
+    {
+      "id": "6a4ffc93f950512905f23164",
+      "name": "Upcycled LV Logo Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Upcycled LV Logo Bag [6a4ffc93f950512905f23164]"
+    },
+    {
+      "id": "6a4ffc94f950512905f23165",
+      "name": "The Weekender Tote Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/The Weekender Tote Bag [6a4ffc94f950512905f23165]"
+    },
+    {
+      "id": "6a4ffc95f950512905f23166",
+      "name": "LV Upcycled Cowhide Leather Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/LV Upcycled Cowhide Leather Bag [6a4ffc95f950512905f23166]"
+    },
+    {
+      "id": "6a4ffc96f950512905f23167",
+      "name": "Upcycled LV Cowhide Leather Fringe Crossbody Bag",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Bags [6a4ffc8df950512905f2315b]/products/Upcycled LV Cowhide Leather Fringe Crossbody Bag [6a4ffc96f950512905f23167]"
+    },
+    {
+      "id": "6a4ffc97f950512905f23168",
+      "name": "Cowhide Leather Wristlet",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Wallets [6a4ffc8df950512905f2315c]/products/Cowhide Leather Wristlet [6a4ffc97f950512905f23168]"
+    },
+    {
+      "id": "6a4ffc97f950512905f23169",
+      "name": "Upcycled LV Mini Flask Bag Charm",
+      "folder": "collections/Upcycled Logo [6a4ffc8cf950512905f2315a]/subcollections/Accessories [6a4ffc8ef950512905f2315d]/products/Upcycled LV Mini Flask Bag Charm [6a4ffc97f950512905f23169]"
+    },
+    {
+      "id": "6a50ae27f38cf10fb0d9754a",
+      "name": "Miss Cheetah",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Miss Cheetah [6a50ae27f38cf10fb0d9754a]"
+    },
+    {
+      "id": "6a50f5eb21d68331ea2b053d",
+      "name": "Boo-Jee Boa",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/Boa [6a50df028fa3071924f9356c]/products/Boo-Jee Boa [6a50f5eb21d68331ea2b053d]"
+    },
+    {
+      "id": "6a50f76421d68331ea2b070a",
+      "name": "Cheetah Boa",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/Boa [6a50df028fa3071924f9356c]/products/Cheetah Boa [6a50f76421d68331ea2b070a]"
+    },
+    {
+      "id": "6a50f83f21d68331ea2b07fd",
+      "name": "Baby I'm a Wild Card",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/Boa [6a50df028fa3071924f9356c]/products/Baby I'm a Wild Card [6a50f83f21d68331ea2b07fd]"
+    },
+    {
+      "id": "6a50f8d321d68331ea2b08f6",
+      "name": "Smart Ass and Pretty Donkey Blinged Out",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Smart Ass and Pretty Donkey Blinged Out [6a50f8d321d68331ea2b08f6]"
+    },
+    {
+      "id": "6a50f97821d68331ea2b099f",
+      "name": "Feral Raccoon",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Feral Raccoon [6a50f97821d68331ea2b099f]"
+    },
+    {
+      "id": "6a544d12fa9d8328987ce2bb",
+      "name": "Masie Mallard Wildly Chic",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Masie Mallard Wildly Chic [6a544d12fa9d8328987ce2bb]"
+    },
+    {
+      "id": "6a558e874df0858b4ff5db6c",
+      "name": "Blue Isle Cross Body Bag Small",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Blue Isle Cross Body Bag Small [6a558e874df0858b4ff5db6c]"
+    },
+    {
+      "id": "6a56a7d2b7452e6d81001c59",
+      "name": "Juniper Hairon Canvas Weekender Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Juniper Hairon Canvas Weekender Bag [6a56a7d2b7452e6d81001c59]"
+    },
+    {
+      "id": "6a56bbfbb7452e6d81001c5a",
+      "name": "Peridot Hairon and Canvas Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Peridot Hairon and Canvas Bag [6a56bbfbb7452e6d81001c5a]"
+    },
+    {
+      "id": "6a57ce0cf03f5ac4122e0ef2",
+      "name": "Delphine Canvas & Hairon Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Delphine Canvas & Hairon Bag [6a57ce0cf03f5ac4122e0ef2]"
+    },
+    {
+      "id": "6a57d14df03f5ac4122e0ef3",
+      "name": "Lanthe Hairon and Canvas Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Lanthe Hairon and Canvas Bag [6a57d14df03f5ac4122e0ef3]"
+    },
+    {
+      "id": "6a57d507f03f5ac4122e0ef4",
+      "name": "Maia Concealed Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Maia Concealed Bag [6a57d507f03f5ac4122e0ef4]"
+    },
+    {
+      "id": "6a57d7e8f03f5ac4122e0ef5",
+      "name": "Amethyst Hairon & Canvas Bag",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Amethyst Hairon & Canvas Bag [6a57d7e8f03f5ac4122e0ef5]"
+    },
+    {
+      "id": "6a5ce98f54bc8485063e0b61",
+      "name": "In a While Crocodile",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/In a While Crocodile [6a5ce98f54bc8485063e0b61]"
+    },
+    {
+      "id": "6a636ee0dce42b85840d2bfb",
+      "name": "Shirley Boho Bag",
+      "folder": "collections/Adirondack Chic [6a4ffc6bf950512905f2312d]/products/Shirley Boho Bag [6a636ee0dce42b85840d2bfb]"
+    },
+    {
+      "id": "6a6f9b03955755fcc5876510",
+      "name": "Jennifer\u2019s Garden",
+      "folder": "collections/Skirts [6a6eb656683c077a1ffcd111]/products/Jennifer\u2019s Garden [6a6f9b03955755fcc5876510]"
+    },
+    {
+      "id": "6a7135446cd8f610d01253f5",
+      "name": "Farmer Mrs. Synakowski",
+      "folder": "collections/Sweaters [6a71187428f61335d771da92]/products/Farmer Mrs. Synakowski [6a7135446cd8f610d01253f5]"
+    },
+    {
+      "id": "6a72519e6cd8f610d01253f7",
+      "name": "Myra Mojave Leather Bag in Old Rose",
+      "folder": "collections/MYRA [6a54fbf1fa9d8328987ce2bc]/subcollections/Bags [6a550f35f950512905f231b2]/products/Myra Mojave Leather Bag in Old Rose [6a72519e6cd8f610d01253f7]"
+    },
+    {
+      "id": "6a73be407f0dda37a3525ef6",
+      "name": "Country GaGa",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Country GaGa [6a73be407f0dda37a3525ef6]"
+    },
+    {
+      "id": "6a7dd482751852051fef2294",
+      "name": "Autumn Cowgirl",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Autumn Cowgirl [6a7dd482751852051fef2294]"
+    }
+  ]
+}

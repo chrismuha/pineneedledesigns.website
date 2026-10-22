@@ -1,0 +1,51 @@
+{
+  "_id": "6a4ffc97f950512905f23169",
+  "legacyId": 31,
+  "__v": 1,
+  "bagTypes": [],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:55:03.599Z",
+  "customProperties": [],
+  "description": "Upcycled LV Mini Flask Bag Charm.",
+  "filters": [
+    "Accessories"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $46",
+    "Size: 2\" x 2\"",
+    "Free shipping"
+  ],
+  "name": "Upcycled LV Mini Flask Bag Charm",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-d5619f89fb9338abc295.webp",
+    "/uploads/legacy-bc5c8be7ef3bc8e574e5.webp",
+    "/uploads/legacy-55f0ced22b7745b682b3.webp",
+    "/uploads/legacy-94de2eaca29e29277c8f.webp"
+  ],
+  "price": 46,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 11,
+  "subCollectionId": "6a4ffc8ef950512905f2315d",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

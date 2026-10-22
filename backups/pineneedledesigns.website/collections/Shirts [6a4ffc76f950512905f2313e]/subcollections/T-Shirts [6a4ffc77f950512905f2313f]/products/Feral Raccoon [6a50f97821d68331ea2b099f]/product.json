@@ -1,0 +1,42 @@
+{
+  "_id": "6a50f97821d68331ea2b099f",
+  "name": "Feral Raccoon",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "color": "Gray, Peach, Pink, Sand, White",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "description": "She\u2019s wrapped in a pink fur coat. Faux of course! Loves her afternoon tea. Don\u2019t let her fool you with rose-colored glasses. Comes blinged out. No extra charges for plus sizes!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1783691640941-818083453.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "freeShipping": true,
+  "outOfStock": false,
+  "quantity": 88,
+  "sortOrder": 11,
+  "meta": [],
+  "videos": [
+    "/uploads/1788366958742-388818864.webm"
+  ],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-10T13:54:00.971Z",
+  "updatedAt": "2026-09-21T00:09:38.866Z",
+  "__v": 3,
+  "beltSize": "",
+  "comfortColors": [],
+  "hasBlingOptions": false,
+  "shoeSize": "",
+  "sizePrices": {},
+  "blingPrice": null,
+  "generalDescription": "",
+  "sweatshirtSize": ""
+}

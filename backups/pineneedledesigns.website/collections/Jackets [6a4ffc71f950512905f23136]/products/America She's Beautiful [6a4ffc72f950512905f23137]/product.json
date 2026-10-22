@@ -1,0 +1,49 @@
+{
+  "_id": "6a4ffc72f950512905f23137",
+  "legacyId": 3,
+  "__v": 0,
+  "bagTypes": [],
+  "collectionId": "6a4ffc71f950512905f23136",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:25.674Z",
+  "customProperties": [],
+  "description": "This patriotic jean jacket is the ultimate tribute to classic Americana. Re-designed with satin, lace, fringe, and star studs and amber stones. Designed for the salute to America.",
+  "filters": [],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $214.00 plus sales tax with free shipping",
+    "Size: M/L",
+    "Free shipping"
+  ],
+  "name": "America She's Beautiful",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-e272b3723243ddaabc41.webp",
+    "/uploads/legacy-f01a9c7442f10988281c.webp"
+  ],
+  "price": 214,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 0,
+  "subCollectionId": null,
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [
+    "/uploads/legacy-f2542222365bc6c9a2f9.webp"
+  ],
+  "videos": [
+    "/uploads/legacy-03cb35862b89ab1f6c25.webm"
+  ],
+  "quantity": 90,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "sweatshirtSize": "",
+  "shoeSize": ""
+}

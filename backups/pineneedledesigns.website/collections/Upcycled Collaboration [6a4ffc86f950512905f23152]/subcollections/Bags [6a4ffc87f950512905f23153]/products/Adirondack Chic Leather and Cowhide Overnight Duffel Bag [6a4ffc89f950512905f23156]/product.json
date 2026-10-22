@@ -1,0 +1,52 @@
+{
+  "_id": "6a4ffc89f950512905f23156",
+  "legacyId": 16,
+  "__v": 1,
+  "bagTypes": [
+    "Duffel Bags"
+  ],
+  "collectionId": "6a4ffc86f950512905f23152",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:49.357Z",
+  "customProperties": [],
+  "description": "A definite for traveling and weekend stays.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "Made by jGypsie",
+  "meta": [
+    "Price: $160",
+    "Free shipping"
+  ],
+  "name": "Adirondack Chic Leather and Cowhide Overnight Duffel Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-9b5bf6bfda789a2d28c3.webp",
+    "/uploads/legacy-c1193f5450d328450ca3.webp",
+    "/uploads/legacy-097d05880561132e2ac4.webp",
+    "/uploads/legacy-146349f2fb39f070a28a.webp"
+  ],
+  "price": 160,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 0,
+  "subCollectionId": "6a4ffc87f950512905f23153",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

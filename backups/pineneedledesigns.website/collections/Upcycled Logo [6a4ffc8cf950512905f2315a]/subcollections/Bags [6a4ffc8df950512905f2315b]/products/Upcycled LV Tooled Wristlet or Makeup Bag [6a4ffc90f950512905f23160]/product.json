@@ -1,0 +1,54 @@
+{
+  "_id": "6a4ffc90f950512905f23160",
+  "legacyId": 22,
+  "__v": 1,
+  "bagTypes": [
+    "Makeup Bags",
+    "Wristlets"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:56.457Z",
+  "customProperties": [],
+  "description": "All recycled leather and hand tooled for that Adirondack Charm! Great for country Western and North country girls alike!",
+  "filters": [
+    "Bags",
+    "Wallets"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $88",
+    "Free shipping"
+  ],
+  "name": "Upcycled LV Tooled Wristlet or Makeup Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-d4aeabc6ab19a5d1c937.webp",
+    "/uploads/legacy-27b4a9061a91a612a0b6.webp",
+    "/uploads/legacy-080f824af36efecf8508.webp",
+    "/uploads/legacy-c94d16dd8cc6f68e2b87.webp"
+  ],
+  "price": 88,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 2,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

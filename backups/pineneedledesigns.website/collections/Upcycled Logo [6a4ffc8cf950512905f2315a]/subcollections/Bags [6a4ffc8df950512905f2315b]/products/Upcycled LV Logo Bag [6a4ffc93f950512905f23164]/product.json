@@ -1,0 +1,54 @@
+{
+  "_id": "6a4ffc93f950512905f23164",
+  "legacyId": 26,
+  "__v": 1,
+  "bagTypes": [
+    "Crossbody Bags"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:59.637Z",
+  "customProperties": [],
+  "description": "This crossbody bag is pink and white checkered with natural cowhide and leather fringe. Total statement bag with that LV logo! And there's only one!",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $171",
+    "Pink and white checkered",
+    "Natural cowhide and leather fringe",
+    "There's only one",
+    "Free shipping"
+  ],
+  "name": "Upcycled LV Logo Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-8cc66d9ec839e618236f.webp",
+    "/uploads/legacy-a096e6158591a6784e70.webp",
+    "/uploads/legacy-5855a238b24b9b484640.webp"
+  ],
+  "price": 171,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 6,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

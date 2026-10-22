@@ -1,0 +1,45 @@
+{
+  "_id": "6a50f83f21d68331ea2b07fd",
+  "name": "Baby I'm a Wild Card",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a50df028fa3071924f9356c",
+  "color": "Gray, Peach, Pink, Sand, White",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "description": "This shirt is All 7\u2019s for that lucky girl! So roll the dice and order with or without Bling today!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1783691326976-435709395.webp"
+  ],
+  "price": 38,
+  "shippingCost": 0,
+  "freeShipping": true,
+  "outOfStock": false,
+  "quantity": 88,
+  "sortOrder": 9,
+  "meta": [],
+  "videos": [
+    "/uploads/1785962462844-805310474.webm"
+  ],
+  "videoPosters": [],
+  "noBlingPrice": 28,
+  "noBlingDescription": "This shirt is All 7\u2019s for that lucky girl! So roll the dice and order today! NO BLING.",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [
+    "Boa",
+    "T-Shirts"
+  ],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-10T13:48:47.025Z",
+  "updatedAt": "2026-08-19T17:53:36.545Z",
+  "__v": 5,
+  "beltSize": "",
+  "comfortColors": [],
+  "generalDescription": "This shirt is All 7\u2019s for that lucky girl! So roll the dice and order with or without Bling today!",
+  "hasBlingOptions": true,
+  "shoeSize": "",
+  "blingPrice": 38,
+  "sizePrices": {},
+  "sweatshirtSize": ""
+}

@@ -1,0 +1,57 @@
+{
+  "_id": "6a4ffc7bf950512905f23144",
+  "legacyId": 9,
+  "__v": 1,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "Peach, Natural, Pink, Sand, White",
+  "createdAt": "2026-07-09T19:54:35.566Z",
+  "customProperties": [],
+  "description": "A Cowgirl with Attitude. Of course she's all Blinged Out!",
+  "filters": [
+    "T-Shirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $38",
+    "Available in Peach, Natural, Pink, Sand, and White.",
+    "Free shipping"
+  ],
+  "name": "Don't Burst My Bubble Blinged Out T-Shirt",
+  "noBlingDescription": "A Cowgirl with Attitude T-Shirt.",
+  "noBlingPrice": 28,
+  "optionPlaceholders": {
+    "Style": "Select style",
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-e840ba1c6aa72f8d6a77.webp"
+  ],
+  "price": 38,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sortOrder": 3,
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [
+    "/uploads/legacy-10aee3c13f1a96acd8ff.webp"
+  ],
+  "videos": [
+    "/uploads/legacy-6de1c9736ff3aa04d9ce.webm"
+  ],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": true,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "Retro Cow Girl in her cowgirl hat. Blowing a pink bubble. Nice for that sassy girl! Shown in Sand.  Don\u2019t Burst My Bubble written on her cowboy hat. Added a touch of highlights of bling! Priced the same for all sizes and colors listed.",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

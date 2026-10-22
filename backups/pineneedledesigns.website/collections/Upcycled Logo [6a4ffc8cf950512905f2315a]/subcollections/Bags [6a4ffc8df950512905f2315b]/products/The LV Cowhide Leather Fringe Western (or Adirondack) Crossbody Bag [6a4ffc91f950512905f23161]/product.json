@@ -1,0 +1,52 @@
+{
+  "_id": "6a4ffc91f950512905f23161",
+  "legacyId": 23,
+  "__v": 1,
+  "bagTypes": [
+    "Crossbody Bags"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:57.387Z",
+  "customProperties": [],
+  "description": "One of a kind. Nicely concealed back zipper pocket. Love that leather fringe.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $160",
+    "Color: Rustic Charm and Feminine",
+    "Free shipping"
+  ],
+  "name": "The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-12030587057b1acc55bb.webp",
+    "/uploads/legacy-7d529df0455bbccb3899.webp",
+    "/uploads/legacy-6ed7052e0b86933cbbcd.webp"
+  ],
+  "price": 160,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 3,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

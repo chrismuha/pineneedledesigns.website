@@ -1,0 +1,54 @@
+{
+  "_id": "6a4ffc7df950512905f23146",
+  "legacyId": 11,
+  "__v": 2,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "White, Peach, Pink, Sand, Natural",
+  "createdAt": "2026-07-09T19:54:37.465Z",
+  "customProperties": [],
+  "description": "Blinged out T-Shirt.",
+  "filters": [
+    "T-Shirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $38",
+    "Sizes: S-3X",
+    "Comes in white, peach, pink, sand, and natural.",
+    "Free shipping"
+  ],
+  "name": "Guts, Grit And Lipstick Blinged Out T-Shirt",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "optionPlaceholders": {
+    "Style": "Select style",
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-07cc983c6d3ae474012a.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "shoeTypes": [],
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sortOrder": 5,
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "updatedAt": "2026-09-21T00:11:16.227Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

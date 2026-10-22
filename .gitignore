@@ -126,6 +126,9 @@ yarn.lock
 .sessions/
 
 # Uploaded product images
+backups/**/.backup.lock
+backups/**/backup.log
+backups/**/backup-error.log
 backend/uploads/*
 !backend/uploads/.gitkeep
 

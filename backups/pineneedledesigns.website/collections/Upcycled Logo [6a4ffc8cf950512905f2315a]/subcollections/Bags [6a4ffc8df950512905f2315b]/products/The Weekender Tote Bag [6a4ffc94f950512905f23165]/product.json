@@ -1,0 +1,53 @@
+{
+  "_id": "6a4ffc94f950512905f23165",
+  "legacyId": 27,
+  "__v": 2,
+  "bagTypes": [
+    "Tote Bags"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:55:00.307Z",
+  "customProperties": [],
+  "description": "Perfect neutral tones on canvas and brown leather handles. Of course you will rock it with the LV logo! Very roomy and fun with the canvas front fringe and flashy dark diamond print.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $98",
+    "Neutral canvas tones",
+    "Brown leather handles",
+    "Free shipping"
+  ],
+  "name": "The Weekender Tote Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-9f3e206d9a1274b23e71.webp",
+    "/uploads/legacy-92a55d146134d72cf05b.webp",
+    "/uploads/legacy-74f6887618ac1d24e158.webp"
+  ],
+  "price": 98,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 7,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

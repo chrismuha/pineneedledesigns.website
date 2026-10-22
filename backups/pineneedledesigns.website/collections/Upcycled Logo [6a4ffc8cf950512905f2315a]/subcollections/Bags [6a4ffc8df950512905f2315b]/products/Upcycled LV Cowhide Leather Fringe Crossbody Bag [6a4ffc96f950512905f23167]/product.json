@@ -1,0 +1,53 @@
+{
+  "_id": "6a4ffc96f950512905f23167",
+  "legacyId": 29,
+  "__v": 1,
+  "bagTypes": [
+    "Crossbody Bags"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:55:02.007Z",
+  "customProperties": [],
+  "description": "Upcycled LV cowhide leather fringe crossbody bag. Brown. One of a kind bag. Western style with hand tooled front markings. Back has a zipped concealed compartment.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $160",
+    "Color: Brown",
+    "One of a kind",
+    "Western style",
+    "Free shipping"
+  ],
+  "name": "Upcycled LV Cowhide Leather Fringe Crossbody Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-19d5e1e68a718f318a10.webp",
+    "/uploads/legacy-f34dc7f50d10e38d65ce.webp"
+  ],
+  "price": 160,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 9,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

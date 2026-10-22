@@ -1,0 +1,55 @@
+{
+  "_id": "6a4ffc86f950512905f23151",
+  "legacyId": 15,
+  "__v": 0,
+  "bagTypes": [],
+  "collectionId": "6a4ffc82f950512905f2314c",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:45.847Z",
+  "customProperties": [],
+  "description": "Adeline is a country chic bracelet. Denim, lace, pink chiffon, and a matching rose colored cameo. Trimmed in gold boucle ribbon and a string of pearls. Fastens in the back with a pearl flower and centered rhinestone. Closure is a corded elastic. Adeline stretches to 8\".",
+  "filters": [
+    "Bracelets"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $32",
+    "Size: 7-8\"",
+    "Stretches to 8\"",
+    "Free shipping"
+  ],
+  "name": "Adeline Bracelet",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-a40c10c279e0175ae4eb.webp",
+    "/uploads/legacy-f2d2fdd2352b902a237d.webp",
+    "/uploads/legacy-38cdc914906f3d10de9b.webp",
+    "/uploads/legacy-2da1a931035693354d4e.webp"
+  ],
+  "price": 32,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 2,
+  "subCollectionId": "6a4ffc83f950512905f2314e",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [
+    "/uploads/legacy-d19223a0de740f73f86d.webp",
+    "/uploads/legacy-f9af10251f7026ee4790.webp"
+  ],
+  "videos": [
+    "/uploads/legacy-9e3c31c6bedddaace593.webm",
+    "/uploads/legacy-b9758f15657bf862c49a.webm"
+  ],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "sweatshirtSize": ""
+}

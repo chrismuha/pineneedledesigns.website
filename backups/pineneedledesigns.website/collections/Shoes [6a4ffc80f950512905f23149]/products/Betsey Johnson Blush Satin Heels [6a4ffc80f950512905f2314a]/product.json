@@ -1,0 +1,50 @@
+{
+  "_id": "6a4ffc80f950512905f2314a",
+  "legacyId": 32,
+  "__v": 0,
+  "bagTypes": [],
+  "collectionId": "6a4ffc80f950512905f23149",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:40.716Z",
+  "customProperties": [],
+  "description": "Stiletto block heel for a dressy look. Back zipper closure for easy wear.",
+  "filters": [
+    "Shoes"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $129",
+    "Size: 9.5",
+    "Color: Blush Satin",
+    "Ankle strap and toe band",
+    "Free shipping"
+  ],
+  "name": "Betsey Johnson Blush Satin Heels",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": true,
+  "photos": [
+    "/uploads/legacy-396c64640278750b0871.webp"
+  ],
+  "price": 129,
+  "shippingCost": 0,
+  "shoeTypes": [
+    "Satin Heels"
+  ],
+  "size": "",
+  "sortOrder": 0,
+  "subCollectionId": null,
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "sweatshirtSize": "",
+  "shoeSize": "9.5"
+}

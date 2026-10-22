@@ -1,0 +1,43 @@
+{
+  "_id": "6a50ae27f38cf10fb0d9754a",
+  "name": "Miss Cheetah",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "color": "Pink, Gray, Peach, Sand, White",
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "importantNotes": "",
+  "description": "Extra Extra Read All About! Cheetah in her flashy Bandana. When your fur has the perrrrfect colors, why not accessorize in the same? Goes great with a rhinestone necklace and sunglasses! With Bling.",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1783672358990-600883762.jpeg"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "freeShipping": true,
+  "outOfStock": false,
+  "sortOrder": 7,
+  "meta": [],
+  "videos": [
+    "/uploads/1788368382629-301758658.webm"
+  ],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-07-10T08:32:39.057Z",
+  "updatedAt": "2026-09-21T00:14:07.461Z",
+  "__v": 4,
+  "quantity": 88,
+  "beltSize": "",
+  "comfortColors": [],
+  "hasBlingOptions": false,
+  "shoeSize": "",
+  "sizePrices": {},
+  "generalDescription": "",
+  "blingPrice": null,
+  "sweatshirtSize": ""
+}

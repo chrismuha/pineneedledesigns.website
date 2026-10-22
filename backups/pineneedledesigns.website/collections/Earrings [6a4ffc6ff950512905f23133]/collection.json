@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc6ff950512905f23133",
+  "slug": "earrings",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-29cb5c7fa72eb213eaf5.webp",
+  "createdAt": "2026-07-09T19:54:23.134Z",
+  "description": "Red flower earrings, 2.5\" long.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Earrings",
+  "showWhenEmpty": false,
+  "sortOrder": 6,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

@@ -1,0 +1,52 @@
+{
+  "_id": "6a4ffc7ef950512905f23147",
+  "legacyId": 12,
+  "__v": 3,
+  "bagTypes": [],
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "color": "White, Gray, Sand, Peach, Natural",
+  "createdAt": "2026-07-09T19:54:38.406Z",
+  "customProperties": [],
+  "description": "Is that Audrey Hepburn blowing a blue bubble? From the Bubble Blower Collection! Added is a touch of highlights of bling. Priced the same for all sizes and colors listed. Perfect for your Bubble Blower T-shirt Collection. And... there are more Bubble Blowers listed in my shop. Go Look!",
+  "filters": [
+    "T-Shirts"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $38",
+    "Available in White, Gray, Sand, Peach, and Natural.",
+    "Free shipping"
+  ],
+  "name": "Happy Girls are the PRETTIEST! Blinged Out T-Shirt",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "optionPlaceholders": {
+    "Size": "Select size",
+    "Color": "Select color"
+  },
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-9adbc6f48a1af5da3eac.webp"
+  ],
+  "price": 38,
+  "shippingCost": 5,
+  "shoeTypes": [],
+  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "sortOrder": 6,
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "updatedAt": "2026-09-21T00:11:33.401Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 88,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

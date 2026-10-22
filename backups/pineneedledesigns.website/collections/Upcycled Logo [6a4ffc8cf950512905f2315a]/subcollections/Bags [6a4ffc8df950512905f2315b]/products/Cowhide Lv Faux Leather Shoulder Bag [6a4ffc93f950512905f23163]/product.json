@@ -1,0 +1,53 @@
+{
+  "_id": "6a4ffc93f950512905f23163",
+  "legacyId": 25,
+  "__v": 1,
+  "bagTypes": [
+    "Shoulder Bags"
+  ],
+  "collectionId": "6a4ffc8cf950512905f2315a",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:58.707Z",
+  "customProperties": [],
+  "description": "A nice rich golden brown color with a roomy inside for an iPad and make up bag. Durable faux leather with cowhide to match. Goes perfect with Lv logo.",
+  "filters": [
+    "Bags"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "",
+  "meta": [
+    "Price: $138",
+    "Color: Golden brown",
+    "Durable faux leather with cowhide",
+    "Free shipping"
+  ],
+  "name": "Cowhide Lv Faux Leather Shoulder Bag",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-59b92bc12e3ea5ef585a.webp",
+    "/uploads/legacy-efa8ffc93b3b69930923.webp",
+    "/uploads/legacy-db710eed5d88a6e30aaf.webp"
+  ],
+  "price": 138,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 5,
+  "subCollectionId": "6a4ffc8df950512905f2315b",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "6a4ffc74f950512905f2313a",
+  "slug": "jeans",
+  "__v": 0,
+  "cardImage": "/uploads/legacy-17d8006aa03800ebbf8a.webp",
+  "createdAt": "2026-07-09T19:54:28.174Z",
+  "description": "Sculpted fit with vintage wash.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Jeans",
+  "showWhenEmpty": false,
+  "sortOrder": 9,
+  "updatedAt": "2026-09-20T15:39:29.271Z"
+}

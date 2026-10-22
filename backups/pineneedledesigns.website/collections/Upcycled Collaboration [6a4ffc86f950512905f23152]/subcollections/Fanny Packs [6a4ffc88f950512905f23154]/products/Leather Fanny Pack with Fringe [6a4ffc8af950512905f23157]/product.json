@@ -1,0 +1,49 @@
+{
+  "_id": "6a4ffc8af950512905f23157",
+  "legacyId": 17,
+  "__v": 1,
+  "bagTypes": [],
+  "collectionId": "6a4ffc86f950512905f23152",
+  "color": "",
+  "createdAt": "2026-07-09T19:54:50.287Z",
+  "customProperties": [],
+  "description": "Upcycled leather in the USA. Convenient back zipper pocket. Great for a day at the rodeo or horse show! You decide.",
+  "filters": [
+    "Fanny Packs"
+  ],
+  "freeShipping": true,
+  "imageWrapper": "image-frame",
+  "importantNotes": "",
+  "maker": "Made by jGypsie",
+  "meta": [
+    "Price: $99",
+    "Free shipping"
+  ],
+  "name": "Leather Fanny Pack with Fringe",
+  "noBlingDescription": "",
+  "noBlingPrice": null,
+  "outOfStock": false,
+  "photos": [
+    "/uploads/legacy-6156fcca38b7d1939537.webp",
+    "/uploads/legacy-71a571edf6b734fe70a8.webp",
+    "/uploads/legacy-853a538ab7dd573b45e1.webp"
+  ],
+  "price": 99,
+  "shippingCost": 0,
+  "shoeTypes": [],
+  "size": "",
+  "sortOrder": 1,
+  "subCollectionId": "6a4ffc88f950512905f23154",
+  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "videoPosters": [],
+  "videos": [],
+  "quantity": 1,
+  "beltSize": "",
+  "blingPrice": null,
+  "hasBlingOptions": false,
+  "sizePrices": {},
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": "",
+  "sweatshirtSize": ""
+}
