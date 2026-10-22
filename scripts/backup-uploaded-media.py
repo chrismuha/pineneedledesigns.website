@@ -67,7 +67,7 @@ def write_json(destination, value):
     os.replace(temporary, destination)
 
 
-def catalog_changes(previous, catalog):
+def catalog_changes(previous, catalog, include_uploads=False):
     """Compare live inventory, not retained backup files; remember past deletions."""
     files = set(catalog['_mediaFiles'])
     records = {kind + ':' + str(record['_id']): record.get('name', record.get('key', 'Unnamed'))
@@ -91,16 +91,24 @@ def catalog_changes(previous, catalog):
                               ('catalog-restored', restored_records)]:
         if items:
             events.append({'type': event_type, 'items': items})
+    if include_uploads:
+        new_files = sorted(files - set(previous['files']) - set(previous['missingFiles']))
+        new_records = {key: name for key, name in records.items()
+                       if key not in previous['records'] and key not in previous['missingRecords']}
+        if new_files:
+            events.append({'type': 'media-uploaded', 'items': new_files})
+        if new_records:
+            events.append({'type': 'catalog-added', 'items': new_records})
     state = {'files': sorted(files), 'records': records,
              'missingFiles': sorted((set(previous['missingFiles']) | deleted_files | referenced) - files),
              'missingRecords': missing_records}
     return state, events
 
 
-def monitor_catalog(root, catalog, stamp):
+def monitor_catalog(root, catalog, stamp, include_uploads=False):
     state_file = root / 'monitor-state.json'
     previous = json.loads(state_file.read_text()) if state_file.exists() else None
-    state, events = catalog_changes(previous, catalog)
+    state, events = catalog_changes(previous, catalog, include_uploads=include_uploads)
     pending_file = root / 'pending-alerts.json'
     pending = json.loads(pending_file.read_text()) if pending_file.exists() else []
     for event in events:
@@ -324,8 +332,8 @@ def main():
         result = subprocess.run(ssh + [args.host, remote], input=REMOTE_CATALOG,
                                 text=True, capture_output=True, check=True, timeout=90)
         catalog = json.loads(result.stdout)
-        monitor_catalog(root, catalog, stamp)
         if args.alerts != 'off':
+            monitor_catalog(root, catalog, stamp)
             try:
                 if args.alerts == 'email':
                     deliver_email_alerts(root, args)

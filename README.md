@@ -82,6 +82,8 @@ is not committed to the repository.
 On Chris's Mac, `scripts/install-media-backup.py` installs a LaunchAgent that runs
 `scripts/backup-uploaded-media.py` at login and every six hours while the Mac is
 awake and online. Install or update it with `/usr/bin/python3 scripts/install-media-backup.py`.
+This local job only backs up files; its alerts are disabled. Monitoring and email
+notifications run on GitHub independently of Macs, as described below.
 The job connects over SSH using `~/.ssh/pineneedles_deploy`; database credentials
 stay on the production server. It reads all products and collections, including
 hidden and sold items, plus subcollections and store settings, directly from MongoDB.
@@ -112,16 +114,8 @@ the Dropbox checkout. Until then the regular local backup continues, and
 - `replaced-files/` retains previous files when an existing upload is replaced.
 - `backup-status.json` records the latest completed backup, SHA-256 checksums, and missing media links.
 - `backup.log` and `backup-error.log` show scheduled job results and failures.
-- `activity.jsonl` records detected media deletions/restorations and removed/restored
-  product, collection, and subcollection records. The scheduled job emails new
-  events to `muhachris297@gmail.com` through the server's existing mail service;
-  no mail credentials are copied to this Mac. The first run establishes a baseline so existing
-  missing files do not generate alerts; later recovery of those files does.
-  New uploads do not trigger restoration alerts. Unchanged damage does not repeat.
-  `monitor-state.json` remembers previously missing items and `pending-alerts.json`
-  retains notifications until the email service accepts them, retrying failures
-  on the next successful check. Checks require this Mac to be awake and online.
-  Manual runs can use `--alerts mac` for Mac notifications instead.
+- Historical local `activity.jsonl`, `monitor-state.json`, and `pending-alerts.json`
+  are retained. The local scheduled backup no longer monitors changes or sends alerts.
 
 Website deletions do not delete local backup files. Interrupted transfers do not
 replace completed files. An offline Mac cannot pull new files until it reconnects;
@@ -141,6 +135,18 @@ catalog data. Restore verifies backup checksums and casts saved IDs/dates back t
 MongoDB types. It does not restore orders/payments or roll back existing records.
 
 ## External uptime monitoring
+
+The separate `Catalog and File Monitor` workflow runs every six hours at minute 29
+UTC. It reads all catalog records (including hidden/sold products) and the actual
+uploads directory through SSH, using existing repository secrets and a pinned host
+key. It emails `muhachris297@gmail.com` for new uploads, deleted/restored media, and
+added/deleted/restored product, collection, and subcollection records. Initial
+state comes from the existing monitor baseline; previously missing originals do
+not generate repeated deletion alerts. State and pending messages persist in a
+separate Actions cache. Failed inventory reads never count as mass deletions and
+send a monitoring-failure email. This does not copy backup files into GitHub;
+the local backup remains a separate task. Like uptime monitoring, changes between
+checks can be missed and GitHub schedules/cache retention have limitations.
 
 The `External Uptime Monitor` GitHub Actions workflow checks the public homepage
 and `/api/health` every six hours, at minute 17 in UTC, independently of DigitalOcean

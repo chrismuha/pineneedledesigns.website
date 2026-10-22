@@ -1,0 +1,59 @@
+name: Catalog and File Monitor
+
+on:
+  schedule:
+    - cron: '29 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      send_test_email:
+        description: Send a confirmation email
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-file-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/
+          persist-credentials: false
+      - name: Restore catalog inventory and pending alerts
+        uses: actions/cache/restore@v5
+        with:
+          path: .catalog-monitor-state
+          key: catalog-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: catalog-state-v1-
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DO_SSH_KEY }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/pine-monitor"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/pine-monitor/identity"
+          chmod 600 "$RUNNER_TEMP/pine-monitor/identity"
+      - name: Check uploads and database records and email changes
+        run: python3 scripts/catalog-monitor.py
+        env:
+          DO_HOST: ${{ secrets.DO_HOST }}
+          DO_USER: ${{ secrets.DO_USER }}
+          MONITOR_IDENTITY: ${{ runner.temp }}/pine-monitor/identity
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SEND_TEST_EMAIL: ${{ inputs.send_test_email || 'false' }}
+      - name: Save inventory and unsent alerts even on failure
+        if: always()
+        uses: actions/cache/save@v5
+        with:
+          path: .catalog-monitor-state
+          key: catalog-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Remove temporary SSH key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/pine-monitor/identity"

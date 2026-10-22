@@ -22,7 +22,7 @@ job = {
     'ProgramArguments': ['/usr/bin/python3', str(script),
                          '--destination', str(destination),
                          '--repository-copy', str(repo / 'backups/pineneedledesigns.website'),
-                         '--alerts', 'email', '--alert-email', 'muhachris297@gmail.com'],
+                         '--alerts', 'off'],
     'WorkingDirectory': str(runtime),
     'RunAtLoad': True,
     'StartInterval': 21600,

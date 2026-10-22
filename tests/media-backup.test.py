@@ -17,6 +17,19 @@ restore_spec.loader.exec_module(restore)
 
 
 class MediaBackupTests(unittest.TestCase):
+    def test_external_monitor_reports_new_uploads_and_records_separately_from_restorations(self):
+        before = {'products': [{'_id': 'old', 'name': 'Old', 'photos': ['/uploads/missing.webp']}],
+                  '_mediaFiles': ['/uploads/existing.webp']}
+        state, _ = backup.catalog_changes(None, before, include_uploads=True)
+        after = {'products': before['products'] + [{'_id': 'new', 'name': 'New'}],
+                 '_mediaFiles': ['/uploads/existing.webp', '/uploads/new.webp', '/uploads/missing.webp']}
+        state, events = backup.catalog_changes(state, after, include_uploads=True)
+        by_type = {event['type']: event['items'] for event in events}
+        self.assertEqual(by_type['media-uploaded'], ['/uploads/new.webp'])
+        self.assertEqual(by_type['media-restored'], ['/uploads/missing.webp'])
+        self.assertEqual(by_type['catalog-added'], {'products:new': 'New'})
+        self.assertEqual(backup.catalog_changes(state, after, include_uploads=True)[1], [])
+
     def test_email_alert_preserves_queue_on_failure_and_clears_after_acceptance(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -124,6 +124,7 @@ yarn.lock
 
 # Runtime session data
 .uptime-state/
+.catalog-monitor-state/
 .sessions/
 
 # Uploaded product images
