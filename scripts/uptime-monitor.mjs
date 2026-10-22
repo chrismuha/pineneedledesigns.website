@@ -1,3 +1,4 @@
+import { emailDocument, escapeEmailHtml } from './email-accessibility.mjs';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -52,6 +53,12 @@ export async function sendAlert(kind, report, fetcher = fetch) {
       from: 'Pine Needle Designs <notifications@notifications.pineneedledesigns.store>',
       to: [recipient],
       subject: `Pine Needle: ${labels[kind]}`,
+      html: emailDocument(`Pine Needle: ${labels[kind]}`, `
+        <p><strong>Website:</strong> <a href="${origin}" style="color:#0645ad;text-decoration:underline;">${origin}</a><br><strong>Checked:</strong> ${escapeEmailHtml(report.checkedAt)}</p>
+        <h2 style="font-size:28px;line-height:1.35;">Health check results</h2>
+        <ul>${report.results.map(item => `<li style="margin-bottom:16px;"><strong>${escapeEmailHtml(item.endpoint)}: ${item.healthy ? 'OK' : 'FAILED'}</strong>${item.healthy ? '' : '<br>' + escapeEmailHtml(item.error)}</li>`).join('')}</ul>
+        <h2 style="font-size:28px;line-height:1.35;">About these alerts</h2>
+        <p>This check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.</p>`),
       text: `${origin}\nChecked: ${report.checkedAt}\n\n${labels[kind]}.\n\n`
         + report.results.map((item) => `${item.endpoint}: ${item.healthy ? 'OK' : item.error}`).join('\n')
         + '\n\nThis check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.'

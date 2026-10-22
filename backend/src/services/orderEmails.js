@@ -24,7 +24,7 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
 
   const lineItemsHtml = lineItems.map((line) => `
     <tr>
-      <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};">${line.title || 'Item'}</td>
+      <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};"><strong>${line.title || 'Item'}</strong></td>
       <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:center;">${line.quantity || 1}</td>
       <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:right;">${money(line.subtotal)}</td>
       <td style="padding:10px;border-bottom:1px solid ${emailColors.divider};text-align:right;">${money(line.lineTotal)}</td>
@@ -32,42 +32,42 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
   `).join('');
 
   const adminHtml = `
-    <div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px;">
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:1.6;color:#17212b;overflow-wrap:anywhere;word-break:break-word;background:${emailColors.pageSurface};padding:20px;">
       <div style="max-width:900px;margin:auto;background:${emailColors.cardSurface};padding:20px;border-radius:10px;">
-        <h2 style="margin:0;">New Clover Order Received</h2>
+        <h1 style="font-size:34px;line-height:1.3;margin:0;">New Clover Order Received</h1>
         <p style="color:${emailColors.secondaryText};">Order ${orderLabel}${paymentRef ? `<br>Payment reference: ${paymentRef}` : ''}</p>
         <hr>
-        <h3>Customer</h3>
-        <p>Type: ${customer.type || ''}<br>Email: ${customer.email || ''}<br>Phone: ${customer.phone || ''}</p>
-        <h3>Billing Address</h3>
+        <h2 style="font-size:28px;line-height:1.35;">Customer</h2>
+        <p><strong>Type:</strong> ${customer.type || ''}<br><strong>Email:</strong> ${customer.email || ''}<br><strong>Phone:</strong> ${customer.phone || ''}</p>
+        <h2 style="font-size:28px;line-height:1.35;">Billing Address</h2>
         <p>${billingAddress.name || ''}<br>${billingAddress.address1 || ''}<br>${billingAddress.address2 || ''}<br>${billingAddress.city || ''}, ${billingAddress.state || ''} ${billingAddress.zip || ''}</p>
-        <h3>Shipping Address</h3>
+        <h2 style="font-size:28px;line-height:1.35;">Shipping Address</h2>
         <p>${shippingAddress.name || ''}<br>${shippingAddress.address1 || ''}<br>${shippingAddress.address2 || ''}<br>${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}</p>
         ${order.discountCode ? `<p><b>Discount Code:</b> ${order.discountCode}</p>` : ''}
         <hr>
-        <h3>Items</h3>
-        <table width="100%" cellpadding="0" cellspacing="0"><tbody>${lineItemsHtml}</tbody></table>
+        <h2 style="font-size:28px;line-height:1.35;">Items</h2>
+        <table aria-label="Order items" width="100%" cellpadding="0" cellspacing="0" style="font-size:22px;line-height:1.6;"><thead><tr><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Item</th><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Quantity</th><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Subtotal</th><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Total</th></tr></thead><tbody>${lineItemsHtml}</tbody></table>
         <hr>
-        <h3>Summary</h3>
-        <p>Subtotal: <b>${money(summary.subtotal)}</b><br>Discount: <b>-${money(summary.discount)}</b><br>Shipping: <b>${money(summary.shipping)}</b><br>Tax: <b>${money(summary.tax)}</b><br><b style="font-size:16px;">Final Total: ${money(summary.finalTotal)}</b></p>
+        <h2 style="font-size:28px;line-height:1.35;">Summary</h2>
+        <p><strong>Subtotal:</strong> <b>${money(summary.subtotal)}</b><br><strong>Discount:</strong> <b>-${money(summary.discount)}</b><br><strong>Shipping:</strong> <b>${money(summary.shipping)}</b><br><strong>Tax:</strong> <b>${money(summary.tax)}</b><br><b style="font-size:28px;">Final Total: ${money(summary.finalTotal)}</b></p>
       </div>
     </div>
   `;
 
   const customerReceiptHtml = `
-    <div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px;">
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:1.6;color:#17212b;overflow-wrap:anywhere;word-break:break-word;background:${emailColors.pageSurface};padding:20px;">
       <div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:30px;border-radius:10px;">
-        <h2 style="margin-top:0;">Thank you for your order!</h2>
+        <h1 style="font-size:34px;line-height:1.3;margin-top:0;">Thank you for your order!</h1>
         <p>Hi ${shippingAddress.name || 'there'},</p>
         <p>Your payment has been successfully received. Below is your receipt.</p>
         <hr>
         <p><strong>Order:</strong> ${orderLabel}<br><strong>Email:</strong> ${customer.email || ''}</p>
-        <h3>Items</h3>
-        <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
-          <tbody>
+        <h2 style="font-size:28px;line-height:1.35;">Items</h2>
+        <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;font-size:22px;line-height:1.6;" aria-label="Order items">
+          <thead><tr><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Item</th><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Quantity</th><th scope="col" style="text-align:left;padding:8px;font-size:22px;">Total</th></tr></thead><tbody>
             ${lineItems.map((line) => `
               <tr>
-                <td>${line.title || 'Item'}</td>
+                <td><strong>${line.title || 'Item'}</strong></td>
                 <td align="center">${line.quantity || 1}</td>
                 <td align="right">${money(line.lineTotal)}</td>
               </tr>
@@ -75,10 +75,10 @@ export const sendOrderConfirmationEmails = async (order, { transactionId = '' } 
           </tbody>
         </table>
         <hr>
-        <h3>Summary</h3>
-        <p>Subtotal: ${money(summary.subtotal)}<br>Discount: -${money(summary.discount)}<br>Shipping: ${money(summary.shipping)}<br>Tax: ${money(summary.tax)}<br><strong>Total Paid: ${money(summary.finalTotal)}</strong></p>
+        <h2 style="font-size:28px;line-height:1.35;">Summary</h2>
+        <p><strong>Subtotal:</strong> ${money(summary.subtotal)}<br><strong>Discount:</strong> -${money(summary.discount)}<br><strong>Shipping:</strong> ${money(summary.shipping)}<br><strong>Tax:</strong> ${money(summary.tax)}<br><strong>Total Paid: ${money(summary.finalTotal)}</strong></p>
         <hr>
-        <h3>Shipping Address</h3>
+        <h2 style="font-size:28px;line-height:1.35;">Shipping Address</h2>
         <p>${shippingAddress.name || ''}<br>${shippingAddress.address1 || ''}<br>${shippingAddress.address2 || ''}<br>${shippingAddress.city || ''}, ${shippingAddress.state || ''} ${shippingAddress.zip || ''}</p>
         <p style="margin-top:20px;">If you have any questions, call (315) 272-8928</p>
         <p>— Pine Needle Designs</p>
@@ -147,7 +147,7 @@ export const sendOrderEventEmails = async (order, {
       : kind === 'payment_required'
         ? `Pine Needle Designs proposed an update that adds ${money(amount)}. The original order will remain unchanged until payment succeeds.`
         : `The order was updated successfully.${amount ? ` Amount adjusted: ${money(Math.abs(amount))}.` : ''}`;
-  const html = `<div style="font-family:Arial,sans-serif;background:${emailColors.pageSurface};padding:20px"><div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:28px;border-radius:10px"><h2>${title}</h2><p><strong>Order ${label}</strong></p><p>${detail}</p>${action}<p>— Pine Needle Designs</p></div></div>`;
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:1.6;color:#17212b;overflow-wrap:anywhere;word-break:break-word;background:${emailColors.pageSurface};padding:20px"><div style="max-width:700px;margin:auto;background:${emailColors.cardSurface};padding:28px;border-radius:10px"><h1 style="font-size:34px;line-height:1.3;">${title}</h1><p><strong>Order ${label}</strong></p><p>${detail}</p>${action}<p>— Pine Needle Designs</p></div></div>`;
   const text = `${title}\nOrder ${label}\n${detail}${paymentUrl ? `\nPay securely: ${paymentUrl}` : ''}`;
   const results = await Promise.allSettled([
     sendEmail({ from: `"Pine Needle Designs" <${getEmailSender()}>`, to: getEmailRecipients(), subject: `${title}: ${label}`, html, text }),

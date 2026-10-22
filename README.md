@@ -240,3 +240,22 @@ Sessions are stored in the ignored `.sessions` directory so carts survive server
 - CORS is configured for local development
 - Session cookies expire after 24 hours
 - All API calls include credentials for session management
+
+## Readable email notifications
+
+Commit notifications use the organization’s shared commit-email workflow. Pine
+Needle outage/recovery alerts, catalog and uploaded-file activity, backup notices,
+booking deposits, order confirmations, receipts, payment changes, cancellations,
+and refunds use large email text (22px body, 34px titles, 28px section headings),
+clear headings, bold item names or field labels, spacing, and wrapping text.
+Order item tables include column headers. Status labels state OK or FAILED in
+words. Plain-text alternatives remain available. Text-only backend notices gain
+an escaped HTML version in the shared mail sender, for both SMTP and Resend.
+
+Check notification formatting without delivering email:
+
+```sh
+node --experimental-test-module-mocks --test tests/email-accessibility.test.mjs tests/uptime.test.mjs
+python3 tests/email-accessibility.test.py
+python3 tests/media-backup.test.py
+```

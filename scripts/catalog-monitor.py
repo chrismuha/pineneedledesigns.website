@@ -3,6 +3,7 @@
 import datetime
 import importlib.util
 import json
+from html import escape
 import os
 from pathlib import Path
 import shlex
@@ -19,6 +20,7 @@ def send_email(events):
               'media-restored': 'Files restored', 'catalog-added': 'Catalog records added',
               'catalog-deleted': 'Catalog records deleted', 'catalog-restored': 'Catalog records restored',
               'test': 'GitHub catalog monitor enabled', 'monitor-error': 'Catalog monitoring check failed'}
+    html = []
     text = ['Pine Needle Designs catalog and uploaded-media monitoring', '']
     for event in events:
         items = event['items']
@@ -26,10 +28,19 @@ def send_email(events):
         text.extend((f'- {name} ({key})' for key, name in items.items()) if isinstance(items, dict)
                     else ('- ' + value for value in items))
         text.append('')
+        html.append('<h2 style="font-size:28px;line-height:1.35;">' + escape(labels[event['type']]) + f' ({len(items)})</h2>')
+        html.append('<p><strong>Detected:</strong> ' + escape(event.get('detectedAt', '')) + '</p><ul>')
+        values = (f'{name} ({key})' for key, name in items.items()) if isinstance(items, dict) else items
+        html.extend('<li style="margin-bottom:16px;"><strong>' + escape(str(value)) + '</strong></li>' for value in values)
+        html.append('</ul>')
     text.append('Checks run on GitHub every six hours, independently of both Macs. Changes between checks can be missed. GitHub may delay scheduled runs. The monitor sends alerts; it does not automatically restore or back up files.')
     payload = {'from': 'Pine Needle Designs <notifications@notifications.pineneedledesigns.store>',
                'to': ['muhachris297@gmail.com'],
                'subject': 'Pine Needle: catalog and file activity alert', 'text': '\n'.join(text)}
+    payload['html'] = ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Catalog and file activity alert</title></head>'
+                       '<body style="margin:0;background:#fff;color:#17212b;"><main style="max-width:800px;margin:auto;padding:24px;font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:1.6;overflow-wrap:anywhere;word-break:break-word;">'
+                       '<h1 style="font-size:34px;line-height:1.3;">Pine Needle catalog and file activity</h1>'
+                       + ''.join(html) + '<p>' + escape(text[-1]) + '</p></main></body></html>')
     request = urllib.request.Request('https://api.resend.com/emails', data=json.dumps(payload).encode(),
                                      headers={'Authorization': 'Bearer ' + os.environ['RESEND_API_KEY'],
                                               'Content-Type': 'application/json',

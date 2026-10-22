@@ -1,3 +1,4 @@
+import { textEmailHtml } from '../../../scripts/email-accessibility.mjs';
 import { config, isLocalApp } from '../config/index.js';
 
 const DEFAULT_PROD_EMAIL = 'onpinesandneedles@gmail.com';
@@ -20,6 +21,8 @@ export const sendEmail = async ({ from: _from, to, ...message }) => {
   if (!mailerConfigured) {
     throw new Error('Mailer is not configured. Set RESEND_API_KEY in production or EMAIL_APP_PASSWORD locally.');
   }
+
+  if (!message.html) message.html = textEmailHtml(message.subject || 'Pine Needle Designs notification', message.text);
 
   if (emailProvider === 'resend') {
     const response = await fetch('https://api.resend.com/emails', {
