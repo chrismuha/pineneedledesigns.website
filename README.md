@@ -77,28 +77,34 @@ catalog records and product media through the dashboard. Uploaded media files li
 `backend/uploads` directory on the application server and are served from `/uploads`; catalog media
 is not committed to the repository.
 
-### Automatic local media backup
+### Daily GitHub catalog and media backup
 
-On Chris's Mac, `scripts/install-media-backup.py` installs a LaunchAgent that runs
-`scripts/backup-uploaded-media.py` at login and every six hours while the Mac is
-awake and online. Install or update it with `/usr/bin/python3 scripts/install-media-backup.py`.
-This local job only backs up files; its alerts are disabled. Monitoring and email
-notifications run on GitHub independently of Macs, as described below.
-The job connects over SSH using `~/.ssh/pineneedles_deploy`; database credentials
-stay on the production server. It reads all products and collections, including
-hidden and sold items, plus subcollections and store settings, directly from MongoDB.
-This backs up catalog records and uploaded media, not orders, payments, or the entire database.
+The `Daily Catalog and Media Backup` GitHub Actions workflow runs once every
+24 hours at 07:43 UTC (3:43 a.m. Eastern daylight time / 2:43 a.m. Eastern
+standard time). It runs independently of both Macs and can also be started
+manually from the Actions tab. GitHub can delay scheduled runs.
 
-Backups live at `~/Website Backups/pineneedledesigns.website/`. The scheduled script
-is installed into `~/Library/Application Support/Muha Computer Repair/Media Backup/`
-because macOS blocks LaunchAgent access to this Dropbox checkout. These backups
-are also copied to `backups/pineneedledesigns.website/` inside this repository, where
-the media and catalog files can be committed to Git. Runtime locks and logs remain
-ignored. The backup sits outside the served `docs/` directory. Dropbox can sync this
-additional copy. macOS must grant Full Disk Access to
-`/Library/Developer/CommandLineTools/usr/bin/python3` for the scheduled job to access
-the Dropbox checkout. Until then the regular local backup continues, and
-`repository-copy-status.json` reports whether the additional copy succeeded.
+It reads products and collections, including hidden and sold items, subcollections,
+and store settings directly from production MongoDB over SSH, and downloads the
+server's uploaded media. It commits the result to `backups/pineneedledesigns.website/`
+on `main`, retaining deleted media, older catalog snapshots, and replaced files.
+It uses the existing `DO_HOST`, `DO_USER`, and `DO_SSH_KEY` repository secrets and
+the monitor's pinned SSH host key. Database credentials stay on the server.
+Backup commits use `GITHUB_TOKEN` and do not trigger production deployment.
+A failed download or upload fails the workflow; check Actions for results and
+GitHub failure notifications. The run summary reports missing referenced files;
+a successful backup cannot recover originals already missing from the server.
+Files of 100 MiB or more cause the Git upload step to fail rather than silently skip them.
+
+This backs up catalog records and uploaded media, not orders, payments, or the
+entire database. The repository is public: do not add credentials or private
+customer data to this backup.
+
+The former Mac LaunchAgent was removed. Its last local files remain at
+`~/Website Backups/pineneedledesigns.website/`. The optional local installer and
+manual backup script remain available, but are not required for the daily workflow.
+The backup folder is outside the served `docs/` directory. Runtime locks and logs
+are ignored by Git. Local checkouts receive new GitHub backups on `git pull`.
 
 - `site/uploads/` mirrors website `/uploads/` URLs, including files no longer referenced by the catalog.
 - `collections/Collection Name [ID]/` groups collection metadata and cover media. Its
@@ -145,7 +151,7 @@ state comes from the existing monitor baseline; previously missing originals do
 not generate repeated deletion alerts. State and pending messages persist in a
 separate Actions cache. Failed inventory reads never count as mass deletions and
 send a monitoring-failure email. This does not copy backup files into GitHub;
-the local backup remains a separate task. Like uptime monitoring, changes between
+the daily backup workflow is a separate task. Like uptime monitoring, changes between
 checks can be missed and GitHub schedules/cache retention have limitations.
 
 The `External Uptime Monitor` GitHub Actions workflow checks the public homepage

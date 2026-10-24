@@ -1,0 +1,94 @@
+name: Daily Catalog and Media Backup
+
+on:
+  schedule:
+    - cron: '43 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-catalog-media-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Prepare verified production SSH connection
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DO_SSH_KEY }}
+          DO_HOST: ${{ secrets.DO_HOST }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ssh" "$RUNNER_TEMP/pine-backup"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/pine-backup/identity"
+          chmod 600 "$RUNNER_TEMP/pine-backup/identity"
+          cp scripts/catalog-monitor.known_hosts "$RUNNER_TEMP/pine-backup/known_hosts"
+          cat > "$HOME/.ssh/config" <<EOF
+          Host *
+            StrictHostKeyChecking yes
+            HostKeyAlias pineneedles-production
+            UserKnownHostsFile $RUNNER_TEMP/pine-backup/known_hosts
+          EOF
+          chmod 600 "$HOME/.ssh/config"
+      - name: Back up production catalog and uploaded media
+        env:
+          DO_HOST: ${{ secrets.DO_HOST }}
+          DO_USER: ${{ secrets.DO_USER }}
+        run: |
+          set -euo pipefail
+          python3 scripts/backup-uploaded-media.py \
+            --host "$DO_USER@$DO_HOST" \
+            --identity "$RUNNER_TEMP/pine-backup/identity" \
+            --destination "$GITHUB_WORKSPACE/backups/pineneedledesigns.website"
+      - name: Commit and upload backup to GitHub
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- backups/pineneedledesigns.website
+          if git diff --cached --quiet; then
+            echo 'No backup changes to upload.'
+            exit 0
+          fi
+          python3 - <<'PYCODE'
+          import subprocess
+          from pathlib import Path
+          files = subprocess.check_output(['git', 'diff', '--cached', '--name-only', '-z']).decode().split('\0')
+          oversized = [p for p in files if p and Path(p).is_file() and Path(p).stat().st_size >= 100 * 1024 * 1024]
+          if oversized:
+              raise SystemExit('Backup contains files exceeding the GitHub file limit: ' + ', '.join(oversized))
+          PYCODE
+          git commit -m "Daily catalog and media backup $(date -u +%Y-%m-%d)"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          echo 'Backup upload failed after three attempts.' >&2
+          exit 1
+      - name: Report backup coverage
+        run: |
+          python3 - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          status = json.loads(Path('backups/pineneedledesigns.website/backup-status.json').read_text())
+          missing = len(status['missingFiles'])
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write(f"Backup uploaded to main.\n\nCompleted (UTC): {status['completedAt']}\n\nFiles retained: {status['filesBackedUp']}\n\nMissing referenced files: {missing}\n")
+          if missing:
+              print(f'::warning::{missing} referenced media files are missing. Existing backups are retained; see backup-status.json.')
+          PYCODE
+      - name: Remove temporary SSH key
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/pine-backup"
