@@ -8,6 +8,16 @@ October 7 deployment is the leading explanation; October 18 deletion is not conf
 
 Circumstantial evidence; exact deletion times and attribution of all 86 files remain unproven.
 
+## Company assessment and technical explanation
+
+**Company assessment, provided by Chris Muha:** “Outside our company’s control.”
+
+This is the company representative’s assessment. The available technical evidence does not independently establish responsibility or whether the incident was outside company control.
+
+Leading technical explanation: deployed commit fe821c5 removed the backend/uploads/* ignore rule while the deployment ran git clean -fd. This exposed untracked uploaded media to cleanup until deployed commit 8f6e7ab restored the rule about eleven minutes later on October 7, 2026. An isolated dry run reproduced that exposure. No retained deletion log proves that this action removed all 86 files; the exact historical cause remains unconfirmed.
+
+The October 18 deployment had the uploads ignore rule in place. It is not established as the deletion event.
+
 ## Evidence
 
 - October 7, 2026, **8:15:15 p.m. Eastern** (October 8, 00:15:15 UTC): the production server deployed `fe821c5`. This revision removed `backend/uploads/*` from `.gitignore`, while deployment still ran `git clean -fd`.
