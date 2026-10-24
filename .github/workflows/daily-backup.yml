@@ -39,13 +39,23 @@ jobs:
             UserKnownHostsFile $RUNNER_TEMP/pine-backup/known_hosts
           EOF
           chmod 600 "$HOME/.ssh/config"
+      - name: Prepare dedicated backup branch
+        run: |
+          set -euo pipefail
+          cp scripts/backup-uploaded-media.py scripts/restore-uploaded-media.py "$RUNNER_TEMP/pine-backup/"
+          if git ls-remote --exit-code --heads origin daily-backups; then
+            git fetch origin daily-backups
+            git switch -c daily-backups origin/daily-backups
+          else
+            git switch -c daily-backups
+          fi
       - name: Back up production catalog and uploaded media
         env:
           DO_HOST: ${{ secrets.DO_HOST }}
           DO_USER: ${{ secrets.DO_USER }}
         run: |
           set -euo pipefail
-          python3 scripts/backup-uploaded-media.py \
+          python3 "$RUNNER_TEMP/pine-backup/backup-uploaded-media.py" \
             --host "$DO_USER@$DO_HOST" \
             --identity "$RUNNER_TEMP/pine-backup/identity" \
             --destination "$GITHUB_WORKSPACE/backups/pineneedledesigns.website"
@@ -69,9 +79,11 @@ jobs:
           PYCODE
           git commit -m "Daily catalog and media backup $(date -u +%Y-%m-%d)"
           for attempt in 1 2 3; do
-            git fetch origin main
-            git rebase origin/main
-            if git push origin HEAD:main; then
+            if git ls-remote --exit-code --heads origin daily-backups; then
+              git fetch origin daily-backups
+              git rebase origin/daily-backups
+            fi
+            if git push origin HEAD:daily-backups; then
               exit 0
             fi
           done
@@ -85,7 +97,7 @@ jobs:
           status = json.loads(Path('backups/pineneedledesigns.website/backup-status.json').read_text())
           missing = len(status['missingFiles'])
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
-              summary.write(f"Backup uploaded to main.\n\nCompleted (UTC): {status['completedAt']}\n\nFiles retained: {status['filesBackedUp']}\n\nMissing referenced files: {missing}\n")
+              summary.write(f"Backup uploaded to the daily-backups branch.\n\nCompleted (UTC): {status['completedAt']}\n\nFiles retained: {status['filesBackedUp']}\n\nMissing referenced files: {missing}\n")
           if missing:
               print(f'::warning::{missing} referenced media files are missing. Existing backups are retained; see backup-status.json.')
           PYCODE

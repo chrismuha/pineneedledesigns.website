@@ -87,7 +87,7 @@ manually from the Actions tab. GitHub can delay scheduled runs.
 It reads products and collections, including hidden and sold items, subcollections,
 and store settings directly from production MongoDB over SSH, and downloads the
 server's uploaded media. It commits the result to `backups/pineneedledesigns.website/`
-on `main`, retaining deleted media, older catalog snapshots, and replaced files.
+on the `daily-backups` branch, retaining deleted media, older catalog snapshots, and replaced files.
 It uses the existing `DO_HOST`, `DO_USER`, and `DO_SSH_KEY` repository secrets and
 the monitor's pinned SSH host key. Database credentials stay on the server.
 Backup commits use `GITHUB_TOKEN` and do not trigger production deployment.
@@ -104,7 +104,9 @@ The former Mac LaunchAgent was removed. Its last local files remain at
 `~/Website Backups/pineneedledesigns.website/`. The optional local installer and
 manual backup script remain available, but are not required for the daily workflow.
 The backup folder is outside the served `docs/` directory. Runtime locks and logs
-are ignored by Git. Local checkouts receive new GitHub backups on `git pull`.
+are ignored by Git. Browse the current backup on GitHub’s `daily-backups` branch. The older backup
+on `main` remains unchanged. To download the daily copy, clone or check out
+`daily-backups` separately; pulling `main` does not download that branch’s files.
 
 - `site/uploads/` mirrors website `/uploads/` URLs, including files no longer referenced by the catalog.
 - `collections/Collection Name [ID]/` groups collection metadata and cover media. Its
