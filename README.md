@@ -121,13 +121,14 @@ on `main` remains unchanged. To download the daily copy, clone or check out
 - `catalog-snapshots/` retains timestamped catalog records for restoring media associations.
 - `replaced-files/` retains previous files when an existing upload is replaced.
 - `backup-status.json` records the latest completed backup, SHA-256 checksums, and missing media links.
-- `backup.log` and `backup-error.log` show scheduled job results and failures.
+- GitHub Actions shows daily job results and failures. The retained local
+  `backup.log` and `backup-error.log` describe the former Mac job.
 - Historical local `activity.jsonl`, `monitor-state.json`, and `pending-alerts.json`
   are retained. The local scheduled backup no longer monitors changes or sends alerts.
 
-Website deletions do not delete local backup files. Interrupted transfers do not
-replace completed files. An offline Mac cannot pull new files until it reconnects;
-uploads deleted before the next successful pull cannot be recovered by this job.
+Website deletions do not delete retained backup files. Interrupted transfers do not
+replace completed files. The daily workflow works while both Macs are offline;
+uploads deleted before a successful backup cannot be recovered by this job.
 Existing missing media is reported rather than replaced with blank files. There is
 no automatic pruning of old snapshots or replacement files.
 
