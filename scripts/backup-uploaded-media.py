@@ -26,6 +26,9 @@ try {
   for (const name of ['products', 'collections', 'subcollections', 'storesettings']) {
     result[name] = await mongoose.connection.db.collection(name).find({}).toArray();
   }
+  result._auditEvents = await mongoose.connection.db.collection('catalogauditevents').find({}, {
+    projection: { _id: 1, type: 1, targets: 1, reason: 1, startedAt: 1, completedAt: 1, status: 1 }
+  }).sort({ startedAt: 1 }).toArray();
   const mediaFiles = [];
   async function listFiles(directory, prefix = '/uploads') {
     let entries;
@@ -49,7 +52,7 @@ def media_paths(value):
     found = set()
     if isinstance(value, dict):
         for key, item in value.items():
-            if key != '_mediaFiles':
+            if key not in ('_mediaFiles', '_auditEvents'):
                 found.update(media_paths(item))
     elif isinstance(value, list):
         for item in value:
@@ -256,7 +259,8 @@ def organize_catalog(root, catalog):
         'IDs in folder names keep items with the same name separate.\n\n'
         'collections/index.json lists the current catalog. Older item folders are retained. '
         'catalog-snapshots/ preserves earlier catalog states. site/uploads/ preserves original website paths. '
-        'replaced-files/ preserves replaced media. Missing originals are listed in backup-status.json.\n\n'
+        'replaced-files/ preserves replaced media. Missing originals are listed in missing-files.txt and backup-status.json. '
+        'removed-items.md categorizes removals and retained recovery paths; removal-history.jsonl preserves detected removals and restorations.\n\n'
         'Preview a restore: /usr/bin/python3 restore-uploaded-media.py\n'
         'Restore missing files and catalog records: /usr/bin/python3 restore-uploaded-media.py --apply\n'
         'Use --snapshot catalog-snapshots/FILE.json to select an earlier catalog state. '
@@ -280,6 +284,135 @@ def copy_to_repository(root, destination):
     subprocess.run(['rsync', '-rt', '--exclude=.backup.lock', '--exclude=backup.log',
                     '--exclude=backup-error.log', './', str(destination) + '/'],
                    cwd=root, check=True, timeout=1800)
+
+
+def track_removals(root, catalog, stamp):
+    """Track observed removals independently from retained recovery files."""
+    def iso(value):
+        if not value:
+            return None
+        if 'T' in value and '-' not in value:
+            return datetime.datetime.strptime(value, '%Y%m%dT%H%M%S%fZ').replace(tzinfo=datetime.timezone.utc).isoformat()
+        return value
+
+    checked = iso(stamp)
+    state_file = root / 'removal-state.json'
+    previous = json.loads(state_file.read_text()) if state_file.exists() else None
+    # Migrate from the last successful backup, never from retained files on disk.
+    if previous is None and (root / 'latest-catalog.json').exists():
+        old = json.loads((root / 'latest-catalog.json').read_text())
+        status = json.loads((root / 'backup-status.json').read_text())
+        previous = {'checkedAt': iso(status['completedAt']), 'items': inventory(old)}
+        for item in previous['items'].values():
+            item['lastSeenAt'] = previous['checkedAt']
+            item['status'] = 'present'
+    items = previous['items'] if previous else {}
+    current = inventory(catalog)
+    audit = catalog.get('_auditEvents', [])
+    events = []
+    for key, item in current.items():
+        old = items.get(key, {})
+        if old.get('status') in ('removed', 'missing-at-baseline'):
+            events.append({'event': 'restored', 'key': key, 'detectedAt': checked,
+                           'previousMissingAt': old.get('firstDetectedMissingAt')})
+        items[key] = {**item, 'status': 'present', 'lastSeenAt': checked}
+    for key, item in items.items():
+        if key in current:
+            continue
+        if item.get('status') == 'present':
+            item.update(status='removed', firstDetectedMissingAt=checked)
+            events.append({'event': 'removed', 'key': key, 'name': item.get('name'),
+                           'lastSeenAt': item.get('lastSeenAt'), 'detectedAt': checked})
+    # References already broken when first observed are not invented deletion events.
+    for relative in sorted(media_paths(catalog)):
+        key = 'media:/' + relative
+        if key not in items:
+            items[key] = {'kind': 'media', 'name': '/' + relative, 'websitePath': '/' + relative,
+                          'status': 'missing-at-baseline', 'lastSeenAt': None,
+                          'firstDetectedMissingAt': checked}
+    # Audit also catches items created and deleted entirely between daily checks.
+    for event in audit:
+        if event.get('status') != 'completed':
+            continue
+        for target in event.get('targets', []):
+            key = target['key']
+            if key in items:
+                continue
+            kind, identifier = key.split(':', 1)
+            if kind not in ('media', 'products', 'collections', 'subcollections'):
+                continue
+            item = {'kind': kind, 'name': target.get('name', identifier),
+                    'status': 'removed', 'lastSeenAt': None, 'firstDetectedMissingAt': checked}
+            item['websitePath' if kind == 'media' else 'id'] = identifier
+            items[key] = item
+            events.append({'event': 'removed', 'key': key, 'name': item['name'],
+                           'lastSeenAt': None, 'detectedAt': checked})
+    for key, item in items.items():
+        if item['status'] == 'present':
+            continue
+        matches = [event for event in audit if event.get('status') == 'completed'
+                   and any(target.get('key') == key for target in event.get('targets', []))
+                   and event.get('completedAt')
+                   and (not item.get('lastSeenAt') or
+                        datetime.datetime.fromisoformat(event['completedAt'].replace('Z', '+00:00')) >=
+                        datetime.datetime.fromisoformat(item['lastSeenAt'].replace('Z', '+00:00')))]
+        if matches:
+            event = max(matches, key=lambda value: datetime.datetime.fromisoformat(value['completedAt'].replace('Z', '+00:00')))
+            if item['status'] == 'missing-at-baseline':
+                item['status'] = 'removed'
+                events.append({'event': 'removed', 'key': key, 'name': item.get('name'),
+                               'lastSeenAt': None, 'detectedAt': checked})
+            item['websiteDeletionStartedAt'] = event.get('startedAt')
+            item['websiteDeletionCompletedAt'] = event.get('completedAt')
+            item['reason'] = event.get('reason')
+        if item['kind'] == 'media':
+            relative = item['websitePath'].lstrip('/')
+            item['backupPath'] = 'site/' + relative if (root / 'site' / relative).is_file() else None
+        else:
+            filename = {'products': 'product.json', 'collections': 'collection.json',
+                        'subcollections': 'subcollection.json'}[item['kind']]
+            # Old folders are deliberately retained even after moves and renames.
+            candidates = list((root / 'collections').rglob(filename))
+            item['backupPath'] = next((str(path.relative_to(root)) for path in candidates
+                                      if str(json.loads(path.read_text()).get('_id')) == item['id']), None)
+        item['category'] = ('Removed from website — backup retained' if item['status'] == 'removed' and item['backupPath']
+                            else 'Removed from website — no backup available' if item['status'] == 'removed'
+                            else 'Already missing when first observed')
+    removed = {key: item for key, item in items.items() if item['status'] != 'present'}
+    write_json(state_file, {'checkedAt': checked, 'items': items})
+    write_json(root / 'removed-items.json', {'checkedAt': checked, 'items': removed})
+    write_json(root / 'website-deletion-audit.json', audit)
+    if events:
+        with (root / 'removal-history.jsonl').open('a') as history:
+            for event in events:
+                if event['event'] == 'removed':
+                    event.update({key: items[event['key']].get(key) for key in (
+                        'websiteDeletionStartedAt', 'websiteDeletionCompletedAt', 'backupPath', 'category', 'reason')})
+                history.write(json.dumps(event, sort_keys=True) + '\n')
+    lines = ['# Removed and missing items', '', 'Checked (UTC): ' + checked, '',
+             'Last seen / first detected missing bounds an observed removal; it is not an exact deletion time.',
+             'Website deletion times are recorded only for audited application actions after deployment.',
+             'Direct database or disk changes are detected at backup time. Restoration means seen again, not proof of how it returned.', '']
+    for key, item in sorted(removed.items()):
+        lines.extend([f'## {item["name"]}', '', 'Category: ' + item['category'],
+                      'Last seen (UTC): ' + str(item.get('lastSeenAt') or 'Unknown'),
+                      'First detected missing (UTC): ' + item['firstDetectedMissingAt'],
+                      'Website deletion started (UTC): ' + str(item.get('websiteDeletionStartedAt') or 'Unknown'),
+                      'Website deletion completed (UTC): ' + str(item.get('websiteDeletionCompletedAt') or 'Unknown'),
+                      'Retained backup: ' + str(item.get('backupPath') or 'None'), ''])
+    if not removed:
+        lines.append('No removed or missing items.')
+    (root / 'removed-items.md').write_text('\n'.join(lines) + '\n')
+
+
+def inventory(catalog):
+    result = {'media:' + url: {'kind': 'media', 'name': url, 'websitePath': url}
+              for url in catalog.get('_mediaFiles', [])}
+    for kind in ('products', 'collections', 'subcollections'):
+        for record in catalog.get(kind, []):
+            result[kind + ':' + str(record['_id'])] = {
+                'kind': kind, 'id': str(record['_id']), 'name': record.get('name', 'Unnamed')}
+    return result
 
 
 def record_backup_result(root, report):
@@ -389,6 +522,7 @@ def main():
         organize_catalog(root, catalog)
         report = {'completedAt': stamp, 'filesBackedUp': len(files),
                   'referencedFiles': len(references), 'missingFiles': missing, 'files': files}
+        track_removals(root, catalog, stamp)
         write_json(root / 'latest-catalog.json', catalog)
         record_backup_result(root, report)
         if args.repository_copy:

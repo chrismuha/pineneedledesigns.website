@@ -17,6 +17,54 @@ restore_spec.loader.exec_module(restore)
 
 
 class MediaBackupTests(unittest.TestCase):
+    def test_audit_catches_between_backup_removal_without_fake_media_references(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            catalog = {'_mediaFiles': [], '_auditEvents': [
+                {'status': 'completed', 'startedAt': '2026-10-25T12:00:00Z',
+                 'completedAt': '2026-10-25T12:00:01Z', 'reason': 'Product deleted',
+                 'targets': [{'key': 'media:/uploads/gone.webp', 'name': '/uploads/gone.webp'}]},
+                {'status': 'failed', 'targets': [{'key': 'products:failed', 'name': 'Failed'}]}]}
+            self.assertEqual(backup.media_paths(catalog), set())
+            backup.track_removals(root, catalog, '20261026T060000000000Z')
+            state = json.loads((root / 'removed-items.json').read_text())['items']
+            self.assertEqual(list(state), ['media:/uploads/gone.webp'])
+            self.assertIsNone(state['media:/uploads/gone.webp']['lastSeenAt'])
+            self.assertIsNone(state['media:/uploads/gone.webp']['backupPath'])
+            event = json.loads((root / 'removal-history.jsonl').read_text())
+            self.assertEqual(event['websiteDeletionCompletedAt'], '2026-10-25T12:00:01Z')
+
+    def test_removal_tracking_distinguishes_retained_missing_and_restored(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'site/uploads').mkdir(parents=True)
+            (root / 'site/uploads/a.webp').write_bytes(b'original')
+            (root / 'collections').mkdir()
+            catalog = {'products': [{'_id': 'one', 'name': 'One', 'photos': ['/uploads/a.webp', '/uploads/old.webp']}],
+                       'collections': [], 'subcollections': [], '_mediaFiles': ['/uploads/a.webp']}
+            backup.organize_catalog(root, catalog)
+            backup.track_removals(root, catalog, '20261025T060000000000Z')
+            first = json.loads((root / 'removed-items.json').read_text())['items']
+            self.assertEqual(first['media:/uploads/old.webp']['status'], 'missing-at-baseline')
+            self.assertFalse((root / 'removal-history.jsonl').exists())
+            removed = {**catalog, 'products': [], '_mediaFiles': [], '_auditEvents': [
+                {'status': 'completed', 'startedAt': '2026-10-25T12:00:00+00:00',
+                 'completedAt': '2026-10-25T12:00:01+00:00', 'reason': 'Product deleted',
+                 'targets': [{'key': 'products:one'}]}]}
+            backup.track_removals(root, removed, '20261026T060000000000Z')
+            state = json.loads((root / 'removed-items.json').read_text())['items']
+            self.assertEqual(state['media:/uploads/a.webp']['backupPath'], 'site/uploads/a.webp')
+            self.assertEqual(state['media:/uploads/a.webp']['lastSeenAt'], '2026-10-25T06:00:00+00:00')
+            self.assertEqual(state['products:one']['websiteDeletionCompletedAt'], '2026-10-25T12:00:01+00:00')
+            self.assertIsNotNone(state['products:one']['backupPath'])
+            count = len((root / 'removal-history.jsonl').read_text().splitlines())
+            backup.track_removals(root, removed, '20261027T060000000000Z')
+            self.assertEqual(len((root / 'removal-history.jsonl').read_text().splitlines()), count)
+            backup.track_removals(root, catalog, '20261028T060000000000Z')
+            restored = [json.loads(line) for line in (root / 'removal-history.jsonl').read_text().splitlines()]
+            self.assertEqual(sum(event['event'] == 'restored' for event in restored), 2)
+            self.assertEqual(len(json.loads((root / 'removed-items.json').read_text())['items']), 1)
+
     def test_unchanged_backups_append_history_and_refresh_missing_reference(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

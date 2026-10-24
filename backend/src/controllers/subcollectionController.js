@@ -1,3 +1,4 @@
+import { auditedRemoval, catalogTarget } from '../services/catalogAudit.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
@@ -120,7 +121,7 @@ export const deleteSubcollection = async (req, res) => {
   const collection = await getCollectionOr404(req.params.collectionId, res);
   if (!collection) return;
 
-  const subcollection = await Subcollection.findOneAndDelete({
+  const subcollection = await Subcollection.findOne({
     _id: req.params.subcollectionId,
     collectionId: collection._id,
   });
@@ -128,6 +129,9 @@ export const deleteSubcollection = async (req, res) => {
   if (!subcollection) {
     return res.status(404).json({ error: 'Filter/sub-collection not found.' });
   }
+
+  await auditedRemoval({ targets: [catalogTarget('subcollections', subcollection)],
+    reason: 'Subcollection deleted; products retained' }, () => subcollection.deleteOne());
 
   await Product.updateMany(
     { collectionId: collection._id, subCollectionId: subcollection._id },

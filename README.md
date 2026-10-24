@@ -120,6 +120,23 @@ on `main` remains unchanged. To download the daily copy, clone or check out
 - `collections/index.json` lists current folders; folders for removed or renamed items remain.
 - `catalog-snapshots/` retains timestamped catalog records for restoring media associations.
 - `replaced-files/` retains previous files when an existing upload is replaced.
+- `removed-items.md` and `removed-items.json` separate removed items with retained backups,
+  removed items with no backup, and files already missing when first observed. They include
+  original media paths or catalog IDs, last-seen and first-detected-missing times, and
+  retained recovery paths. Existing recovery files stay in their original folders.
+- `removal-history.jsonl` appends observed removals and reappearances without repeating
+  the same absence every day. `removal-state.json` preserves last-seen observations.
+- `website-deletion-audit.json` contains catalog/media deletion audit records from the
+  website. New dashboard product, collection (including cascades), subcollection, and
+  product-media deletions record UTC start/completion times in MongoDB. Audit intent
+  must be saved before deletion; failed or interrupted actions are never reported as
+  confirmed completed deletions. An operation may partly complete before failure.
+  Audit records exclude customer information and request bodies.
+- Exact action times are available only after this feature is deployed. Direct database
+  edits, manual disk changes, and automatic video conversion are detected between checks;
+  they do not have dashboard deletion timestamps. Historical missing files have unknown
+  deletion dates. Items created and deleted between checks can be logged by the website
+  audit but cannot be recovered unless a backup captured their contents.
 - `backup-history.jsonl` appends a timestamp and file/missing counts for every completed
   backup, including runs with no catalog or media changes. Each successful daily run
   uploads this log to GitHub. Failed runs remain visible in GitHub Actions.

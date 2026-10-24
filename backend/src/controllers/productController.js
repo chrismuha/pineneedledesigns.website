@@ -1,3 +1,4 @@
+import { auditedRemoval, catalogTarget, removeUploadedMedia } from '../services/catalogAudit.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { Collection } from '../models/Collection.js';
@@ -595,7 +596,7 @@ export const updateProduct = async (req, res) => {
     );
     await Promise.all(removedPhotos
       .filter((photo) => !stillReferenced.has(photo))
-      .map((photo) => fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch((error) => {
+      .map((photo) => removeUploadedMedia(photo, 'Photo removed from product during edit').catch((error) => {
         if (error?.code !== 'ENOENT') console.error(`Failed to remove product photo ${photo}:`, error);
       })));
   }
@@ -610,7 +611,7 @@ export const updateProduct = async (req, res) => {
     );
     await Promise.all(removedVideos
       .filter((video) => !stillReferenced.has(video))
-      .map((video) => fs.unlink(path.join(config.uploadsDir, path.basename(video))).catch((error) => {
+      .map((video) => removeUploadedMedia(video, 'Video removed from product during edit').catch((error) => {
         if (error?.code !== 'ENOENT') console.error(`Failed to remove product video ${video}:`, error);
       })));
   }
@@ -621,10 +622,13 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid product ID.' });
-  const product = await Product.findByIdAndDelete(objectId(req.params.id));
+  const product = await Product.findById(objectId(req.params.id));
   if (!product) {
     return res.status(404).json({ error: 'Product not found.' });
   }
+
+  await auditedRemoval({ targets: [catalogTarget('products', product)], reason: 'Product deleted' },
+    () => product.deleteOne());
 
   const uploadedMedia = [...(product.photos || []), ...(product.videos || [])]
     .filter((media) => String(media).startsWith('/uploads/'));
@@ -638,7 +642,7 @@ export const deleteProduct = async (req, res) => {
     ]));
     await Promise.all(uploadedMedia
       .filter((media) => !stillReferenced.has(media))
-      .map((media) => fs.unlink(path.join(config.uploadsDir, path.basename(media))).catch((error) => {
+      .map((media) => removeUploadedMedia(media, 'Product deleted').catch((error) => {
         if (error?.code !== 'ENOENT') console.error(`Failed to remove product media ${media}:`, error);
       })));
   }

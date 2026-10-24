@@ -1,9 +1,7 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { auditedRemoval, catalogTarget, removeUploadedMedia } from '../services/catalogAudit.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
-import { config } from '../config/index.js';
 import { createUniqueSlug } from '../utils/slug.js';
 import { invalidateStorefrontCatalog } from '../services/storefrontCatalog.js';
 
@@ -87,15 +85,23 @@ export const deleteCollection = async (req, res) => {
     });
   }
 
-  const products = await Product.find({ collectionId: collection._id }).select('photos').lean();
+  const products = await Product.find({ collectionId: collection._id }).select('name photos').lean();
+  const subcollections = await Subcollection.find({ collectionId: collection._id }).select('name').lean();
   const productIds = products.map((product) => product._id);
   const uploadedPhotos = products
     .flatMap((product) => product.photos || [])
     .filter((photo) => String(photo).startsWith('/uploads/'));
 
-  await Product.deleteMany({ _id: { $in: productIds } });
-  await Subcollection.deleteMany({ collectionId: collection._id });
-  await collection.deleteOne();
+  await auditedRemoval({
+    targets: [catalogTarget('collections', collection),
+      ...products.map((product) => catalogTarget('products', product)),
+      ...subcollections.map((item) => catalogTarget('subcollections', item))],
+    reason: 'Collection and its contents deleted',
+  }, async () => {
+    await Product.deleteMany({ _id: { $in: productIds } });
+    await Subcollection.deleteMany({ collectionId: collection._id });
+    await collection.deleteOne();
+  });
   invalidateStorefrontCatalog('collection deleted');
 
   const remainingPhotoReferences = new Set(
@@ -104,7 +110,7 @@ export const deleteCollection = async (req, res) => {
   );
   await Promise.all(uploadedPhotos
     .filter((photo) => !remainingPhotoReferences.has(photo))
-    .map((photo) => fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch((error) => {
+    .map((photo) => removeUploadedMedia(photo, 'Collection deleted').catch((error) => {
       if (error?.code !== 'ENOENT') {
         console.error(`Failed to remove deleted product photo ${photo}:`, error);
       }
