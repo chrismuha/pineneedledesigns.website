@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import { removeUploadedMedia } from './catalogAudit.js';
 import path from 'path';
 import os from 'os';
 import { config } from '../config/index.js';
@@ -46,8 +46,8 @@ const backgroundSemaphore = new Semaphore(BACKGROUND_VIDEO_CONCURRENCY);
 const uploadsPathFor = (filename) => path.join(config.uploadsDir, filename);
 const uploadsUrlFor = (filename) => `/uploads/${filename}`;
 
-const unlinkQuiet = async (filename) => {
-  await fs.unlink(uploadsPathFor(filename)).catch((error) => {
+const unlinkQuiet = async (filename, reason) => {
+  await removeUploadedMedia(uploadsUrlFor(filename), reason).catch((error) => {
     if (error?.code !== 'ENOENT') console.error('[videoTranscoder] failed to remove %s:', filename, error);
   });
 };
@@ -70,13 +70,13 @@ const transcodeOne = async ({ productId, rawFilename }) => {
       { $set: { 'videos.$': finalUrl } },
     );
 
-    await unlinkQuiet(rawFilename);
+    await unlinkQuiet(rawFilename, 'Original video removed after automatic video conversion');
 
     if (result.modifiedCount === 0) {
       // Nothing referenced the raw path anymore (product deleted, or the
       // video was removed in a later edit) — the freshly-made file is
       // orphaned, so clean it up too instead of leaving it on disk forever.
-      await unlinkQuiet(finalFilename);
+      await unlinkQuiet(finalFilename, 'Converted video removed because its product no longer references it');
       console.log('[videoTranscoder] %s transcoded but no longer referenced by product %s; cleaned up.', rawFilename, productId);
       return;
     }

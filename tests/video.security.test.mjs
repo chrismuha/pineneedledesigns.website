@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 mock.module('../backend/src/models/Product.js', { namedExports: { Product: { updateOne: async () => ({ modifiedCount: 1 }) } } });
 mock.module('../backend/src/middleware/upload.js', { namedExports: { transcodeToWebm: async () => {} } });
+mock.module('../backend/src/models/CatalogAuditEvent.js', { namedExports: { CatalogAuditEvent: {
+  create: async (event) => ({ ...event, _id: 'test' }), updateOne: async () => ({}),
+} } });
 const { queueVideoTranscode } = await import('../backend/src/services/videoTranscoder.js');
 
 test('user filenames are log arguments, never the format string', async (t) => {

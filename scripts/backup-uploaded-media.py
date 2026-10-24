@@ -365,6 +365,14 @@ def track_removals(root, catalog, stamp):
             item['websiteDeletionStartedAt'] = event.get('startedAt')
             item['websiteDeletionCompletedAt'] = event.get('completedAt')
             item['reason'] = event.get('reason')
+        if matches:
+            item['reason'] = item.get('reason') or 'Website removal recorded without a detailed reason.'
+            item['reasonSource'] = 'website-audit'
+        else:
+            item['reason'] = ('Cause unknown: file was already missing when first observed; no completed website deletion audit matches.'
+                              if item['status'] == 'missing-at-baseline' else
+                              'Cause unknown: item disappeared between checks; no completed website deletion audit matches. Direct server, deployment, or database changes are possible but unconfirmed.')
+            item['reasonSource'] = 'backup-observation'
         if item['kind'] == 'media':
             relative = item['websitePath'].lstrip('/')
             item['backupPath'] = 'site/' + relative if (root / 'site' / relative).is_file() else None
@@ -387,7 +395,7 @@ def track_removals(root, catalog, stamp):
             for event in events:
                 if event['event'] == 'removed':
                     event.update({key: items[event['key']].get(key) for key in (
-                        'websiteDeletionStartedAt', 'websiteDeletionCompletedAt', 'backupPath', 'category', 'reason')})
+                        'websiteDeletionStartedAt', 'websiteDeletionCompletedAt', 'backupPath', 'category', 'reason', 'reasonSource')})
                 history.write(json.dumps(event, sort_keys=True) + '\n')
     lines = ['# Removed and missing items', '', 'Checked (UTC): ' + checked, '',
              'Last seen / first detected missing bounds an observed removal; it is not an exact deletion time.',
@@ -395,6 +403,8 @@ def track_removals(root, catalog, stamp):
              'Direct database or disk changes are detected at backup time. Restoration means seen again, not proof of how it returned.', '']
     for key, item in sorted(removed.items()):
         lines.extend([f'## {item["name"]}', '', 'Category: ' + item['category'],
+                      'Reason: ' + item['reason'],
+                      'Reason source: ' + item['reasonSource'],
                       'Last seen (UTC): ' + str(item.get('lastSeenAt') or 'Unknown'),
                       'First detected missing (UTC): ' + item['firstDetectedMissingAt'],
                       'Website deletion started (UTC): ' + str(item.get('websiteDeletionStartedAt') or 'Unknown'),

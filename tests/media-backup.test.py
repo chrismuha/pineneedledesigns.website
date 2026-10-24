@@ -46,6 +46,7 @@ class MediaBackupTests(unittest.TestCase):
             backup.track_removals(root, catalog, '20261025T060000000000Z')
             first = json.loads((root / 'removed-items.json').read_text())['items']
             self.assertEqual(first['media:/uploads/old.webp']['status'], 'missing-at-baseline')
+            self.assertIn('Cause unknown', first['media:/uploads/old.webp']['reason'])
             self.assertFalse((root / 'removal-history.jsonl').exists())
             removed = {**catalog, 'products': [], '_mediaFiles': [], '_auditEvents': [
                 {'status': 'completed', 'startedAt': '2026-10-25T12:00:00+00:00',
@@ -57,6 +58,10 @@ class MediaBackupTests(unittest.TestCase):
             self.assertEqual(state['media:/uploads/a.webp']['lastSeenAt'], '2026-10-25T06:00:00+00:00')
             self.assertEqual(state['products:one']['websiteDeletionCompletedAt'], '2026-10-25T12:00:01+00:00')
             self.assertIsNotNone(state['products:one']['backupPath'])
+            self.assertEqual(state['products:one']['reason'], 'Product deleted')
+            self.assertEqual(state['products:one']['reasonSource'], 'website-audit')
+            self.assertIn('Cause unknown', state['media:/uploads/a.webp']['reason'])
+            self.assertIn('Reason:', (root / 'removed-items.md').read_text())
             count = len((root / 'removal-history.jsonl').read_text().splitlines())
             backup.track_removals(root, removed, '20261027T060000000000Z')
             self.assertEqual(len((root / 'removal-history.jsonl').read_text().splitlines()), count)

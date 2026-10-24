@@ -128,12 +128,15 @@ on `main` remains unchanged. To download the daily copy, clone or check out
   the same absence every day. `removal-state.json` preserves last-seen observations.
 - `website-deletion-audit.json` contains catalog/media deletion audit records from the
   website. New dashboard product, collection (including cascades), subcollection, and
-  product-media deletions record UTC start/completion times in MongoDB. Audit intent
+  product-media deletions record UTC start/completion times in MongoDB. Automatic video
+  conversion cleanup and rejected-photo cleanup also record specific reasons. Every removal
+  report and new removal history entry includes a reason and its evidence source;
+  unmatched removals are explicitly marked cause unknown. Audit intent
   must be saved before deletion; failed or interrupted actions are never reported as
   confirmed completed deletions. An operation may partly complete before failure.
   Audit records exclude customer information and request bodies.
 - Exact action times are available only after this feature is deployed. Direct database
-  edits, manual disk changes, and automatic video conversion are detected between checks;
+  edits and manual disk changes are detected between checks;
   they do not have dashboard deletion timestamps. Historical missing files have unknown
   deletion dates. Items created and deleted between checks can be logged by the website
   audit but cannot be recovered unless a backup captured their contents.

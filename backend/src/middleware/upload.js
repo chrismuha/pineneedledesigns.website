@@ -1,3 +1,4 @@
+import { removeUploadedMedia } from '../services/catalogAudit.js';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
@@ -80,7 +81,7 @@ const convertVideoSync = async (file) => {
   try {
     await transcodeToWebm(input, path.join(config.uploadsDir, filename));
   } finally {
-    await fs.unlink(input).catch(() => {});
+    await removeUploadedMedia(`/uploads/${path.basename(input)}`, 'Temporary source video cleanup after conversion attempt').catch(() => {});
   }
 
   console.log(`[upload] sync-transcoded ${file.originalname} in ${Date.now() - startedAt}ms`);

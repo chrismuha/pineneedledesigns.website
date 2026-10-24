@@ -1,11 +1,8 @@
 import { auditedRemoval, catalogTarget, removeUploadedMedia } from '../services/catalogAudit.js';
-import fs from 'fs/promises';
-import path from 'path';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
 import { isValidObjectId, Types } from 'mongoose';
-import { config } from '../config/index.js';
 import { sortSizeOptions } from '../utils/sizeOptions.js';
 import { queueVideoTranscode } from '../services/videoTranscoder.js';
 import { invalidateStorefrontCatalog } from '../services/storefrontCatalog.js';
@@ -521,7 +518,7 @@ export const updateProduct = async (req, res) => {
     }
     if (product.photos.length > 20) {
       await Promise.all(uploadedPhotos.map((photo) => (
-        fs.unlink(path.join(config.uploadsDir, path.basename(photo))).catch(() => {})
+        removeUploadedMedia(photo, 'New photo removed because product exceeds the 20-photo limit').catch(() => {})
       )));
       return res.status(400).json({ error: 'A maximum of 20 photos is allowed.' });
     }
