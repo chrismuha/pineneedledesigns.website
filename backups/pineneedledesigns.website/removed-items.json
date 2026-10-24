@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-24T23:48:29.695433+00:00",
+  "checkedAt": "2026-10-24T23:57:21.068997+00:00",
   "items": {
     "media:/uploads/1783672358990-600883762.jpeg": {
       "kind": "media",
@@ -9,7 +9,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783690731684-51129312.webp": {
       "kind": "media",
@@ -19,7 +21,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783691108529-577199489.webp": {
       "kind": "media",
@@ -29,7 +33,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783691326976-435709395.webp": {
       "kind": "media",
@@ -39,7 +45,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783691640941-818083453.webp": {
       "kind": "media",
@@ -49,7 +57,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783991943053-319234647.webp": {
       "kind": "media",
@@ -59,7 +69,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1783998578622-36361855.webp": {
       "kind": "media",
@@ -69,7 +81,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784045789562-226366899.webp": {
       "kind": "media",
@@ -79,7 +93,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784045789568-341514717.webp": {
       "kind": "media",
@@ -89,7 +105,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784063952592-719836236.webp": {
       "kind": "media",
@@ -99,7 +117,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784063952593-266536681.webp": {
       "kind": "media",
@@ -109,7 +129,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784065340652-707136497.webp": {
       "kind": "media",
@@ -119,7 +141,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784069113156-160039583.webp": {
       "kind": "media",
@@ -129,7 +153,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784069818266-625432947.webp": {
       "kind": "media",
@@ -139,7 +165,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784137385703-310900338.webp": {
       "kind": "media",
@@ -149,7 +177,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784137385805-32981382.webp": {
       "kind": "media",
@@ -159,7 +189,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784137385807-342546709.webp": {
       "kind": "media",
@@ -169,7 +201,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784137587664-829198967.webp": {
       "kind": "media",
@@ -179,7 +213,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784139274731-996967941.webp": {
       "kind": "media",
@@ -189,7 +225,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784139274735-513118032.webp": {
       "kind": "media",
@@ -199,7 +237,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784139274736-23585267.webp": {
       "kind": "media",
@@ -209,7 +249,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784139274740-487683339.webp": {
       "kind": "media",
@@ -219,7 +261,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784139274745-179245036.webp": {
       "kind": "media",
@@ -229,7 +273,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784140108446-170016502.webp": {
       "kind": "media",
@@ -239,7 +285,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784140108447-705424667.webp": {
       "kind": "media",
@@ -249,7 +297,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784140108453-71159071.webp": {
       "kind": "media",
@@ -259,7 +309,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784140108458-32206855.webp": {
       "kind": "media",
@@ -269,7 +321,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141062386-13376486.webp": {
       "kind": "media",
@@ -279,7 +333,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141062387-905025949.webp": {
       "kind": "media",
@@ -289,7 +345,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141062389-715251127.webp": {
       "kind": "media",
@@ -299,7 +357,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141062390-880746567.webp": {
       "kind": "media",
@@ -309,7 +369,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141799612-261580366.webp": {
       "kind": "media",
@@ -319,7 +381,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141799614-945457380.webp": {
       "kind": "media",
@@ -329,7 +393,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141799616-55630534.webp": {
       "kind": "media",
@@ -339,7 +405,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141799616-97553241.webp": {
       "kind": "media",
@@ -349,7 +417,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784141799618-901243083.webp": {
       "kind": "media",
@@ -359,7 +429,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784224391324-892861758.webp": {
       "kind": "media",
@@ -369,7 +441,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784224564731-274139057.webp": {
       "kind": "media",
@@ -379,7 +453,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784473998935-499706426.webp": {
       "kind": "media",
@@ -389,7 +465,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677609-762299862.webp": {
       "kind": "media",
@@ -399,7 +477,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677701-524751672.webp": {
       "kind": "media",
@@ -409,7 +489,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677708-286181336.webp": {
       "kind": "media",
@@ -419,7 +501,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677769-854417811.webp": {
       "kind": "media",
@@ -429,7 +513,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677778-475809922.webp": {
       "kind": "media",
@@ -439,7 +525,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677785-968345443.webp": {
       "kind": "media",
@@ -449,7 +537,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677786-297973643.webp": {
       "kind": "media",
@@ -459,7 +549,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899677786-681414023.webp": {
       "kind": "media",
@@ -469,7 +561,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1784899687488-758409083.webm": {
       "kind": "media",
@@ -479,7 +573,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698346966-317818312.webp": {
       "kind": "media",
@@ -489,7 +585,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347017-791748772.webp": {
       "kind": "media",
@@ -499,7 +597,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347029-676620032.webp": {
       "kind": "media",
@@ -509,7 +609,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347031-928742831.webp": {
       "kind": "media",
@@ -519,7 +621,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347035-46634783.webp": {
       "kind": "media",
@@ -529,7 +633,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347035-62299765.webp": {
       "kind": "media",
@@ -539,7 +645,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698347041-32849318.webp": {
       "kind": "media",
@@ -549,7 +657,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698359408-845967717.webm": {
       "kind": "media",
@@ -559,7 +669,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785698359436-219100135.webm": {
       "kind": "media",
@@ -569,7 +681,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847325-721535881.webp": {
       "kind": "media",
@@ -579,7 +693,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847600-540517333.webp": {
       "kind": "media",
@@ -589,7 +705,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847615-726191347.webp": {
       "kind": "media",
@@ -599,7 +717,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847622-953516934.webp": {
       "kind": "media",
@@ -609,7 +729,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847627-803996742.webp": {
       "kind": "media",
@@ -619,7 +741,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802847636-731592493.webp": {
       "kind": "media",
@@ -629,7 +753,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802874238-555619409.webm": {
       "kind": "media",
@@ -639,7 +765,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785802874369-16727371.webm": {
       "kind": "media",
@@ -649,7 +777,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875956329-798591988.webp": {
       "kind": "media",
@@ -659,7 +789,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875956390-754376166.webp": {
       "kind": "media",
@@ -669,7 +801,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875956390-757348513.webp": {
       "kind": "media",
@@ -679,7 +813,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875956395-433422140.webp": {
       "kind": "media",
@@ -689,7 +825,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875956396-400668000.webp": {
       "kind": "media",
@@ -699,7 +837,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785875961641-957410862.webm": {
       "kind": "media",
@@ -709,7 +849,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785962462844-805310474.webm": {
       "kind": "media",
@@ -719,7 +861,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785970237867-200640105.webp": {
       "kind": "media",
@@ -729,7 +873,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785970238841-929814564.webp": {
       "kind": "media",
@@ -739,7 +885,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1785970239931-614621459.webp": {
       "kind": "media",
@@ -749,7 +897,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1786143404284-489770260.webp": {
       "kind": "media",
@@ -759,7 +909,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1786143404300-318314249.webp": {
       "kind": "media",
@@ -769,7 +921,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1786143404303-792340982.webp": {
       "kind": "media",
@@ -779,7 +933,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1786143404304-862559829.webp": {
       "kind": "media",
@@ -789,7 +945,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1787763423018-785382150.webp": {
       "kind": "media",
@@ -799,7 +957,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1787763423043-843837897.webm": {
       "kind": "media",
@@ -809,7 +969,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1788366958742-388818864.webm": {
       "kind": "media",
@@ -819,7 +981,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1788367213556-151018210.webm": {
       "kind": "media",
@@ -829,7 +993,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1788368382629-301758658.webm": {
       "kind": "media",
@@ -839,7 +1005,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/1789949606594-515446718.webp": {
       "kind": "media",
@@ -849,7 +1017,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     },
     "media:/uploads/legacy-6a42cc687962f91d73d7.webp": {
       "kind": "media",
@@ -859,7 +1029,9 @@
       "lastSeenAt": null,
       "firstDetectedMissingAt": "2026-10-24T23:48:29.695433+00:00",
       "backupPath": null,
-      "category": "Already missing when first observed"
+      "category": "Already missing when first observed",
+      "reason": "Cause unknown: file was already missing when first observed; no completed website deletion audit matches.",
+      "reasonSource": "backup-observation"
     }
   }
 }
