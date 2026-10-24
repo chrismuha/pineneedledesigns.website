@@ -8,6 +8,12 @@ October 7 deployment is the leading explanation; October 18 deletion is not conf
 
 Circumstantial evidence; exact deletion times and attribution of all 86 files remain unproven.
 
+## Incident description
+
+Suspected cause: Inadvertent removal of uploaded media during an automated security-maintenance deployment. A deployed change temporarily removed the Git ignore rule protecting uploaded media, leaving those files subject to deletion by the deployment cleanup command (git clean -fd).
+
+The cleanup exposure is supported by the deployed revisions and a non-destructive reproduction. Attribution of all 86 missing files to that event, the security-maintenance characterization, and responsibility are not independently confirmed by the retained deletion records. The exact deletion times remain unknown.
+
 ## Company assessment and technical explanation
 
 **Company assessment, provided by Chris Muha:** “Outside our company’s control.”
