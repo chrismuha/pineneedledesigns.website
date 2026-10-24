@@ -14,15 +14,9 @@ Suspected cause: Inadvertent removal of uploaded media during an automated secur
 
 The cleanup exposure is supported by the deployed revisions and a non-destructive reproduction. Attribution of all 86 missing files to that event, the security-maintenance characterization, and responsibility are not independently confirmed by the retained deletion records. The exact deletion times remain unknown.
 
-## Company assessment and technical explanation
+## October 18 deployment review
 
-**Company assessment, provided by Chris Muha:** “Outside our company’s control.”
-
-This is the company representative’s assessment. The available technical evidence does not independently establish responsibility or whether the incident was outside company control.
-
-Leading technical explanation: deployed commit fe821c5 removed the backend/uploads/* ignore rule while the deployment ran git clean -fd. This exposed untracked uploaded media to cleanup until deployed commit 8f6e7ab restored the rule about eleven minutes later on October 7, 2026. An isolated dry run reproduced that exposure. No retained deletion log proves that this action removed all 86 files; the exact historical cause remains unconfirmed.
-
-The October 18 deployment had the uploads ignore rule in place. It is not established as the deletion event.
+October 18, 2026 was the date raised for review. The production server deployed `2f3f16c` at 7:33:03 p.m. Eastern that day. The uploads ignore rule was in place, and the isolated cleanup dry run preserved uploaded media under that revision. October 18 is therefore not established as the deletion event. October 7 remains the leading explanation; the exact historical cause and deletion times remain unconfirmed.
 
 ## Evidence
 
