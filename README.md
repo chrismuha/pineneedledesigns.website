@@ -80,7 +80,7 @@ is not committed to the repository.
 ### Daily GitHub catalog and media backup
 
 The `Daily Catalog and Media Backup` GitHub Actions workflow runs once every
-24 hours at 07:43 UTC (3:43 a.m. Eastern daylight time / 2:43 a.m. Eastern
+24 hours at 06:00 UTC (2:00 a.m. Eastern daylight time / 1:00 a.m. Eastern
 standard time). It runs independently of both Macs and can also be started
 manually from the Actions tab. GitHub can delay scheduled runs.
 
@@ -120,6 +120,11 @@ on `main` remains unchanged. To download the daily copy, clone or check out
 - `collections/index.json` lists current folders; folders for removed or renamed items remain.
 - `catalog-snapshots/` retains timestamped catalog records for restoring media associations.
 - `replaced-files/` retains previous files when an existing upload is replaced.
+- `backup-history.jsonl` appends a timestamp and file/missing counts for every completed
+  backup, including runs with no catalog or media changes. Each successful daily run
+  uploads this log to GitHub. Failed runs remain visible in GitHub Actions.
+- `missing-files.txt` lists every currently missing referenced media path, with the
+  last check timestamp; it is refreshed even when the list is unchanged.
 - `backup-status.json` records the latest completed backup, SHA-256 checksums, and missing media links.
 - GitHub Actions shows daily job results and failures. The retained local
   `backup.log` and `backup-error.log` describe the former Mac job.

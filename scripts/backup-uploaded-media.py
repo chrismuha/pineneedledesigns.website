@@ -282,6 +282,28 @@ def copy_to_repository(root, destination):
                    cwd=root, check=True, timeout=1800)
 
 
+def record_backup_result(root, report):
+    """Record every completed backup, even when catalog and media are unchanged."""
+    write_json(root / 'backup-status.json', report)
+    missing = report['missingFiles']
+    lines = [
+        'Pine Needle Designs — missing media reference',
+        'Checked (UTC): ' + report['completedAt'],
+        'Missing referenced files: ' + str(len(missing)),
+        '',
+        'These catalog references have no file in the retained backup.',
+        'Existing missing originals cannot be recovered by refreshing the backup.',
+        '',
+    ]
+    lines.extend(missing if missing else ['None. All referenced media is present in the backup.'])
+    (root / 'missing-files.txt').write_text('\n'.join(lines) + '\n')
+    entry = {key: report[key] for key in ('completedAt', 'filesBackedUp', 'referencedFiles')}
+    entry['missingFileCount'] = len(missing)
+    entry['result'] = 'completed-with-missing-media' if missing else 'completed'
+    with (root / 'backup-history.jsonl').open('a') as history:
+        history.write(json.dumps(entry, sort_keys=True) + '\n')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--host', default='root@192.34.58.246')
@@ -368,7 +390,7 @@ def main():
         report = {'completedAt': stamp, 'filesBackedUp': len(files),
                   'referencedFiles': len(references), 'missingFiles': missing, 'files': files}
         write_json(root / 'latest-catalog.json', catalog)
-        write_json(root / 'backup-status.json', report)
+        record_backup_result(root, report)
         if args.repository_copy:
             try:
                 copy_to_repository(root, args.repository_copy)

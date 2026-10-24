@@ -17,6 +17,29 @@ restore_spec.loader.exec_module(restore)
 
 
 class MediaBackupTests(unittest.TestCase):
+    def test_unchanged_backups_append_history_and_refresh_missing_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            report = {'completedAt': '20261025T060000Z', 'filesBackedUp': 1,
+                      'referencedFiles': 2, 'missingFiles': ['uploads/missing.webp'],
+                      'files': {'uploads/present.webp': {'bytes': 1, 'sha256': 'test'}}}
+            backup.record_backup_result(root, report)
+            report['completedAt'] = '20261026T060000Z'
+            backup.record_backup_result(root, report)
+            history = [json.loads(line) for line in (root / 'backup-history.jsonl').read_text().splitlines()]
+            self.assertEqual(len(history), 2)
+            self.assertEqual(history[0]['completedAt'], '20261025T060000Z')
+            self.assertEqual(history[1]['completedAt'], '20261026T060000Z')
+            self.assertEqual(history[1]['missingFileCount'], 1)
+            reference = (root / 'missing-files.txt').read_text()
+            self.assertIn('uploads/missing.webp', reference)
+            self.assertIn('20261026T060000Z', reference)
+            report['missingFiles'] = []
+            backup.record_backup_result(root, report)
+            self.assertNotIn('uploads/missing.webp', (root / 'missing-files.txt').read_text())
+            self.assertIn('None.', (root / 'missing-files.txt').read_text())
+            self.assertEqual(json.loads((root / 'backup-status.json').read_text())['missingFiles'], [])
+
     def test_external_monitor_reports_new_uploads_and_records_separately_from_restorations(self):
         before = {'products': [{'_id': 'old', 'name': 'Old', 'photos': ['/uploads/missing.webp']}],
                   '_mediaFiles': ['/uploads/existing.webp']}

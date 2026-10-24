@@ -2,7 +2,7 @@ name: Daily Catalog and Media Backup
 
 on:
   schedule:
-    - cron: '43 7 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -66,8 +66,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- backups/pineneedledesigns.website
           if git diff --cached --quiet; then
-            echo 'No backup changes to upload.'
-            exit 0
+            echo 'Expected a new backup history entry; refusing to report success without one.' >&2
+            exit 1
           fi
           python3 - <<'PYCODE'
           import subprocess
