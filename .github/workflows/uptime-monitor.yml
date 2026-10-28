@@ -20,7 +20,7 @@ concurrency:
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v7
         with:

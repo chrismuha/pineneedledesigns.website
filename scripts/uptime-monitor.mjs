@@ -58,10 +58,10 @@ export async function sendAlert(kind, report, fetcher = fetch) {
         <h2 style="font-size:28px;line-height:1.35;">Health check results</h2>
         <ul>${report.results.map(item => `<li style="margin-bottom:16px;"><strong>${escapeEmailHtml(item.endpoint)}: ${item.healthy ? 'OK' : 'FAILED'}</strong>${item.healthy ? '' : '<br>' + escapeEmailHtml(item.error)}</li>`).join('')}</ul>
         <h2 style="font-size:28px;line-height:1.35;">About these alerts</h2>
-        <p>This check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.</p>`),
+        <p>This check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours, with follow-up checks every 15 minutes for up to five hours after a detected outage; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.</p>`),
       text: `${origin}\nChecked: ${report.checkedAt}\n\n${labels[kind]}.\n\n`
         + report.results.map((item) => `${item.endpoint}: ${item.healthy ? 'OK' : item.error}`).join('\n')
-        + '\n\nThis check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.'
+        + '\n\nThis check runs on GitHub, independently of the website server and both Macs. Checks are scheduled every six hours, with follow-up checks every 15 minutes for up to five hours after a detected outage; GitHub may delay scheduled runs. Outages between checks may go undetected. You receive one outage alert and one recovery alert per observed incident.'
         + `\n\nRun: ${process.env.GITHUB_SERVER_URL || 'https://github.com'}/${process.env.GITHUB_REPOSITORY || 'chrismuha/pineneedledesigns.website'}/actions/runs/${process.env.GITHUB_RUN_ID || ''}`,
     }),
   });
@@ -92,10 +92,26 @@ export async function runMonitor({ stateFile, check = confirmHealth, send = send
   return state;
 }
 
+// Keep the normal schedule quiet; only an observed outage starts follow-ups.
+// Bound the runner time so state can be cached before GitHub's job timeout.
+export async function monitorWithFollowups({
+  run = runMonitor,
+  pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  ...options
+}) {
+  let state = await run(options);
+  console.log(JSON.stringify(state, null, 2));
+  for (let followup = 0; !state.healthy && followup < 20; followup++) {
+    await pause(15 * 60 * 1000);
+    state = await run({ ...options, testEmail: false });
+    console.log(JSON.stringify(state, null, 2));
+  }
+  return state;
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const state = await runMonitor({ stateFile: '.uptime-state/status.json', testEmail: process.env.SEND_TEST_EMAIL === 'true' });
-    console.log(JSON.stringify(state, null, 2));
+    const state = await monitorWithFollowups({ stateFile: '.uptime-state/status.json', testEmail: process.env.SEND_TEST_EMAIL === 'true' });
     if (process.env.GITHUB_STEP_SUMMARY) {
       await writeFile(process.env.GITHUB_STEP_SUMMARY, `Website: **${state.observedStatus.toUpperCase()}**\n\nChecked ${state.checkedAt}.\n`);
     }

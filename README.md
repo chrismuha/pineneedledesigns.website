@@ -186,7 +186,10 @@ The `External Uptime Monitor` GitHub Actions workflow checks the public homepage
 and `/api/health` every six hours, at minute 17 in UTC, independently of DigitalOcean
 and both Macs. It retries failed probes three times and emails
 `muhachris297@gmail.com` through Resend when a confirmed outage starts and when the
-site recovers. It uses the verified notification sender and the repository's
+site recovers. After detecting an outage, that run rechecks every 15 minutes for
+up to five hours, stopping as soon as the site recovers. If it remains down, the
+next scheduled six-hour run continues monitoring. Healthy runs finish immediately.
+It uses the verified notification sender and the repository's
 existing `RESEND_API_KEY` secret; no SSH connection to the website is required.
 Run it manually from Actions with `send_test_email` enabled to test delivery.
 
