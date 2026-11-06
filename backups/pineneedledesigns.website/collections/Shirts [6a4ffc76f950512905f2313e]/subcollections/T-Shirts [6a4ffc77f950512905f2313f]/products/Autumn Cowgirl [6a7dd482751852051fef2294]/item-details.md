@@ -6,10 +6,10 @@ description: Adirondack Chic this  country girl loves rocking her Fall colors. A
 
 price: 38
 
-quantity: 88
+quantity: 1
 
-color: Grey, Natural, White, Peach, Pink, Sand
+color: Natural
 
-size: Small, Medium, Large, XL, 2X, 3X
+size: Small
 
 Media available: 0 of 2

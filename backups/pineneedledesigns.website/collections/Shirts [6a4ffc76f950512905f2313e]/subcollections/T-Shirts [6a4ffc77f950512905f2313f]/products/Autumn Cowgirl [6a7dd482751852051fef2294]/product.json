@@ -3,8 +3,8 @@
   "name": "Autumn Cowgirl",
   "collectionId": "6a4ffc76f950512905f2313e",
   "subCollectionId": "6a4ffc77f950512905f2313f",
-  "color": "Grey, Natural, White, Peach, Pink, Sand",
-  "size": "Small, Medium, Large, XL, 2X, 3X",
+  "color": "Natural",
+  "size": "Small",
   "sweatshirtSize": "",
   "shoeSize": "",
   "beltSize": "",
@@ -21,7 +21,7 @@
   "shippingCost": 5,
   "freeShipping": false,
   "outOfStock": false,
-  "quantity": 88,
+  "quantity": 1,
   "sortOrder": 15,
   "meta": [],
   "videos": [
@@ -37,6 +37,6 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-08-13T14:28:18.462Z",
-  "updatedAt": "2026-09-20T22:38:59.068Z",
+  "updatedAt": "2026-11-06T02:13:03.063Z",
   "__v": 1
 }
