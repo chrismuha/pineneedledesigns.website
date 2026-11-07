@@ -10,7 +10,15 @@ The current scheduled backup files live on [`daily-backups`](https://github.com/
 
 This is a repository and server-upload/catalog backup, not a whole-computer backup or a complete MongoDB backup. Uncommitted local files, Orders, payments, credentials, and customer data are not automatically included. Previously committed media remains in Git history. Explicit source copies retained under server uploads are included.
 
-Latest verified media inventory: 426 retained files, including old URL aliases and source copies. Active catalog paths comprise 216 available and 21 missing files. The 21 missing paths remain documented below; their absence is unchanged by daily accumulation.
+Latest verified media inventory — November 7, 2026: **462 retained files**, including old URL aliases and source copies. Active catalog paths comprise **229 available / 10 missing / 239 total**. The November 7 owner-supplied recovery below supersedes older inventory and confirmation snapshots.
+
+## Current status — November 7, 2026
+
+Jennifer’s Garden now has seven available photos and two available videos. Myra Mojave Leather Bag in Old Rose now has six owner-supplied photos and two available videos; its current gallery is **Confirmed**, replacing the prior Unconfirmed manufacturer-photo classification. Baby I’m a Wild Card now has its available video; its separately missing photo remains unresolved. Seven other Myra products retain their Unconfirmed manufacturer-photo classification.
+
+Remaining missing files: **8 photos and 2 videos** — Baby I’m a Wild Card (one photo), Farmer Mrs. Synakowski (six photos and two videos), and the Shirts collection’s historical fallback image. A separate Shirts cover is still unnecessary because the storefront selects a product photo. Exact paths are recorded in the latest `daily-backups` backup status and missing-file report.
+
+The [successful November 7 backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380857408) retains all 36 newly uploaded gallery/source files, verified against their SHA-256 checksums. All 63 saved products were compared with the prior catalog: only the three intended media arrays and modification timestamps changed. Collections, subcollections, and store settings were preserved.
 
 ## Orders text-only update — November 6, 2026
 
@@ -22,7 +30,7 @@ The live storefront automatically uses the first photo from the first product al
 
 The absent `/uploads/legacy-6a42cc687962f91d73d7.webp` is the Shirts collection’s historical fallback image. It remains in the missing-file inventory because the database still references it, but the customer does **not** need to provide a separate Shirts cover: the storefront can use an existing shirt product photo. No code, collection record, or image was changed for this clarification. The chooser checks whether a photo URL is listed, not whether the file exists.
 
-## Current status — November 6, 2026
+## Historical status — November 6, 2026
 
 **216 available / 21 missing / 237 active catalog media references.** Missing files comprise **15 photos and 6 videos**: 20 product files and one Shirts collection fallback image. The server also retains source copies and old URL aliases, for 426 retained files in total.
 
@@ -580,3 +588,44 @@ Final verification completed: the live storefront matches all 63 product image/v
 | Upcycled Logo | cardImage | `/uploads/legacy-93c6a8011c29b2f5e479.webp` | `/uploads/upcycled-logo-collection-cover.webp` | `b6fd61374553ed250a545bae374ea7ee661d88c2565e94ebc0e4d04b8f0367f2` |
 | Upcycled Denim | cardImage | `/uploads/legacy-243180abf639e16a3c07.webp` | `/uploads/upcycled-denim-collection-cover.webp` | `47e7c1e239043e86e8d8fa68531e8a20e564a0de07696581ad95814079f67d6c` |
 | Vests | cardImage | `/uploads/legacy-3497a7fca9532aa09594.webp` | `/uploads/vests-collection-cover.webp` | `0ea0106c4746fdcf5a2da10c8249049c0442bca722fe7ee676a0d40bf1ceec97` |
+
+## Owner-supplied Jennifer, Old Rose and Wild Card media — November 7, 2026
+
+**Confirmation: Confirmed — owner-supplied camera files from Downloads.**
+
+Restored Jennifer’s Garden with seven photos and two videos. Replaced the Myra Mojave Leather Bag in Old Rose’s five temporary manufacturer photos with six owner photos and restored its video gallery with two videos. Restored Baby I’m a Wild Card’s video. Its separately missing photo was not supplied and remains missing. Farmer Mrs. Synakowski’s media was not supplied.
+
+All 18 Downloads originals remain unchanged. Photos were converted to WebP at quality 85, with upright orientation; full-resolution, metadata-stripped PNG source copies retain the decoded photo pixels. MOV videos were converted to VP9/Opus WebM; metadata-stripped MOV source copies retain the original video/audio streams without recompression. These uploaded sources are not byte-identical camera originals. Location metadata was removed before upload. All 36 gallery/source files are retained in GitHub.
+
+Old Rose’s new photos use picture numbers 06–11, in that gallery order, preserving the five prior manufacturer URLs and their contents. All other product fields and all 60 other products were preserved. The upload checked current media arrays before updating records and verified all product fields afterward.
+
+### Original-to-website mapping
+
+| Product | Camera file | Website URL | Retained source URL |
+| --- | --- | --- | --- |
+| Jennifer’s Garden | `IMG_4068` | `/uploads/jennifers-garden-picture-01.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-01.png` |
+| Jennifer’s Garden | `IMG_4069` | `/uploads/jennifers-garden-picture-02.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-02.png` |
+| Jennifer’s Garden | `IMG_4072` | `/uploads/jennifers-garden-picture-03.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-03.png` |
+| Jennifer’s Garden | `IMG_4076` | `/uploads/jennifers-garden-picture-04.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-04.png` |
+| Jennifer’s Garden | `IMG_4077` | `/uploads/jennifers-garden-picture-05.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-05.png` |
+| Jennifer’s Garden | `IMG_4079` | `/uploads/jennifers-garden-picture-06.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-06.png` |
+| Jennifer’s Garden | `IMG_4080` | `/uploads/jennifers-garden-picture-07.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-07.png` |
+| Jennifer’s Garden | `IMG_4074.mov` | `/uploads/jennifers-garden-video-01.webm` | `/uploads/originals/jennifers-garden/jennifers-garden-source-video-01.mov` |
+| Jennifer’s Garden | `IMG_4075.mov` | `/uploads/jennifers-garden-video-02.webm` | `/uploads/originals/jennifers-garden/jennifers-garden-source-video-02.mov` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4110` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-06.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-06.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4112` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-07.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-07.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4115` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-08.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-08.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4118` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-09.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-09.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4122` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-10.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-10.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4123` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-11.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-11.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4113.MOV` | `/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-01.mov` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4114.MOV` | `/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-02.mov` |
+| Baby I'm a Wild Card | `IMG_4132.MOV` | `/uploads/baby-im-a-wild-card-video-01.webm` | `/uploads/originals/baby-im-a-wild-card/baby-im-a-wild-card-source-video-01.mov` |
+
+The [recovery manifest](owner-supplied/2026-11-07/manifest.json) records all uploaded file sizes and SHA-256 checksums, original media arrays, and new media arrays. Source/gallery files are saved under `site/uploads/` on `main`; the post-upload catalog and cumulative organized media backup are on `daily-backups`.
+
+### Completed verification
+
+The [one-time recovery upload](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380782958) verified all 36 server files and preserved all other product data. Its subsequent public URL check was blocked by Cloudflare with HTTP 403 from the GitHub runner. Independent checks from the owner’s Mac then verified all 18 public gallery URLs return HTTP 200 with matching SHA-256 hashes, and the live storefront contains the intended photo/video arrays. The temporary recovery workflow was removed after use.
+
+The [successful post-recovery backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380857408) saved the current catalog, readable per-product media copies, all 36 new gallery/source files, and retained prior media. All 36 backup file hashes and all 63 saved product records were verified. Backup totals: **462 retained files; 229 available and 10 missing active catalog references**. All 30 application tests, 12 backup tests, change-safety checks, initial Code Quality and production deployment passed. All 18 original camera files in Downloads retain their original checksums.

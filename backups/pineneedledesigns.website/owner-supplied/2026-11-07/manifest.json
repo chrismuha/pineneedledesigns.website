@@ -3,7 +3,7 @@
   "products": [
     {
       "id": "6a6f9b03955755fcc5876510",
-      "name": "Jennifer’s Garden",
+      "name": "Jennifer\u2019s Garden",
       "expected": {
         "photos": [
           "/uploads/1785698346966-317818312.webp",
@@ -270,55 +270,55 @@
   ],
   "mapping": [
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4068",
       "website": "/uploads/jennifers-garden-picture-01.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-01.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4069",
       "website": "/uploads/jennifers-garden-picture-02.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-02.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4072",
       "website": "/uploads/jennifers-garden-picture-03.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-03.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4076",
       "website": "/uploads/jennifers-garden-picture-04.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-04.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4077",
       "website": "/uploads/jennifers-garden-picture-05.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-05.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4079",
       "website": "/uploads/jennifers-garden-picture-06.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-06.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4080",
       "website": "/uploads/jennifers-garden-picture-07.webp",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-07.png"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4074.mov",
       "website": "/uploads/jennifers-garden-video-01.webm",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-video-01.mov"
     },
     {
-      "product": "Jennifer’s Garden",
+      "product": "Jennifer\u2019s Garden",
       "original": "IMG_4075.mov",
       "website": "/uploads/jennifers-garden-video-02.webm",
       "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-video-02.mov"
@@ -376,6 +376,80 @@
       "original": "IMG_4132.MOV",
       "website": "/uploads/baby-im-a-wild-card-video-01.webm",
       "source": "/uploads/originals/baby-im-a-wild-card/baby-im-a-wild-card-source-video-01.mov"
+    }
+  ],
+  "originals": [
+    {
+      "file": "jennifer garden/IMG_4068.heic",
+      "sha256": "4145cc45fc35d31a280572a8a785f198e196982b18eee1a07da9dacba1cddbc0"
+    },
+    {
+      "file": "jennifer garden/IMG_4069.heic",
+      "sha256": "00cbd2b836c65f2e0f33aa12f42254654598584c67a45014d3065bbb59737122"
+    },
+    {
+      "file": "jennifer garden/IMG_4072.heic",
+      "sha256": "b25b3d48d3e1e522b59b886b2747efedecb5ec5df3085c42c0d96ef7b223ab87"
+    },
+    {
+      "file": "jennifer garden/IMG_4074.mov",
+      "sha256": "95084515f69adcc590b566a56011a9135406def98d98f1a9ece7a3bbf1ac7b59"
+    },
+    {
+      "file": "jennifer garden/IMG_4075.mov",
+      "sha256": "8e5194ec8bab81564bd9401f0dd1a408fe9756747bd340bae6668d98b4298a99"
+    },
+    {
+      "file": "jennifer garden/IMG_4076.heic",
+      "sha256": "46913164abb8cc15439378947ed9ea88191205c3df6959822217bcedd59c7163"
+    },
+    {
+      "file": "jennifer garden/IMG_4077.heic",
+      "sha256": "9feac270c7766dbe5774ed333e07e57ea9f38552f0bf385694b140e289bdae21"
+    },
+    {
+      "file": "jennifer garden/IMG_4079.HEIC",
+      "sha256": "a5d77fb81f7bd9c1b06705de9e72c701db2290e3a88aa3814c92775844dd5846"
+    },
+    {
+      "file": "jennifer garden/IMG_4080.HEIC",
+      "sha256": "1f2cf0652d8cab524f20cc5962bc4c701ef39db9dfb6791bff2d6223f7554789"
+    },
+    {
+      "file": "rose bag/IMG_4110.heic",
+      "sha256": "e4b302a6564e5d5aab61ae89f99720c32d110d7bb5036e207e0366821412e9b7"
+    },
+    {
+      "file": "rose bag/IMG_4112.heic",
+      "sha256": "b2eedc61ee57c0741bb45280f08c3d20264e495692c3f3e29cb5334134861606"
+    },
+    {
+      "file": "rose bag/IMG_4113.MOV",
+      "sha256": "d74fc2f6be6a63be9e9d21c1ca333067aa74231a38d5dabc706ec8a6b432d1be"
+    },
+    {
+      "file": "rose bag/IMG_4114.MOV",
+      "sha256": "13b5cabc04e4d352241e2ac137a13723edc34b8abb7cc40bffdfd2498e9abbde"
+    },
+    {
+      "file": "rose bag/IMG_4115.heic",
+      "sha256": "9a9fc1063f9b98ba2369e471fd8b3695f16158e7e078a5d9e82dbefab6d0f3ef"
+    },
+    {
+      "file": "rose bag/IMG_4118.heic",
+      "sha256": "0cf7ab2ccc9a9c47f9567c715bb0b5baf92f539feeae1005862edb9bd7d364d4"
+    },
+    {
+      "file": "rose bag/IMG_4122.heic",
+      "sha256": "84918839f8a44af94bbc3f1d6906e17458dd9b2d7bcf9e77baef48addb62e2a4"
+    },
+    {
+      "file": "rose bag/IMG_4123.heic",
+      "sha256": "529f9c0034e82c440b71e42335b8a10e73a7ceb962de0c2b1a392901f61f35b4"
+    },
+    {
+      "file": "wild card/IMG_4132.MOV",
+      "sha256": "b7fb9569b51c82c4200051331afdc0c472c01d289b1e5f247e3d25ff454a3cea"
     }
   ]
 }
