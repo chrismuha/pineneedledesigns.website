@@ -110,4 +110,4 @@ The Mallard No Bling listing is also represented by the updated existing Mallard
 - No imported Etsy identifiers are present in the new product records.
 - Current media totals: **197 available / 30 missing / 227 referenced files**. The 30 historical missing files are unchanged: 29 product files plus one old Shirts collection fallback image. The customer does not need to supply a separate Shirts cover because the storefront selects a product photo automatically. See the recovery log for exact missing paths.
 
-GitHub backup verification will be recorded below after the backup completes.
+[GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325322573). Verified all 25 imported files against the backup SHA-256 checksums; the saved catalog contains all 63 products, all 10 additions, and the three combined Bling/No Bling products with the expected prices. Backup totals: **197 available files and 30 missing references**. No Etsy identifiers were imported into the new product records.
