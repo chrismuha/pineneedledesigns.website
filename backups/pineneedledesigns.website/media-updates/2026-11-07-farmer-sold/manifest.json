@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-07",
+  "products": [
+    {
+      "id": "6a7135446cd8f610d01253f5",
+      "name": "Farmer Mrs. Synakowski",
+      "expected": {
+        "photos": [
+          "/uploads/1785802847325-721535881.webp",
+          "/uploads/1785802847600-540517333.webp",
+          "/uploads/1785802847615-726191347.webp",
+          "/uploads/1785802847622-953516934.webp",
+          "/uploads/1785802847627-803996742.webp",
+          "/uploads/1785802847636-731592493.webp"
+        ],
+        "videos": [
+          "/uploads/1785802874238-555619409.webm",
+          "/uploads/1785802874369-16727371.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/farmer-mrs-synakowski-picture-01.webp"
+        ],
+        "videos": [],
+        "videoPosters": []
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "farmer-mrs-synakowski-picture-01.webp",
+      "bytes": 443722,
+      "sha256": "0635b59e6774a6c1d17516b014237080ab4edac7343a394ff103c84f7962dfd9"
+    }
+  ],
+  "generation": {
+    "tool": "image_gen",
+    "purpose": "Owner-requested sold announcement, not a depiction of the garment",
+    "text": [
+      "SOLD",
+      "Check back for more unique one-of-a-kind pieces.",
+      "Pine Needle Designs"
+    ],
+    "prompt": "Create a polished square ecommerce sold-out placeholder for Pine Needle Designs. Warm ivory linen-paper background, subtle botanical pine needle border in muted forest green with dusty rose details. Centered highly legible dark forest green typography and ample whitespace. Large serif SOLD; exact secondary text: Check back for more unique one-of-a-kind pieces. Small Pine Needle Designs signature. No garment photograph, phone controls, browser elements, screenshot frame, or watermark."
+  }
+}
