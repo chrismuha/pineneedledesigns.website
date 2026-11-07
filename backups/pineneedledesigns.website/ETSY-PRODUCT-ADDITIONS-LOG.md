@@ -1,5 +1,11 @@
 # Etsy product additions log
 
+## Historical import record and later updates
+
+This log preserves the Etsy import totals and filenames as they were at import time. Later Shirley recovery and product-based media renaming are documented in [MEDIA-RECOVERY-LOG.md](MEDIA-RECOVERY-LOG.md), including the current database-to-backup filename mapping. Its current summary supersedes the historical counts and URLs below; previous URLs remain retained aliases.
+
+Daily backups build on prior backups on `daily-backups`: new files are added, unchanged files remain, replaced contents and deleted website items are retained when previously captured, and timestamped catalog snapshots plus Git commits preserve earlier versions. These logs are also published on `main`; the latest scheduled media files are on `daily-backups`. Orders, payments, credentials, customer data, and arbitrary uncommitted local files are outside this catalog/media backup.
+
 ## November 6, 2026
 
 Compared all **29 current ZebraDivaDesigns Etsy listings** with all **53 existing website products**, including hidden/sold catalog entries and differently named matches. Added **10 products** and **25 media files: 20 photos and 5 videos**. The website now contains **63 products**. Added a No Bling option to one existing product.
@@ -108,6 +114,6 @@ The Mallard No Bling listing is also represented by the updated existing Mallard
 - All 25 imported files passed checksums and the application served every file with HTTP 200.
 - Existing 172 media files were preserved. The other 52 pre-existing product records were unchanged.
 - No imported Etsy identifiers are present in the new product records.
-- Current media totals: **197 available / 30 missing / 227 referenced files**. The 30 historical missing files are unchanged: 29 product files plus one old Shirts collection fallback image. The customer does not need to supply a separate Shirts cover because the storefront selects a product photo automatically. See the recovery log for exact missing paths.
+- Media totals at the time of this import: **197 available / 30 missing / 227 referenced files**. The 30 historical missing files are unchanged: 29 product files plus one old Shirts collection fallback image. The customer does not need to supply a separate Shirts cover because the storefront selects a product photo automatically. See the recovery log for exact missing paths.
 
 [GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325322573). Verified all 25 imported files against the backup SHA-256 checksums; the saved catalog contains all 63 products, all 10 additions, and the three combined Bling/No Bling products with the expected prices. Backup totals: **197 available files and 30 missing references**. No Etsy identifiers were imported into the new product records.
