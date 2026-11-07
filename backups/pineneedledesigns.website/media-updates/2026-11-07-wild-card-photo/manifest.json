@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-07",
+  "changes": [
+    {
+      "kind": "products",
+      "id": "6a50f83f21d68331ea2b07fd",
+      "name": "Baby I'm a Wild Card",
+      "expected": {
+        "photos": [
+          "/uploads/1783691326976-435709395.webp"
+        ],
+        "videos": [
+          "/uploads/baby-im-a-wild-card-video-01.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/baby-im-a-wild-card-picture-01.webp"
+        ]
+      }
+    },
+    {
+      "kind": "collections",
+      "id": "6a4ffc76f950512905f2313e",
+      "name": "Shirts",
+      "expected": {
+        "cardImage": "/uploads/legacy-6a42cc687962f91d73d7.webp"
+      },
+      "set": {
+        "cardImage": ""
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "baby-im-a-wild-card-picture-01.webp",
+      "bytes": 1412652,
+      "sha256": "ac60a5a3bace211564aeff25acc914559fa2faf3e84c3ba8effd58f9574279f9"
+    }
+  ],
+  "extraction": {
+    "tool": "ffmpeg",
+    "video": "/uploads/baby-im-a-wild-card-video-01.webm",
+    "videoSha256": "4fc409358e282d14114beffc28e91493b73475610f717eddb8fd3a3dc836c2a8",
+    "timestampSeconds": 0,
+    "method": "Decode first frame without phone UI, overlays, screenshot controls, or generated content. Save lossless WebP with unchanged frame pixels.",
+    "width": 1080,
+    "height": 1920
+  }
+}
