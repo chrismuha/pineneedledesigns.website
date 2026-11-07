@@ -10,4 +10,4 @@ price: 72
 
 quantity: 1
 
-Media available: 0 of 5
+Media available: 5 of 5

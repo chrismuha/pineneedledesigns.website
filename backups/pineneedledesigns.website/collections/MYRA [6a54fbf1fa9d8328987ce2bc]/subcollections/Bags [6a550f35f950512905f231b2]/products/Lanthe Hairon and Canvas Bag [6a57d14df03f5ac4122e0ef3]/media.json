@@ -1,27 +1,27 @@
 [
   {
     "websiteUrl": "/uploads/1784140108446-170016502.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/01-1784140108446-170016502.webp"
   },
   {
     "websiteUrl": "/uploads/1784140108447-705424667.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/02-1784140108447-705424667.webp"
   },
   {
     "websiteUrl": "/uploads/1784140108453-71159071.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/03-1784140108453-71159071.webp"
   },
   {
     "websiteUrl": "/uploads/1784140108458-32206855.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/04-1784140108458-32206855.webp"
   },
   {
     "websiteUrl": "/uploads/1784224564731-274139057.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/05-1784224564731-274139057.webp"
   }
 ]

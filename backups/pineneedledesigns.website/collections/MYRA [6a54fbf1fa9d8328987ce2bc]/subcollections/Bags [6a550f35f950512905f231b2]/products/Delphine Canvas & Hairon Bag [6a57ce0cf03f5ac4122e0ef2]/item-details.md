@@ -11,4 +11,4 @@ price: 68
 
 quantity: 1
 
-Media available: 0 of 6
+Media available: 6 of 6
