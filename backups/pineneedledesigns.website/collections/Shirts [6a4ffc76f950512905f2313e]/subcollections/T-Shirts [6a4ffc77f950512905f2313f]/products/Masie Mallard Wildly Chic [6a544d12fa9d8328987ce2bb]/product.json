@@ -19,8 +19,8 @@
   "meta": [],
   "videos": [],
   "videoPosters": [],
-  "noBlingPrice": null,
-  "noBlingDescription": "",
+  "noBlingPrice": 28,
+  "noBlingDescription": "Maisy Mallard likes showing off her Adirondack Green with a couple little baubles and cat eye sunglasses!  A Must when swimming in the Pond in Old Forge New York in the Adirondacks! Look for the other listing If you want to order Maisy with BLING!",
   "maker": "Barta",
   "bagTypes": [],
   "filters": [],
@@ -28,13 +28,14 @@
   "imageWrapper": "",
   "optionPlaceholders": {},
   "createdAt": "2026-07-13T02:27:30.949Z",
-  "updatedAt": "2026-09-21T00:13:26.764Z",
+  "updatedAt": "2026-11-07T01:38:32.324Z",
   "__v": 2,
   "shoeSize": "",
   "beltSize": "",
   "comfortColors": [],
   "generalDescription": "",
-  "hasBlingOptions": false,
+  "hasBlingOptions": true,
   "sizePrices": {},
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "blingPrice": 38
 }

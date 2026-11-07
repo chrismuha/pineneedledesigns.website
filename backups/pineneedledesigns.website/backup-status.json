@@ -1,7 +1,7 @@
 {
-  "completedAt": "20261107T012101104183Z",
-  "filesBackedUp": 172,
-  "referencedFiles": 202,
+  "completedAt": "20261107T014036311465Z",
+  "filesBackedUp": 197,
+  "referencedFiles": 227,
   "missingFiles": [
     "uploads/1783691326976-435709395.webp",
     "uploads/1784899677609-762299862.webp",
@@ -258,6 +258,106 @@
     "uploads/1789949606594-515446718.webp": {
       "bytes": 284158,
       "sha256": "6ac8d4aab889ba30000559c8f01478d3b2395b36fe35a394fc47b3472f8eadec"
+    },
+    "uploads/etsy-bougie-lips-t-shirt-d8e9ee-photo-01.webp": {
+      "bytes": 373708,
+      "sha256": "d61206b2ab7393f95a9e290453f6352e4ce6083793d0c6e5473dc771881c1b06"
+    },
+    "uploads/etsy-bougie-lips-t-shirt-d8e9ee-video-01.webm": {
+      "bytes": 1836458,
+      "sha256": "3ab3efebd127d3f702769ab8bc726235178a4e394ded5404107663a098abe7e7"
+    },
+    "uploads/etsy-bridal-lace-ribbon-snippet-roll-navy-ivory-hand-stamped-tag-a40bb2-photo-01.webp": {
+      "bytes": 1034862,
+      "sha256": "c345ab62feef3c8dbb4d99110fa856d5b25109fd961f7a32d8bda07b63277c74"
+    },
+    "uploads/etsy-bridal-lace-ribbon-snippet-roll-navy-ivory-hand-stamped-tag-a40bb2-photo-02.webp": {
+      "bytes": 1628808,
+      "sha256": "f85884a2c11a6848ff10cbaf32b6cd258cb0bb42d06924b96b9bd2bdc47d49bf"
+    },
+    "uploads/etsy-bridal-lace-ribbon-snippet-roll-navy-ivory-hand-stamped-tag-a40bb2-photo-03.webp": {
+      "bytes": 1671862,
+      "sha256": "1dcce5c3c38ccd6f7d038ddd0d98b17718f49e825338440e4d9cbaff5ea581dc"
+    },
+    "uploads/etsy-bridal-lace-ribbon-snippet-roll-navy-ivory-hand-stamped-tag-a40bb2-photo-04.webp": {
+      "bytes": 1592832,
+      "sha256": "1e177407b2d98214d3cd803d817571e0d299e4829832ef580697d65957a0ff63"
+    },
+    "uploads/etsy-bridal-lace-ribbon-snippet-roll-navy-ivory-hand-stamped-tag-a40bb2-photo-05.webp": {
+      "bytes": 2207420,
+      "sha256": "33b09cabf80527b601cd12b4dc0d579c4cef92d0f28e10e86943cae15c33ec06"
+    },
+    "uploads/etsy-don-t-burst-my-bubble-sweatshirt-f958d7-photo-01.webp": {
+      "bytes": 188876,
+      "sha256": "5efca3f551f5b8023a93932b1e51f491f21afdb7b4f5f7b1aaf6c415d4341b7b"
+    },
+    "uploads/etsy-don-t-burst-my-bubble-sweatshirt-f958d7-photo-02.webp": {
+      "bytes": 188876,
+      "sha256": "5efca3f551f5b8023a93932b1e51f491f21afdb7b4f5f7b1aaf6c415d4341b7b"
+    },
+    "uploads/etsy-frankly-my-dear-i-don-t-give-a-damn-either-with-bling-7c35b9-photo-01.webp": {
+      "bytes": 88762,
+      "sha256": "59c90bbca11e5a948d139a30a28251966c26230d3a297d0d9e595d0754ef3f7b"
+    },
+    "uploads/etsy-frankly-my-dear-i-don-t-give-a-damn-either-with-bling-7c35b9-video-01.webm": {
+      "bytes": 2120579,
+      "sha256": "30996f691cebf28d314274efbb709eda12f7542592060a0d92361a9c07d09eae"
+    },
+    "uploads/etsy-highland-cow-in-her-crown-rhinestone-shirt-dc0ddf-photo-01.webp": {
+      "bytes": 173258,
+      "sha256": "017d30594a503c5afe07eb92eeb3596048e4a5966c75ca3f907544e858e2cbc1"
+    },
+    "uploads/etsy-highland-cow-in-her-crown-rhinestone-shirt-dc0ddf-photo-02.webp": {
+      "bytes": 2559900,
+      "sha256": "c2c2832d3fbabe677421afcdf331ea5b132785898e3782b4dff68fbcaef4c535"
+    },
+    "uploads/etsy-highland-cow-in-her-crown-rhinestone-shirt-dc0ddf-video-01.webm": {
+      "bytes": 5423306,
+      "sha256": "7d34dce14ca04c9dbf2ff745e0b8b5ef9b0fbca0a1eed1a30ca0b483a9369fdc"
+    },
+    "uploads/etsy-i-may-look-calm-chicken-t-shirt-54583c-photo-01.webp": {
+      "bytes": 327232,
+      "sha256": "ce2bd4d1bbf76dfb15b3b25dfaaa9bdc36662fb189a5a3fcb85562494b237365"
+    },
+    "uploads/etsy-i-may-look-calm-chicken-t-shirt-54583c-photo-02.webp": {
+      "bytes": 2180354,
+      "sha256": "c0f5888a49248c18143d7dc2707ed585c1bb83f691df2e3222ff7767a1d27bce"
+    },
+    "uploads/etsy-i-may-look-calm-chicken-t-shirt-54583c-photo-03.webp": {
+      "bytes": 2241194,
+      "sha256": "f31a056c960090f6f1bc6941066b051cd03a2d59c82f3e913867bd7bf9b834ea"
+    },
+    "uploads/etsy-i-woke-up-like-this-t-shirt-blinged-out-fa0ca1-photo-01.webp": {
+      "bytes": 2624596,
+      "sha256": "180d24e31c146eeb14e7e5d32e31d632250038a700c2b0a2f26337f9e33c1eb8"
+    },
+    "uploads/etsy-i-woke-up-like-this-t-shirt-blinged-out-fa0ca1-photo-02.webp": {
+      "bytes": 2630850,
+      "sha256": "c68dd222e13159425f4f8bb65d3460c8b113e034334dda4ead0c4dcc470a5cb6"
+    },
+    "uploads/etsy-i-woke-up-like-this-t-shirt-blinged-out-fa0ca1-photo-03.webp": {
+      "bytes": 2227958,
+      "sha256": "81fe07ceed8c0f6039d7c1ed9c4ef0d6dbb0e6b72a59bf6e75eb28a3b3a79f09"
+    },
+    "uploads/etsy-i-woke-up-like-this-t-shirt-blinged-out-fa0ca1-video-01.webm": {
+      "bytes": 2287265,
+      "sha256": "0c8a806c311d713e5d307c265acb91276117095251203ccdd0743af22c1ba825"
+    },
+    "uploads/etsy-mischief-witch-and-her-cat-blinged-out-b73246-photo-01.webp": {
+      "bytes": 434962,
+      "sha256": "ea031265cbfcc0bc02e1782c0f65f58b1498e28e922709444de238a0d964f37b"
+    },
+    "uploads/etsy-turquoise-girl-blinged-out-sweatshirt-541d9d-photo-01.webp": {
+      "bytes": 357756,
+      "sha256": "10c0ed78b7eb53544c39946c7417222304c6cfa5b4bb6218fd7d20e2ced59a76"
+    },
+    "uploads/etsy-turquoise-girl-blinged-out-sweatshirt-541d9d-video-01.webm": {
+      "bytes": 3840768,
+      "sha256": "24f0800ce6d37b7befe5a20309246a07fa8c276d7285c1c63a4626b1233e5f1f"
+    },
+    "uploads/etsy-turquoise-junky-blinged-out-t-shirt-86e114-photo-01.webp": {
+      "bytes": 266246,
+      "sha256": "3403e38ac00f13c62a2e490ab86f0456b693f02caa265dfb34bd98d5d58bad0d"
     },
     "uploads/legacy-03cb35862b89ab1f6c25.webm": {
       "bytes": 14577999,
