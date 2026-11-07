@@ -47,7 +47,7 @@
         <div class="brand-logos">
           <router-link class="brand-home-link" to="/" aria-label="Pine Needle Designs home">
             <span class="brand-name">Pine Needle Designs</span>
-            <img src="/images/wende-ai.webp" alt="Wende of Pine Needle Designs" width="1283" height="1403" loading="eager" fetchpriority="high" decoding="async" />
+            <img src="/images/wende-portrait.webp" alt="Wende of Pine Needle Designs" width="1283" height="1403" loading="eager" fetchpriority="high" decoding="async" />
             <span class="designer-name">Wende Maliani</span>
           </router-link>
         </div>
