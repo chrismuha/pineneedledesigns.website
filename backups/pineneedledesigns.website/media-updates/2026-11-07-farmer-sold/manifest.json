@@ -35,14 +35,13 @@
       "sha256": "0635b59e6774a6c1d17516b014237080ab4edac7343a394ff103c84f7962dfd9"
     }
   ],
-  "generation": {
-    "tool": "image_gen",
+  "artwork": {
     "purpose": "Owner-requested sold announcement, not a depiction of the garment",
     "text": [
       "SOLD",
       "Check back for more unique one-of-a-kind pieces.",
       "Pine Needle Designs"
     ],
-    "prompt": "Create a polished square 1200x1200 ecommerce sold-out placeholder image for Pine Needle Designs, an Adirondack handmade one-of-a-kind clothing boutique. Warm ivory linen-paper background, a very subtle elegant botanical pine needle border in muted forest green with restrained dusty rose details. Centered highly legible dark forest green typography with ample whitespace. Exact primary text in large elegant serif capitals: \"SOLD\". Exact secondary text below in clear readable type across two or three balanced centered lines: \"Check back for more unique one-of-a-kind pieces.\" Small understated text near bottom: \"Pine Needle Designs\". No photograph of clothing, no invented garment, no phone controls, no browser elements, no screenshot frame, no watermark. Clean professional retail announcement card. Text must be spelled exactly, easy to read in a small product thumbnail. Single flat image filling the entire canvas, no mockup scene."
+    "designBrief": "Create a polished square 1200x1200 ecommerce sold-out placeholder image for Pine Needle Designs, an Adirondack handmade one-of-a-kind clothing boutique. Warm ivory linen-paper background, a very subtle elegant botanical pine needle border in muted forest green with restrained dusty rose details. Centered highly legible dark forest green typography with ample whitespace. Exact primary text in large elegant serif capitals: \"SOLD\". Exact secondary text below in clear readable type across two or three balanced centered lines: \"Check back for more unique one-of-a-kind pieces.\" Small understated text near bottom: \"Pine Needle Designs\". No photograph of clothing, no invented garment, no phone controls, no browser elements, no screenshot frame, no watermark. Clean professional retail announcement card. Text must be spelled exactly, easy to read in a small product thumbnail. Single flat image filling the entire canvas, no mockup scene."
   }
 }
