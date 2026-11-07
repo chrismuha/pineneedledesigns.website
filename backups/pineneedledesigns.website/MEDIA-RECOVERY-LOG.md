@@ -10,9 +10,11 @@ The current scheduled backup files live on [`daily-backups`](https://github.com/
 
 This is a repository and server-upload/catalog backup, not a whole-computer backup or a complete MongoDB backup. Uncommitted local files, Orders, payments, credentials, and customer data are not automatically included. Previously committed media remains in Git history. Explicit source copies retained under server uploads are included.
 
-Latest verified media inventory — November 7, 2026: **462 retained files**, including old URL aliases and source copies. Active catalog paths comprise **229 available / 10 missing / 239 total**. The November 7 owner-supplied recovery below supersedes older inventory and confirmation snapshots.
+Latest verified media inventory — November 7, 2026: **471 retained files**, including old URL aliases and source copies. Active catalog paths comprise **231 available / 10 missing / 241 total**. The November 7 recovery and screenshot-cleanup entries below supersede older inventory and confirmation snapshots.
 
 ## Current status — November 7, 2026
+
+Six screenshot photos across five products have been cropped to remove phone controls, black borders, and thumbnails. The Lipstick sweatshirt now has separate working photo, video, and poster files copied from its T-shirt counterpart, as requested by the owner. Its description, $58 price, sizing, colors, and stock were preserved. The latest verified backup retains 471 files; active catalog totals are 231 available and 10 missing references. See the screenshot-cleanup entry below for exact mappings and checks.
 
 Jennifer’s Garden now has seven available photos and two available videos. Myra Mojave Leather Bag in Old Rose now has six owner-supplied photos and two available videos; its current gallery is **Confirmed**, replacing the prior Unconfirmed manufacturer-photo classification. Baby I’m a Wild Card now has its available video; its separately missing photo remains unresolved. Seven other Myra products retain their Unconfirmed manufacturer-photo classification.
 
@@ -629,3 +631,36 @@ The [recovery manifest](owner-supplied/2026-11-07/manifest.json) records all upl
 The [one-time recovery upload](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380782958) verified all 36 server files and preserved all other product data. Its subsequent public URL check was blocked by Cloudflare with HTTP 403 from the GitHub runner. Independent checks from the owner’s Mac then verified all 18 public gallery URLs return HTTP 200 with matching SHA-256 hashes, and the live storefront contains the intended photo/video arrays. The temporary recovery workflow was removed after use.
 
 The [successful post-recovery backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380857408) saved the current catalog, readable per-product media copies, all 36 new gallery/source files, and retained prior media. All 36 backup file hashes and all 63 saved product records were verified. Backup totals: **462 retained files; 229 available and 10 missing active catalog references**. All 30 application tests, 12 backup tests, change-safety checks, initial Code Quality and production deployment passed. All 18 original camera files in Downloads retain their original checksums.
+
+## Screenshot crops and separate Lipstick sweatshirt media — November 7, 2026
+
+Reviewed all 174 available product photo entries. Six photos across five products contained phone status bars, gallery/editor controls, black padding, or thumbnail strips. Cropped each to the product photograph. Crops were encoded as lossless WebP and checked against the decoded source crop pixel-for-pixel; product artwork, wording, colors, and model details were not regenerated. Original screenshot URLs and their contents remain retained on the server and in prior backups. New URLs prevent stale cached screenshots from appearing in the current galleries.
+
+### Cropped photo mapping
+
+| Product | Previous URL retained | New gallery URL | Source crop (left, top, width, height) |
+| --- | --- | --- | --- |
+| Autumn Cowgirl | `/uploads/autumn-cowgirl-picture-01.webp` | `/uploads/autumn-cowgirl-picture-01-cropped.webp` | `0, 645, 1284, 1467` |
+| Bougie Lips T-Shirt | `/uploads/bougie-lips-t-shirt-picture-01.webp` | `/uploads/bougie-lips-t-shirt-picture-01-cropped.webp` | `0, 410, 1284, 1937` |
+| Highland Cow in Her Crown. Rhinestone Shirt | `/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp` | `/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp` | `0, 552, 1284, 1713` |
+| Don’t Burst My Bubble! Sweatshirt | `/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp` | `/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp` | `0, 304, 1284, 1940` |
+| Don’t Burst My Bubble! Sweatshirt | `/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp` | `/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp` | `0, 304, 1284, 1940` |
+| Turquoise Girl Blinged Out Sweatshirt | `/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp` | `/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp` | `0, 483, 1284, 1737` |
+
+### Lipstick sweatshirt media copies
+
+The sweatshirt had two absent legacy `/images/` photos and an absent `/videos/` video. These are separate from the ten missing `/uploads/` references in the backup report. Per the owner’s request, copied the working T-shirt’s photo, video, and poster into three independent sweatshirt-specific files and changed only the sweatshirt’s media arrays and modification timestamp. The T-shirt’s media files and product record were preserved. Existing sweatshirt description, price ($58), colors, sweatshirt sizes, inventory, and other non-media fields were preserved. These are copies of the T-shirt’s supplied imagery, not newly photographed sweatshirt garments.
+
+| Media | T-shirt source | Separate sweatshirt file |
+| --- | --- | --- |
+| photos | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp` |
+| videos | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm` |
+| videoPosters | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp` |
+
+### Completed verification
+
+The [production media update](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42395208305) completed successfully. All nine new files match their SHA-256 checksums and return HTTP 200 both from the application and from public URLs checked on the owner’s Mac. The live storefront shows all six intended gallery changes. Sweatshirt and T-shirt photo/video/poster URLs are distinct. Only the six intended product media arrays and their modification timestamps changed; all 57 other product records were preserved. Collection records and store-setting values were preserved. Code Quality and production deployment passed. The temporary upload workflow was removed after use.
+
+The [post-update GitHub backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42395292834) completed successfully. Verified all nine new files in both the server-upload mirror and organized per-product copies, including their readable filename mappings. Compared all 63 saved product records with the previous catalog. The backup retains **471 files** and reports **10 missing upload references**; active catalog totals are **231 available / 10 missing / 241 referenced paths**. The three broken legacy static-media links are no longer referenced by the sweatshirt. The ten unresolved upload references remain unchanged.
+
+The [cleanup manifest](media-cleanup/2026-11-07/manifest.json) records source checksums, crop rectangles, destination checksums, and before/after media arrays. Current media/catalog backups are on `daily-backups`; the new files, manifest, and this recovery log are also retained on `main`.
