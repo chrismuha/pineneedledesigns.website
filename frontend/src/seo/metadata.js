@@ -55,9 +55,9 @@ const plainText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replac
 export const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))
 const imageUrl = (value) => {
   try {
-    const url = new URL(value || '/images/wende-ai.webp', SITE_ORIGIN)
-    return ['http:', 'https:'].includes(url.protocol) ? url.href : `${SITE_ORIGIN}/images/wende-ai.webp`
-  } catch { return `${SITE_ORIGIN}/images/wende-ai.webp` }
+    const url = new URL(value || '/images/wende-portrait.webp', SITE_ORIGIN)
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : `${SITE_ORIGIN}/images/wende-portrait.webp`
+  } catch { return `${SITE_ORIGIN}/images/wende-portrait.webp` }
 }
 
 export function getPageSeo(path, { collection, catalogReady = false } = {}) {
@@ -106,7 +106,7 @@ export function renderSeoHead(seo) {
         name: SITE_NAME,
         url: `${SITE_ORIGIN}/`,
         description: HOME_DESCRIPTION,
-        image: `${SITE_ORIGIN}/images/wende-ai.webp`,
+        image: `${SITE_ORIGIN}/images/wende-portrait.webp`,
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Remsen',

@@ -2,10 +2,11 @@
 
 ## November 7, 2026
 
+- Standardized the portrait asset name and clarified sold-placeholder wording in media records.
 - Current media classification now uses two independently alphabetized lists:
   Never lost originals plus Confirmed Etsy media, followed by Unconfirmed replacements.
 - Recovery documentation now records each media replacement reason, explicitly
-  confirms all 34 Etsy-sourced photos, and explains Farmer's generated sold notice.
+  confirms all 34 Etsy-sourced photos, and explains Farmer's custom sold notice.
   Daily backups refresh these logs and supporting manifests from `main`.
 - Media-gallery and homepage product-slider arrows now use forest-green buttons,
   larger white chevrons, white borders, and larger touch targets on phones and desktops.
