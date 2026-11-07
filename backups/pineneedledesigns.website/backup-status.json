@@ -1,7 +1,7 @@
 {
-  "completedAt": "20261107T141715475974Z",
-  "filesBackedUp": 462,
-  "referencedFiles": 239,
+  "completedAt": "20261107T171430227690Z",
+  "filesBackedUp": 471,
+  "referencedFiles": 241,
   "missingFiles": [
     "uploads/1783691326976-435709395.webp",
     "uploads/1785802847325-721535881.webp",
@@ -335,6 +335,10 @@
       "bytes": 11117096,
       "sha256": "f1e0679da27198f1985c9c5324b806c18765f8fb05d49107e886e82f0126f080"
     },
+    "uploads/autumn-cowgirl-picture-01-cropped.webp": {
+      "bytes": 1426570,
+      "sha256": "b727621d5602ad492be9418c0077260394de9fa7c2ed6cc7c4d33af38700f398"
+    },
     "uploads/autumn-cowgirl-picture-01.webp": {
       "bytes": 326074,
       "sha256": "4402e0eb704e0efbf7c57bf092514cb07a22908397152eea2a6e82e05edf8097"
@@ -374,6 +378,10 @@
     "uploads/boot-bands-collection-cover.webp": {
       "bytes": 153810,
       "sha256": "f5385c448f17362014dc351464eb35c70169e97db9a4e4930bd815648a5f0a58"
+    },
+    "uploads/bougie-lips-t-shirt-picture-01-cropped.webp": {
+      "bytes": 1793696,
+      "sha256": "f62544c218bdc2c7a23866179d92423463571aabdf48d6ec0f64f34fa98582d0"
     },
     "uploads/bougie-lips-t-shirt-picture-01.webp": {
       "bytes": 373708,
@@ -539,9 +547,17 @@
       "bytes": 187116,
       "sha256": "0cc2f35a5f8128ebb86b61e842c925ca36520d95c495d119435e022ab4748773"
     },
+    "uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp": {
+      "bytes": 898584,
+      "sha256": "9b5919f48dfbdfd41af6b8babbb9add231bf32b766005ae2f621e37d75ed8724"
+    },
     "uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp": {
       "bytes": 188876,
       "sha256": "5efca3f551f5b8023a93932b1e51f491f21afdb7b4f5f7b1aaf6c415d4341b7b"
+    },
+    "uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp": {
+      "bytes": 898584,
+      "sha256": "9b5919f48dfbdfd41af6b8babbb9add231bf32b766005ae2f621e37d75ed8724"
     },
     "uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp": {
       "bytes": 188876,
@@ -678,6 +694,10 @@
     "uploads/hat-bands-collection-cover.webp": {
       "bytes": 33616,
       "sha256": "a6b3faa89302a8958fd15759720e8fe0b35778dede8c7b87218b6adb382af43b"
+    },
+    "uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp": {
+      "bytes": 880448,
+      "sha256": "bb2d03bfd212ec8242ac5fe51edb8c1ede9395b72fd674977639f66469514b76"
     },
     "uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp": {
       "bytes": 173258,
@@ -1375,9 +1395,21 @@
       "bytes": 30508,
       "sha256": "5272f4b0265ccfa7719390dadd69d76596609446bef377d57fdbc14b1299151c"
     },
+    "uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp": {
+      "bytes": 115164,
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
+    },
+    "uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm": {
+      "bytes": 5853268,
+      "sha256": "11733d84ac30cf731382568388ea6bae8e8bccfe877abea48737743b5bf269cb"
+    },
     "uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-01.webp": {
       "bytes": 111598,
       "sha256": "7fd49c7f11ce6d0aba659c6106dda8759259c4af84ae42ee3da906b1ff7aa88f"
+    },
+    "uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp": {
+      "bytes": 115164,
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
     },
     "uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp": {
       "bytes": 115164,
@@ -1750,6 +1782,10 @@
     "uploads/turquoise-chic-blinged-out-t-shirt-video-poster-01.webp": {
       "bytes": 110178,
       "sha256": "8b11717b5d76c732775d8eb345eb3c8711c2930829cb3c80f81a4128bb3b3949"
+    },
+    "uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp": {
+      "bytes": 1128536,
+      "sha256": "ad3315be421b14f6417344d75b85cb99acc28cb85880768c0d977635e3824eff"
     },
     "uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp": {
       "bytes": 357756,

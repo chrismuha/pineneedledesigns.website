@@ -271,8 +271,7 @@
       },
       "outOfStock": false,
       "photos": [
-        "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp",
-        "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1b.webp"
+        "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp"
       ],
       "price": 58,
       "shippingCost": 5,
@@ -280,12 +279,12 @@
       "size": "",
       "sortOrder": 0,
       "subCollectionId": "6a4ffc78f950512905f23140",
-      "updatedAt": "2026-11-07T01:57:31.803Z",
+      "updatedAt": "2026-11-07T17:13:32.310Z",
       "videoPosters": [
-        "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-01.webp"
+        "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp"
       ],
       "videos": [
-        "/videos/shirts/wende-choice-blinged-out-sweatshirt/wende-choice.webm"
+        "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm"
       ],
       "quantity": 44,
       "beltSize": "",
@@ -2571,7 +2570,7 @@
       "description": "Adirondack Chic this  country girl loves rocking her Fall colors. As well as her rhinestones. Bling, pictured leather, and cowboy hat with all the Cowgirl amenities! Priced the same for all sizes!",
       "customProperties": [],
       "photos": [
-        "/uploads/autumn-cowgirl-picture-01.webp"
+        "/uploads/autumn-cowgirl-picture-01-cropped.webp"
       ],
       "price": 38,
       "hasBlingOptions": false,
@@ -2595,7 +2594,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-08-13T14:28:18.462Z",
-      "updatedAt": "2026-11-07T01:57:32.026Z",
+      "updatedAt": "2026-11-07T17:13:32.226Z",
       "__v": 1
     },
     {
@@ -2655,7 +2654,7 @@
       "description": "Striking T-Shirt of pouty lips. Hot pink and leopard print topped off with aurora rhinestones! If you\u2019re feeling a LITTLE BOUGIE or just want everyone to know it, there\u2019s no mistake they will know!! Priced the same for all sizes and colors listed.",
       "customProperties": [],
       "photos": [
-        "/uploads/bougie-lips-t-shirt-picture-01.webp"
+        "/uploads/bougie-lips-t-shirt-picture-01-cropped.webp"
       ],
       "price": 38,
       "hasBlingOptions": true,
@@ -2679,7 +2678,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-07T01:38:32.276Z",
-      "updatedAt": "2026-11-07T01:57:32.034Z",
+      "updatedAt": "2026-11-07T17:13:32.281Z",
       "__v": 0
     },
     {
@@ -2696,7 +2695,7 @@
       "description": "The Queen Highland Cow in her glory. Sparkley rhinestones added to her dressing.  Shown in color Natural. For the Highland Cow lovers! Priced the same for all sizes!",
       "customProperties": [],
       "photos": [
-        "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp",
+        "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp",
         "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-02.webp"
       ],
       "price": 38,
@@ -2721,7 +2720,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-07T01:38:32.281Z",
-      "updatedAt": "2026-11-07T01:57:32.038Z",
+      "updatedAt": "2026-11-07T17:13:32.290Z",
       "__v": 0
     },
     {
@@ -2738,8 +2737,8 @@
       "description": "Retro Cow Girl in her cowgirl hat. Blowing a pink bubble. Nice for that sassy girl! Shown in Sand.  Don\u2019t Burst My Bubble written on her cowboy hat. Added a touch of highlights of bling! Priced the same for all sizes and colors listed.",
       "customProperties": [],
       "photos": [
-        "/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp",
-        "/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp"
+        "/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp",
+        "/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp"
       ],
       "price": 59,
       "hasBlingOptions": false,
@@ -2761,7 +2760,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-07T01:38:32.286Z",
-      "updatedAt": "2026-11-07T01:57:32.042Z",
+      "updatedAt": "2026-11-07T17:13:32.297Z",
       "__v": 0
     },
     {
@@ -2778,7 +2777,7 @@
       "description": "Turquoise Girl in her cowgirl hat. Nice for that rodeo party girl! Shown in Sand.  A touch of bling highlights her hat and turquoise jewelry! Priced the same for all sizes and colors listed.",
       "customProperties": [],
       "photos": [
-        "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp"
+        "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp"
       ],
       "price": 59,
       "hasBlingOptions": false,
@@ -2802,7 +2801,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-07T01:38:32.293Z",
-      "updatedAt": "2026-11-07T01:57:32.046Z",
+      "updatedAt": "2026-11-07T17:13:32.304Z",
       "__v": 0
     },
     {
@@ -3545,7 +3544,7 @@
       "fallbackShippingCost": 5,
       "freeShippingEnabled": true,
       "freeShippingMinimum": 28,
-      "updatedAt": "2026-11-06T22:26:50.261Z",
+      "updatedAt": "2026-11-07T15:05:10.325Z",
       "toastTimeoutSeconds": 6
     }
   ],
@@ -3631,6 +3630,7 @@
     "/uploads/amethyst-hairon-canvas-bag-picture-04.webp",
     "/uploads/amethyst-hairon-canvas-bag-picture-05.webp",
     "/uploads/autumn-cowgirl-customer-a5e7309365.webm",
+    "/uploads/autumn-cowgirl-picture-01-cropped.webp",
     "/uploads/autumn-cowgirl-picture-01.webp",
     "/uploads/autumn-cowgirl-video-01.webm",
     "/uploads/baby-im-a-wild-card-video-01.webm",
@@ -3641,6 +3641,7 @@
     "/uploads/blue-isle-cross-body-bag-small-picture-04.webp",
     "/uploads/boo-jee-boa-picture-01.webp",
     "/uploads/boot-bands-collection-cover.webp",
+    "/uploads/bougie-lips-t-shirt-picture-01-cropped.webp",
     "/uploads/bougie-lips-t-shirt-picture-01.webp",
     "/uploads/bougie-lips-t-shirt-video-01.webm",
     "/uploads/bracelets-collection-cover.webp",
@@ -3682,7 +3683,9 @@
     "/uploads/don-t-burst-my-bubble-blinged-out-t-shirt-picture-01.webp",
     "/uploads/don-t-burst-my-bubble-blinged-out-t-shirt-video-01.webm",
     "/uploads/don-t-burst-my-bubble-blinged-out-t-shirt-video-poster-01.webp",
+    "/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp",
     "/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp",
+    "/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp",
     "/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp",
     "/uploads/earrings-collection-cover.webp",
     "/uploads/etsy-bougie-lips-t-shirt-d8e9ee-photo-01.webp",
@@ -3717,6 +3720,7 @@
     "/uploads/guts-grit-and-lipstick-blinged-out-t-shirt-picture-01.webp",
     "/uploads/happy-girls-are-the-prettiest-blinged-out-t-shirt-picture-01.webp",
     "/uploads/hat-bands-collection-cover.webp",
+    "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp",
     "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp",
     "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-02.webp",
     "/uploads/highland-cow-in-her-crown-rhinestone-shirt-video-01.webm",
@@ -3891,7 +3895,10 @@
     "/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm",
     "/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm",
     "/uploads/necklaces-collection-cover.webp",
+    "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp",
+    "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm",
     "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-01.webp",
+    "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp",
     "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp",
     "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm",
     "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp",
@@ -3985,6 +3992,7 @@
     "/uploads/turquoise-chic-blinged-out-t-shirt-picture-02.webp",
     "/uploads/turquoise-chic-blinged-out-t-shirt-video-01.webm",
     "/uploads/turquoise-chic-blinged-out-t-shirt-video-poster-01.webp",
+    "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp",
     "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp",
     "/uploads/turquoise-girl-blinged-out-sweatshirt-video-01.webm",
     "/uploads/turquoise-junky-blinged-out-t-shirt-picture-01.webp",

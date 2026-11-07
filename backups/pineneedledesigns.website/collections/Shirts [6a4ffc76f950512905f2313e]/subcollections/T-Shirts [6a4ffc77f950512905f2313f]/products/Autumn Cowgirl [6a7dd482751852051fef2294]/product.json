@@ -13,7 +13,7 @@
   "description": "Adirondack Chic this  country girl loves rocking her Fall colors. As well as her rhinestones. Bling, pictured leather, and cowboy hat with all the Cowgirl amenities! Priced the same for all sizes!",
   "customProperties": [],
   "photos": [
-    "/uploads/autumn-cowgirl-picture-01.webp"
+    "/uploads/autumn-cowgirl-picture-01-cropped.webp"
   ],
   "price": 38,
   "hasBlingOptions": false,
@@ -37,6 +37,6 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-08-13T14:28:18.462Z",
-  "updatedAt": "2026-11-07T01:57:32.026Z",
+  "updatedAt": "2026-11-07T17:13:32.226Z",
   "__v": 1
 }

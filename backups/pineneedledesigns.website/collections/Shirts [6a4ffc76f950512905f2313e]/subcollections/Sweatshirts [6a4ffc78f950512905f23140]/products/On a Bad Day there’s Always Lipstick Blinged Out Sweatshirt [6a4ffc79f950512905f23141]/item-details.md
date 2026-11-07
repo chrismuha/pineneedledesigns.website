@@ -16,4 +16,4 @@ filters: ["Sweatshirts"]
 
 meta: ["Price: $58", "Available in Peach, Natural, Grey, Sand, and White.", "Free shipping"]
 
-Media available: 1 of 1
+Media available: 3 of 3
