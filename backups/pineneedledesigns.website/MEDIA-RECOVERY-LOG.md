@@ -8,7 +8,7 @@ The absent `/uploads/legacy-6a42cc687962f91d73d7.webp` is the Shirts collection�
 
 ## Current status — November 6, 2026
 
-**197 available / 30 missing / 227 referenced media files.** Missing files comprise **23 photos and 7 videos**: 29 product files and one Shirts collection image.
+**208 available / 21 missing / 229 active catalog media references.** Missing files comprise **15 photos and 6 videos**: 20 product files and one Shirts collection fallback image. The server also retains source copies and superseded files, for 221 retained files in total.
 
 Confirmation labels follow the owner’s requested classification:
 
@@ -82,7 +82,7 @@ These additions are Confirmed because their content and media came from the owne
 | Pink Tooled Leather Speedy Bag | Confirmed | 2 | 0 | 0 | 0 |
 | Red Flower | Confirmed | 5 | 0 | 0 | 0 |
 | Ruby Lee | Confirmed | 3 | 1 | 0 | 0 |
-| Shirley Boho Bag | Confirmed | 0 | 0 | 8 | 1 |
+| Shirley Boho Bag | Confirmed | 9 | 2 | 0 | 0 |
 | Smart Ass and Pretty Donkey Blinged Out | Confirmed | 4 | 0 | 0 | 0 |
 | The Crowned Hare Vest | Confirmed | 9 | 1 | 0 | 0 |
 | The LV Cowhide Leather Fringe Western (or Adirondack) Crossbody Bag | Confirmed | 3 | 0 | 0 | 0 |
@@ -104,7 +104,6 @@ These additions are Confirmed because their content and media came from the owne
 | Item | Confirmation | Missing photos | Missing videos |
 | --- | --- | ---: | ---: |
 | Baby I'm a Wild Card | Confirmed | 1 | 1 |
-| Shirley Boho Bag | Confirmed | 8 | 1 |
 | Jennifer’s Garden | Confirmed | 7 | 2 |
 | Farmer Mrs. Synakowski | Confirmed | 6 | 2 |
 | Myra Mojave Leather Bag in Old Rose | Unconfirmed | 0 | 1 |
@@ -114,15 +113,6 @@ These additions are Confirmed because their content and media came from the owne
 | --- | --- | --- |
 | Baby I'm a Wild Card | Confirmed | `/uploads/1783691326976-435709395.webp` |
 | Baby I'm a Wild Card | Confirmed | `/uploads/1785962462844-805310474.webm` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677609-762299862.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677701-524751672.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677708-286181336.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677769-854417811.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677778-475809922.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677785-968345443.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677786-297973643.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899677786-681414023.webp` |
-| Shirley Boho Bag | Confirmed | `/uploads/1784899687488-758409083.webm` |
 | Jennifer’s Garden | Confirmed | `/uploads/1785698346966-317818312.webp` |
 | Jennifer’s Garden | Confirmed | `/uploads/1785698347017-791748772.webp` |
 | Jennifer’s Garden | Confirmed | `/uploads/1785698347029-676620032.webp` |
@@ -308,3 +298,39 @@ The scheduled GitHub backup reads the server’s catalog and copies the server u
 Active catalog media totals remain 197 available and 30 missing out of 227 referenced paths: this operation replaced a working video rather than filling another missing slot. The server now retains 199 media files, including the superseded Etsy video and the source MOV copy. The backup’s inventory-inclusive referenced-file count can therefore differ from the active catalog-only count.
 
 [GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325887134). Both the WebM and metadata-stripped MOV source copy match their recorded SHA-256 checksums in the backup. The saved catalog points Autumn Cowgirl to the new WebM and preserves its photo. The Desktop original’s checksum is unchanged. The backup retains 199 media files and still reports the same 30 missing paths.
+
+## Shirley Boho Bag — owner-supplied media, November 6, 2026
+
+**Confirmation: Confirmed — owner-supplied camera files in `Downloads/shorley`.**
+
+Restored the product’s gallery using all nine supplied HEIC photos and both MOV videos. The previous product record listed eight absent photos and one absent video; those nine unavailable references were replaced with nine WebP photo paths and two WebM video paths. This adds two gallery entries and reduces the current missing-file count by nine. Only Shirley’s photo/video arrays and modification timestamp changed. All other 62 products, product details, and pre-existing working media were preserved.
+
+### File naming convention
+
+New manual media uploads use readable product-based names: `shirley-boho-bag-picture-01.webp` through `shirley-boho-bag-picture-09.webp`, and `shirley-boho-bag-video-01.webm` / `shirley-boho-bag-video-02.webm`. Use the same product-name + picture/video + number pattern for future manual media additions. The database references these exact names; the server upload mirror in GitHub retains the same names, and the existing per-product backup folder contains copies with those readable names. `media.json` maps each backup file to its website URL. Existing working media elsewhere was not renamed, and automatic dashboard-upload code was not changed.
+
+A full-bag photo is first, followed by the remaining views and details. The photos were rotated 90 degrees clockwise for upright display. HEIC images became WebP website photos; full-resolution, metadata-stripped PNG source copies preserve the decoded photo pixels without further lossy compression. MOV inputs became VP9/Opus WebM videos. Metadata-stripped MOV source copies preserve their video/audio streams without recompression. These source copies are not byte-identical camera originals. Location metadata is absent from the uploads. All 11 original HEIC/MOV files remain unchanged in the owner’s Downloads folder.
+
+### Original-to-website mapping
+
+| Original camera file | Website file | Retained source copy | Confirmation |
+| --- | --- | --- | --- |
+| `IMG_3996.heic` | `/uploads/shirley-boho-bag-picture-01.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-01.png` | Confirmed |
+| `IMG_3995.heic` | `/uploads/shirley-boho-bag-picture-02.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-02.png` | Confirmed |
+| `IMG_4001.heic` | `/uploads/shirley-boho-bag-picture-03.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-03.png` | Confirmed |
+| `IMG_4002.heic` | `/uploads/shirley-boho-bag-picture-04.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-04.png` | Confirmed |
+| `IMG_4003.heic` | `/uploads/shirley-boho-bag-picture-05.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-05.png` | Confirmed |
+| `IMG_3999.heic` | `/uploads/shirley-boho-bag-picture-06.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-06.png` | Confirmed |
+| `IMG_4007.heic` | `/uploads/shirley-boho-bag-picture-07.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-07.png` | Confirmed |
+| `IMG_4008.heic` | `/uploads/shirley-boho-bag-picture-08.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-08.png` | Confirmed |
+| `IMG_3994.heic` | `/uploads/shirley-boho-bag-picture-09.webp` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-09.png` | Confirmed |
+| `IMG_3997.MOV` | `/uploads/shirley-boho-bag-video-01.webm` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-01.mov` | Confirmed |
+| `IMG_3998.MOV` | `/uploads/shirley-boho-bag-video-02.webm` | `/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-02.mov` | Confirmed |
+
+### Verification
+
+All 22 uploaded website/source files passed SHA-256 verification. All 11 gallery files were served by the application with HTTP 200. Local camera-original checksums were verified unchanged.
+
+Active catalog totals are now **208 available / 21 missing / 229 referenced paths**. The server retains **221 files**, including source copies and superseded media. The remaining missing product media belongs to Baby I’m a Wild Card (1 photo, 1 video), Jennifer’s Garden (7 photos, 2 videos), Farmer Mrs. Synakowski (6 photos, 2 videos), and Myra Mojave Leather Bag in Old Rose (1 video), plus one Shirts collection fallback image. A separate customer-supplied Shirts cover is unnecessary.
+
+Backup verification for Shirley will be recorded after completion.
