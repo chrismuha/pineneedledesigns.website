@@ -8,4 +8,4 @@ price: 153
 
 quantity: 1
 
-Media available: 5 of 6
+Media available: 8 of 8

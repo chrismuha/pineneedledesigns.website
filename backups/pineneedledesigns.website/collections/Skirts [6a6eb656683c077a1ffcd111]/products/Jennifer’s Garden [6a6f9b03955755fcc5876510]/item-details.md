@@ -10,4 +10,4 @@ quantity: 1
 
 size: 16
 
-Media available: 0 of 9
+Media available: 9 of 9

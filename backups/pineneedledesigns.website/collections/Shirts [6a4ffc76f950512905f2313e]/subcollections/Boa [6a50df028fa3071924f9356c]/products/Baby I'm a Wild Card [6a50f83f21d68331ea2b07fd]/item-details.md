@@ -14,4 +14,4 @@ size: Small, Medium, Large, XL, 2X, 3X
 
 filters: ["Boa", "T-Shirts"]
 
-Media available: 0 of 2
+Media available: 1 of 2

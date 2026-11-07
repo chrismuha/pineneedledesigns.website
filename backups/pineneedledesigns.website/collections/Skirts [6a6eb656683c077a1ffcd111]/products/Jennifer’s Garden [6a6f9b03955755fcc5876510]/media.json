@@ -1,47 +1,47 @@
 [
   {
-    "websiteUrl": "/uploads/1785698346966-317818312.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-01.webp",
+    "available": true,
+    "localFile": "media/01-jennifers-garden-picture-01.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347017-791748772.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-02.webp",
+    "available": true,
+    "localFile": "media/02-jennifers-garden-picture-02.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347029-676620032.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-03.webp",
+    "available": true,
+    "localFile": "media/03-jennifers-garden-picture-03.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347031-928742831.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-04.webp",
+    "available": true,
+    "localFile": "media/04-jennifers-garden-picture-04.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347035-46634783.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-05.webp",
+    "available": true,
+    "localFile": "media/05-jennifers-garden-picture-05.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347035-62299765.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-06.webp",
+    "available": true,
+    "localFile": "media/06-jennifers-garden-picture-06.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698347041-32849318.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-picture-07.webp",
+    "available": true,
+    "localFile": "media/07-jennifers-garden-picture-07.webp"
   },
   {
-    "websiteUrl": "/uploads/1785698359408-845967717.webm",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-video-01.webm",
+    "available": true,
+    "localFile": "media/08-jennifers-garden-video-01.webm"
   },
   {
-    "websiteUrl": "/uploads/1785698359436-219100135.webm",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/jennifers-garden-video-02.webm",
+    "available": true,
+    "localFile": "media/09-jennifers-garden-video-02.webm"
   }
 ]

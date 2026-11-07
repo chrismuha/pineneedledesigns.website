@@ -1,32 +1,42 @@
 [
   {
-    "websiteUrl": "/uploads/1785875961641-957410862.webm",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-06.webp",
+    "available": true,
+    "localFile": "media/01-myra-mojave-leather-bag-in-old-rose-picture-06.webp"
   },
   {
-    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-01.webp",
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-07.webp",
     "available": true,
-    "localFile": "media/02-myra-mojave-leather-bag-in-old-rose-picture-01.webp"
+    "localFile": "media/02-myra-mojave-leather-bag-in-old-rose-picture-07.webp"
   },
   {
-    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-02.webp",
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-08.webp",
     "available": true,
-    "localFile": "media/03-myra-mojave-leather-bag-in-old-rose-picture-02.webp"
+    "localFile": "media/03-myra-mojave-leather-bag-in-old-rose-picture-08.webp"
   },
   {
-    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-03.webp",
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-09.webp",
     "available": true,
-    "localFile": "media/04-myra-mojave-leather-bag-in-old-rose-picture-03.webp"
+    "localFile": "media/04-myra-mojave-leather-bag-in-old-rose-picture-09.webp"
   },
   {
-    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-04.webp",
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-10.webp",
     "available": true,
-    "localFile": "media/05-myra-mojave-leather-bag-in-old-rose-picture-04.webp"
+    "localFile": "media/05-myra-mojave-leather-bag-in-old-rose-picture-10.webp"
   },
   {
-    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-05.webp",
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-11.webp",
     "available": true,
-    "localFile": "media/06-myra-mojave-leather-bag-in-old-rose-picture-05.webp"
+    "localFile": "media/06-myra-mojave-leather-bag-in-old-rose-picture-11.webp"
+  },
+  {
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm",
+    "available": true,
+    "localFile": "media/07-myra-mojave-leather-bag-in-old-rose-video-01.webm"
+  },
+  {
+    "websiteUrl": "/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm",
+    "available": true,
+    "localFile": "media/08-myra-mojave-leather-bag-in-old-rose-video-02.webm"
   }
 ]
