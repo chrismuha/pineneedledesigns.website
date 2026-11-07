@@ -2,6 +2,8 @@
 
 ## November 7, 2026
 
+- Current media classification now uses two independently alphabetized lists:
+  Never lost originals plus Confirmed Etsy media, followed by Unconfirmed replacements.
 - Recovery documentation now records each media replacement reason, explicitly
   confirms all 34 Etsy-sourced photos, and explains Farmer's generated sold notice.
   Daily backups refresh these logs and supporting manifests from `main`.
