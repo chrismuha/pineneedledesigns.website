@@ -25,15 +25,15 @@
   "noBlingPrice": null,
   "outOfStock": false,
   "photos": [
-    "/uploads/legacy-989ee94218ac7c0edc29.webp",
-    "/uploads/legacy-8aac1ab4c1c2f361662b.webp",
-    "/uploads/legacy-5e98a9c7b804c4cf285c.webp",
-    "/uploads/legacy-5ab17c3bbbaf972c406b.webp",
-    "/uploads/legacy-d004bc21419df668e872.webp",
-    "/uploads/legacy-bfabb8ea9ce47643c8f6.webp",
-    "/uploads/legacy-74182fc578d4c5b8c491.webp",
-    "/uploads/legacy-d9f1853e78b031b33ec4.webp",
-    "/uploads/legacy-3af64788886e85c5de3a.webp"
+    "/uploads/the-crowned-hare-vest-picture-01.webp",
+    "/uploads/the-crowned-hare-vest-picture-02.webp",
+    "/uploads/the-crowned-hare-vest-picture-03.webp",
+    "/uploads/the-crowned-hare-vest-picture-04.webp",
+    "/uploads/the-crowned-hare-vest-picture-05.webp",
+    "/uploads/the-crowned-hare-vest-picture-06.webp",
+    "/uploads/the-crowned-hare-vest-picture-07.webp",
+    "/uploads/the-crowned-hare-vest-picture-08.webp",
+    "/uploads/the-crowned-hare-vest-picture-09.webp"
   ],
   "price": 77,
   "shippingCost": 0,
@@ -41,12 +41,12 @@
   "size": "",
   "sortOrder": 0,
   "subCollectionId": "6a4ffc82f950512905f2314d",
-  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "updatedAt": "2026-11-07T01:57:31.840Z",
   "videoPosters": [
-    "/uploads/legacy-a74460b9f1db1877a323.webp"
+    "/uploads/the-crowned-hare-vest-video-poster-01.webp"
   ],
   "videos": [
-    "/uploads/legacy-20f7f5f792e80fc91658.webm"
+    "/uploads/the-crowned-hare-vest-video-01.webm"
   ],
   "quantity": 88,
   "beltSize": "",

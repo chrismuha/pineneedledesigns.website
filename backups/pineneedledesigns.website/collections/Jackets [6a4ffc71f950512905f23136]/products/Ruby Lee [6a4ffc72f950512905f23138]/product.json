@@ -23,9 +23,9 @@
   "noBlingPrice": null,
   "outOfStock": false,
   "photos": [
-    "/uploads/legacy-08fff9d200bc25fa936b.webp",
-    "/uploads/legacy-e43ac9220187e89df242.webp",
-    "/uploads/legacy-29f6b9cb001c2b7c8df4.webp"
+    "/uploads/ruby-lee-picture-01.webp",
+    "/uploads/ruby-lee-picture-02.webp",
+    "/uploads/ruby-lee-picture-03.webp"
   ],
   "price": 264,
   "shippingCost": 0,
@@ -33,12 +33,12 @@
   "size": "",
   "sortOrder": 1,
   "subCollectionId": null,
-  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "updatedAt": "2026-11-07T01:57:31.793Z",
   "videoPosters": [
-    "/uploads/legacy-145654049cb514b6977d.webp"
+    "/uploads/ruby-lee-video-poster-01.webp"
   ],
   "videos": [
-    "/uploads/legacy-77913138cd6ab87f4733.webm"
+    "/uploads/ruby-lee-video-01.webm"
   ],
   "quantity": 88,
   "beltSize": "",

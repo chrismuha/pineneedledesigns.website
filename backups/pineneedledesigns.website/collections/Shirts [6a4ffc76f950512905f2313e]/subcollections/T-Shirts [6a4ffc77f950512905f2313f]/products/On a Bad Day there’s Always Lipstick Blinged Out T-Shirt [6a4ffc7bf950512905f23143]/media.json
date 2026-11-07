@@ -1,12 +1,17 @@
 [
   {
-    "websiteUrl": "/uploads/legacy-ab3c97011c2c9ce61909.webp",
+    "websiteUrl": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp",
     "available": true,
-    "localFile": "media/01-legacy-ab3c97011c2c9ce61909.webp"
+    "localFile": "media/01-on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp"
   },
   {
-    "websiteUrl": "/uploads/legacy-bac45177a2487ef0a404.webm",
+    "websiteUrl": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm",
     "available": true,
-    "localFile": "media/02-legacy-bac45177a2487ef0a404.webm"
+    "localFile": "media/02-on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm"
+  },
+  {
+    "websiteUrl": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp",
+    "available": true,
+    "localFile": "media/03-on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp"
   }
 ]

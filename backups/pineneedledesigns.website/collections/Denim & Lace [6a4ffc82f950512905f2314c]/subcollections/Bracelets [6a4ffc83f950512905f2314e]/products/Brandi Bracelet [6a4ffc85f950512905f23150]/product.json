@@ -25,11 +25,11 @@
   "noBlingPrice": null,
   "outOfStock": false,
   "photos": [
-    "/uploads/legacy-a77b44ce0b4cdad490e0.webp",
-    "/uploads/legacy-26fda35654083171776b.webp",
-    "/uploads/legacy-3c83f109e5bbb12755f5.webp",
-    "/uploads/legacy-924695c87d7d8f1f7659.webp",
-    "/uploads/legacy-784b399d60ca91351dc3.webp"
+    "/uploads/brandi-bracelet-picture-01.webp",
+    "/uploads/brandi-bracelet-picture-02.webp",
+    "/uploads/brandi-bracelet-picture-03.webp",
+    "/uploads/brandi-bracelet-picture-04.webp",
+    "/uploads/brandi-bracelet-picture-05.webp"
   ],
   "price": 29,
   "shippingCost": 0,
@@ -37,12 +37,12 @@
   "size": "",
   "sortOrder": 1,
   "subCollectionId": "6a4ffc83f950512905f2314e",
-  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "updatedAt": "2026-11-07T01:57:31.846Z",
   "videoPosters": [
-    "/uploads/legacy-5b355d6fa4c5116c1d22.webp"
+    "/uploads/brandi-bracelet-video-poster-01.webp"
   ],
   "videos": [
-    "/uploads/legacy-69a85e88135dadfa9c0c.webm"
+    "/uploads/brandi-bracelet-video-01.webm"
   ],
   "quantity": 88,
   "beltSize": "",

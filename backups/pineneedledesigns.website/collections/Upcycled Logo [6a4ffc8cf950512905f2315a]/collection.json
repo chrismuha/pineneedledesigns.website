@@ -2,7 +2,7 @@
   "_id": "6a4ffc8cf950512905f2315a",
   "slug": "upcycled-logo",
   "__v": 0,
-  "cardImage": "/uploads/legacy-93c6a8011c29b2f5e479.webp",
+  "cardImage": "/uploads/upcycled-logo-collection-cover.webp",
   "createdAt": "2026-07-09T19:54:52.257Z",
   "description": "Upcycled finds reimagined as one-of-a-kind accessories and statement pieces.",
   "hidden": false,
@@ -10,5 +10,5 @@
   "name": "Upcycled Logo",
   "showWhenEmpty": false,
   "sortOrder": 19,
-  "updatedAt": "2026-09-20T15:39:29.271Z"
+  "updatedAt": "2026-11-07T01:57:32.177Z"
 }

@@ -2,7 +2,7 @@
   "_id": "6a4ffc80f950512905f23149",
   "slug": "shoes",
   "__v": 0,
-  "cardImage": "/uploads/legacy-396c64640278750b0871.webp",
+  "cardImage": "/uploads/shoes-collection-cover.webp",
   "createdAt": "2026-07-09T19:54:40.046Z",
   "description": "One-of-a-kind footwear with handcrafted Pine Needle Designs style.",
   "hidden": false,
@@ -10,5 +10,5 @@
   "name": "Shoes",
   "showWhenEmpty": false,
   "sortOrder": 15,
-  "updatedAt": "2026-09-20T15:39:29.271Z"
+  "updatedAt": "2026-11-07T01:57:32.159Z"
 }

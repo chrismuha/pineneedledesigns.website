@@ -2,7 +2,7 @@
   "_id": "6a4ffc81f950512905f2314b",
   "slug": "shorts",
   "__v": 0,
-  "cardImage": "/uploads/legacy-af03703a71f2696a85a1.webp",
+  "cardImage": "/uploads/shorts-collection-cover.webp",
   "createdAt": "2026-07-09T19:54:41.356Z",
   "description": "A-line shape with luxe hardware.",
   "hidden": false,
@@ -10,5 +10,5 @@
   "name": "Shorts",
   "showWhenEmpty": false,
   "sortOrder": 16,
-  "updatedAt": "2026-09-20T15:39:29.271Z"
+  "updatedAt": "2026-11-07T01:57:32.164Z"
 }

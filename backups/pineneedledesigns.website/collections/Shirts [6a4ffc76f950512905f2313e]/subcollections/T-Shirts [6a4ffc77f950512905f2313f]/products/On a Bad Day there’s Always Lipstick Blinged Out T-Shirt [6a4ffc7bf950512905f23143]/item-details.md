@@ -16,4 +16,4 @@ filters: ["T-Shirts"]
 
 meta: ["Price: $38", "Available in Peach, Natural, Grey, Sand, and White.", "Free shipping"]
 
-Media available: 2 of 2
+Media available: 3 of 3

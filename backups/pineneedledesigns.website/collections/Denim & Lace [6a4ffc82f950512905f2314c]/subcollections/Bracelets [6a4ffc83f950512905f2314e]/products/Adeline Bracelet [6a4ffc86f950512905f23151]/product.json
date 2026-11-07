@@ -26,10 +26,10 @@
   "noBlingPrice": null,
   "outOfStock": false,
   "photos": [
-    "/uploads/legacy-a40c10c279e0175ae4eb.webp",
-    "/uploads/legacy-f2d2fdd2352b902a237d.webp",
-    "/uploads/legacy-38cdc914906f3d10de9b.webp",
-    "/uploads/legacy-2da1a931035693354d4e.webp"
+    "/uploads/adeline-bracelet-picture-01.webp",
+    "/uploads/adeline-bracelet-picture-02.webp",
+    "/uploads/adeline-bracelet-picture-03.webp",
+    "/uploads/adeline-bracelet-picture-04.webp"
   ],
   "price": 32,
   "shippingCost": 0,
@@ -37,14 +37,14 @@
   "size": "",
   "sortOrder": 2,
   "subCollectionId": "6a4ffc83f950512905f2314e",
-  "updatedAt": "2026-09-20T15:39:29.222Z",
+  "updatedAt": "2026-11-07T01:57:31.855Z",
   "videoPosters": [
-    "/uploads/legacy-d19223a0de740f73f86d.webp",
-    "/uploads/legacy-f9af10251f7026ee4790.webp"
+    "/uploads/adeline-bracelet-video-poster-01.webp",
+    "/uploads/adeline-bracelet-video-poster-02.webp"
   ],
   "videos": [
-    "/uploads/legacy-9e3c31c6bedddaace593.webm",
-    "/uploads/legacy-b9758f15657bf862c49a.webm"
+    "/uploads/adeline-bracelet-video-01.webm",
+    "/uploads/adeline-bracelet-video-02.webm"
   ],
   "quantity": 88,
   "beltSize": "",
