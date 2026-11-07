@@ -281,3 +281,30 @@ The Mojave Old Rose bag now has photos; its original video remains missing. The 
 ## Backup verification after Etsy product additions
 
 [GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325322573). Verified all 25 imported files against the backup SHA-256 checksums; the saved catalog contains all 63 products, all 10 additions, and the three combined Bling/No Bling products with the expected prices. Backup totals: **197 available files and 30 missing references**. No Etsy identifiers were imported into the new product records.
+
+## Autumn Cowgirl — customer-supplied video, November 6, 2026
+
+**Confirmation: Confirmed — supplied directly by the owner.**
+
+- Input: `IMG_4191.mov`, supplied from the owner’s Desktop. The local original was left unchanged.
+- Final requested website format: **WebM**. An initial MP4 request was superseded by the owner’s instruction to use WebM; no MP4 was uploaded.
+- Converted to VP9 WebM with Opus audio, retaining the video’s full duration and correcting its display orientation. Location metadata was removed from the upload.
+- Replaced only Autumn Cowgirl’s video association with the new WebM. Its photos and other product fields were unchanged, apart from the normal modification timestamp.
+- Retained the previous Etsy WebM on the server and in backups.
+- Preserved a MOV source copy by remuxing the original video/audio streams without recompression, removing location metadata and auxiliary data tracks. This is a metadata-stripped source copy, not a byte-identical copy of the local MOV.
+- Verified both uploaded files by SHA-256; the application serves the new video with HTTP 200 and `video/webm`.
+
+| Purpose | Saved path | SHA-256 |
+| --- | --- | --- |
+| Website WebM | `/uploads/autumn-cowgirl-customer-a5e7309365.webm` | `f1e0679da27198f1985c9c5324b806c18765f8fb05d49107e886e82f0126f080` |
+| Metadata-stripped MOV source copy | `/uploads/originals/autumn-cowgirl-source-a5e7309365.mov` | `83a87d53e0332ef08d4bca9358865d37d925adce94d2d685098791cd997adbc9` |
+
+### What the backups include
+
+Media committed before the database migration remains available in Git history. The historical migration/removal commit is an ancestor of the repository’s current main branch. Removing an asset from the current tree does not erase that committed history. This does not establish that every camera-original file was ever committed.
+
+The scheduled GitHub backup reads the server’s catalog and copies the server uploads directory, retaining older files and snapshots. It does not automatically scan Desktop, Downloads, Messages attachments, or other arbitrary local folders. The current uploader can remove raw uploaded videos after successful conversion; an original that was neither committed nor captured by a backup cannot be assumed to be recoverable. For this video, the local original is still on Desktop and the metadata-stripped MOV source copy is explicitly included in the server uploads backup.
+
+Active catalog media totals remain 197 available and 30 missing out of 227 referenced paths: this operation replaced a working video rather than filling another missing slot. The server now retains 199 media files, including the superseded Etsy video and the source MOV copy. The backup’s inventory-inclusive referenced-file count can therefore differ from the active catalog-only count.
+
+Backup verification for this video will be recorded after completion.
