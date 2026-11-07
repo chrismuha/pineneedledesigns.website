@@ -1814,7 +1814,7 @@
       "description": "This shirt is All 7\u2019s for that lucky girl! So roll the dice and order with or without Bling today!",
       "customProperties": [],
       "photos": [
-        "/uploads/1783691326976-435709395.webp"
+        "/uploads/baby-im-a-wild-card-picture-01.webp"
       ],
       "price": 38,
       "shippingCost": 0,
@@ -1838,7 +1838,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-07-10T13:48:47.025Z",
-      "updatedAt": "2026-11-07T14:16:29.529Z",
+      "updatedAt": "2026-11-07T17:36:53.328Z",
       "__v": 5,
       "beltSize": "",
       "comfortColors": [],
@@ -3197,7 +3197,7 @@
       "_id": "6a4ffc76f950512905f2313e",
       "slug": "shirts",
       "__v": 0,
-      "cardImage": "/uploads/legacy-6a42cc687962f91d73d7.webp",
+      "cardImage": "",
       "createdAt": "2026-07-09T19:54:30.745Z",
       "description": "Blinged Out T-Shirts and Sweatshirts made to stand out.",
       "hidden": false,
@@ -3205,7 +3205,7 @@
       "name": "Shirts",
       "showWhenEmpty": false,
       "sortOrder": 13,
-      "updatedAt": "2026-09-20T15:39:29.271Z"
+      "updatedAt": "2026-11-07T17:36:53.342Z"
     },
     {
       "_id": "6a4ffc7ff950512905f23148",
@@ -3625,6 +3625,7 @@
     "/uploads/autumn-cowgirl-picture-01-cropped.webp",
     "/uploads/autumn-cowgirl-picture-01.webp",
     "/uploads/autumn-cowgirl-video-01.webm",
+    "/uploads/baby-im-a-wild-card-picture-01.webp",
     "/uploads/baby-im-a-wild-card-video-01.webm",
     "/uploads/betsey-johnson-blush-satin-heels-picture-01.webp",
     "/uploads/blue-isle-cross-body-bag-small-picture-01.webp",

@@ -2,7 +2,7 @@
   "_id": "6a4ffc76f950512905f2313e",
   "slug": "shirts",
   "__v": 0,
-  "cardImage": "/uploads/legacy-6a42cc687962f91d73d7.webp",
+  "cardImage": "",
   "createdAt": "2026-07-09T19:54:30.745Z",
   "description": "Blinged Out T-Shirts and Sweatshirts made to stand out.",
   "hidden": false,
@@ -10,5 +10,5 @@
   "name": "Shirts",
   "showWhenEmpty": false,
   "sortOrder": 13,
-  "updatedAt": "2026-09-20T15:39:29.271Z"
+  "updatedAt": "2026-11-07T17:36:53.342Z"
 }

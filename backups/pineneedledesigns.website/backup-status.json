@@ -1,11 +1,8 @@
 {
-  "completedAt": "20261107T172432720772Z",
-  "filesBackedUp": 472,
-  "referencedFiles": 234,
-  "missingFiles": [
-    "uploads/1783691326976-435709395.webp",
-    "uploads/legacy-6a42cc687962f91d73d7.webp"
-  ],
+  "completedAt": "20261107T173830310537Z",
+  "filesBackedUp": 473,
+  "referencedFiles": 233,
+  "missingFiles": [],
   "files": {
     "uploads/1783672358990-600883762.jpeg": {
       "bytes": 278783,
@@ -338,6 +335,10 @@
     "uploads/autumn-cowgirl-video-01.webm": {
       "bytes": 11117096,
       "sha256": "f1e0679da27198f1985c9c5324b806c18765f8fb05d49107e886e82f0126f080"
+    },
+    "uploads/baby-im-a-wild-card-picture-01.webp": {
+      "bytes": 1412652,
+      "sha256": "ac60a5a3bace211564aeff25acc914559fa2faf3e84c3ba8effd58f9574279f9"
     },
     "uploads/baby-im-a-wild-card-video-01.webm": {
       "bytes": 9564231,

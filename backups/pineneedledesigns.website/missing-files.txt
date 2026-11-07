@@ -1,9 +1,8 @@
 Pine Needle Designs — missing media reference
-Checked (UTC): 20261107T172432720772Z
-Missing referenced files: 2
+Checked (UTC): 20261107T173830310537Z
+Missing referenced files: 0
 
 These catalog references have no file in the retained backup.
 Existing missing originals cannot be recovered by refreshing the backup.
 
-uploads/1783691326976-435709395.webp
-uploads/legacy-6a42cc687962f91d73d7.webp
+None. All referenced media is present in the backup.
