@@ -1,0 +1,289 @@
+{
+  "date": "2026-11-07",
+  "products": [
+    {
+      "id": "6a7dd482751852051fef2294",
+      "name": "Autumn Cowgirl",
+      "expected": {
+        "photos": [
+          "/uploads/autumn-cowgirl-picture-01.webp"
+        ],
+        "videos": [
+          "/uploads/autumn-cowgirl-video-01.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/autumn-cowgirl-picture-01-cropped.webp"
+        ]
+      }
+    },
+    {
+      "id": "6aee811742b2c1028a00bd36",
+      "name": "Bougie Lips T-Shirt",
+      "expected": {
+        "photos": [
+          "/uploads/bougie-lips-t-shirt-picture-01.webp"
+        ],
+        "videos": [
+          "/uploads/bougie-lips-t-shirt-video-01.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/bougie-lips-t-shirt-picture-01-cropped.webp"
+        ]
+      }
+    },
+    {
+      "id": "6aee811742b2c1028a00bd37",
+      "name": "Highland Cow in Her Crown. Rhinestone Shirt",
+      "expected": {
+        "photos": [
+          "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp",
+          "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-02.webp"
+        ],
+        "videos": [
+          "/uploads/highland-cow-in-her-crown-rhinestone-shirt-video-01.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp",
+          "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-02.webp"
+        ]
+      }
+    },
+    {
+      "id": "6aee811742b2c1028a00bd38",
+      "name": "Don’t Burst My Bubble! Sweatshirt",
+      "expected": {
+        "photos": [
+          "/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp",
+          "/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp"
+        ],
+        "videos": [],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp",
+          "/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp"
+        ]
+      }
+    },
+    {
+      "id": "6aee811742b2c1028a00bd39",
+      "name": "Turquoise Girl Blinged Out Sweatshirt",
+      "expected": {
+        "photos": [
+          "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp"
+        ],
+        "videos": [
+          "/uploads/turquoise-girl-blinged-out-sweatshirt-video-01.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "photos": [
+          "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp"
+        ]
+      }
+    },
+    {
+      "id": "6a4ffc79f950512905f23141",
+      "name": "On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt",
+      "expected": {
+        "photos": [
+          "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1a.webp",
+          "/images/shirts/wende-choice-blinged-out-sweatshirt/wende-choice-blinged-out-sweatshirt-1b.webp"
+        ],
+        "videos": [
+          "/videos/shirts/wende-choice-blinged-out-sweatshirt/wende-choice.webm"
+        ],
+        "videoPosters": [
+          "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-01.webp"
+        ]
+      },
+      "set": {
+        "photos": [
+          "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp"
+        ],
+        "videos": [
+          "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm"
+        ],
+        "videoPosters": [
+          "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp"
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "autumn-cowgirl-picture-01-cropped.webp",
+      "bytes": 1426570,
+      "sha256": "b727621d5602ad492be9418c0077260394de9fa7c2ed6cc7c4d33af38700f398"
+    },
+    {
+      "path": "bougie-lips-t-shirt-picture-01-cropped.webp",
+      "bytes": 1793696,
+      "sha256": "f62544c218bdc2c7a23866179d92423463571aabdf48d6ec0f64f34fa98582d0"
+    },
+    {
+      "path": "highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp",
+      "bytes": 880448,
+      "sha256": "bb2d03bfd212ec8242ac5fe51edb8c1ede9395b72fd674977639f66469514b76"
+    },
+    {
+      "path": "dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp",
+      "bytes": 898584,
+      "sha256": "9b5919f48dfbdfd41af6b8babbb9add231bf32b766005ae2f621e37d75ed8724"
+    },
+    {
+      "path": "dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp",
+      "bytes": 898584,
+      "sha256": "9b5919f48dfbdfd41af6b8babbb9add231bf32b766005ae2f621e37d75ed8724"
+    },
+    {
+      "path": "turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp",
+      "bytes": 1128536,
+      "sha256": "ad3315be421b14f6417344d75b85cb99acc28cb85880768c0d977635e3824eff"
+    },
+    {
+      "path": "on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp",
+      "bytes": 115164,
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
+    },
+    {
+      "path": "on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm",
+      "bytes": 5853268,
+      "sha256": "11733d84ac30cf731382568388ea6bae8e8bccfe877abea48737743b5bf269cb"
+    },
+    {
+      "path": "on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp",
+      "bytes": 115164,
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
+    }
+  ],
+  "crops": [
+    {
+      "product": "Autumn Cowgirl",
+      "source": "/uploads/autumn-cowgirl-picture-01.webp",
+      "sourceSha256": "4402e0eb704e0efbf7c57bf092514cb07a22908397152eea2a6e82e05edf8097",
+      "destination": "/uploads/autumn-cowgirl-picture-01-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 645,
+        "width": 1284,
+        "height": 1467
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    },
+    {
+      "product": "Bougie Lips T-Shirt",
+      "source": "/uploads/bougie-lips-t-shirt-picture-01.webp",
+      "sourceSha256": "d61206b2ab7393f95a9e290453f6352e4ce6083793d0c6e5473dc771881c1b06",
+      "destination": "/uploads/bougie-lips-t-shirt-picture-01-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 410,
+        "width": 1284,
+        "height": 1937
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    },
+    {
+      "product": "Highland Cow in Her Crown. Rhinestone Shirt",
+      "source": "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp",
+      "sourceSha256": "017d30594a503c5afe07eb92eeb3596048e4a5966c75ca3f907544e858e2cbc1",
+      "destination": "/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 552,
+        "width": 1284,
+        "height": 1713
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    },
+    {
+      "product": "Don’t Burst My Bubble! Sweatshirt",
+      "source": "/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp",
+      "sourceSha256": "5efca3f551f5b8023a93932b1e51f491f21afdb7b4f5f7b1aaf6c415d4341b7b",
+      "destination": "/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 304,
+        "width": 1284,
+        "height": 1940
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    },
+    {
+      "product": "Don’t Burst My Bubble! Sweatshirt",
+      "source": "/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp",
+      "sourceSha256": "5efca3f551f5b8023a93932b1e51f491f21afdb7b4f5f7b1aaf6c415d4341b7b",
+      "destination": "/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 304,
+        "width": 1284,
+        "height": 1940
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    },
+    {
+      "product": "Turquoise Girl Blinged Out Sweatshirt",
+      "source": "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp",
+      "sourceSha256": "10c0ed78b7eb53544c39946c7417222304c6cfa5b4bb6218fd7d20e2ced59a76",
+      "destination": "/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp",
+      "crop": {
+        "left": 0,
+        "top": 483,
+        "width": 1284,
+        "height": 1737
+      },
+      "sourceDimensions": {
+        "width": 1284,
+        "height": 2778
+      }
+    }
+  ],
+  "copies": [
+    {
+      "field": "photos",
+      "source": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp",
+      "destination": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp",
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
+    },
+    {
+      "field": "videos",
+      "source": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm",
+      "destination": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm",
+      "sha256": "11733d84ac30cf731382568388ea6bae8e8bccfe877abea48737743b5bf269cb"
+    },
+    {
+      "field": "videoPosters",
+      "source": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp",
+      "destination": "/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp",
+      "sha256": "2a6f88a0e040e7d292671fb283ea766374437009ae3650bce150447c134bb90c"
+    }
+  ]
+}

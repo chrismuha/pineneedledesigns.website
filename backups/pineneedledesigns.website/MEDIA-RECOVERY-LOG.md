@@ -1,5 +1,7 @@
 # Media recovery log
 
+**Current source/confirmation ledger:** [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) explains every replacement decision, why Farmer has a generated SOLD sign, all 43 Etsy source-file mappings (including 34 owner-confirmed photos), and current availability for all 63 products. Historical sections below preserve what was known at their dates.
+
 ## Daily backup retention and branch locations — November 6, 2026
 
 Daily backups accumulate on the `daily-backups` branch. Each successful run builds on the previous backup: unchanged files remain, new media is added, and the latest catalog metadata is refreshed. A timestamped catalog snapshot and a Git commit preserve each run’s history. For example, content added today remains alongside content added tomorrow.
@@ -10,7 +12,17 @@ The current scheduled backup files live on [`daily-backups`](https://github.com/
 
 This is a repository and server-upload/catalog backup, not a whole-computer backup or a complete MongoDB backup. Uncommitted local files, Orders, payments, credentials, and customer data are not automatically included. Previously committed media remains in Git history. Explicit source copies retained under server uploads are included.
 
-Latest verified media inventory: 426 retained files, including old URL aliases and source copies. Active catalog paths comprise 216 available and 21 missing files. The 21 missing paths remain documented below; their absence is unchanged by daily accumulation.
+Latest verified media inventory — November 7, 2026: **473 retained files**, including old URL aliases and source copies. Active catalog paths comprise **233 available / 0 missing / 233 total**. The November 7 recovery, screenshot-cleanup, Farmer sold-card, and Wild Card photo/fallback-retirement entries below supersede older inventory and confirmation snapshots.
+
+## Current status — November 7, 2026
+
+Six screenshot photos across five products have been cropped to remove phone controls, black borders, and thumbnails. The Lipstick sweatshirt now has separate working photo, video, and poster files copied from its T-shirt counterpart, as requested by the owner. Its description, $58 price, sizing, colors, and stock were preserved. The Farmer item now has one generated sold-announcement image, with its six absent photo references and two absent video references removed from the active catalog. Baby I’m a Wild Card now has a photo captured from its working video, and the obsolete Shirts fallback image reference has been cleared. The latest verified backup retains 473 files; all 233 active upload references are available, with zero currently listed as missing. See the entries below for exact mappings and checks.
+
+Jennifer’s Garden now has seven available photos and two available videos. Myra Mojave Leather Bag in Old Rose now has six owner-supplied photos and two available videos; its current gallery is **Confirmed**, replacing the prior Unconfirmed manufacturer-photo classification. Baby I’m a Wild Card now has one photo extracted from the start of its working video, plus the unchanged video. Seven other Myra products retain their Unconfirmed manufacturer-photo classification.
+
+Remaining missing files: **none currently listed**. The Wild Card video frame replaces its absent photo reference; the owner intentionally retired the Shirts fallback reference and Farmer’s eight unavailable references. This does not reconstruct the lost originals or guarantee that the site has no other bugs. The storefront continues selecting a product photo for the Shirts cover. Current coverage is recorded in the latest `daily-backups` backup status and missing-file report.
+
+The [successful November 7 backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380857408) retains all 36 newly uploaded gallery/source files, verified against their SHA-256 checksums. All 63 saved products were compared with the prior catalog: only the three intended media arrays and modification timestamps changed. Collections, subcollections, and store settings were preserved.
 
 ## Orders text-only update — November 6, 2026
 
@@ -22,7 +34,7 @@ The live storefront automatically uses the first photo from the first product al
 
 The absent `/uploads/legacy-6a42cc687962f91d73d7.webp` is the Shirts collection’s historical fallback image. It remains in the missing-file inventory because the database still references it, but the customer does **not** need to provide a separate Shirts cover: the storefront can use an existing shirt product photo. No code, collection record, or image was changed for this clarification. The chooser checks whether a photo URL is listed, not whether the file exists.
 
-## Current status — November 6, 2026
+## Historical status — November 6, 2026
 
 **216 available / 21 missing / 237 active catalog media references.** Missing files comprise **15 photos and 6 videos**: 20 product files and one Shirts collection fallback image. The server also retains source copies and old URL aliases, for 426 retained files in total.
 
@@ -47,7 +59,7 @@ These additions are Confirmed because their content and media came from the owne
 5. Verified the 56 uploaded files by checksums and application HTTP 200 responses. The earlier public URL checks returned HTTP 403; automated public delivery verification was not completed.
 6. Updated this recovery log and ran the GitHub media backup. The [successful backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42323558539) retained 172 files on `daily-backups`; all 38 manufacturer replacements were checked against the backup checksums. The earlier 18 Etsy recoveries were also verified in the preceding backup.
 
-### Confirmation and availability for every product
+### Historical confirmation and availability for every product — November 6 snapshot
 
 | Product | Confirmation | Available photos | Available videos | Missing photos | Missing videos |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -151,7 +163,7 @@ These additions are Confirmed because their content and media came from the owne
 
 ## Recovery history and source mappings
 
-The dated sections below preserve the sequence of recovery. Their intermediate missing-file totals are historical; the current totals and availability table above take precedence.
+The dated sections below preserve the sequence of recovery. Their intermediate missing-file totals and confirmation/availability table are historical; the current status above and [current provenance ledger](MEDIA-PROVENANCE.md) take precedence.
 
 ## November 6, 2026 — Etsy recovery
 
@@ -580,3 +592,109 @@ Final verification completed: the live storefront matches all 63 product image/v
 | Upcycled Logo | cardImage | `/uploads/legacy-93c6a8011c29b2f5e479.webp` | `/uploads/upcycled-logo-collection-cover.webp` | `b6fd61374553ed250a545bae374ea7ee661d88c2565e94ebc0e4d04b8f0367f2` |
 | Upcycled Denim | cardImage | `/uploads/legacy-243180abf639e16a3c07.webp` | `/uploads/upcycled-denim-collection-cover.webp` | `47e7c1e239043e86e8d8fa68531e8a20e564a0de07696581ad95814079f67d6c` |
 | Vests | cardImage | `/uploads/legacy-3497a7fca9532aa09594.webp` | `/uploads/vests-collection-cover.webp` | `0ea0106c4746fdcf5a2da10c8249049c0442bca722fe7ee676a0d40bf1ceec97` |
+
+## Owner-supplied Jennifer, Old Rose and Wild Card media — November 7, 2026
+
+**Confirmation: Confirmed — owner-supplied camera files from Downloads.**
+
+Restored Jennifer’s Garden with seven photos and two videos. Replaced the Myra Mojave Leather Bag in Old Rose’s five temporary manufacturer photos with six owner photos and restored its video gallery with two videos. Restored Baby I’m a Wild Card’s video. Its separately missing photo was not supplied and remains missing. Farmer Mrs. Synakowski’s media was not supplied.
+
+All 18 Downloads originals remain unchanged. Photos were converted to WebP at quality 85, with upright orientation; full-resolution, metadata-stripped PNG source copies retain the decoded photo pixels. MOV videos were converted to VP9/Opus WebM; metadata-stripped MOV source copies retain the original video/audio streams without recompression. These uploaded sources are not byte-identical camera originals. Location metadata was removed before upload. All 36 gallery/source files are retained in GitHub.
+
+Old Rose’s new photos use picture numbers 06–11, in that gallery order, preserving the five prior manufacturer URLs and their contents. All other product fields and all 60 other products were preserved. The upload checked current media arrays before updating records and verified all product fields afterward.
+
+### Original-to-website mapping
+
+| Product | Camera file | Website URL | Retained source URL |
+| --- | --- | --- | --- |
+| Jennifer’s Garden | `IMG_4068` | `/uploads/jennifers-garden-picture-01.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-01.png` |
+| Jennifer’s Garden | `IMG_4069` | `/uploads/jennifers-garden-picture-02.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-02.png` |
+| Jennifer’s Garden | `IMG_4072` | `/uploads/jennifers-garden-picture-03.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-03.png` |
+| Jennifer’s Garden | `IMG_4076` | `/uploads/jennifers-garden-picture-04.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-04.png` |
+| Jennifer’s Garden | `IMG_4077` | `/uploads/jennifers-garden-picture-05.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-05.png` |
+| Jennifer’s Garden | `IMG_4079` | `/uploads/jennifers-garden-picture-06.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-06.png` |
+| Jennifer’s Garden | `IMG_4080` | `/uploads/jennifers-garden-picture-07.webp` | `/uploads/originals/jennifers-garden/jennifers-garden-source-picture-07.png` |
+| Jennifer’s Garden | `IMG_4074.mov` | `/uploads/jennifers-garden-video-01.webm` | `/uploads/originals/jennifers-garden/jennifers-garden-source-video-01.mov` |
+| Jennifer’s Garden | `IMG_4075.mov` | `/uploads/jennifers-garden-video-02.webm` | `/uploads/originals/jennifers-garden/jennifers-garden-source-video-02.mov` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4110` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-06.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-06.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4112` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-07.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-07.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4115` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-08.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-08.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4118` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-09.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-09.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4122` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-10.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-10.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4123` | `/uploads/myra-mojave-leather-bag-in-old-rose-picture-11.webp` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-11.png` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4113.MOV` | `/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-01.mov` |
+| Myra Mojave Leather Bag in Old Rose | `IMG_4114.MOV` | `/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm` | `/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-02.mov` |
+| Baby I'm a Wild Card | `IMG_4132.MOV` | `/uploads/baby-im-a-wild-card-video-01.webm` | `/uploads/originals/baby-im-a-wild-card/baby-im-a-wild-card-source-video-01.mov` |
+
+The [recovery manifest](owner-supplied/2026-11-07/manifest.json) records all uploaded file sizes and SHA-256 checksums, original media arrays, and new media arrays. Source/gallery files are saved under `site/uploads/` on `main`; the post-upload catalog and cumulative organized media backup are on `daily-backups`.
+
+### Completed verification
+
+The [one-time recovery upload](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380782958) verified all 36 server files and preserved all other product data. Its subsequent public URL check was blocked by Cloudflare with HTTP 403 from the GitHub runner. Independent checks from the owner’s Mac then verified all 18 public gallery URLs return HTTP 200 with matching SHA-256 hashes, and the live storefront contains the intended photo/video arrays. The temporary recovery workflow was removed after use.
+
+The [successful post-recovery backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42380857408) saved the current catalog, readable per-product media copies, all 36 new gallery/source files, and retained prior media. All 36 backup file hashes and all 63 saved product records were verified. Backup totals: **462 retained files; 229 available and 10 missing active catalog references**. All 30 application tests, 12 backup tests, change-safety checks, initial Code Quality and production deployment passed. All 18 original camera files in Downloads retain their original checksums.
+
+## Screenshot crops and separate Lipstick sweatshirt media — November 7, 2026
+
+Reviewed all 174 available product photo entries. Six photos across five products contained phone status bars, gallery/editor controls, black padding, or thumbnail strips. Cropped each to the product photograph. Crops were encoded as lossless WebP and checked against the decoded source crop pixel-for-pixel; product artwork, wording, colors, and model details were not regenerated. Original screenshot URLs and their contents remain retained on the server and in prior backups. New URLs prevent stale cached screenshots from appearing in the current galleries.
+
+### Cropped photo mapping
+
+| Product | Previous URL retained | New gallery URL | Source crop (left, top, width, height) |
+| --- | --- | --- | --- |
+| Autumn Cowgirl | `/uploads/autumn-cowgirl-picture-01.webp` | `/uploads/autumn-cowgirl-picture-01-cropped.webp` | `0, 645, 1284, 1467` |
+| Bougie Lips T-Shirt | `/uploads/bougie-lips-t-shirt-picture-01.webp` | `/uploads/bougie-lips-t-shirt-picture-01-cropped.webp` | `0, 410, 1284, 1937` |
+| Highland Cow in Her Crown. Rhinestone Shirt | `/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01.webp` | `/uploads/highland-cow-in-her-crown-rhinestone-shirt-picture-01-cropped.webp` | `0, 552, 1284, 1713` |
+| Don’t Burst My Bubble! Sweatshirt | `/uploads/dont-burst-my-bubble-sweatshirt-picture-01.webp` | `/uploads/dont-burst-my-bubble-sweatshirt-picture-01-cropped.webp` | `0, 304, 1284, 1940` |
+| Don’t Burst My Bubble! Sweatshirt | `/uploads/dont-burst-my-bubble-sweatshirt-picture-02.webp` | `/uploads/dont-burst-my-bubble-sweatshirt-picture-02-cropped.webp` | `0, 304, 1284, 1940` |
+| Turquoise Girl Blinged Out Sweatshirt | `/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01.webp` | `/uploads/turquoise-girl-blinged-out-sweatshirt-picture-01-cropped.webp` | `0, 483, 1284, 1737` |
+
+### Lipstick sweatshirt media copies
+
+The sweatshirt had two absent legacy `/images/` photos and an absent `/videos/` video. These are separate from the ten missing `/uploads/` references in the backup report. Per the owner’s request, copied the working T-shirt’s photo, video, and poster into three independent sweatshirt-specific files and changed only the sweatshirt’s media arrays and modification timestamp. The T-shirt’s media files and product record were preserved. Existing sweatshirt description, price ($58), colors, sweatshirt sizes, inventory, and other non-media fields were preserved. These are copies of the T-shirt’s supplied imagery, not newly photographed sweatshirt garments.
+
+| Media | T-shirt source | Separate sweatshirt file |
+| --- | --- | --- |
+| photos | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-picture-01.webp` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-picture-01.webp` |
+| videos | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-01.webm` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-01.webm` |
+| videoPosters | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-t-shirt-video-poster-01.webp` | `/uploads/on-a-bad-day-theres-always-lipstick-blinged-out-sweatshirt-video-poster-02.webp` |
+
+### Completed verification
+
+The [production media update](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42395208305) completed successfully. All nine new files match their SHA-256 checksums and return HTTP 200 both from the application and from public URLs checked on the owner’s Mac. The live storefront shows all six intended gallery changes. Sweatshirt and T-shirt photo/video/poster URLs are distinct. Only the six intended product media arrays and their modification timestamps changed; all 57 other product records were preserved. Collection records and store-setting values were preserved. Code Quality and production deployment passed. The temporary upload workflow was removed after use.
+
+The [post-update GitHub backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42395292834) completed successfully. Verified all nine new files in both the server-upload mirror and organized per-product copies, including their readable filename mappings. Compared all 63 saved product records with the previous catalog. The backup retains **471 files** and reports **10 missing upload references**; active catalog totals are **231 available / 10 missing / 241 referenced paths**. The three broken legacy static-media links are no longer referenced by the sweatshirt. The ten unresolved upload references remain unchanged.
+
+The [cleanup manifest](media-cleanup/2026-11-07/manifest.json) records source checksums, crop rectangles, destination checksums, and before/after media arrays. Current media/catalog backups are on `daily-backups`; the new files, manifest, and this recovery log are also retained on `main`.
+
+## Farmer sold announcement — November 7, 2026
+
+At the owner’s request, replaced Farmer Mrs. Synakowski’s six missing photo references and two missing video references with exactly one image: `/uploads/farmer-mrs-synakowski-picture-01.webp`. The active product now has one photo, an empty videos array, and an empty videoPosters array. It remains marked out of stock; its description, price, sizing, quantity, and all other non-media fields were preserved. All other 62 products were preserved.
+
+The owner chose a status graphic because the Farmer item was already sold, its six photos and two videos were unavailable, and no verified replacement garment media had been recovered. The stock-style logo/sign is a custom SOLD placeholder made for this item, not a recovered garment photograph. The image was created with the built-in imagegen tool: a forest-green and ivory Pine Needle Designs announcement reading **SOLD** and **Check back for more unique one-of-a-kind pieces.** It is a status announcement, not a garment photograph or a reconstruction of the missing originals. The [generation and update manifest](media-updates/2026-11-07-farmer-sold/manifest.json) records the prompt, displayed text, image checksum, retired media references, and new arrays. Historical catalog snapshots and prior recovery logs remain retained for audit; the retired URLs are no longer referenced by the live item.
+
+The [production update](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42396060733) succeeded. Verified that the live storefront has exactly one photo, no videos, and no posters; the public image returns HTTP 200 and matches its SHA-256 checksum. Code Quality and production deployment passed. The temporary upload workflow was removed after use.
+
+The [post-update GitHub backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42396133353) completed successfully. Verified both the upload-mirror image and the organized product image against their checksum, and verified the product’s current media mapping contains exactly one available entry. Compared all 63 products: only Farmer’s media arrays and modification timestamp changed. Collection records and store-setting values were preserved. The backup retains **472 files**, with **232 available / 2 missing / 234 active catalog upload references**. The two remaining missing references belong to Wild Card’s photo and the historical Shirts fallback, not Farmer.
+
+## Wild Card video photo and Shirts fallback removal — November 7, 2026
+
+At the owner’s request, captured the first decoded frame (0.00 seconds) from `/uploads/baby-im-a-wild-card-video-01.webm` and saved it as `/uploads/baby-im-a-wild-card-picture-01.webp`. The upright 1080 × 1920 image is a lossless WebP with pixels verified identical to the decoded video frame. It contains no phone/gallery controls, and no artwork was generated or reconstructed. This replaces the absent `/uploads/1783691326976-435709395.webp` in the product’s photo array. Its working video, poster array, pricing, options, stock, and all other product details were preserved. The photo is Confirmed as a frame from the owner-supplied video, not a recovered copy of the original missing photo.
+
+Cleared the Shirts collection’s obsolete `cardImage` value `/uploads/legacy-6a42cc687962f91d73d7.webp`. This path had no existing media bytes to delete. The collection continues to use a product photo through the existing storefront cover selection. All other collection fields and records were preserved. Historical snapshots, earlier missing-file inventories, and recovery logs remain retained for audit; neither retired path is referenced by the active catalog.
+
+The [production update](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42397123050) succeeded. Verified the public photo returns HTTP 200 with the expected SHA-256 checksum, the live product has the new photo and unchanged video, and the live Shirts cover selects an available product image. The [extraction/update manifest](media-updates/2026-11-07-wild-card-photo/manifest.json) records the source-video checksum, timestamp, new-image checksum, and before/after fields. The temporary upload workflow was removed after use.
+
+The [post-update GitHub backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42397272330) completed successfully. Verified the image in both the upload mirror and organized product backup against its checksum. Compared the saved catalog with the prior backup: only Wild Card’s photo array, the Shirts fallback field, and modification timestamps changed; all other product, collection, subcollection, and setting values were preserved. The backup retains **473 files**, with **233 available / 0 missing / 233 active upload references**. There are no currently listed missing photos or videos.
+
+### Larger navigation arrows
+
+Media-gallery arrows and homepage product-slider arrows now share forest-green buttons with larger white chevrons, white borders, and a visible focus outline. Main controls are 60 pixels on desktop and 52 pixels on phones; compact homepage header controls are 52 pixels on desktop and 48 pixels on phones. The white/green contrast ratio is 7.67:1. Existing click, swipe, and keyboard navigation handlers are preserved. The storefront browsing guide and release notes were updated together. All 30 existing tests and the production release build passed; both maintained CSS copies and published CSS match for the shared arrow styles. Browser preview was unavailable in this session, so an interactive visual check was not performed.
+
+## Explicit owner confirmation and provenance clarification — November 7, 2026
+
+The owner explicitly confirmed the photos obtained from their Etsy listings. All **34 Etsy photos** are **Confirmed**: 14 restored photos plus 20 photos imported with the ten new products. Their readable-name aliases and lossless screenshot crops keep this classification. All nine Etsy source videos retain their existing Confirmed source label. Autumn’s earlier Etsy video is retained but superseded by its owner-supplied video. This approval applies to Etsy sources; the seven active Myra manufacturer-photo galleries remain Unconfirmed, and Farmer’s generated SOLD notice is separately identified as an owner-approved placeholder. No media bytes or live catalog records changed for this documentation clarification.
+
+Added [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) with the reason, before/after state, source, confirmation, retention decision, and supporting manifests for every recovery/replacement operation. It includes every Etsy source file’s original upload URL, source link, current gallery use (or superseded state), and current source/availability classification for all 63 products. Farmer’s rationale is explicit: sold item, eight unavailable originals, owner-requested retirement of broken links, and one custom generated SOLD announcement rather than a fabricated or recovered garment photo.
+
+The backup workflow now copies the current recovery/provenance/Etsy logs and their supporting manifests from `main` into `daily-backups` on every run. This corrects the stale backup-branch summary and keeps both branches’ documentation aligned while retaining historical media and catalog snapshots.

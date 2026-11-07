@@ -1,5 +1,9 @@
 # Etsy product additions log
 
+## Owner confirmation — November 7, 2026
+
+The owner explicitly confirmed all photos obtained from their Etsy listings. The **20 photos imported with these ten products are Confirmed**, as are the **14 photos recovered for existing products** in the separate recovery operation. All **34 Etsy photos** retain Confirmed status after product-based renaming or lossless screenshot cropping. The nine Etsy source videos retain their existing Confirmed classification; the superseded Autumn video is clearly distinguished from its current owner-supplied replacement. See [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) for every Etsy source file, current filename/use, current product availability, and Farmer’s separately identified generated SOLD placeholder. Manufacturer-photo classification is unchanged.
+
 ## Historical import record and later updates
 
 This log preserves the Etsy import totals and filenames as they were at import time. Later Shirley recovery and product-based media renaming are documented in [MEDIA-RECOVERY-LOG.md](MEDIA-RECOVERY-LOG.md), including the current database-to-backup filename mapping. Its current summary supersedes the historical counts and URLs below; previous URLs remain retained aliases.
