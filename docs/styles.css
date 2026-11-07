@@ -1432,10 +1432,11 @@ section {
 }
 
 .collections-page-header h1 {
+    overflow-wrap: anywhere;
     margin: 0;
     color: var(--ink);
     font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 36pt;
+    font-size: clamp(24pt, 6vw, 36pt);
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1.05;
@@ -1444,7 +1445,7 @@ section {
 
 .collection-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 10px;
 }
 
@@ -1655,7 +1656,7 @@ section {
 
 .collections:not(.collections-catalog) .grid-6 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 10px;
 }
 
@@ -2824,6 +2825,8 @@ footer>section {
     }
 
     .product-card {
+        min-width: 0;
+        overflow-wrap: anywhere;
         background: var(--white);
         border: 1px solid var(--border);
         border-radius: 18px;
@@ -2879,6 +2882,8 @@ footer>section {
     }
 
     .product-option select {
+        min-width: 0;
+        max-width: 100%;
         width: 100%;
         min-height: 42px;
         border: 1px solid var(--border);

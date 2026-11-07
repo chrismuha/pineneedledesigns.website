@@ -1146,6 +1146,7 @@ const submitCheckout = async () => {
   }
 
   .cart-items .item-actions {
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -1164,6 +1165,10 @@ const submitCheckout = async () => {
     height: 34px;
     flex-basis: 34px;
   }
+}
+
+@media (max-width: 380px) {
+  .cart-items .item-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 .item-total-label {

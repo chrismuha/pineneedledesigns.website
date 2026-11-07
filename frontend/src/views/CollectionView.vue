@@ -107,7 +107,7 @@
             :placeholder="option.placeholder"
           />
         </div>
-        <div class="product-images">
+        <div class="product-images" :class="{ 'product-images--gallery': hasMedia(product) }">
           <template v-if="hasMedia(product)">
             <MediaSlider
               :media="productMedia(product)"
@@ -537,6 +537,9 @@ const addToCart = async (product) => {
 </script>
 
 <style scoped>
+/* Bring gallery controls within 6px of the card edge without moving its text. */
+.product-images--gallery { margin-inline: -12px; }
+
 .purchase-options {
   width: min(480px, calc(100vw - 32px));
   max-height: calc(100dvh - 40px);

@@ -248,15 +248,16 @@ const {
 <style scoped>
 .media-slider {
   position: relative;
+  --item-gallery-rail: 82px;
   width: 100%;
   box-sizing: border-box;
   border-radius: 16px;
   background: transparent;
-  overflow: hidden;
+  overflow: visible;
   touch-action: pan-y;
 }
 
-.media-slider--with-controls { padding-inline: 82px; }
+.media-slider--with-controls { padding-inline: var(--item-gallery-rail); }
 
 .media-slider:focus-visible {
   outline: 3px solid var(--brand-red-45);
@@ -350,11 +351,12 @@ const {
 
 .media-slider__dots {
   position: absolute;
-  right: 94px;
+  right: calc(var(--item-gallery-rail) + 12px);
   bottom: 12px;
-  left: 94px;
+  left: calc(var(--item-gallery-rail) + 12px);
   z-index: 2;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
   pointer-events: none;
@@ -385,7 +387,7 @@ const {
     border-radius: 12px;
   }
 
-  .media-slider--with-controls { padding-inline: 64px; }
+  .media-slider { --item-gallery-rail: 64px; }
 
   .media-slider__button svg { width: 28px; height: 28px; }
 
@@ -393,5 +395,10 @@ const {
     width: 52px;
     height: 52px;
   }
+}
+@media (max-width: 480px) {
+  .media-slider { --item-gallery-rail: 54px; }
+  .media-slider__button { width: 44px; height: 44px; }
+  .media-slider__button svg { width: 26px; height: 26px; }
 }
 </style>

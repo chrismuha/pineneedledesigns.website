@@ -2,6 +2,11 @@
 
 ## November 7, 2026
 
+- Item-gallery arrows now sit within 6px of the product-card edges, with responsive
+  spacing and 44px minimum buttons on narrow phones. Navigation dots follow the photo.
+- Improved narrow-screen collection headings, grid sizing, long product text, option
+  selectors, and cart controls to reduce crowding and horizontal overflow.
+
 - Available items keep Add to Cart active. Missing selections open a required-options
   dialog; fully selected items add directly with their selected pricing.
 - Item-gallery arrows have independent styling and SVG icons, with dedicated space
