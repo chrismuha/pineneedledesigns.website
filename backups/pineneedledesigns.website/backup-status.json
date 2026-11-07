@@ -1,6 +1,6 @@
 {
-  "completedAt": "20261107T014036311465Z",
-  "filesBackedUp": 197,
+  "completedAt": "20261107T014717691187Z",
+  "filesBackedUp": 199,
   "referencedFiles": 227,
   "missingFiles": [
     "uploads/1783691326976-435709395.webp",
@@ -258,6 +258,10 @@
     "uploads/1789949606594-515446718.webp": {
       "bytes": 284158,
       "sha256": "6ac8d4aab889ba30000559c8f01478d3b2395b36fe35a394fc47b3472f8eadec"
+    },
+    "uploads/autumn-cowgirl-customer-a5e7309365.webm": {
+      "bytes": 11117096,
+      "sha256": "f1e0679da27198f1985c9c5324b806c18765f8fb05d49107e886e82f0126f080"
     },
     "uploads/etsy-bougie-lips-t-shirt-d8e9ee-photo-01.webp": {
       "bytes": 373708,
@@ -822,6 +826,10 @@
     "uploads/legacy-fae2069d3c05196e25e9.webp": {
       "bytes": 216532,
       "sha256": "53bd8a3f16c7d6441aa5b541ec85caec451346425b268d98a6302a51e5786ce2"
+    },
+    "uploads/originals/autumn-cowgirl-source-a5e7309365.mov": {
+      "bytes": 21651029,
+      "sha256": "83a87d53e0332ef08d4bca9358865d37d925adce94d2d685098791cd997adbc9"
     }
   }
 }
