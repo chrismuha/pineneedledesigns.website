@@ -10,4 +10,4 @@ quantity: 1
 
 sweatshirtSize: 2X, 3X, 4X, 22, 24, 26, 28
 
-Media available: 0 of 8
+Media available: 1 of 1

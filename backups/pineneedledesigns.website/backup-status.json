@@ -1,17 +1,9 @@
 {
-  "completedAt": "20261107T171430227690Z",
-  "filesBackedUp": 471,
-  "referencedFiles": 241,
+  "completedAt": "20261107T172432720772Z",
+  "filesBackedUp": 472,
+  "referencedFiles": 234,
   "missingFiles": [
     "uploads/1783691326976-435709395.webp",
-    "uploads/1785802847325-721535881.webp",
-    "uploads/1785802847600-540517333.webp",
-    "uploads/1785802847615-726191347.webp",
-    "uploads/1785802847622-953516934.webp",
-    "uploads/1785802847627-803996742.webp",
-    "uploads/1785802847636-731592493.webp",
-    "uploads/1785802874238-555619409.webm",
-    "uploads/1785802874369-16727371.webm",
     "uploads/legacy-6a42cc687962f91d73d7.webp"
   ],
   "files": {
@@ -666,6 +658,10 @@
     "uploads/etsy-turquoise-junky-blinged-out-t-shirt-86e114-photo-01.webp": {
       "bytes": 266246,
       "sha256": "3403e38ac00f13c62a2e490ab86f0456b693f02caa265dfb34bd98d5d58bad0d"
+    },
+    "uploads/farmer-mrs-synakowski-picture-01.webp": {
+      "bytes": 443722,
+      "sha256": "0635b59e6774a6c1d17516b014237080ab4edac7343a394ff103c84f7962dfd9"
     },
     "uploads/feral-raccoon-picture-01.webp": {
       "bytes": 326206,
