@@ -111,6 +111,7 @@ export const dashboardApi = {
     body: JSON.stringify(settings),
   }, 'Store settings saved successfully.'),
   getOrders: (status = 'all') => request(`/api/orders${status && status !== 'all' ? `?status=${status}` : ''}`),
+  getOrderItemOptions: () => request('/api/orders/item-options'),
   getOrder: (id) => request(`/api/orders/${id}`),
   deleteOrder: (id) => request(`/api/orders/${id}`, {
     method: 'DELETE',

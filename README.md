@@ -202,6 +202,15 @@ missed. View the workflow history to confirm the monitor itself is running.
 
 ## API Endpoints
 
+### Orders user guide
+
+The dashboard Orders page is a text-only record of item names, selected options,
+quantities, prices, totals, customer details, and order activity. It does not show
+product photos/videos or provide product/media links. Editing an order uses a
+text-only item list. Existing payment, inventory, cancellation, and refund controls
+continue to work. Order responses also omit media stored in older checkout snapshots;
+new snapshots exclude media. This does not delete product media or historical orders.
+
 The backend provides the following cart API endpoints:
 
 - `GET /api/cart` - Get current cart items

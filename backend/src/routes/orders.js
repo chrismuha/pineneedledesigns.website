@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { changeOrder, listOrders, getOrderById, deleteOrder, permanentlyDeleteOrder, refundOrderInCloverOnly, resolveOrder, updateOrderNumber, updateOrderStatus, verifyOrderPayment } from '../controllers/orderController.js';
+import { changeOrder, listOrders, listOrderItemOptions, getOrderById, deleteOrder, permanentlyDeleteOrder, refundOrderInCloverOnly, resolveOrder, updateOrderNumber, updateOrderStatus, verifyOrderPayment } from '../controllers/orderController.js';
 
 const router = Router();
 
 router.get('/', listOrders);
+router.get('/item-options', listOrderItemOptions);
 router.get('/:id', getOrderById);
 router.delete('/:id', deleteOrder);
 router.delete('/:id/permanent', permanentlyDeleteOrder);

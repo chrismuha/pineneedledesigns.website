@@ -9,6 +9,7 @@ import { config } from '../config/index.js';
 import { createHostedCheckoutSession, refundCloverPayment, updateCloverOrderReference } from '../services/cloverService.js';
 import { sendOrderEventEmails } from '../services/orderEmails.js';
 import { sendPushNotification } from '../services/pushNotifications.js';
+import { orderTextRecord } from '../utils/orderTextRecord.js';
 
 const roundMoney = (value) => Number(Number(value || 0).toFixed(2));
 const orderLabel = (order) => order.orderNumber ? `#${order.orderNumber}` : String(order._id);
@@ -156,10 +157,13 @@ const refundAcrossPayments = async (order, amountCents) => {
   if (remaining > 0) throw Object.assign(new Error('Clover payment records do not contain enough refundable funds.'), { status: 409 });
 };
 
-export const listOrders = async (req, res) => res.json(await Order.find(buildOrderFilter(req.query)).sort({ createdAt: -1 }).lean());
+export const listOrderItemOptions = async (_req, res) => res.json(await Product.find()
+  .select('_id name price quantity outOfStock').sort({ name: 1 }).lean());
+
+export const listOrders = async (req, res) => res.json(orderTextRecord(await Order.find(buildOrderFilter(req.query)).sort({ createdAt: -1 }).lean()));
 export const getOrderById = async (req, res) => {
   const order = await Order.findById(req.params.id).lean();
-  return order ? res.json(order) : res.status(404).json({ error: 'Order not found.' });
+  return order ? res.json(orderTextRecord(order)) : res.status(404).json({ error: 'Order not found.' });
 };
 
 export const verifyOrderPayment = async (req, res) => {

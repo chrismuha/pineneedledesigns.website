@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { orderTextRecord } from '../utils/orderTextRecord.js';
 
 const addressSchema = new mongoose.Schema({
   name: { type: String, default: '' },
@@ -70,8 +71,8 @@ const orderSchema = new mongoose.Schema({
     default: () => ({}),
   },
   discountCode: { type: String, default: '' },
-  items: { type: [mongoose.Schema.Types.Mixed], default: [] },
-  lineItems: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  items: { type: [mongoose.Schema.Types.Mixed], default: [], set: orderTextRecord },
+  lineItems: { type: [mongoose.Schema.Types.Mixed], default: [], set: orderTextRecord },
   inventoryLines: { type: [mongoose.Schema.Types.Mixed], default: [] },
   resolution: {
     type: String,
@@ -84,6 +85,7 @@ const orderSchema = new mongoose.Schema({
   pendingChange: {
     type: mongoose.Schema.Types.Mixed,
     default: null,
+    set: orderTextRecord,
   },
   summary: {
     subtotal: { type: Number, default: 0 },
@@ -101,6 +103,7 @@ const orderSchema = new mongoose.Schema({
 }, {
   timestamps: true,
   autoIndex: false,
+  toJSON: { transform: (_document, record) => orderTextRecord(record) },
 });
 
 orderSchema.index({ status: 1, createdAt: -1 });

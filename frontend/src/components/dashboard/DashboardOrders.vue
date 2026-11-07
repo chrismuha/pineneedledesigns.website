@@ -307,7 +307,7 @@ const cancelCloverOnlyRefund = () => {
 const beginEdit = async (order) => {
   error.value = ''
   try {
-    if (!products.value.length) products.value = await dashboardApi.getProducts()
+    if (!products.value.length) products.value = await dashboardApi.getOrderItemOptions()
     editItems.value = (order.inventoryLines || []).map((line) => ({
       productId: String(line.productId),
       quantity: Number(line.quantity || 1),
@@ -360,6 +360,7 @@ watch(
         <p class="page-subtitle">
           {{ openCount }} open · {{ closedCount }} closed
         </p>
+        <p class="page-subtitle">Text-only records of purchased items, quantities, totals, and order activity.</p>
       </div>
       <button type="button" class="btn-outline" :disabled="loading" @click="loadOrders">
         Refresh

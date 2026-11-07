@@ -1,0 +1,1 @@
+var e=`pine-needle-login-reset-enabled`,t=()=>window.localStorage.getItem(e)===`true`,n=t=>{window.localStorage.setItem(e,t?`true`:`false`)};export{n,t};
