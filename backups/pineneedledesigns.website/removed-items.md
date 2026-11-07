@@ -1,56 +1,12 @@
 # Removed and missing items
 
-Checked (UTC): 2026-11-06T13:40:48.636540+00:00
+Checked (UTC): 2026-11-07T01:14:40.072534+00:00
 
 Last seen / first detected missing bounds an observed removal; it is not an exact deletion time.
 Website deletion times are recorded only for audited application actions after deployment.
 Direct database or disk changes are detected at backup time. Restoration means seen again, not proof of how it returned.
 
-## /uploads/1783672358990-600883762.jpeg
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1783690731684-51129312.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1783691108529-577199489.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
 ## /uploads/1783691326976-435709395.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1783691640941-818083453.webp
 
 Category: Already missing when first observed
 Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
@@ -424,17 +380,6 @@ Website deletion started (UTC): Unknown
 Website deletion completed (UTC): Unknown
 Retained backup: None
 
-## /uploads/1784473998935-499706426.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
 ## /uploads/1784899677609-762299862.webp
 
 Category: Already missing when first observed
@@ -788,149 +733,6 @@ Website deletion completed (UTC): Unknown
 Retained backup: None
 
 ## /uploads/1785962462844-805310474.webm
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1785970237867-200640105.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1785970238841-929814564.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1785970239931-614621459.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1786143404284-489770260.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1786143404300-318314249.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1786143404303-792340982.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1786143404304-862559829.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1787763423018-785382150.webp
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1787763423043-843837897.webm
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1788366958742-388818864.webm
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1788367213556-151018210.webm
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1788368382629-301758658.webm
-
-Category: Already missing when first observed
-Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.
-Reason source: backup-observation
-Last seen (UTC): Unknown
-First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
-Website deletion started (UTC): Unknown
-Website deletion completed (UTC): Unknown
-Retained backup: None
-
-## /uploads/1789949606594-515446718.webp
 
 Category: Already missing when first observed
 Reason: Cause unknown: file was already missing when first observed; no completed website deletion audit matches.

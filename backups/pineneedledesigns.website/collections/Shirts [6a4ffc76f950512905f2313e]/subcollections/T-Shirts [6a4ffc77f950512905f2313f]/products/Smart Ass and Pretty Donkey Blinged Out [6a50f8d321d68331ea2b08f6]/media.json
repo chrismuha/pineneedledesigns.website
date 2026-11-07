@@ -1,22 +1,22 @@
 [
   {
     "websiteUrl": "/uploads/1786143404284-489770260.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/01-1786143404284-489770260.webp"
   },
   {
     "websiteUrl": "/uploads/1786143404300-318314249.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/02-1786143404300-318314249.webp"
   },
   {
     "websiteUrl": "/uploads/1786143404303-792340982.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/03-1786143404303-792340982.webp"
   },
   {
     "websiteUrl": "/uploads/1786143404304-862559829.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/04-1786143404304-862559829.webp"
   }
 ]

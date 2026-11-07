@@ -12,4 +12,4 @@ color: Gray, Peach, Pink, Sand, White
 
 size: Small, Medium, Large, XL, 2X, 3X
 
-Media available: 0 of 4
+Media available: 4 of 4

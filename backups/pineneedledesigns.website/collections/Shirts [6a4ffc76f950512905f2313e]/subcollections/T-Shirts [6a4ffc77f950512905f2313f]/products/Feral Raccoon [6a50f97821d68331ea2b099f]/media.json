@@ -1,12 +1,12 @@
 [
   {
     "websiteUrl": "/uploads/1783691640941-818083453.webp",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/01-1783691640941-818083453.webp"
   },
   {
     "websiteUrl": "/uploads/1788366958742-388818864.webm",
-    "available": false,
-    "localFile": null
+    "available": true,
+    "localFile": "media/02-1788366958742-388818864.webm"
   }
 ]

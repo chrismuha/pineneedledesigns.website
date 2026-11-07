@@ -12,4 +12,4 @@ color: Natural
 
 size: Small
 
-Media available: 0 of 2
+Media available: 2 of 2

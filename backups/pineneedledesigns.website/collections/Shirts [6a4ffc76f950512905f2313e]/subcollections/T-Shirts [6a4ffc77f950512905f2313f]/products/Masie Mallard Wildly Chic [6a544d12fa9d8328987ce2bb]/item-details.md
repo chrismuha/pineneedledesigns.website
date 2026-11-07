@@ -14,4 +14,4 @@ size: Small, Medium, Large, XL, 2X, 3X
 
 maker: Barta
 
-Media available: 0 of 1
+Media available: 1 of 1
