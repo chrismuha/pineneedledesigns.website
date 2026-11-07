@@ -307,4 +307,4 @@ The scheduled GitHub backup reads the server’s catalog and copies the server u
 
 Active catalog media totals remain 197 available and 30 missing out of 227 referenced paths: this operation replaced a working video rather than filling another missing slot. The server now retains 199 media files, including the superseded Etsy video and the source MOV copy. The backup’s inventory-inclusive referenced-file count can therefore differ from the active catalog-only count.
 
-Backup verification for this video will be recorded after completion.
+[GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325887134). Both the WebM and metadata-stripped MOV source copy match their recorded SHA-256 checksums in the backup. The saved catalog points Autumn Cowgirl to the new WebM and preserves its photo. The Desktop original’s checksum is unchanged. The backup retains 199 media files and still reports the same 30 missing paths.
