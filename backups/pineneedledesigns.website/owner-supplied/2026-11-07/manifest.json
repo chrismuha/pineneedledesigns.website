@@ -1,0 +1,381 @@
+{
+  "date": "2026-11-07",
+  "products": [
+    {
+      "id": "6a6f9b03955755fcc5876510",
+      "name": "Jennifer’s Garden",
+      "expected": {
+        "photos": [
+          "/uploads/1785698346966-317818312.webp",
+          "/uploads/1785698347017-791748772.webp",
+          "/uploads/1785698347029-676620032.webp",
+          "/uploads/1785698347031-928742831.webp",
+          "/uploads/1785698347035-62299765.webp",
+          "/uploads/1785698347035-46634783.webp",
+          "/uploads/1785698347041-32849318.webp"
+        ],
+        "videos": [
+          "/uploads/1785698359408-845967717.webm",
+          "/uploads/1785698359436-219100135.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "videos": [
+          "/uploads/jennifers-garden-video-01.webm",
+          "/uploads/jennifers-garden-video-02.webm"
+        ],
+        "photos": [
+          "/uploads/jennifers-garden-picture-01.webp",
+          "/uploads/jennifers-garden-picture-02.webp",
+          "/uploads/jennifers-garden-picture-03.webp",
+          "/uploads/jennifers-garden-picture-04.webp",
+          "/uploads/jennifers-garden-picture-05.webp",
+          "/uploads/jennifers-garden-picture-06.webp",
+          "/uploads/jennifers-garden-picture-07.webp"
+        ]
+      }
+    },
+    {
+      "id": "6a72519e6cd8f610d01253f7",
+      "name": "Myra Mojave Leather Bag in Old Rose",
+      "expected": {
+        "photos": [
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-01.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-02.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-03.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-04.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-05.webp"
+        ],
+        "videos": [
+          "/uploads/1785875961641-957410862.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "videos": [
+          "/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm"
+        ],
+        "photos": [
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-06.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-07.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-08.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-09.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-10.webp",
+          "/uploads/myra-mojave-leather-bag-in-old-rose-picture-11.webp"
+        ]
+      }
+    },
+    {
+      "id": "6a50f83f21d68331ea2b07fd",
+      "name": "Baby I'm a Wild Card",
+      "expected": {
+        "photos": [
+          "/uploads/1783691326976-435709395.webp"
+        ],
+        "videos": [
+          "/uploads/1785962462844-805310474.webm"
+        ],
+        "videoPosters": []
+      },
+      "set": {
+        "videos": [
+          "/uploads/baby-im-a-wild-card-video-01.webm"
+        ]
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "baby-im-a-wild-card-video-01.webm",
+      "sha256": "4fc409358e282d14114beffc28e91493b73475610f717eddb8fd3a3dc836c2a8",
+      "bytes": 9564231
+    },
+    {
+      "path": "jennifers-garden-picture-01.webp",
+      "sha256": "c311c0bfffd3ec7f49b5ad8fe938165eeb557a3a4eaaabab580cb34d38caff7f",
+      "bytes": 724940
+    },
+    {
+      "path": "jennifers-garden-picture-02.webp",
+      "sha256": "5d215ae451dd67f264d7f6f8f72181c84e492d0344505d189084e4b64f28b44d",
+      "bytes": 1014170
+    },
+    {
+      "path": "jennifers-garden-picture-03.webp",
+      "sha256": "601b91df5f06fab04ae68fabd4caf433830eb53611eb1fffe192786eb400735e",
+      "bytes": 479718
+    },
+    {
+      "path": "jennifers-garden-picture-04.webp",
+      "sha256": "bf4ef28ba8056dad39f248656dcff09cfafc13b26110cd0502817423228b4856",
+      "bytes": 1256526
+    },
+    {
+      "path": "jennifers-garden-picture-05.webp",
+      "sha256": "e799ffc202ffbe65303d7609c09ecd50a2a5fabb0776bbbc9c116b3a745baff9",
+      "bytes": 1023106
+    },
+    {
+      "path": "jennifers-garden-picture-06.webp",
+      "sha256": "32a2b4c5eed5393497219bef97f14f8f533749dd6ebc5edf8aafc2a145ddbd5d",
+      "bytes": 662778
+    },
+    {
+      "path": "jennifers-garden-picture-07.webp",
+      "sha256": "5caa4d38aa0bbae702bc230497c627e70726cef61b968b80a66890896e441b17",
+      "bytes": 821422
+    },
+    {
+      "path": "jennifers-garden-video-01.webm",
+      "sha256": "6c4a696b018544fdf4d7159020da98c8ceb2f7986f21308be29bc6564380c7f5",
+      "bytes": 3407251
+    },
+    {
+      "path": "jennifers-garden-video-02.webm",
+      "sha256": "c4cfd25659095fa530db7b3818bacbef1283d3677e4bef7403cf0135dd83e195",
+      "bytes": 9331021
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-06.webp",
+      "sha256": "859010aa33a83b6b919c92098153561ea6a827e68844f05e49eece985bc3c603",
+      "bytes": 404794
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-07.webp",
+      "sha256": "6c0c983c9932b4a441e2b74f7f5b499051ec1e1d92c7ade8bb86069be18941df",
+      "bytes": 523210
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-08.webp",
+      "sha256": "f13dfb852b3e7d93ce8e50419914e38a4f36df389dcec31f1550514eedbac7a1",
+      "bytes": 533152
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-09.webp",
+      "sha256": "010a90e5fa7beaa8dab882dc60734ebd6c8427bdfed9707746e06c37a49830c4",
+      "bytes": 344980
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-10.webp",
+      "sha256": "bf0bdb0f02e24fefc3f57c5079f0e3a369d442d4304bfa909707c0177ca150be",
+      "bytes": 393618
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-picture-11.webp",
+      "sha256": "330263691b4668e2a2836dd0fcb86c1a1b46826486a7835ace9f353bc21b46e8",
+      "bytes": 543524
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-video-01.webm",
+      "sha256": "0dab5ab9cec861b52172675146ccbac2ac9fc2d27fd82755afcaa5a8f6b844a3",
+      "bytes": 21570988
+    },
+    {
+      "path": "myra-mojave-leather-bag-in-old-rose-video-02.webm",
+      "sha256": "d75c3719ada1b371dbcdce6448ab74ddbe022297e3050268b54d1a33b417b22f",
+      "bytes": 1179574
+    },
+    {
+      "path": "originals/baby-im-a-wild-card/baby-im-a-wild-card-source-video-01.mov",
+      "sha256": "4cdfbfce6910509bc454a0ff4ce438a9f011ce4e37cbdcbb2c8a6a866ee3f23c",
+      "bytes": 21489227
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-01.png",
+      "sha256": "a7ee2314271e45553803e89b48bd3aac8abc5b51802187df03443ec711a25ddc",
+      "bytes": 6189206
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-02.png",
+      "sha256": "990058d64ed984b7fab1de864e13442dcc21f38ba6f59714a7559f32e21b1d26",
+      "bytes": 8014789
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-03.png",
+      "sha256": "098a768d794271b057ed11771bf35671e7f5cc670a36ad54dfdebe4adfa19987",
+      "bytes": 7770963
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-04.png",
+      "sha256": "a5d9e73527e9c404728a9bda4c4ef12b0a1ac2dd8da394b162faf09652d6e548",
+      "bytes": 8829931
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-05.png",
+      "sha256": "d1768e335ec106dce0e6fea64c60e78933e202462f8c75582dcf39e09cac272e",
+      "bytes": 8448529
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-06.png",
+      "sha256": "89ded19b659c1efc0b4cbcc00f4d1b5763d553b81d8abcb464e81415d676fccf",
+      "bytes": 7147097
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-picture-07.png",
+      "sha256": "fb4c94b9722e92881c81486e817578719f0c4a121d56f1e705b2d6c39f8a5863",
+      "bytes": 7939126
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-video-01.mov",
+      "sha256": "f5106c4ec0cd539a41e09368211b6b9243c23719191476793d1f96f235ff1792",
+      "bytes": 6866344
+    },
+    {
+      "path": "originals/jennifers-garden/jennifers-garden-source-video-02.mov",
+      "sha256": "9086e381664a6e19b989b128181f563bf382d9a4442f714be22ea6d48dca1104",
+      "bytes": 9925517
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-06.png",
+      "sha256": "68a994d4398dc4e20683a07264beb328bbd5bcd08479210c1b005656d6e60f25",
+      "bytes": 7382123
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-07.png",
+      "sha256": "1522ae7d1db6959ddc0f22bfceb2e11a2aaa367d0980181e902e5919cf357fce",
+      "bytes": 7783383
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-08.png",
+      "sha256": "604742ae5a52629e9479218785e5a9feb26f60ba4fcb0f74599c6b6386c3997b",
+      "bytes": 7548034
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-09.png",
+      "sha256": "e93e802994eb5e76f1b63cefb939882aa52dc1e69c21ad9472c88e6e5afcdad4",
+      "bytes": 5790367
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-10.png",
+      "sha256": "07dd08301b69ffa71fba77c3ccb4a9ce550ca6cea89047b67f05be0a952ef51a",
+      "bytes": 6927178
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-11.png",
+      "sha256": "ab5fe478cb2d6b31bdd1bf1d58763f40a79349016930ececa1693593e40bfb83",
+      "bytes": 7765016
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-01.mov",
+      "sha256": "18f5a7ac2161d47cfa668732efa0092ca32d5337ff22009460c9adc7386f2478",
+      "bytes": 31134775
+    },
+    {
+      "path": "originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-02.mov",
+      "sha256": "ec0a3cba94c419b7f82ddd57b491c7f69060ac1d9a7de85ba4b626fd77738208",
+      "bytes": 2886266
+    }
+  ],
+  "mapping": [
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4068",
+      "website": "/uploads/jennifers-garden-picture-01.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-01.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4069",
+      "website": "/uploads/jennifers-garden-picture-02.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-02.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4072",
+      "website": "/uploads/jennifers-garden-picture-03.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-03.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4076",
+      "website": "/uploads/jennifers-garden-picture-04.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-04.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4077",
+      "website": "/uploads/jennifers-garden-picture-05.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-05.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4079",
+      "website": "/uploads/jennifers-garden-picture-06.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-06.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4080",
+      "website": "/uploads/jennifers-garden-picture-07.webp",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-picture-07.png"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4074.mov",
+      "website": "/uploads/jennifers-garden-video-01.webm",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-video-01.mov"
+    },
+    {
+      "product": "Jennifer’s Garden",
+      "original": "IMG_4075.mov",
+      "website": "/uploads/jennifers-garden-video-02.webm",
+      "source": "/uploads/originals/jennifers-garden/jennifers-garden-source-video-02.mov"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4110",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-06.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-06.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4112",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-07.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-07.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4115",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-08.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-08.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4118",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-09.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-09.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4122",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-10.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-10.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4123",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-picture-11.webp",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-picture-11.png"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4113.MOV",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-video-01.webm",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-01.mov"
+    },
+    {
+      "product": "Myra Mojave Leather Bag in Old Rose",
+      "original": "IMG_4114.MOV",
+      "website": "/uploads/myra-mojave-leather-bag-in-old-rose-video-02.webm",
+      "source": "/uploads/originals/myra-mojave-leather-bag-in-old-rose/myra-mojave-leather-bag-in-old-rose-source-video-02.mov"
+    },
+    {
+      "product": "Baby I'm a Wild Card",
+      "original": "IMG_4132.MOV",
+      "website": "/uploads/baby-im-a-wild-card-video-01.webm",
+      "source": "/uploads/originals/baby-im-a-wild-card/baby-im-a-wild-card-source-video-01.mov"
+    }
+  ]
+}
