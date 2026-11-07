@@ -1,14 +1,26 @@
 # Media recovery log
 
+## Shirts collection cover clarification — November 6, 2026
+
+The live storefront automatically uses the first photo from the first product alphabetically with a nonempty photo list. It does not select the latest upload. The saved collection `cardImage` is a fallback only when no product supplies an image. This behavior was checked in the deployed `backend/src/services/storefrontCatalog.js` (`buildCollectionPage` and alphabetical product query).
+
+The absent `/uploads/legacy-6a42cc687962f91d73d7.webp` is the Shirts collection’s historical fallback image. It remains in the missing-file inventory because the database still references it, but the customer does **not** need to provide a separate Shirts cover: the storefront can use an existing shirt product photo. No code, collection record, or image was changed for this clarification. The chooser checks whether a photo URL is listed, not whether the file exists.
+
 ## Current status — November 6, 2026
 
-**172 available / 30 missing / 202 referenced media files.** Missing files comprise **23 photos and 7 videos**: 29 product files and one Shirts collection image.
+**197 available / 30 missing / 227 referenced media files.** Missing files comprise **23 photos and 7 videos**: 29 product files and one Shirts collection image.
 
 Confirmation labels follow the owner’s requested classification:
 
 - **Confirmed**: existing media and media recovered from the owner’s ZebraDivaDesigns Etsy listings; all other catalog items retain this label. This is a product/source classification, not proof that a restored file is byte-for-byte identical to a lost original.
 - **Unconfirmed**: the eight Myra products whose 38 replacement photos were sourced from manufacturer websites. The owner approved their use, but the photos are not confirmed as the original uploads or as showing the exact individual cowhide pattern.
 - Availability is listed separately. A Confirmed catalog item may still have missing media; Confirmed does not mean recovered.
+
+### New Etsy product additions — November 6, 2026
+
+Compared all 29 current Etsy listings against the website catalog, including differently named existing products. Added 10 new products with 20 photos and 5 videos, and added No Bling as an option on the existing Masie Mallard Wildly Chic shirt. Bougie Lips and I May Look Calm Chicken each combine their Etsy Bling and No Bling listings into one website product. All three combined products use Bling $38 / No Bling $28. No separate No Bling product duplicates were created.
+
+These additions are Confirmed because their content and media came from the owner’s Etsy listings. The 38 earlier manufacturer replacement photos remain Unconfirmed. The 25 newly imported files increase the total from 172 to 197 available files and from 202 to 227 referenced files; they do not reduce the 30 historically missing files. No Etsy identifiers were imported into website product fields. See [ETSY-PRODUCT-ADDITIONS-LOG.md](ETSY-PRODUCT-ADDITIONS-LOG.md) for the separate product comparison, imported details, and source mapping. No application code was changed.
 
 ### Exact work completed
 
@@ -32,7 +44,9 @@ Confirmation labels follow the owner’s requested classification:
 | Betsey Johnson Blush Satin Heels | Confirmed | 1 | 0 | 0 | 0 |
 | Blue Isle Cross Body Bag Small | Unconfirmed | 4 | 0 | 0 | 0 |
 | Boo-Jee Boa | Confirmed | 1 | 0 | 0 | 0 |
+| Bougie Lips T-Shirt | Confirmed | 1 | 1 | 0 | 0 |
 | Brandi Bracelet | Confirmed | 5 | 1 | 0 | 0 |
+| Bridal Lace Ribbon Snippet Roll: Navy & Ivory, Hand Stamped Tag | Confirmed | 5 | 0 | 0 | 0 |
 | Carmen | Confirmed | 1 | 0 | 0 | 0 |
 | Cheetah Boa | Confirmed | 1 | 0 | 0 | 0 |
 | Country GaGa | Confirmed | 3 | 0 | 0 | 0 |
@@ -42,10 +56,15 @@ Confirmation labels follow the owner’s requested classification:
 | Cowhide Lv Faux Leather Shoulder Bag | Confirmed | 3 | 0 | 0 | 0 |
 | Delphine Canvas & Hairon Bag | Unconfirmed | 6 | 0 | 0 | 0 |
 | Don't Burst My Bubble Blinged Out T-Shirt | Confirmed | 1 | 1 | 0 | 0 |
+| Don’t Burst My Bubble! Sweatshirt | Confirmed | 2 | 0 | 0 | 0 |
 | Farmer Mrs. Synakowski | Confirmed | 0 | 0 | 6 | 2 |
 | Feral Raccoon | Confirmed | 1 | 1 | 0 | 0 |
+| FRANKLY my DEAR, I don’t give a damn either! With BLING | Confirmed | 1 | 1 | 0 | 0 |
 | Guts, Grit And Lipstick Blinged Out T-Shirt | Confirmed | 1 | 0 | 0 | 0 |
 | Happy Girls are the PRETTIEST! Blinged Out T-Shirt | Confirmed | 1 | 0 | 0 | 0 |
+| Highland Cow in Her Crown. Rhinestone Shirt | Confirmed | 2 | 1 | 0 | 0 |
+| I May Look Calm Chicken T-Shirt | Confirmed | 3 | 0 | 0 | 0 |
+| I Woke Up Like This T-shirt Blinged Out | Confirmed | 3 | 1 | 0 | 0 |
 | In a While Crocodile | Confirmed | 1 | 1 | 0 | 0 |
 | Jennifer’s Garden | Confirmed | 0 | 0 | 7 | 2 |
 | Juniper Hairon Canvas Weekender Bag | Unconfirmed | 4 | 0 | 0 | 0 |
@@ -54,6 +73,7 @@ Confirmation labels follow the owner’s requested classification:
 | LV Upcycled Cowhide Leather Bag | Confirmed | 1 | 0 | 0 | 0 |
 | Maia Concealed Bag | Unconfirmed | 4 | 0 | 0 | 0 |
 | Masie Mallard Wildly Chic | Confirmed | 1 | 0 | 0 | 0 |
+| Mischief Witch and Her Cat- Blinged Out | Confirmed | 1 | 0 | 0 | 0 |
 | Miss Cheetah | Confirmed | 1 | 1 | 0 | 0 |
 | Myra Mojave Leather Bag in Old Rose | Unconfirmed | 5 | 0 | 0 | 1 |
 | On a Bad Day there’s Always Lipstick Blinged Out Sweatshirt | Confirmed | 0 | 0 | 2 | 1 |
@@ -69,6 +89,8 @@ Confirmation labels follow the owner’s requested classification:
 | The Weekender Tote Bag | Confirmed | 3 | 0 | 0 | 0 |
 | Turquoise and White Leather Speedy Bag | Confirmed | 3 | 0 | 0 | 0 |
 | Turquoise Chic Blinged Out T-Shirt | Confirmed | 2 | 1 | 0 | 0 |
+| Turquoise Girl Blinged Out Sweatshirt | Confirmed | 1 | 1 | 0 | 0 |
+| Turquoise Junky Blinged out T-Shirt | Confirmed | 1 | 0 | 0 | 0 |
 | Upcycled Black Suede and Brown Tooled Leather Backpack | Confirmed | 2 | 0 | 0 | 0 |
 | Upcycled LOGO Barrette | Confirmed | 3 | 0 | 0 | 0 |
 | Upcycled LV Canvas Pack | Confirmed | 3 | 0 | 0 | 0 |
