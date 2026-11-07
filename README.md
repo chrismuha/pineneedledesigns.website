@@ -91,6 +91,10 @@ on the `daily-backups` branch, retaining deleted media, older catalog snapshots,
 It uses the existing `DO_HOST`, `DO_USER`, and `DO_SSH_KEY` repository secrets and
 the monitor's pinned SSH host key. Database credentials stay on the server.
 Backup commits use `GITHUB_TOKEN` and do not trigger production deployment.
+Each run also copies the current media recovery, Etsy, and provenance logs plus
+their supporting manifests from `main` into `daily-backups`. The provenance ledger
+records replacement reasons, owner-confirmed Etsy sources, Farmer's generated sold
+notice, current filenames, and which historical files were superseded or retired.
 A failed download or upload fails the workflow; check Actions for results and
 GitHub failure notifications. The run summary reports missing referenced files;
 a successful backup cannot recover originals already missing from the server.

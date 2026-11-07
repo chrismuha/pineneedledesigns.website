@@ -1,5 +1,7 @@
 # Media recovery log
 
+**Current source/confirmation ledger:** [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) explains every replacement decision, why Farmer has a generated SOLD sign, all 43 Etsy source-file mappings (including 34 owner-confirmed photos), and current availability for all 63 products. Historical sections below preserve what was known at their dates.
+
 ## Daily backup retention and branch locations — November 6, 2026
 
 Daily backups accumulate on the `daily-backups` branch. Each successful run builds on the previous backup: unchanged files remain, new media is added, and the latest catalog metadata is refreshed. A timestamped catalog snapshot and a Git commit preserve each run’s history. For example, content added today remains alongside content added tomorrow.
@@ -57,7 +59,7 @@ These additions are Confirmed because their content and media came from the owne
 5. Verified the 56 uploaded files by checksums and application HTTP 200 responses. The earlier public URL checks returned HTTP 403; automated public delivery verification was not completed.
 6. Updated this recovery log and ran the GitHub media backup. The [successful backup](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42323558539) retained 172 files on `daily-backups`; all 38 manufacturer replacements were checked against the backup checksums. The earlier 18 Etsy recoveries were also verified in the preceding backup.
 
-### Confirmation and availability for every product
+### Historical confirmation and availability for every product — November 6 snapshot
 
 | Product | Confirmation | Available photos | Available videos | Missing photos | Missing videos |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -161,7 +163,7 @@ These additions are Confirmed because their content and media came from the owne
 
 ## Recovery history and source mappings
 
-The dated sections below preserve the sequence of recovery. Their intermediate missing-file totals are historical; the current totals and availability table above take precedence.
+The dated sections below preserve the sequence of recovery. Their intermediate missing-file totals and confirmation/availability table are historical; the current status above and [current provenance ledger](MEDIA-PROVENANCE.md) take precedence.
 
 ## November 6, 2026 — Etsy recovery
 
@@ -669,7 +671,7 @@ The [cleanup manifest](media-cleanup/2026-11-07/manifest.json) records source ch
 
 At the owner’s request, replaced Farmer Mrs. Synakowski’s six missing photo references and two missing video references with exactly one image: `/uploads/farmer-mrs-synakowski-picture-01.webp`. The active product now has one photo, an empty videos array, and an empty videoPosters array. It remains marked out of stock; its description, price, sizing, quantity, and all other non-media fields were preserved. All other 62 products were preserved.
 
-The image was created with the built-in imagegen tool: a forest-green and ivory Pine Needle Designs announcement reading **SOLD** and **Check back for more unique one-of-a-kind pieces.** It is a status announcement, not a garment photograph or a reconstruction of the missing originals. The [generation and update manifest](media-updates/2026-11-07-farmer-sold/manifest.json) records the prompt, displayed text, image checksum, retired media references, and new arrays. Historical catalog snapshots and prior recovery logs remain retained for audit; the retired URLs are no longer referenced by the live item.
+The owner chose a status graphic because the Farmer item was already sold, its six photos and two videos were unavailable, and no verified replacement garment media had been recovered. The stock-style logo/sign is a custom SOLD placeholder made for this item, not a recovered garment photograph. The image was created with the built-in imagegen tool: a forest-green and ivory Pine Needle Designs announcement reading **SOLD** and **Check back for more unique one-of-a-kind pieces.** It is a status announcement, not a garment photograph or a reconstruction of the missing originals. The [generation and update manifest](media-updates/2026-11-07-farmer-sold/manifest.json) records the prompt, displayed text, image checksum, retired media references, and new arrays. Historical catalog snapshots and prior recovery logs remain retained for audit; the retired URLs are no longer referenced by the live item.
 
 The [production update](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42396060733) succeeded. Verified that the live storefront has exactly one photo, no videos, and no posters; the public image returns HTTP 200 and matches its SHA-256 checksum. Code Quality and production deployment passed. The temporary upload workflow was removed after use.
 
@@ -688,3 +690,11 @@ The [post-update GitHub backup](https://github.com/chrismuha/pineneedledesigns.w
 ### Larger navigation arrows
 
 Media-gallery arrows and homepage product-slider arrows now share forest-green buttons with larger white chevrons, white borders, and a visible focus outline. Main controls are 60 pixels on desktop and 52 pixels on phones; compact homepage header controls are 52 pixels on desktop and 48 pixels on phones. The white/green contrast ratio is 7.67:1. Existing click, swipe, and keyboard navigation handlers are preserved. The storefront browsing guide and release notes were updated together. All 30 existing tests and the production release build passed; both maintained CSS copies and published CSS match for the shared arrow styles. Browser preview was unavailable in this session, so an interactive visual check was not performed.
+
+## Explicit owner confirmation and provenance clarification — November 7, 2026
+
+The owner explicitly confirmed the photos obtained from their Etsy listings. All **34 Etsy photos** are **Confirmed**: 14 restored photos plus 20 photos imported with the ten new products. Their readable-name aliases and lossless screenshot crops keep this classification. All nine Etsy source videos retain their existing Confirmed source label. Autumn’s earlier Etsy video is retained but superseded by its owner-supplied video. This approval applies to Etsy sources; the seven active Myra manufacturer-photo galleries remain Unconfirmed, and Farmer’s generated SOLD notice is separately identified as an owner-approved placeholder. No media bytes or live catalog records changed for this documentation clarification.
+
+Added [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) with the reason, before/after state, source, confirmation, retention decision, and supporting manifests for every recovery/replacement operation. It includes every Etsy source file’s original upload URL, source link, current gallery use (or superseded state), and current source/availability classification for all 63 products. Farmer’s rationale is explicit: sold item, eight unavailable originals, owner-requested retirement of broken links, and one custom generated SOLD announcement rather than a fabricated or recovered garment photo.
+
+The backup workflow now copies the current recovery/provenance/Etsy logs and their supporting manifests from `main` into `daily-backups` on every run. This corrects the stale backup-branch summary and keeps both branches’ documentation aligned while retaining historical media and catalog snapshots.

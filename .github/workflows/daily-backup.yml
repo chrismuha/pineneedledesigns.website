@@ -43,12 +43,19 @@ jobs:
         run: |
           set -euo pipefail
           cp scripts/backup-uploaded-media.py scripts/restore-uploaded-media.py "$RUNNER_TEMP/pine-backup/"
+          mkdir -p "$RUNNER_TEMP/pine-backup/provenance"
+          for entry in MEDIA-RECOVERY-LOG.md ETSY-PRODUCT-ADDITIONS-LOG.md MEDIA-PROVENANCE.md owner-supplied media-cleanup media-updates; do
+            cp -R "backups/pineneedledesigns.website/$entry" "$RUNNER_TEMP/pine-backup/provenance/"
+          done
           if git ls-remote --exit-code --heads origin daily-backups; then
             git fetch origin daily-backups
             git switch -c daily-backups origin/daily-backups
           else
             git switch -c daily-backups
           fi
+          # Refresh current explanations and source manifests without pruning
+          # historical media, catalog snapshots, or previous audit records.
+          cp -R "$RUNNER_TEMP/pine-backup/provenance/." backups/pineneedledesigns.website/
       - name: Back up production catalog and uploaded media
         env:
           DO_HOST: ${{ secrets.DO_HOST }}
