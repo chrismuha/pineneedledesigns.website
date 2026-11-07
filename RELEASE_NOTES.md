@@ -2,6 +2,11 @@
 
 ## November 7, 2026
 
+- Available items keep Add to Cart active. Missing selections open a required-options
+  dialog; fully selected items add directly with their selected pricing.
+- Item-gallery arrows have independent styling and SVG icons, with dedicated space
+  beside the photos on desktop and mobile. Other site arrows retain their styling.
+
 - Standardized the portrait asset name and clarified sold-placeholder wording in media records.
 - Current media classification now uses two independently alphabetized lists:
   Never lost originals plus Confirmed Etsy media, followed by Unconfirmed replacements.

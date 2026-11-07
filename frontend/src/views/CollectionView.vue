@@ -132,9 +132,8 @@
             </div>
           </template>
         </div>
-        <button v-if="canAddToCart(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>
+        <button v-if="isForSale(product)" class="addtocart" @click="addToCart(product)">Add to Cart</button>
         <button v-else-if="isProductSold(product)" class="addtocart" disabled>Sold</button>
-        <button v-else-if="Number.isFinite(productPrice(product))" class="addtocart" disabled>Select Options</button>
         <button v-else class="addtocart" disabled>Price TBD</button>
       </article>
     </div>
@@ -145,6 +144,29 @@
   <section v-else class="not-found">
     <p>Collection not found.</p>
   </section>
+  <Teleport to="body">
+    <dialog ref="optionsDialog" class="purchase-options" aria-labelledby="purchase-options-title" @close="optionProduct = null" @click="closeOptionsOnBackdrop">
+      <form v-if="optionProduct" @submit.prevent="confirmOptions">
+        <button type="button" class="purchase-options__close" aria-label="Close options" @click="optionsDialog.close()">×</button>
+        <p class="purchase-options__eyebrow">Make it yours</p>
+        <h2 id="purchase-options-title">Choose your options</h2>
+        <p>{{ displayTitle(optionProduct) }}</p>
+        <p>Please choose each option below before adding this item to your cart.</p>
+        <div class="purchase-options__fields">
+          <ProductOptionSelect
+            v-for="option in optionProduct.options"
+            :key="option.name"
+            v-model="selectedOptions[optionKey(optionProduct, option)]"
+            :label="option.name"
+            :options="option.values"
+            :placeholder="option.placeholder"
+          />
+        </div>
+        <p class="purchase-options__price">{{ Number.isFinite(productPrice(optionProduct)) ? `$${productPrice(optionProduct).toFixed(2)}` : 'Choose options to see the price' }}</p>
+        <button class="addtocart" type="submit" :disabled="cartStore.isLoading">{{ cartStore.isLoading ? 'Adding…' : 'Add to Cart' }}</button>
+      </form>
+    </dialog>
+  </Teleport>
 </template>
 
 <script setup>
@@ -165,6 +187,19 @@ const route = useRoute()
 const catalogStore = useCatalogStore()
 const cartStore = useCartStore()
 const selectedOptions = ref({})
+const optionsDialog = ref(null)
+const optionProduct = ref(null)
+const closeOptionsOnBackdrop = (event) => {
+  if (event.target !== optionsDialog.value) return
+  const bounds = optionsDialog.value.getBoundingClientRect()
+  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) optionsDialog.value.close()
+}
+const confirmOptions = async () => {
+  const product = optionProduct.value
+  if (!product || !canAddToCart(product) || cartStore.isLoading) return
+  optionsDialog.value.close()
+  await addToCart(product)
+}
 const subcollections = ref([])
 const products = ref([])
 const selectedSubcollectionId = ref(null)
@@ -412,8 +447,13 @@ const isProductSold = (product) => {
   return productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
 }
 
+const isForSale = (product) => !isProductSold(product) && (
+  Number.isFinite(productPrice(product)) ||
+  Number.isFinite(product.blingPrice) || Number.isFinite(product.noBlingPrice) ||
+  Object.values(product.sizePrices || {}).some(Number.isFinite)
+)
 const canAddToCart = (product) =>
-  Number.isFinite(productPrice(product)) && !isProductSold(product) && hasRequiredOptions(product)
+  isForSale(product) && Number.isFinite(productPrice(product)) && hasRequiredOptions(product)
 
 const hasMedia = (product) =>
   Boolean((product.images && product.images.length) || (product.videos && product.videos.length))
@@ -455,6 +495,7 @@ onMounted(() => {
 })
 
 watch(() => props.slug, () => {
+  optionsDialog.value?.close()
   loadCollectionData()
 })
 
@@ -468,6 +509,13 @@ watch(selectedSubcollectionId, () => {
 })
 
 const addToCart = async (product) => {
+  if (!isForSale(product) || cartStore.isLoading) return
+  if (!hasRequiredOptions(product)) {
+    optionProduct.value = product
+    await nextTick()
+    optionsDialog.value.showModal()
+    return
+  }
   if (!canAddToCart(product)) return
 
   const selectedProduct = {
@@ -489,6 +537,30 @@ const addToCart = async (product) => {
 </script>
 
 <style scoped>
+.purchase-options {
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  box-sizing: border-box;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid var(--muted);
+  border-radius: 24px;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 24px 80px #0005;
+}
+.purchase-options::backdrop { background: #15202dcc; backdrop-filter: blur(5px); }
+.purchase-options form { display: grid; gap: 16px; }
+.purchase-options h2, .purchase-options p { margin: 0; }
+.purchase-options h2 { padding-right: 24px; }
+.purchase-options__eyebrow { color: var(--accent-2); font-weight: 700; }
+.purchase-options__fields { display: grid; gap: 16px; }
+.purchase-options__price { font-size: 1.25rem; font-weight: 700; }
+.purchase-options__close {
+  position: absolute; top: 12px; right: 12px;
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: var(--muted); color: var(--ink); font-size: 28px; cursor: pointer;
+}
+
 .collection-status {
   margin: 12px 0 0;
   color: var(--collection-view-status-text);

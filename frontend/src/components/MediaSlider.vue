@@ -1,6 +1,7 @@
 <template>
   <section
     class="media-slider"
+    :class="{ 'media-slider--with-controls': showControls }"
     :aria-label="label"
     tabindex="0"
     @keydown.left.prevent="previous"
@@ -58,21 +59,21 @@
 
     <button
       v-if="showControls"
-      class="slider-arrow media-slider__button media-slider__button--previous"
+      class="media-slider__button media-slider__button--previous"
       type="button"
       :aria-label="`Previous ${mediaTypeLabel}`"
       @click="previous"
     >
-      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
     </button>
     <button
       v-if="showControls"
-      class="slider-arrow media-slider__button media-slider__button--next"
+      class="media-slider__button media-slider__button--next"
       type="button"
       :aria-label="`Next ${mediaTypeLabel}`"
       @click="next"
     >
-      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg>
     </button>
 
     <div v-if="showDots" class="media-slider__dots" role="tablist" :aria-label="`${label} navigation`">
@@ -248,11 +249,14 @@ const {
 .media-slider {
   position: relative;
   width: 100%;
+  box-sizing: border-box;
   border-radius: 16px;
-  background: linear-gradient(180deg, var(--muted), var(--soft-ink));
+  background: transparent;
   overflow: hidden;
   touch-action: pan-y;
 }
+
+.media-slider--with-controls { padding-inline: 82px; }
 
 .media-slider:focus-visible {
   outline: 3px solid var(--brand-red-45);
@@ -260,6 +264,8 @@ const {
 }
 
 .media-slider__viewport {
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--muted), var(--soft-ink));
   width: 100%;
   overflow: hidden;
   cursor: grab;
@@ -305,22 +311,48 @@ const {
   position: absolute;
   top: 50%;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: #165f3d;
+  color: var(--white);
+  box-shadow: 0 4px 14px #00000040;
+  cursor: pointer;
   transform: translateY(-50%);
+  appearance: none;
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.media-slider__button svg { width: 32px; height: 32px; }
+
+.media-slider__button:hover {
+  background: #0c422b;
+  box-shadow: 0 6px 18px #00000055;
+}
+
+.media-slider__button:focus-visible {
+  outline: 3px solid var(--brand-red-45);
+  outline-offset: 3px;
 }
 
 .media-slider__button--previous {
-  left: 12px;
+  left: 0;
 }
 
 .media-slider__button--next {
-  right: 12px;
+  right: 0;
 }
 
 .media-slider__dots {
   position: absolute;
-  right: 12px;
+  right: 94px;
   bottom: 12px;
-  left: 12px;
+  left: 94px;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -348,10 +380,18 @@ const {
   outline-offset: 3px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .media-slider {
     border-radius: 12px;
   }
 
+  .media-slider--with-controls { padding-inline: 64px; }
+
+  .media-slider__button svg { width: 28px; height: 28px; }
+
+  .media-slider__button {
+    width: 52px;
+    height: 52px;
+  }
 }
 </style>
