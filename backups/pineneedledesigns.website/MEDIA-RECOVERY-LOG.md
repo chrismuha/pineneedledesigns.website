@@ -1,5 +1,21 @@
 # Media recovery log
 
+## Daily backup retention and branch locations — November 6, 2026
+
+Daily backups accumulate on the `daily-backups` branch. Each successful run builds on the previous backup: unchanged files remain, new media is added, and the latest catalog metadata is refreshed. A timestamped catalog snapshot and a Git commit preserve each run’s history. For example, content added today remains alongside content added tomorrow.
+
+When a file is replaced at the same path, its previous contents are retained in `replaced-files/` and Git history. Deleting a product or media from the website does not delete an existing retained backup; older product folders, media, catalog snapshots, and removal reports remain. The workflow does not automatically prune retained backups. A backup can only recover bytes that were captured successfully; already-missing originals cannot be recreated by merging later backups.
+
+The current scheduled backup files live on [`daily-backups`](https://github.com/chrismuha/pineneedledesigns.website/tree/daily-backups/backups/pineneedledesigns.website). These logs are also published on `main` for reference. The older media/catalog snapshot already present on `main` is historical; pushing a log to `main` does not replace it with the current daily media backup. Use the `daily-backups` branch for the latest recovery files.
+
+This is a repository and server-upload/catalog backup, not a whole-computer backup or a complete MongoDB backup. Uncommitted local files, Orders, payments, credentials, and customer data are not automatically included. Previously committed media remains in Git history. Explicit source copies retained under server uploads are included.
+
+Latest verified media inventory: 426 retained files, including old URL aliases and source copies. Active catalog paths comprise 216 available and 21 missing files. The 21 missing paths remain documented below; their absence is unchanged by daily accumulation.
+
+## Orders text-only update — November 6, 2026
+
+Published and deployed [the Orders change on main](https://github.com/chrismuha/pineneedledesigns.website/commit/b1735889d7288dec9e2a93f2fc5bb487a8869902). Orders display text records without product media or product/media links. New snapshots omit media; old responses filter it without deleting historical orders. Editing uses a text-only product choice list. Verified against the existing Farmer order and all 63 product choices; financial totals, inventory references, payment state, and catalog media were preserved. All 30 tests, the production build, Code Quality, CodeQL, and deployment passed. Orders remain outside the catalog/media backup scope.
+
 ## Shirts collection cover clarification — November 6, 2026
 
 The live storefront automatically uses the first photo from the first product alphabetically with a nonempty photo list. It does not select the latest upload. The saved collection `cardImage` is a fallback only when no product supplies an image. This behavior was checked in the deployed `backend/src/services/storefrontCatalog.js` (`buildCollectionPage` and alphabetical product query).
