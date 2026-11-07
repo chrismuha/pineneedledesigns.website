@@ -200,6 +200,13 @@ schedules after 60 days without repository activity. This is a periodic external
 check, not a guaranteed real-time paging service. Outages between checks can be
 missed. View the workflow history to confirm the monitor itself is running.
 
+### Storefront browsing
+
+Use the large forest-green buttons with white arrows to browse product photos and
+videos or move between items in a homepage collection slider. Gallery and product
+controls have larger touch targets on phones. Swipe gestures and keyboard left/right
+navigation remain available when the gallery or product slider has focus.
+
 ## API Endpoints
 
 ### Orders user guide

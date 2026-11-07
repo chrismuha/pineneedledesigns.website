@@ -897,6 +897,45 @@ header {
   box-sizing: border-box;
 } */
 
+/* Shared high-contrast gallery and product navigation. */
+.slider-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    background: #165f3d;
+    color: var(--white);
+    box-shadow: 0 4px 14px #00000040;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+    transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.slider-arrow:hover {
+    background: #0c422b;
+    box-shadow: 0 6px 18px #00000055;
+}
+
+.slider-arrow:focus-visible {
+    outline: 3px solid #165f3d;
+    outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+    .slider-arrow {
+        width: 52px;
+        height: 52px;
+        font-size: 28px;
+    }
+}
+
 .slider-btn {
     position: absolute;
     top: 42%;

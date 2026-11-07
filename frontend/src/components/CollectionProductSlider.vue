@@ -13,6 +13,7 @@
       </div>
       <div v-if="products.length > 1" class="collection-product-slider__quick-controls" aria-label="Quick product navigation">
         <button
+          class="slider-arrow"
           type="button"
           :aria-label="`Previous ${collection.title} product`"
           @click="previous"
@@ -21,6 +22,7 @@
         </button>
         <span aria-live="polite">{{ currentIndex + 1 }} / {{ products.length }}</span>
         <button
+          class="slider-arrow"
           type="button"
           :aria-label="`Next ${collection.title} product`"
           @click="next"
@@ -55,7 +57,7 @@
     >
       <button
         v-if="products.length > 1"
-        class="collection-product-slider__control collection-product-slider__control--previous"
+        class="slider-arrow collection-product-slider__control collection-product-slider__control--previous"
         type="button"
         :aria-label="`Previous ${collection.title} product`"
         @click="previous"
@@ -101,7 +103,7 @@
 
       <button
         v-if="products.length > 1"
-        class="collection-product-slider__control collection-product-slider__control--next"
+        class="slider-arrow collection-product-slider__control collection-product-slider__control--next"
         type="button"
         :aria-label="`Next ${collection.title} product`"
         @click="next"
@@ -245,27 +247,11 @@ watch(
 }
 
 .collection-product-slider__quick-controls button {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  background: linear-gradient(135deg, var(--collection-product-slider-product-slider-quick-controls-button-surface), var(--collection-product-slider-product-slider-quick-controls-button-surface-2));
-  color: var(--collection-product-slider-product-slider-quick-controls-button-text);
-  box-shadow: 0 10px 22px var(--collection-product-slider-product-slider-quick-controls-button-shadow);
-  cursor: pointer;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: box-shadow 160ms ease, transform 160ms ease;
+  width: 52px;
+  height: 52px;
+  font-size: 28px;
 }
 
-.collection-product-slider__quick-controls button::before,
 .collection-product-slider__all::before {
   position: absolute;
   z-index: -1;
@@ -274,24 +260,6 @@ watch(
   content: '';
   opacity: 0;
   transition: opacity 160ms ease-out;
-}
-
-@media (hover: hover) {
-  .collection-product-slider__quick-controls button:hover {
-    background: linear-gradient(135deg, var(--collection-product-slider-collection-product-slider-all-surface), var(--collection-product-slider-collection-product-slider-all-surface-2));
-    color: var(--white);
-    box-shadow: 0 10px 24px var(--collection-product-slider-collection-product-slider-all-shadow);
-    transform: translateY(-1px) scale(1.04);
-  }
-
-  .collection-product-slider__quick-controls button:hover::before {
-    opacity: 1;
-  }
-}
-
-.collection-product-slider__quick-controls button:focus-visible {
-  outline: 3px solid var(--brand-red-45);
-  outline-offset: 3px;
 }
 
 .collection-product-slider__quick-controls span {
@@ -484,17 +452,6 @@ watch(
   position: absolute;
   top: clamp(215px, 29vw, 325px);
   z-index: 2;
-  display: grid;
-  width: 48px;
-  height: 48px;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--white-95);
-  color: var(--ink);
-  box-shadow: var(--shadow);
-  cursor: pointer;
   transform: translateY(-50%);
 }
 
@@ -531,8 +488,8 @@ watch(
   }
 
   .collection-product-slider__quick-controls button {
-    width: 38px;
-    height: 38px;
+    width: 48px;
+    height: 48px;
   }
 
   .collection-product-slider__quick-controls span {
@@ -563,8 +520,6 @@ watch(
 
   .collection-product-slider__control {
     top: min(46vw, 210px);
-    width: 44px;
-    height: 44px;
   }
 }
 </style>

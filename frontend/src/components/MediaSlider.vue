@@ -58,7 +58,7 @@
 
     <button
       v-if="showControls"
-      class="media-slider__button media-slider__button--previous"
+      class="slider-arrow media-slider__button media-slider__button--previous"
       type="button"
       :aria-label="`Previous ${mediaTypeLabel}`"
       @click="previous"
@@ -67,7 +67,7 @@
     </button>
     <button
       v-if="showControls"
-      class="media-slider__button media-slider__button--next"
+      class="slider-arrow media-slider__button media-slider__button--next"
       type="button"
       :aria-label="`Next ${mediaTypeLabel}`"
       @click="next"
@@ -305,29 +305,7 @@ const {
   position: absolute;
   top: 50%;
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--white-92);
-  color: var(--ink);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
   transform: translateY(-50%);
-  transition: background 180ms ease, transform 180ms ease;
-}
-
-.media-slider__button:hover {
-  background: var(--white);
-  transform: translateY(-50%) scale(1.04);
-}
-
-.media-slider__button:focus-visible {
-  outline: 3px solid var(--brand-red-45);
-  outline-offset: 3px;
 }
 
 .media-slider__button--previous {
@@ -375,9 +353,5 @@ const {
     border-radius: 12px;
   }
 
-  .media-slider__button {
-    width: 38px;
-    height: 38px;
-  }
 }
 </style>
