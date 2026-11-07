@@ -353,7 +353,7 @@ Shared collection/product media now has a separate descriptive alias for each us
 - Verified every updated database field matches its intended new filename and all non-media fields are preserved.
 - Confirmed the set of 21 missing paths is unchanged.
 
-Storefront and GitHub backup verification will be recorded after completion.
+Final verification completed: the live storefront matches all 63 product image/video/poster arrays and all collection-cover selections. All 413 available canonical/old-alias URLs return HTTP 200. The [GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42326891042). Verified all 205 new/old SHA-256 pairs, every saved catalog record, and all 90 organized product/collection `media.json` mappings. The backup retains 426 files and reports the same 21 previously missing paths. These missing files remain unresolved; this naming operation did not claim to recover them.
 
 ### Filename mapping
 
