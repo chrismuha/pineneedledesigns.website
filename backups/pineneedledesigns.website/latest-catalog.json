@@ -2331,14 +2331,15 @@
       "description": "Shirley is a quilted multi colored and multi accented bag. Made by me. She measures 22\u201d wide 13.5\u201d high and a 4\u201d box bottom. She has pockets on the back and inside. A long zipper closure. Shirley is adorned with crystal dangles, evergreen pompoms, doily lace in angel wings, bridal satin ribbon in sage, and a double sided Aztec print strap. Very ADIRONDACK CHIC! Comfortable to wear and gorgeous to look at. Shirley is a beautiful bag and is named after my friend in heaven \ud83d\ude07 and there\u2019s only ONE!!!",
       "customProperties": [],
       "photos": [
-        "/uploads/1784899677609-762299862.webp",
-        "/uploads/1784899677701-524751672.webp",
-        "/uploads/1784899677708-286181336.webp",
-        "/uploads/1784899677769-854417811.webp",
-        "/uploads/1784899677778-475809922.webp",
-        "/uploads/1784899677785-968345443.webp",
-        "/uploads/1784899677786-681414023.webp",
-        "/uploads/1784899677786-297973643.webp"
+        "/uploads/shirley-boho-bag-picture-01.webp",
+        "/uploads/shirley-boho-bag-picture-02.webp",
+        "/uploads/shirley-boho-bag-picture-03.webp",
+        "/uploads/shirley-boho-bag-picture-04.webp",
+        "/uploads/shirley-boho-bag-picture-05.webp",
+        "/uploads/shirley-boho-bag-picture-06.webp",
+        "/uploads/shirley-boho-bag-picture-07.webp",
+        "/uploads/shirley-boho-bag-picture-08.webp",
+        "/uploads/shirley-boho-bag-picture-09.webp"
       ],
       "price": 117,
       "hasBlingOptions": false,
@@ -2350,7 +2351,8 @@
       "sortOrder": 1,
       "meta": [],
       "videos": [
-        "/uploads/1784899687488-758409083.webm"
+        "/uploads/shirley-boho-bag-video-01.webm",
+        "/uploads/shirley-boho-bag-video-02.webm"
       ],
       "videoPosters": [],
       "noBlingPrice": null,
@@ -2362,7 +2364,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-07-24T13:55:44.688Z",
-      "updatedAt": "2026-08-19T17:53:36.545Z",
+      "updatedAt": "2026-11-07T01:53:35.202Z",
       "__v": 0
     },
     {
@@ -3745,6 +3747,28 @@
     "/uploads/legacy-f65d415bc32e5f4b269c.webp",
     "/uploads/legacy-f9af10251f7026ee4790.webp",
     "/uploads/legacy-fae2069d3c05196e25e9.webp",
-    "/uploads/originals/autumn-cowgirl-source-a5e7309365.mov"
+    "/uploads/originals/autumn-cowgirl-source-a5e7309365.mov",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-01.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-02.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-03.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-04.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-05.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-06.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-07.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-08.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-09.png",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-01.mov",
+    "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-02.mov",
+    "/uploads/shirley-boho-bag-picture-01.webp",
+    "/uploads/shirley-boho-bag-picture-02.webp",
+    "/uploads/shirley-boho-bag-picture-03.webp",
+    "/uploads/shirley-boho-bag-picture-04.webp",
+    "/uploads/shirley-boho-bag-picture-05.webp",
+    "/uploads/shirley-boho-bag-picture-06.webp",
+    "/uploads/shirley-boho-bag-picture-07.webp",
+    "/uploads/shirley-boho-bag-picture-08.webp",
+    "/uploads/shirley-boho-bag-picture-09.webp",
+    "/uploads/shirley-boho-bag-video-01.webm",
+    "/uploads/shirley-boho-bag-video-02.webm"
   ]
 }

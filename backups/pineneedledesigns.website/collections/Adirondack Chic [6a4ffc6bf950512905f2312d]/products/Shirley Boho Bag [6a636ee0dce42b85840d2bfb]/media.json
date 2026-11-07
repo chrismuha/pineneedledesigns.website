@@ -1,47 +1,57 @@
 [
   {
-    "websiteUrl": "/uploads/1784899677609-762299862.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-01.webp",
+    "available": true,
+    "localFile": "media/01-shirley-boho-bag-picture-01.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677701-524751672.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-02.webp",
+    "available": true,
+    "localFile": "media/02-shirley-boho-bag-picture-02.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677708-286181336.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-03.webp",
+    "available": true,
+    "localFile": "media/03-shirley-boho-bag-picture-03.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677769-854417811.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-04.webp",
+    "available": true,
+    "localFile": "media/04-shirley-boho-bag-picture-04.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677778-475809922.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-05.webp",
+    "available": true,
+    "localFile": "media/05-shirley-boho-bag-picture-05.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677785-968345443.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-06.webp",
+    "available": true,
+    "localFile": "media/06-shirley-boho-bag-picture-06.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677786-297973643.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-07.webp",
+    "available": true,
+    "localFile": "media/07-shirley-boho-bag-picture-07.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899677786-681414023.webp",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-08.webp",
+    "available": true,
+    "localFile": "media/08-shirley-boho-bag-picture-08.webp"
   },
   {
-    "websiteUrl": "/uploads/1784899687488-758409083.webm",
-    "available": false,
-    "localFile": null
+    "websiteUrl": "/uploads/shirley-boho-bag-picture-09.webp",
+    "available": true,
+    "localFile": "media/09-shirley-boho-bag-picture-09.webp"
+  },
+  {
+    "websiteUrl": "/uploads/shirley-boho-bag-video-01.webm",
+    "available": true,
+    "localFile": "media/10-shirley-boho-bag-video-01.webm"
+  },
+  {
+    "websiteUrl": "/uploads/shirley-boho-bag-video-02.webm",
+    "available": true,
+    "localFile": "media/11-shirley-boho-bag-video-02.webm"
   }
 ]
