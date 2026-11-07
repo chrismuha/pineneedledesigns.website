@@ -277,3 +277,7 @@ The Mojave Old Rose bag now has photos; its original video remains missing. The 
 | Myra Mojave Leather Bag in Old Rose | `/uploads/1785875956390-757348513.webp` | [Source image](https://cdn.shopify.com/s/files/1/0631/7631/0870/files/S-12997_4_ab6d864c-c78c-4c20-83b6-9fdff794d08e.jpg?v=1767187883)  Unconfirmed |
 | Myra Mojave Leather Bag in Old Rose | `/uploads/1785875956395-433422140.webp` | [Source image](https://cdn.shopify.com/s/files/1/0631/7631/0870/files/S-12997_1_87ef2c59-9670-4fb2-9839-38a9d08afabb.jpg?v=1767187883)  Unconfirmed |
 | Myra Mojave Leather Bag in Old Rose | `/uploads/1785875956396-400668000.webp` | [Source image](https://cdn.shopify.com/s/files/1/0631/7631/0870/files/S-12997_5_52e34d69-1742-40db-8c3b-f80115762ee4.jpg?v=1767187883)  Unconfirmed |
+
+## Backup verification after Etsy product additions
+
+[GitHub backup completed successfully](https://github.com/chrismuha/pineneedledesigns.website/actions/runs/42325322573). Verified all 25 imported files against the backup SHA-256 checksums; the saved catalog contains all 63 products, all 10 additions, and the three combined Bling/No Bling products with the expected prices. Backup totals: **197 available files and 30 missing references**. No Etsy identifiers were imported into the new product records.
