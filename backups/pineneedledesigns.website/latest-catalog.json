@@ -2998,6 +2998,48 @@
       "createdAt": "2026-11-07T01:38:32.318Z",
       "updatedAt": "2026-11-07T01:57:32.093Z",
       "__v": 0
+    },
+    {
+      "_id": "6af268af294a1051fc7e7be4",
+      "name": "SNOW DIVA T-shirt",
+      "collectionId": "6a4ffc76f950512905f2313e",
+      "subCollectionId": "6a4ffc77f950512905f2313f",
+      "color": "",
+      "size": "",
+      "sweatshirtSize": "",
+      "shoeSize": "",
+      "beltSize": "",
+      "sizePrices": {},
+      "comfortColors": [
+        "Brick"
+      ],
+      "description": "Snow woman dressed to the 9\u2019s. Carrots and coal buttons are just not enough! A check and leopard prints swirl this Snow Diva. Order in Comfort Color Brick. So cute! She melts your heart, but not too much!!!",
+      "customProperties": [],
+      "photos": [
+        "/uploads/1794271407495-777375102.webp"
+      ],
+      "price": 36,
+      "hasBlingOptions": false,
+      "blingPrice": null,
+      "shippingCost": 0,
+      "freeShipping": false,
+      "outOfStock": true,
+      "quantity": 6,
+      "sortOrder": 16,
+      "meta": [],
+      "videos": [],
+      "videoPosters": [],
+      "noBlingPrice": null,
+      "noBlingDescription": "",
+      "generalDescription": "",
+      "maker": "",
+      "bagTypes": [],
+      "filters": [],
+      "shoeTypes": [],
+      "imageWrapper": "",
+      "createdAt": "2026-11-10T00:43:27.949Z",
+      "updatedAt": "2026-11-10T00:43:27.949Z",
+      "__v": 0
     }
   ],
   "collections": [
@@ -3536,7 +3578,7 @@
       "fallbackShippingCost": 5,
       "freeShippingEnabled": true,
       "freeShippingMinimum": 28,
-      "updatedAt": "2026-11-09T07:14:51.036Z",
+      "updatedAt": "2026-11-10T14:05:13.291Z",
       "toastTimeoutSeconds": 6
     }
   ],
@@ -3598,6 +3640,7 @@
     "/uploads/1788367213556-151018210.webm",
     "/uploads/1788368382629-301758658.webm",
     "/uploads/1789949606594-515446718.webp",
+    "/uploads/1794271407495-777375102.webp",
     "/uploads/adeline-bracelet-picture-01.webp",
     "/uploads/adeline-bracelet-picture-02.webp",
     "/uploads/adeline-bracelet-picture-03.webp",

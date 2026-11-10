@@ -1,0 +1,42 @@
+{
+  "_id": "6af268af294a1051fc7e7be4",
+  "name": "SNOW DIVA T-shirt",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "color": "",
+  "size": "",
+  "sweatshirtSize": "",
+  "shoeSize": "",
+  "beltSize": "",
+  "sizePrices": {},
+  "comfortColors": [
+    "Brick"
+  ],
+  "description": "Snow woman dressed to the 9\u2019s. Carrots and coal buttons are just not enough! A check and leopard prints swirl this Snow Diva. Order in Comfort Color Brick. So cute! She melts your heart, but not too much!!!",
+  "customProperties": [],
+  "photos": [
+    "/uploads/1794271407495-777375102.webp"
+  ],
+  "price": 36,
+  "hasBlingOptions": false,
+  "blingPrice": null,
+  "shippingCost": 0,
+  "freeShipping": false,
+  "outOfStock": true,
+  "quantity": 6,
+  "sortOrder": 16,
+  "meta": [],
+  "videos": [],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "generalDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-11-10T00:43:27.949Z",
+  "updatedAt": "2026-11-10T00:43:27.949Z",
+  "__v": 0
+}

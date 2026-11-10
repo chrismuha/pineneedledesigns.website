@@ -1,7 +1,7 @@
 {
-  "completedAt": "20261109T150043822402Z",
-  "filesBackedUp": 473,
-  "referencedFiles": 233,
+  "completedAt": "20261110T141443326877Z",
+  "filesBackedUp": 474,
+  "referencedFiles": 234,
   "missingFiles": [],
   "files": {
     "uploads/1783672358990-600883762.jpeg": {
@@ -227,6 +227,10 @@
     "uploads/1789949606594-515446718.webp": {
       "bytes": 284158,
       "sha256": "6ac8d4aab889ba30000559c8f01478d3b2395b36fe35a394fc47b3472f8eadec"
+    },
+    "uploads/1794271407495-777375102.webp": {
+      "bytes": 121228,
+      "sha256": "9b8673bbf9b823008ca62854a2251da366ef34abf587711b5ff0d3bb90794f4d"
     },
     "uploads/adeline-bracelet-picture-01.webp": {
       "bytes": 305848,
