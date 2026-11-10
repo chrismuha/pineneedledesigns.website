@@ -105,6 +105,10 @@ const uploadRequest = async (url, method, formData, onProgress, successMessage, 
 
 export const dashboardApi = {
   getStats: () => request('/api/dashboard/stats'),
+  updateNewArrivals: (settings) => request('/api/settings/new-arrivals', {
+    method: 'PUT',
+    body: JSON.stringify(settings),
+  }, 'New Arrivals settings saved successfully.'),
   getSettings: () => request('/api/settings'),
   updateSettings: (settings) => request('/api/settings', {
     method: 'PUT',

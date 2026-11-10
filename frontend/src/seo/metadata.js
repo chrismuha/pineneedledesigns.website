@@ -37,6 +37,9 @@ export const LOCAL_SERVICE_REGIONS = [
 export const publicPages = [
   { path: '/', title: 'Upcycled Clothing in Remsen, NY | Pine Needle Designs', description: HOME_DESCRIPTION },
   { path: '/collections', title: 'Clothing, Jewelry & Handbag Collections | Pine Needle Designs', description: 'Browse Pine Needle Designs collections of upcycled clothing, embellished denim, jewelry, handbags and one-of-a-kind accessories.' },
+  { path: '/collections/jewelry', title: 'Jewelry | Pine Needle Designs', description: 'Browse necklaces, bracelets and earrings at Pine Needle Designs.' },
+  { path: '/collections/bags', title: 'Bags | Pine Needle Designs', description: 'Shop Myra, Adirondack Chic and Upcycled Logos bags at Pine Needle Designs.' },
+  { path: '/collections/pants', title: 'Pants | Pine Needle Designs', description: 'Browse jeans and shorts collections at Pine Needle Designs.' },
   { path: '/about', title: 'Remsen, NY Fashion Designer | Pine Needle Designs', description: 'Meet Wende Maliani of Pine Needle Designs in Remsen, NY, creating one-of-a-kind upcycled clothing and accessories for Central New York and customers nationwide.' },
   { path: '/privacy-policy', title: 'Privacy Policy | Pine Needle Designs', description: 'Read the Pine Needle Designs privacy policy.' },
   { path: '/refund-policy', title: 'Refund Policy | Pine Needle Designs', description: 'Review the Pine Needle Designs refund policy before placing your order.' },

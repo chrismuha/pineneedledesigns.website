@@ -35,6 +35,26 @@ const routes = [
     alias: ['/collections.html'],
   },
 
+  {
+    path: '/collections/jewelry',
+    component: CollectionsView,
+    props: { category: 'jewelry' },
+  },
+  {
+    path: '/collections/bags',
+    component: CollectionsView,
+    props: { category: 'bags' },
+  },
+  {
+    path: '/collections/pants',
+    component: CollectionsView,
+    props: { category: 'pants' },
+  },
+  { path: '/jewelry', redirect: '/collections/jewelry', alias: ['/jewelry.html'] },
+  { path: '/bags', redirect: '/collections/bags', alias: ['/bags.html'] },
+  { path: '/collections/purses', redirect: '/collections/bags', alias: ['/purses', '/purses.html'] },
+  { path: '/collections/chic-jewelry', redirect: '/collections/jewelry' },
+
   ...sitePages.map((page) => ({
     path: page.path,
     name: `page-${page.slug}`,

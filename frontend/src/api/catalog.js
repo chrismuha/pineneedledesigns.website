@@ -1,6 +1,7 @@
-const request = async (url) => {
+const request = async (url, options = {}) => {
   const response = await fetch(url, {
     credentials: 'include',
+    ...options,
   });
 
   const data = await response.json().catch(() => ({}));
@@ -15,7 +16,7 @@ const request = async (url) => {
 };
 
 export const catalogApi = {
-  getCatalog: () => request('/api/storefront/catalog'),
+  getCatalog: (options) => request('/api/storefront/catalog', options),
   getCollection: (slug) => request(`/api/storefront/collections/${slug}`),
   getSubcollections: (slug) => request(`/api/storefront/collections/${slug}/subcollections`),
   getProducts: (slug, subCollectionId = null) => {

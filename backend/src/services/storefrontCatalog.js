@@ -1,4 +1,6 @@
 import { collectionCategoryOrder } from '../../../frontend/src/data/collectionCategoryOrder.js';
+import { StoreSettings } from '../models/StoreSettings.js';
+import { normalizeNewArrivalsSettings } from '../../../frontend/src/utils/newArrivals.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
 import { Subcollection } from '../models/Subcollection.js';
@@ -128,6 +130,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
 
   return {
     id: product.legacyId ?? product._id,
+    catalogId: String(product._id),
     title: product.name,
     price: product.price,
     sizePrices: sizePricesFor(product),
@@ -292,6 +295,8 @@ const buildStorefrontCatalog = async () => {
   ));
 
   const catalog = attachCollectionNavigation(collectionPages);
+  const settings = await StoreSettings.findOne({ key: 'store' }).select('newArrivals').lean();
+  catalog.newArrivalsSettings = normalizeNewArrivalsSettings(settings?.newArrivals);
   logStorefrontTiming(
     'rebuilt catalog',
     startedAt,

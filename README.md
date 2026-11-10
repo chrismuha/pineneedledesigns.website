@@ -239,6 +239,28 @@ navigation remain available when the gallery or product slider has focus.
 
 ## API Endpoints
 
+### New Arrivals user guide
+
+Open **Dashboard → Settings → New Arrivals** to control the homepage slider.
+The default is **Latest only**, showing the ten newest available products with photos.
+Choose one of three modes:
+
+- **Latest only:** show 1–10 newest products automatically.
+- **Latest + custom:** set the number of latest products and custom picks separately,
+  with 1–10 items in total. For example, five latest plus four custom shows up to nine.
+  Either count may be zero when you want just one item.
+- **Custom only:** choose 1–10 products yourself.
+
+Search by product or collection to choose custom picks. Use the arrow buttons to
+set their order. Latest products appear first in mixed mode, followed by custom
+picks; a product appears only once. Sold products, products without photos, and
+hidden collections are excluded. Picks remain saved when sold or unavailable,
+so remove or replace them if needed. Unfilled custom spaces stay empty rather
+than being filled automatically. The preview shows exactly which available items
+will appear. Use **Save New Arrivals** to apply changes, or turn off the section
+with **Show New Arrivals on the homepage** and save. These controls have their own
+save button and do not change checkout preferences or product collection assignments.
+
 ### Orders user guide
 
 The dashboard Orders page is a text-only record of item names, selected options,

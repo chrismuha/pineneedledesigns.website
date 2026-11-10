@@ -71,27 +71,27 @@
     <section class="collections">
       <div class="container">
         <div class="section-head">
-          <h2>Other Collections</h2>
+          <h2>Shop by Category</h2>
         </div>
 
         <div class="grid grid-6">
           <article
             v-for="(collection, collectionIndex) in otherCollections"
             :key="collection.slug"
-            :class="['card', { disabled: collection.count === 0 }]"
+            :class="['card', { disabled: collection.count === 0 && !collection.children }]"
           >
-            <router-link v-if="collection.count > 0" class="card-link" :to="collection.path">
+            <router-link v-if="collection.count > 0 || collection.children" class="card-link" :to="collection.path">
               <img
                 :loading="collectionImageLoading(collectionIndex)"
                 :fetchpriority="collectionImagePriority(collectionIndex)"
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
-                :src="collection.cardImage"
+                :src="collection.cardImage || '/images/comingsoon/comingsoon015.webp'"
                 :alt="collection.title"
               />
               <div class="body">
                 <h3>{{ uppercase(collection.title) }}</h3>
-                <div class="subtle">{{ itemCountLabel(collection.count) }}</div>
+                <div class="subtle">{{ collection.count ? itemCountLabel(collection.count) : 'Coming Soon' }}</div>
               </div>
             </router-link>
             <div v-else>
@@ -100,7 +100,7 @@
                 :fetchpriority="collectionImagePriority(collectionIndex)"
                 decoding="async"
                 :class="['media', { 'coming-soon-image': isComingSoonImage(collection.cardImage) }]"
-                :src="collection.cardImage"
+                :src="collection.cardImage || '/images/comingsoon/comingsoon015.webp'"
                 :alt="collection.title"
               />
               <div class="body">
@@ -129,6 +129,8 @@
 import { computed, onMounted } from 'vue'
 import CollectionProductSlider from '../components/CollectionProductSlider.vue'
 import ImageSlider from '../components/ImageSlider.vue'
+import { selectNewArrivals } from '../utils/newArrivals.js'
+import { buildCatalogSections } from '../data/collectionCategoryOrder.js'
 import { useCatalogStore } from '../stores/catalog.js'
 import { preloadImages, preloadImagesOnIdle } from '../utils/mediaPreloader'
 
@@ -143,27 +145,11 @@ const featuredCollectionSlugs = [
   'denim-and-lace',
 ]
 
-const productMeta = (product) => Array.isArray(product.meta) ? product.meta : [product.meta].filter(Boolean)
-const isProductSold = (product) => (
-  product.sold
-  || product.soldOut
-  || (typeof product.status === 'string' && /^sold(?:\s*out)?$/i.test(product.status.trim()))
-  || (typeof product.availability === 'string' && /^sold(?:\s*out)?$/i.test(product.availability.trim()))
-  || productMeta(product).some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
-)
-
 const recentProductsCollection = computed(() => ({
   slug: 'recently-added',
   title: 'New Arrivals',
   path: '/collections',
-  products: catalogStore.collectionPages
-    .flatMap((collection) => collection.products.map((product) => ({
-      ...product,
-      path: `${collection.path}#product-${product.id}`,
-    })))
-    .filter((product) => !product.placeholder && product.images?.length && !isProductSold(product))
-    .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime())
-    .slice(0, 10),
+  products: selectNewArrivals(catalogStore.collectionPages, catalogStore.newArrivalsSettings),
 }))
 
 const featuredProductCollections = computed(() =>
@@ -172,13 +158,13 @@ const featuredProductCollections = computed(() =>
     .filter((collection) => collection?.products.some((product) => !product.placeholder && product.images?.length))
 )
 
-const otherCollections = computed(() => catalogStore.otherCollections)
+const otherCollections = computed(() => buildCatalogSections(catalogStore.collectionPages))
 
 const featuredImageLoading = (index) => (index === 0 ? 'eager' : 'lazy')
 const featuredImagePriority = (index) => (index === 0 ? 'high' : 'auto')
 const collectionImageLoading = (index) => (index < 2 ? 'eager' : 'lazy')
 const collectionImagePriority = (index) => (index === 0 ? 'high' : 'auto')
-const isComingSoonImage = (src) => String(src).includes('/comingsoon/')
+const isComingSoonImage = (src) => !src || String(src).includes('/comingsoon/')
 const uppercase = (value) => String(value).toUpperCase()
 const itemCountLabel = (count) => `${count} ITEMS`
 

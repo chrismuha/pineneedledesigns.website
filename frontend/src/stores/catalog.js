@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { normalizeNewArrivalsSettings } from '../utils/newArrivals.js'
 import { catalogApi } from '../api/catalog.js'
 
 export const useCatalogStore = defineStore('catalog', () => {
+  const newArrivalsSettings = ref(normalizeNewArrivalsSettings())
   const collectionPages = ref([])
   const visibleCollectionPages = ref([])
   const otherCollections = ref([])
@@ -22,6 +24,7 @@ export const useCatalogStore = defineStore('catalog', () => {
 
     try {
       const data = await catalogApi.getCatalog()
+      newArrivalsSettings.value = normalizeNewArrivalsSettings(data.newArrivalsSettings)
       collectionPages.value = data.collectionPages || []
       visibleCollectionPages.value = data.visibleCollectionPages || []
       otherCollections.value = data.otherCollections || []
@@ -43,6 +46,7 @@ export const useCatalogStore = defineStore('catalog', () => {
   const hasCollections = computed(() => collectionPages.value.length > 0)
 
   return {
+    newArrivalsSettings,
     collectionPages,
     visibleCollectionPages,
     otherCollections,

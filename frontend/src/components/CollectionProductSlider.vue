@@ -208,7 +208,7 @@ const { isDragging, pointerDown, pointerMove, pointerUp, pointerCancel, wheel, c
 const productPath = (product) => product.path || `${props.collection.path}#product-${product.id}`
 
 watch(
-  () => props.collection.slug,
+  () => `${props.collection.slug}:${products.value.map((product) => product.id).join(',')}`,
   () => { currentIndex.value = 0 }
 )
 </script>

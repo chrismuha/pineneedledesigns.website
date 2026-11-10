@@ -4,6 +4,9 @@
 
 ### Catalog
 
+- Bags and jewelry now have dedicated collection pages and menu headings: JEWELRY lists Necklaces, Bracelets, and Earrings; BAGS lists Myra, Adirondack Chic, and Upcycled Logos. Existing Purses and Chic Jewelry links open the corresponding category page, and empty jewelry collections are clearly marked Coming Soon.
+- Catalog and homepage shopping links now start with Purses & Bags, Jewelry, Jackets, and Pants. Pants leads to Jeans and Shorts, while existing collection products, dashboard organization, and subcollection filters remain intact.
+- Dashboard New Arrivals controls offer Latest only, Latest + custom, and Custom only modes, with 1–10 total items, searchable product picks, custom ordering, a homepage preview, and a show/hide switch. New stores keep the ten-newest-items default; mixed selections avoid duplicate products and skip sold items, missing photos, and hidden collections.
 - Dashboard photo and video uploads now use readable product-based filenames, preserve existing canonical names, and reserve unused numbers to avoid overwriting retained media.
 - Dashboard sold status has a grayed-out checkbox, readable stock guidance, and an information dialog when clicked, explaining why items with positive quantity remain available.
 - Inventory status now follows quantity automatically: sales mark items sold only at zero, and returns or restocking make positive quantities available again. Dashboard stock status is read-only, and inventory changes immediately refresh the storefront catalog.

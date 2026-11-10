@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import DashboardNewArrivals from './DashboardNewArrivals.vue'
 import { dashboardApi } from '../../api/dashboard.js'
 import {
   clearDashboardAppearancePreviews,
@@ -279,6 +280,7 @@ onBeforeUnmount(() => {
         <p>Manage checkout and dashboard preferences.</p>
       </div>
     </div>
+    <DashboardNewArrivals />
     <p v-if="loading" class="status-text">Loading settings...</p>
     <section v-else class="settings-card">
       <div class="section-heading">

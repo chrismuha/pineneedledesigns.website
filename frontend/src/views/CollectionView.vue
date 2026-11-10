@@ -138,7 +138,7 @@
       </article>
     </div>
     <p v-else-if="!productsLoading && !productsError" class="subtle">
-      {{ hasLoadedProducts ? 'No matching items' : 'Coming Soon' }}
+      {{ selectedSubcollectionId !== null || activeBagType !== allBagTypes ? 'No matching items' : 'Coming Soon' }}
     </p>
   </section>
   <section v-else class="not-found">

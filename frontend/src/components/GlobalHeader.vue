@@ -56,7 +56,12 @@
     </div>
 
     <nav class="nav-main" :class="{ 'nav-main--dimmed': chromeDimmed }" aria-label="Main">
-      <router-link v-for="link in navLinks" :key="link.path" :to="link.path" :class="{ active: isNavLinkActive(link) }">{{ link.label }}</router-link>
+      <div v-for="link in navLinks" :key="link.path" class="nav-entry">
+        <router-link :to="link.path" :class="{ active: isNavLinkActive(link) }">{{ link.label }}</router-link>
+        <div v-if="link.children" class="nav-children">
+          <router-link v-for="child in link.children" :key="child.path" :to="child.path" :class="{ active: isNavLinkActive(child) }">{{ child.label }}</router-link>
+        </div>
+      </div>
     </nav>
 
     <nav
@@ -65,13 +70,12 @@
       aria-label="Mobile menu"
       :class="{ 'mobile-nav--open': menuOpen, 'mobile-nav--dimmed': chromeDimmed }"
     >
-      <a
-        v-for="link in navLinks"
-        :key="link.path"
-        :href="link.path"
-        :class="{ active: isNavLinkActive(link) }"
-        @click="closeMenu"
-      >{{ link.label }}</a>
+      <div v-for="link in navLinks" :key="link.path" class="nav-entry">
+        <router-link :to="link.path" :class="{ active: isNavLinkActive(link) }" @click="closeMenu">{{ link.label }}</router-link>
+        <div v-if="link.children" class="nav-children">
+          <router-link v-for="child in link.children" :key="child.path" :to="child.path" :class="{ active: isNavLinkActive(child) }" @click="closeMenu">{{ child.label }}</router-link>
+        </div>
+      </div>
     </nav>
 
   </header>
@@ -80,6 +84,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { buildCollectionNavLinks } from '../data/collectionCategoryOrder.js'
 import { useCatalogStore } from '../stores/catalog.js'
 import { useCartStore } from '../stores/cart'
 import { isInstalledPwa } from '../utils/pwaDisplayMode.js'
@@ -90,12 +95,12 @@ const cartStore = useCartStore()
 const catalogStore = useCatalogStore()
 const installedApp = isInstalledPwa()
 
-const navLinks = computed(() => catalogStore.navLinks.length
+const navLinks = computed(() => buildCollectionNavLinks(catalogStore.navLinks.length
   ? catalogStore.navLinks
   : [
     { label: 'Home', path: '/' },
     { label: 'All Collections', path: '/collections' },
-  ])
+  ], catalogStore.collectionPages))
 
 defineProps({
   chromeDimmed: {
@@ -194,7 +199,15 @@ watch(
   transform: scale(0.96);
 }
 
+.nav-entry { display: flex; flex-direction: column; }
+.nav-children { display: flex; flex-direction: column; }
+.mobile-nav .nav-children a { padding-left: 32px; font-size: 0.9rem; letter-spacing: 0.06em; }
+.mobile-nav .nav-entry:has(.nav-children) > a { font-weight: 800; background: var(--black-08); }
+.nav-main .nav-children a { font-size: 1rem; }
+
 .mobile-nav {
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
   z-index: 970;
   pointer-events: auto;
 }
