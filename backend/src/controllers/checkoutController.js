@@ -2,7 +2,7 @@ import { DISCOUNT_RULES } from '../constants/index.js';
 import { config } from '../config/index.js';
 import { ordersController, paypal } from '../services/paypal.js';
 import { getEmailRecipients, getEmailSender, mailerConfigured, sendEmail } from '../services/mailer.js';
-import { persistCapturedOrder } from '../services/orderPersistence.js';
+import { deductCapturedInventory, persistCapturedOrder } from '../services/orderPersistence.js';
 import { Product } from '../models/Product.js';
 import { isValidObjectId, Types } from 'mongoose';
 import { StoreSettings } from '../models/StoreSettings.js';
@@ -57,7 +57,7 @@ const validateCartInventory = async (cart) => {
     const product = await findProductByStorefrontId(id);
     if (!product) return { error: 'An item in your cart is no longer available.' };
     const availableQuantity = Number.isInteger(product.quantity) ? product.quantity : 1;
-    if (product.outOfStock || requestedQuantity > availableQuantity) {
+    if (availableQuantity === 0 || requestedQuantity > availableQuantity) {
       return {
         error: `${product.name} has only ${availableQuantity} available. Please update your cart.`,
       };
@@ -77,24 +77,6 @@ const validateCartInventory = async (cart) => {
   });
 
   return { inventoryLines, pricedCart };
-};
-
-const deductCapturedInventory = async (inventoryLines = []) => {
-  for (const line of inventoryLines) {
-    const product = await Product.findOneAndUpdate(
-      { _id: line.productId, quantity: { $gte: line.quantity } },
-      { $inc: { quantity: -line.quantity } },
-      { new: true },
-    );
-    if (!product) {
-      console.error(`Inventory deduction failed for product ${line.productId}.`);
-      continue;
-    }
-    if (product.quantity === 0 && !product.outOfStock) {
-      product.outOfStock = true;
-      await product.save();
-    }
-  }
 };
 
 const getDiscountAmount = (total, code) => {

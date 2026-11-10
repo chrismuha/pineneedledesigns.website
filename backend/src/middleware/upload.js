@@ -7,6 +7,8 @@ import { execFile } from 'child_process';
 import ffmpeg from '@ffmpeg-installer/ffmpeg';
 import multer from 'multer';
 import sharp from 'sharp';
+import { Product } from '../models/Product.js';
+import { mediaSlug, reserveMediaFilename } from '../utils/mediaNames.js';
 import { config } from '../config/index.js';
 
 await fs.mkdir(config.uploadsDir, { recursive: true });
@@ -20,8 +22,6 @@ const upload = multer({
   },
   limits: { fileSize: 100 * 1024 * 1024, files: 30 },
 });
-
-const uniqueBase = () => `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
 
 export const SYNC_TRANSCODE_MAX_BYTES = 15 * 1024 * 1024;
 
@@ -65,15 +65,15 @@ export const transcodeToWebm = async (inputPath, outputPath) => {
 };
 
 const convertImage = async (file) => {
-  const filename = `${uniqueBase()}.webp`;
+  const filename = file.canonicalFilename;
   await sharp(file.buffer).rotate().webp({ quality: 85 }).toFile(path.join(config.uploadsDir, filename));
   return { ...file, filename, mimetype: 'image/webp', pendingTranscode: false };
 };
 
 // Small video: transcode synchronously and return the final .webm right away.
 const convertVideoSync = async (file) => {
-  const base = uniqueBase();
-  const input = path.join(config.uploadsDir, `${base}${path.extname(file.originalname) || '.video'}`);
+  const base = path.basename(file.canonicalFilename, '.webm');
+  const input = path.join(config.uploadsDir, `${base}.source-video`);
   const filename = `${base}.webm`;
   const startedAt = Date.now();
 
@@ -89,8 +89,8 @@ const convertVideoSync = async (file) => {
 };
 
 const persistVideoRaw = async (file) => {
-  const base = uniqueBase();
-  const extension = path.extname(file.originalname) || '.video';
+  const base = path.basename(file.canonicalFilename, '.webm');
+  const extension = `.pending${path.extname(file.originalname).toLowerCase().replace(/[^.a-z0-9]/g, '') || '.video'}`;
   const filename = `${base}${extension}`;
 
   await fs.writeFile(path.join(config.uploadsDir, filename), file.buffer);
@@ -129,6 +129,19 @@ const convertMediaList = async (files) => {
 
 export const convertUploadedMedia = async (req, _res, next) => {
   try {
+    const files = Array.isArray(req.files) ? req.files : Object.values(req.files || {}).flat();
+    if (files.length) {
+      const product = req.params?.id ? await Product.findById(req.params.id).select('name photos videos').lean() : null;
+      const title = String(product?.name || req.body?.name || '').trim();
+      if (!title) throw new Error('A product name is required before uploading media.');
+      const slug = mediaSlug(title, [...(product?.photos || []), ...(product?.videos || [])]);
+      // Reserve all names before parallel conversion. Retained files and pending
+      // videos also occupy their numbers, so later uploads cannot overwrite them.
+      for (const file of files) {
+        file.canonicalFilename = await reserveMediaFilename(config.uploadsDir, slug,
+          file.mimetype.startsWith('image/') ? 'picture' : 'video');
+      }
+    }
     if (Array.isArray(req.files)) {
       req.files = await convertMediaList(req.files);
     } else if (req.files) {

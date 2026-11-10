@@ -1,5 +1,16 @@
 # Release notes
 
+## TBD
+
+### Catalog
+
+- Dashboard photo and video uploads now use readable product-based filenames, preserve existing canonical names, and reserve unused numbers to avoid overwriting retained media.
+- Dashboard sold status has a grayed-out checkbox, readable stock guidance, and an information dialog when clicked, explaining why items with positive quantity remain available.
+- Inventory status now follows quantity automatically: sales mark items sold only at zero, and returns or restocking make positive quantities available again. Dashboard stock status is read-only, and inventory changes immediately refresh the storefront catalog.
+- Local catalog and media backups can be refreshed by double-clicking Refresh Local Backup.command in the backup folder, with visible completion status and preserved historical files.
+- Snow Diva’s stock status now matches its six available items, restoring it to the homepage slider; its photo uses a readable filename with the previous URL preserved.
+- Website deployment builds production files on the server; generated website files are no longer tracked in Git, while catalog and media backups remain separate.
+
 ## November 7, 2026
 
 - Item-gallery arrows now sit within 6px of the product-card edges, with responsive

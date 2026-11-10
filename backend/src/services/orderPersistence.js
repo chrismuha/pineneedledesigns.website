@@ -1,3 +1,5 @@
+import { inventoryQuantityUpdate } from '../utils/inventory.js';
+import { invalidateStorefrontCatalog } from './storefrontCatalog.js';
 import { Order } from '../models/Order.js';
 import { Product } from '../models/Product.js';
 import { getNextOrderNumber } from '../models/OrderCounter.js';
@@ -6,17 +8,14 @@ export const deductCapturedInventory = async (inventoryLines = []) => {
   for (const line of inventoryLines) {
     const product = await Product.findOneAndUpdate(
       { _id: line.productId, quantity: { $gte: line.quantity } },
-      { $inc: { quantity: -line.quantity } },
-      { returnDocument: 'after' },
+      inventoryQuantityUpdate(-line.quantity),
+      { returnDocument: 'after', updatePipeline: true },
     );
     if (!product) {
       console.error(`Inventory deduction failed for product ${line.productId}.`);
       continue;
     }
-    if (product.quantity === 0 && !product.outOfStock) {
-      product.outOfStock = true;
-      await product.save();
-    }
+    invalidateStorefrontCatalog('inventory changed');
   }
 };
 

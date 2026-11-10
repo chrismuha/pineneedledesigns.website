@@ -74,7 +74,7 @@ const validateCartInventory = async (cart) => {
     const product = await findProductByStorefrontId(id);
     if (!product) return { error: 'An item in your cart is no longer available.' };
     const availableQuantity = Number.isInteger(product.quantity) ? product.quantity : 1;
-    if (product.outOfStock || requestedQuantity > availableQuantity) {
+    if (availableQuantity === 0 || requestedQuantity > availableQuantity) {
       return {
         error: `${product.name} has only ${availableQuantity} available. Please update your cart.`,
       };

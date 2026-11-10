@@ -148,3 +148,6 @@ backend/.env
 # Dropbox numbered dependency and conflict copies
 node_modules */
 *conflicted copy*
+
+# Website build output; generated on the deployment server from frontend sources.
+/docs/

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
+import DashboardStockStatus from './DashboardStockStatus.vue'
 import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
@@ -404,7 +405,7 @@ const buildProductFormData = () => {
   formData.append('noBlingPrice', form.hasBlingOptions ? String(form.noBlingPrice) : '')
   formData.append('noBlingDescription', form.hasBlingOptions ? form.noBlingDescription.trim() : '')
   formData.append('shippingCost', String(form.shippingCost || 0))
-  formData.append('outOfStock', String(form.outOfStock))
+  formData.append('outOfStock', String(Number(form.quantity) === 0))
   formData.append('quantity', String(form.quantity))
   formData.append('customProperties', JSON.stringify(customProperties))
   formData.append('subCollectionId', form.subCollectionId || '')
@@ -546,7 +547,7 @@ watch(
 watch(
   () => form.quantity,
   (quantity) => {
-    if (Number(quantity) === 0) form.outOfStock = true
+    form.outOfStock = Number(quantity) === 0
   },
 )
 </script>
@@ -814,13 +815,9 @@ watch(
         <div class="field">
           <label>Quantity Available *</label>
           <input v-model.number="form.quantity" type="number" min="0" step="1" required>
-          <p class="hint">Setting quantity to 0 automatically marks the item Out of Stock / Sold.</p>
         </div>
 
-        <label class="checkbox-row inventory-status-toggle">
-          <input v-model="form.outOfStock" type="checkbox" :disabled="Number(form.quantity) === 0">
-          <span>Out of Stock. / Sold.</span>
-        </label>
+        <DashboardStockStatus :quantity="form.quantity" />
       </section>
 
       <div class="actions">

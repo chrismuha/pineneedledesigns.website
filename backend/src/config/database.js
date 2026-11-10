@@ -374,8 +374,9 @@ const backfillProductQuantities = async () => {
     console.log(`ℹ️ Initialized inventory quantity to 1 for ${result.modifiedCount} products.`);
   }
   await Product.updateMany(
-    { quantity: 0, outOfStock: { $ne: true } },
-    { $set: { outOfStock: true } },
+    { quantity: { $gte: 0 } },
+    [{ $set: { outOfStock: { $eq: ['$quantity', 0] } } }],
+    { updatePipeline: true },
   );
 };
 

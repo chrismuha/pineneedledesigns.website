@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /api/
-
-# Booking, account and error pages use noindex; crawlers may read those directives.
-Sitemap: https://pineneedledesigns.store/sitemap.xml

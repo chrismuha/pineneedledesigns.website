@@ -67,13 +67,25 @@ npm run build
 npm run preview
 ```
 
-`npm run build` writes disposable verification output outside Dropbox in the system temporary directory. Use
-`npm run build:release` when the committed production files in `docs` need to be updated.
+`npm run build` writes disposable verification output outside Dropbox in the system temporary directory.
+Production deployment builds from source on the DigitalOcean server with `npm run build:release`,
+which overlays the completed build into the server’s `docs/` directory. Generated `docs/`
+files are ignored by Git; edit Vue source and `frontend/public/` assets instead.
+You can run `npm run build:release` locally when you need a local production copy,
+but its generated files are not committed. Deployment preserves the currently served
+files while preparing the next build. This does not change uploads or the independent
+local/GitHub catalog and media backups.
 
 ### Production Catalog
 
 MongoDB is the source of truth for collections, products, and their managed media URLs. Manage
-catalog records and product media through the dashboard. Uploaded media files live in the ignored
+catalog records and product media through the dashboard. New uploads use the product
+name and unused numbered filenames; adding media keeps an existing canonical slug.
+Click the grayed-out Sold control or its information icon for an explanation; the
+dialog supports keyboard access, Escape, and a Got it button. Sold status is automatic and read-only: quantity zero means sold; a positive quantity
+means available. Sales, inventory returns, restocking, and order-edit rollback update
+quantity and stock status together. A payment-only refund does not return inventory;
+use Cancel Order & Refund when the items should be returned to stock. Uploaded media files live in the ignored
 `backend/uploads` directory on the application server and are served from `/uploads`; catalog media
 is not committed to the repository.
 
@@ -161,7 +173,21 @@ uploads deleted before a successful backup cannot be recovered by this job.
 Existing missing media is reported rather than replaced with blank files. There is
 no automatic pruning of old snapshots or replacement files.
 
-Run a manual backup from the repository root with
+For an easy local refresh, double-click **Refresh Local Backup.command** inside
+`~/Website Backups/pineneedledesigns.website/`. It opens Terminal, downloads current
+catalog records and uploads, reports the result, and opens the backup folder.
+Keep Terminal open until it finishes. The command keeps older media and snapshots;
+it does not delete local backup files when items are removed from the website.
+Review `backup-status.json` and `missing-files.txt` for completion and missing media.
+This remains an on-demand local refresh; the independent daily GitHub backup continues.
+
+Install or refresh this shortcut on another Mac from the repository root with
+`/usr/bin/python3 scripts/install-local-backup-shortcut.py`. The Mac needs the existing
+server SSH key at `~/.ssh/pineneedles_deploy`, SSH access, Python 3, and rsync.
+The installer copies the current backup script locally and does not enable a schedule.
+Run the installer again after backup-script updates to refresh that installed copy.
+
+You can also run a manual backup from the repository root with
 `/usr/bin/python3 scripts/backup-uploaded-media.py`.
 Verify backup retention with `python3 tests/media-backup.test.py`.
 
@@ -286,7 +312,7 @@ Sessions are stored in the ignored `.sessions` directory so carts survive server
 │   └── router/
 │       └── index.js           # Vue Router configuration
 ├── backend/src/               # Express API and MongoDB catalog
-├── docs/                      # Published storefront build
+├── docs/                      # Ignored production output, generated during deployment
 ├── package.json
 └── README.md
 ```

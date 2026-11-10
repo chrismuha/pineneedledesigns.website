@@ -1,3 +1,5 @@
+import { inventoryQuantityUpdate } from '../utils/inventory.js';
+import { invalidateStorefrontCatalog } from '../services/storefrontCatalog.js';
 import crypto from 'crypto';
 import { Order } from '../models/Order.js';
 import { OrderCounter } from '../models/OrderCounter.js';
@@ -99,14 +101,17 @@ export const applyInventoryChange = async (oldLines = [], newLines = []) => {
       const delta = (newMap.get(id) || 0) - (oldMap.get(id) || 0);
       if (!delta) continue;
       const product = delta > 0
-        ? await Product.findOneAndUpdate({ _id: id, quantity: { $gte: delta } }, { $inc: { quantity: -delta } }, { new: true })
-        : await Product.findByIdAndUpdate(id, { $inc: { quantity: -delta }, $set: { outOfStock: false } }, { new: true });
+        ? await Product.findOneAndUpdate({ _id: id, quantity: { $gte: delta } }, inventoryQuantityUpdate(-delta), { new: true, updatePipeline: true })
+        : await Product.findByIdAndUpdate(id, inventoryQuantityUpdate(-delta), { new: true, updatePipeline: true });
       if (!product) throw new Error('Inventory changed while this order was being updated.');
-      if (product.quantity === 0) await Product.updateOne({ _id: id }, { $set: { outOfStock: true } });
+      invalidateStorefrontCatalog('inventory changed');
       applied.push({ id, delta });
     }
   } catch (error) {
-    for (const entry of applied.reverse()) await Product.updateOne({ _id: entry.id }, { $inc: { quantity: entry.delta }, $set: { outOfStock: false } });
+    for (const entry of applied.reverse()) {
+      await Product.updateOne({ _id: entry.id }, inventoryQuantityUpdate(entry.delta), { updatePipeline: true });
+      invalidateStorefrontCatalog('inventory rollback');
+    }
     throw Object.assign(error, { status: 409 });
   }
 };

@@ -447,7 +447,7 @@ export const createProduct = async (req, res) => {
     generalDescription: data.generalDescription || (data.hasBlingOptions ? data.description : ''),
     shippingCost: data.shippingCost ?? 0,
     freeShipping: data.freeShipping,
-    outOfStock: data.quantity === 0 || data.outOfStock,
+    outOfStock: (data.quantity ?? 1) === 0,
     quantity: data.quantity ?? 1,
     sortOrder: (maxSort?.sortOrder ?? -1) + 1,
     videos: [...(data.videos || []), ...uploadedVideos],
@@ -541,8 +541,7 @@ export const updateProduct = async (req, res) => {
   if (req.body?.shippingCost !== undefined) product.shippingCost = data.shippingCost;
   if (req.body?.freeShipping !== undefined) product.freeShipping = data.freeShipping;
   if (req.body?.quantity !== undefined) product.quantity = data.quantity;
-  if (req.body?.outOfStock !== undefined) product.outOfStock = data.outOfStock;
-  if (product.quantity === 0) product.outOfStock = true;
+  product.outOfStock = product.quantity === 0;
 
   if (data.collectionId) {
     if (!validId(String(data.collectionId))) return res.status(400).json({ error: 'Invalid collection ID.' });

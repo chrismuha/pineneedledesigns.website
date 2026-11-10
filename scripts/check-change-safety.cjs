@@ -59,7 +59,7 @@ if (!base || /^0+$/.test(base)) {
   }
 
   const added = git(['diff', '--name-only', '--diff-filter=A', base, 'HEAD']).split('\n').filter(Boolean)
-  const forbiddenPath = /(^|\/)(node_modules|dist|release|out|coverage)(\/|$)|(^|\/)(\.env(?!\.(example|sample)$)|id_rsa|id_ed25519)$|\.(pem|key|p12|pfx)$/i
+  const forbiddenPath = /(^|\/)(node_modules|dist|release|out|coverage|docs)(\/|$)|(^|\/)(\.env(?!\.(example|sample)$)|id_rsa|id_ed25519)$|\.(pem|key|p12|pfx)$/i
   for (const file of added) {
     if (forbiddenPath.test(file)) failures.push(`Unsafe generated or sensitive file added: ${file}`)
     try {

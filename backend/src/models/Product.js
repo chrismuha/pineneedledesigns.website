@@ -148,6 +148,10 @@ const productSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+productSchema.pre('validate', function () {
+  this.outOfStock = this.quantity === 0;
+});
+
 productSchema.index({ collectionId: 1, sortOrder: 1 });
 productSchema.index({ subCollectionId: 1 });
 productSchema.index(

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
+import DashboardStockStatus from './DashboardStockStatus.vue'
 import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
@@ -826,7 +827,7 @@ const createQuickCollection = async () => {
 }
 
 const handleEditQuantityChange = () => {
-  if (Number(editingProduct.value?.quantity) === 0) editingProduct.value.outOfStock = true
+  if (editingProduct.value) editingProduct.value.outOfStock = Number(editingProduct.value.quantity) === 0
 }
 
 const saveProduct = async () => {
@@ -891,7 +892,7 @@ const saveProduct = async () => {
       noBlingPrice: editingProduct.value.hasBlingOptions ? editingProduct.value.noBlingPrice ?? '' : '',
       noBlingDescription: editingProduct.value.hasBlingOptions ? String(editingProduct.value.noBlingDescription || '').trim() : '',
       shippingCost: Number(editingProduct.value.shippingCost || 0),
-      outOfStock: Boolean(editingProduct.value.outOfStock),
+      outOfStock: Number(editingProduct.value.quantity) === 0,
       quantity: editingProduct.value.quantity ?? 1,
       customProperties,
       photos: editingProduct.value.photos || [],
@@ -1688,15 +1689,9 @@ onBeforeUnmount(() => {
             required
             @input="handleEditQuantityChange"
           >
-          <p class="hint">Setting quantity to 0 automatically marks the item Out of Stock / Sold.</p>
         </div>
 
-        <div class="field">
-          <label class="checkbox-row inventory-status-toggle">
-            <input v-model="editingProduct.outOfStock" type="checkbox" :disabled="Number(editingProduct.quantity) === 0">
-            <span>Out of Stock / Sold</span>
-          </label>
-        </div>
+        <DashboardStockStatus :quantity="editingProduct.quantity" />
 
         <div class="modal-actions">
           <div v-if="saving" class="media-progress" role="status" aria-live="polite">

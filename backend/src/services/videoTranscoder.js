@@ -55,7 +55,7 @@ const unlinkQuiet = async (filename, reason) => {
 const transcodeOne = async ({ productId, rawFilename }) => {
   const startedAt = Date.now();
   const base = path.basename(rawFilename, path.extname(rawFilename));
-  const finalFilename = `${base}.webm`;
+  const finalFilename = `${base.replace(/\.pending$/, '')}.webm`;
   const rawUrl = uploadsUrlFor(rawFilename);
   const finalUrl = uploadsUrlFor(finalFilename);
 

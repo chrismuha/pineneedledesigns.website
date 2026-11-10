@@ -2,6 +2,20 @@
 
 **Current classification:** [Two independently alphabetized media lists](MEDIA-PROVENANCE.md): first list contains original files labeled **Never lost** and Etsy files labeled **Confirmed**; second list contains only **Unconfirmed** non-Etsy recovery/replacement files. These latest labels supersede earlier blanket Confirmed labels in the dated history. The lists include exact current filenames, hashes, source evidence, and Farmer’s placeholder rationale.
 
+## Automatic inventory status — November 10, 2026
+
+- Owner clarified that sold status must follow quantity: zero is sold; positive quantities are available. Dashboard status is now read-only, and sale/return/order-edit rollback paths update quantity and status atomically, then invalidate the storefront cache.
+- With explicit owner approval, preserved Carmen (88), Betsey Johnson Blush Satin Heels (88), and Cheetah Boa (30) quantities and made them available. Per the owner's subsequent correction, Farmer Mrs. Synakowski is sold with quantity zero. Snow Diva remains available with six.
+- Media files and gallery mappings were unchanged. Verified the complete public catalog obeys the quantity/status rule. Refreshed local catalog/media backup `20261110T144722079534Z`: 475 retained files, zero missing references; verified corrected inventory records in the saved catalog.
+
+## Snow Diva visibility and naming — November 10, 2026
+
+- Product `6af268af294a1051fc7e7be4` was marked sold with quantity six. With the owner's explicit confirmation, cleared only the sold flag and preserved the quantity and other item details.
+- Copied dashboard upload `/uploads/1794271407495-777375102.webp` to `/uploads/snow-diva-t-shirt-picture-01.webp` and updated only the gallery URL. Retained the old file as a compatibility alias; no recompression, crop, or conversion occurred. No separate source original was available in this task.
+- Both files and the public response have SHA-256 `9b8673bbf9b823008ca62854a2251da366ef34abf587711b5ff0d3bb90794f4d`. Source attribution is **Unconfirmed**.
+- Verified public catalog reports six available and no sold flag. Dashboard uploads now generate readable product photo/video names, keep canonical slugs stable on edits, and reserve unused numbers without overwriting retained files.
+- The first catalog/media backup transfer was interrupted by an SSH connection reset; previous backups were retained. Retry completed successfully: 475 retained files, zero missing catalog media. Verified the upload mirror SHA-256 and organized Snow Diva product/media mappings, including its available stock status, under `~/Website Backups/pineneedledesigns.website/`. Backup ID: `20261110T144041935502Z`.
+
 ## Daily backup retention and branch locations — November 6, 2026
 
 Daily backups accumulate on the `daily-backups` branch. Each successful run builds on the previous backup: unchanged files remain, new media is added, and the latest catalog metadata is refreshed. A timestamped catalog snapshot and a Git commit preserve each run’s history. For example, content added today remains alongside content added tomorrow.

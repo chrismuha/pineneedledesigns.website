@@ -1,3 +1,10 @@
+# Site-only meaning of “build”
+
+- For this website only, a user request to “build” explicitly authorizes committing the current completed work and pushing it to `main`. Let the existing production deployment build and deploy the website on the server.
+- Do not run another local website build in response to that request. Generated `docs/` output stays ignored and untracked; preserve the local catalog/media backup and uploaded media.
+- Keep the current version, update and verify the release notes, and run appropriate non-build checks before pushing. Do not create desktop installers or distribute installer packages for this website.
+- This site-specific user preference overrides conflicting generic build/push wording below for this repository only. It does not authorize publishing a GitHub release or change the rules for other projects.
+
 ## Build requests and installer delivery
 
 - Established destination search roots, relative to the user’s Dropbox folder, include `MCR Development/main-primary development/program development/PROGRAMS DEVELOPED/<suite>/<program>/`, `Chris Muha/MCR UTILITIES/<suite>/<program>/`, and `Chris Muha/2. DELETE WHEN DONE/flash drive updates/app updates/<suite>/<program>/`. Discover and verify actual suite/program folder names and any additional existing destinations instead of assuming capitalization or creating a new structure. Apply the flash-drive opt-in rule before delivery there.

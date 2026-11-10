@@ -25,3 +25,13 @@ test('user filenames are log arguments, never the format string', async (t) => {
   assert.equal(log[2], 'clip-%s-%d.webm');
   assert.equal(log[4], 'product');
 });
+
+test('background conversion replaces a pending video with its reserved canonical WebM name', async (t) => {
+  let resolveLog;
+  const completed = new Promise((resolve) => { resolveLog = resolve; });
+  t.mock.method(fs, 'unlink', async () => {});
+  t.mock.method(console, 'log', (...args) => resolveLog(args));
+  queueVideoTranscode({ productId: 'product', files: [{ filename: 'snow-diva-t-shirt-video-01.pending.mp4', pendingTranscode: true }] });
+  const log = await completed;
+  assert.equal(log[2], 'snow-diva-t-shirt-video-01.webm');
+});

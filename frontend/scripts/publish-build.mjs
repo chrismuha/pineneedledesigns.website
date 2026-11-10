@@ -12,7 +12,7 @@ const docsDir = path.join(rootDir, 'docs')
 await stat(path.join(buildDir, 'index.html'))
 await mkdir(docsDir, { recursive: true })
 
-// Overlay a fully completed Vite build. The build never clears docs, so a
+// Overlay a fully completed Vite build into ignored runtime output. The build never clears docs, so a
 // Dropbox placeholder or interrupted build cannot make the deployed tree look
 // deleted. Product media lives in backend/uploads and is not part of this build.
 for (const entry of await readdir(buildDir, { withFileTypes: true })) {

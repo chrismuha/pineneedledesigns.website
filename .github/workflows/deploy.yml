@@ -71,10 +71,16 @@ jobs:
             df -h /
 
             git fetch origin main
+            # On the transition away from tracked builds, remove docs from the
+            # index before reset so the current live files stay on disk. Later
+            # deployments also keep serving them until the new build is ready.
+            if [ -z "$(git ls-tree origin/main -- docs)" ]; then
+              git rm -r --cached --ignore-unmatch -- docs
+            fi
             git reset --hard origin/main
             # Uploaded customer media must survive even if a future .gitignore
             # change accidentally removes its ignore rule.
-            git clean -fd -e /backend/uploads/ -e /backups/
+            git clean -fd -e /backend/uploads/ -e /backups/ -e /docs/
 
             if [ -z "${MONGODB_URI:-}" ]; then
               echo "ERROR: MONGODB_URI secret is empty. Set GitHub Actions secret MONGODB_URI to your DigitalOcean MongoDB connection string."

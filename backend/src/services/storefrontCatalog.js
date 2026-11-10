@@ -152,7 +152,7 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
     bagTypes: product.bagTypes?.length ? product.bagTypes : undefined,
     shoeTypes: product.shoeTypes?.length ? product.shoeTypes : undefined,
     maker: product.maker || undefined,
-    sold: product.outOfStock || undefined,
+    sold: product.quantity === 0 || undefined,
     availableQuantity: Number.isInteger(product.quantity) ? product.quantity : 1,
     shippingCost: Number(product.shippingCost || 0),
     createdAt: product.createdAt,
