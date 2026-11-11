@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promi
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { dashboardReleaseId } from './dashboard-release.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const frontendDir = path.resolve(__dirname, '..')
@@ -10,6 +11,17 @@ const buildDir = path.join(os.tmpdir(), 'pineneedledesigns-frontend-dist')
 const docsDir = path.join(rootDir, 'docs')
 
 await stat(path.join(buildDir, 'index.html'))
+// Storefront cache busting remains independent of dashboard update detection.
+const replacements = {
+  'index.html': ['__PINE_NEEDLE_BUILD_ID__', encodeURIComponent(new Date().toISOString())],
+  'sw.js': ['__PINE_NEEDLE_DASHBOARD_RELEASE__', await dashboardReleaseId(frontendDir)],
+}
+for (const [filename, [placeholder]] of Object.entries(replacements)) {
+  if (!(await readFile(path.join(buildDir, filename), 'utf8')).includes(placeholder)) {
+    throw new Error(`Missing release placeholder in ${filename}`)
+  }
+}
+
 await mkdir(docsDir, { recursive: true })
 
 // Overlay a fully completed Vite build into ignored runtime output. The build never clears docs, so a
@@ -31,11 +43,11 @@ for (const entry of await readdir(path.join(docsDir, 'assets'), { withFileTypes:
   }
 }
 
-const buildId = new Date().toISOString()
-for (const filename of ['index.html', 'sw.js']) {
+for (const [filename, [placeholder, value]] of Object.entries(replacements)) {
   const destination = path.join(docsDir, filename)
   const contents = await readFile(destination, 'utf8')
-  await writeFile(destination, contents.replaceAll('__PINE_NEEDLE_BUILD_ID__', encodeURIComponent(buildId)))
+  if (!contents.includes(placeholder)) throw new Error(`Missing release placeholder in ${filename}`)
+  await writeFile(destination, contents.replaceAll(placeholder, value))
 }
 
 await cp(path.join(rootDir, 'CNAME'), path.join(docsDir, 'CNAME'), { force: true })

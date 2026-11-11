@@ -57,9 +57,9 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
-// Replaced with a unique value during every production build so installed
-// copies can reliably detect a deployment even when this source is unchanged.
-const BUILD_ID = '__PINE_NEEDLE_BUILD_ID__';
+// Stable across site-only deployments; changes only with dashboard client code,
+// its shared dependencies/theme, or installed-app shell and notification code.
+const DASHBOARD_RELEASE = '__PINE_NEEDLE_DASHBOARD_RELEASE__';
 
 const updateAppBadge = async (excludedTag = '') => {
   if (!self.navigator?.setAppBadge) return;

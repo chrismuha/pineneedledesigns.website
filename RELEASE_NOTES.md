@@ -2,6 +2,11 @@
 
 ## TBD
 
+### App updates
+
+- App update prompts now follow changes to the dashboard and its shared app code, instead of appearing after every website deployment.
+- Storefront changes, catalog content, backups, and deployment timestamps no longer create dashboard app updates.
+
 ### Catalog
 
 - Bags and jewelry now have dedicated collection pages and menu headings: JEWELRY lists Necklaces, Bracelets, and Earrings; BAGS lists Myra, Adirondack Chic, and Upcycled Logos. Existing Purses and Chic Jewelry links open the corresponding category page, and empty jewelry collections are clearly marked Coming Soon.
@@ -17,6 +22,10 @@
 - Show on website checkboxes control individual items across all collections, entire collections, and individual sub-collections. All existing content is enabled on initial setup, and new items start checked with an option to uncheck during upload. Hidden content stays editable in the dashboard, is excluded from public listings and New Arrivals, and can be restored without changing stock or assignments. Hidden sub-collection placements are also excluded from the parent collection’s All view; shared items remain visible through other enabled placements. Later restarts preserve checkbox choices.
 - Snow Diva’s stock status now matches its six available items, restoring it to the homepage slider; its photo uses a readable filename with the previous URL preserved.
 - Website deployment builds production files on the server; generated website files are no longer tracked in Git, while catalog and media backups remain separate.
+
+### Release notes
+
+- Dashboard Settings now includes a dated release timeline with alphabetized categories and change bullets, plus expandable history.
 
 ## November 7, 2026
 

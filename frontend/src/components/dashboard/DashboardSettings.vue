@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import DashboardNewArrivals from './DashboardNewArrivals.vue'
+import DashboardReleaseNotes from './DashboardReleaseNotes.vue'
 import { dashboardApi } from '../../api/dashboard.js'
 import {
   clearDashboardAppearancePreviews,
@@ -280,6 +281,7 @@ onBeforeUnmount(() => {
         <p>Manage checkout and dashboard preferences.</p>
       </div>
     </div>
+    <DashboardReleaseNotes />
     <DashboardNewArrivals />
     <p v-if="loading" class="status-text">Loading settings...</p>
     <section v-else class="settings-card">
@@ -384,7 +386,7 @@ onBeforeUnmount(() => {
           <div>
             <strong>{{ updateAvailable ? 'App update available' : 'App updates' }}</strong>
             <p v-if="updateAvailable">A newer version is ready to install. This is not another update check.</p>
-            <p v-else>Check whether a newer version of Pine Needle Designs is available.</p>
+            <p v-else>Check for dashboard app changes. Website-only deployments do not create app updates.</p>
           </div>
         </div>
         <button

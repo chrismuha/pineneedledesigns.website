@@ -433,3 +433,41 @@ Collections → Filters/Sub-Collections**. Unchecking hides its filter and its i
 placements, including from the parent collection's **All** view and New Arrivals.
 An item with another enabled placement can still appear there. Re-enabling a
 sub-collection does not override the item or parent collection's own setting.
+
+### Dashboard updates and release timeline
+
+Open **Settings → Release notes** to view What’s New and the expandable dashboard
+history. Categories and bullets are alphabetical; dated entries run newest first.
+The history is reconstructed from documented changes on `main`, grouped by date,
+not from deployment timestamps. No numbered app versions or GitHub releases existed
+when this history was added. Current unpublished changes show **TBD**; set their
+actual release date when they are released, rather than inventing a release date.
+The existing site-wide history remains in `RELEASE_NOTES.md`.
+
+The installed app checks for dashboard client changes, including shared code used
+by the dashboard, theme tokens, icons, the manifest, and notification/worker code.
+Website-only deployments, catalog data edits, media records, backups, and dependency
+metadata alone do not trigger an app update. Server-side and catalog changes are
+served live and do not require an app installation. After the first deployment of
+this fix, existing installations receive one update to adopt the corrected worker;
+subsequent unchanged dashboard deployments keep the same worker bytes.
+If an update is available, the existing alert preferences, delay, Later option,
+and Settings install controls still apply. If the app says it is current after a
+website-only deployment, that is expected.
+
+Release notes are maintained in `frontend/src/data/dashboardReleases.js`, with
+historical source commit references for verification. The same data renders both
+the in-app timeline and `DASHBOARD_RELEASE_NOTES.md`. After editing it, run
+`node frontend/scripts/dashboard-release-notes.mjs`, then verify with
+`node frontend/scripts/dashboard-release-notes.mjs --check`. Keep the site-wide
+notes consistent and preserve historical entries.
+
+`frontend/scripts/dashboard-release.mjs` computes the dashboard fingerprint from
+source inputs, independently of Vite chunk names and deployment time. It follows
+relative dependencies from the dashboard components and shell. Bootstrap and the
+dashboard route block are included without following storefront routes. If the
+router boundary changes, the production release step fails for review instead of
+silently omitting routes. When adding another installed-app entry point or static
+asset, include it in these inputs and extend the focused tests. Production publishing
+injects this fingerprint into `sw.js`; the storefront stylesheet cache-busting token
+continues to change independently. Do not stamp a timestamp or Git SHA into the worker.
