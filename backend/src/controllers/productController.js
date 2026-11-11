@@ -1,3 +1,4 @@
+import { membershipQuery, productMemberships, referenceId } from '../utils/collectionMemberships.js';
 import { auditedRemoval, catalogTarget, removeUploadedMedia } from '../services/catalogAudit.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
@@ -46,6 +47,34 @@ const resolveSubCollectionId = async (collectionId, subCollectionId, { requireWh
   }
 
   return { id: subcollection._id, error: null };
+};
+
+const resolveAdditionalCollections = async (value, primaryCollectionId, primarySubCollectionId) => {
+  let entries = value;
+  if (typeof entries === 'string') {
+    try { entries = JSON.parse(entries); }
+    catch { return { error: 'Additional collections must be a list.' }; }
+  }
+  if (!Array.isArray(entries) || entries.length > 50) {
+    return { error: 'Choose up to 50 additional collection placements.' };
+  }
+  const assignments = [];
+  const seen = new Set([`${referenceId(primaryCollectionId)}:${referenceId(primarySubCollectionId)}`]);
+  for (const entry of entries) {
+    if (!entry || typeof entry !== 'object' || !validId(entry.collectionId)
+      || (entry.subCollectionId && !validId(entry.subCollectionId))) {
+      return { error: 'An additional collection or sub-collection is invalid.' };
+    }
+    const collection = await Collection.findById(objectId(entry.collectionId));
+    if (!collection || collection.isSystem) return { error: 'Choose an existing non-system additional collection.' };
+    const result = await resolveSubCollectionId(collection._id, entry.subCollectionId);
+    if (result.error) return result;
+    const key = `${referenceId(collection._id)}:${referenceId(result.id)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    assignments.push({ collectionId: collection._id, subCollectionId: result.id });
+  }
+  return { assignments };
 };
 
 const normalizeCustomProperties = (properties) => {
@@ -337,9 +366,11 @@ export const listProductsGrouped = async (_req, res) => {
   }, {});
 
   const productsByCollectionId = products.reduce((groups, product) => {
-    const key = String(product.collectionId?._id || product.collectionId);
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(product);
+    const keys = new Set(productMemberships(product).map((entry) => referenceId(entry.collectionId)));
+    for (const key of keys) {
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(product);
+    }
     return groups;
   }, {});
 
@@ -350,6 +381,11 @@ export const listProductsGrouped = async (_req, res) => {
       .map((product) => ({
         ...formatProductForDashboard(product),
         collectionName: collection.name,
+        displayedSubcollections: productMemberships(product)
+          .filter((entry) => referenceId(entry.collectionId) === String(collection._id))
+          .map((entry) => (subcollectionsByCollectionId[String(collection._id)] || [])
+            .find((sub) => String(sub._id) === referenceId(entry.subCollectionId)))
+          .filter(Boolean),
       })),
   }));
   console.log(`[productController] listProductsGrouped in ${Date.now() - startedAt}ms`);
@@ -360,11 +396,13 @@ export const listProducts = async (req, res) => {
   const filter = {};
   if (req.query.collectionId) {
     if (!validId(req.query.collectionId)) return res.status(400).json({ error: 'Invalid collection ID.' });
-    filter.collectionId = objectId(req.query.collectionId);
+    Object.assign(filter, membershipQuery(objectId(req.query.collectionId)));
   }
   if (req.query.subCollectionId) {
     if (!validId(req.query.subCollectionId)) return res.status(400).json({ error: 'Invalid filter/sub-collection ID.' });
-    filter.subCollectionId = objectId(req.query.subCollectionId);
+    const subId = objectId(req.query.subCollectionId);
+    if (req.query.collectionId) Object.assign(filter, membershipQuery(objectId(req.query.collectionId), [subId]));
+    else Object.assign(filter, { $or: [{ subCollectionId: subId }, { 'additionalCollections.subCollectionId': subId }] });
   }
 
   const products = await Product.find(filter)
@@ -424,12 +462,18 @@ export const createProduct = async (req, res) => {
     return res.status(400).json({ error: subcollectionResult.error });
   }
 
+  const additionalResult = await resolveAdditionalCollections(
+    req.body?.additionalCollections ?? [], collection._id, subcollectionResult.id,
+  );
+  if (additionalResult.error) return res.status(400).json({ error: additionalResult.error });
+
   const maxSort = await Product.findOne({ collectionId: collection._id }).sort({ sortOrder: -1 }).select('sortOrder');
   const product = await Product.create({
     name: data.name,
     description: data.description,
     collectionId: collection._id,
     subCollectionId: subcollectionResult.id,
+    additionalCollections: additionalResult.assignments,
     color: data.color,
     size: data.size,
     sweatshirtSize: data.sweatshirtSize,
@@ -572,6 +616,19 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ error: subcollectionResult.error });
     }
     product.subCollectionId = null;
+  }
+
+  if (req.body?.additionalCollections !== undefined) {
+    const additionalResult = await resolveAdditionalCollections(
+      req.body.additionalCollections, product.collectionId, product.subCollectionId,
+    );
+    if (additionalResult.error) return res.status(400).json({ error: additionalResult.error });
+    product.additionalCollections = additionalResult.assignments;
+  } else {
+    product.additionalCollections = (product.additionalCollections || []).filter((entry) => !(
+      referenceId(entry.collectionId) === referenceId(product.collectionId)
+      && referenceId(entry.subCollectionId) === referenceId(product.subCollectionId)
+    ));
   }
 
   await product.save();

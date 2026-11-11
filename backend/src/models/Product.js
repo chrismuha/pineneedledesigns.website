@@ -22,6 +22,13 @@ const productSchema = new mongoose.Schema({
     ref: 'Subcollection',
     default: null,
   },
+  additionalCollections: {
+    type: [new mongoose.Schema({
+      collectionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection', required: true },
+      subCollectionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subcollection', default: null },
+    }, { _id: false })],
+    default: [],
+  },
   color: { type: String, default: '', trim: true },
   size: { type: String, default: '', trim: true },
   sweatshirtSize: { type: String, default: '', trim: true },
@@ -154,6 +161,7 @@ productSchema.pre('validate', function () {
 
 productSchema.index({ collectionId: 1, sortOrder: 1 });
 productSchema.index({ subCollectionId: 1 });
+productSchema.index({ 'additionalCollections.collectionId': 1, 'additionalCollections.subCollectionId': 1 });
 productSchema.index(
   { legacyId: 1 },
   {

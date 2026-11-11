@@ -1,3 +1,4 @@
+import { membershipQuery, productMemberships, referenceId } from '../utils/collectionMemberships.js';
 import { collectionCategoryOrder } from '../../../frontend/src/data/collectionCategoryOrder.js';
 import { StoreSettings } from '../models/StoreSettings.js';
 import { normalizeNewArrivalsSettings } from '../../../frontend/src/utils/newArrivals.js';
@@ -74,6 +75,10 @@ const primarySizeLabelFor = (collectionSlug) => ({
 }[collectionSlug] || 'Size');
 
 const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions = false, collectionSlug = '') => {
+  // A Seasonal placement uses the original product type and purchase options.
+  collectionSlug = product.primaryCollectionSlug || product.collectionId?.slug || collectionSlug;
+  allowBlingOptions = collectionSlug === 'shirts';
+  categoryFilters = [...categoryFilters, product.primarySubcollectionName || product.subCollectionId?.name].filter(Boolean);
   const placeholders = product.optionPlaceholders instanceof Map
     ? Object.fromEntries(product.optionPlaceholders)
     : (product.optionPlaceholders || {});
@@ -169,10 +174,12 @@ const buildCollectionPage = (collection, subcollections, products) => {
     subcollections.map((subcollection) => [String(subcollection._id), subcollection.name]),
   );
   const storefrontProducts = products.map((product) => {
-    const subcollectionName = subcollectionNames.get(String(product.subCollectionId));
-    const categoryFilters = subcollectionName === 'Boa'
-      ? ['Boa', 'T-Shirts']
-      : [subcollectionName].filter(Boolean);
+    const categoryFilters = productMemberships(product)
+      .filter((entry) => referenceId(entry.collectionId) === String(collection._id))
+      .flatMap((entry) => {
+        const name = subcollectionNames.get(referenceId(entry.subCollectionId));
+        return name === 'Boa' ? ['Boa', 'T-Shirts'] : [name].filter(Boolean);
+      });
 
     return mapProductToStorefront(product, categoryFilters, allowBlingOptions, collection.slug);
   });
@@ -269,7 +276,7 @@ const buildStorefrontCatalog = async () => {
     .sort({ sortOrder: 1, name: 1 })
     .lean();
   const products = await Product.find()
-    .select('name collectionId subCollectionId color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders createdAt')
+    .select('name collectionId subCollectionId additionalCollections color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders createdAt')
     .sort({ name: 1 })
     .collation({ locale: 'en', strength: 2 })
     .lean();
@@ -282,9 +289,12 @@ const buildStorefrontCatalog = async () => {
   }, {});
 
   const productsByCollectionId = products.reduce((groups, product) => {
-    const key = String(product.collectionId);
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(product);
+    product.primaryCollectionSlug = collections.find((item) => String(item._id) === referenceId(product.collectionId))?.slug;
+    product.primarySubcollectionName = subcollections.find((item) => String(item._id) === referenceId(product.subCollectionId))?.name;
+    for (const key of new Set(productMemberships(product).map((entry) => referenceId(entry.collectionId)))) {
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(product);
+    }
     return groups;
   }, {});
 
@@ -354,7 +364,7 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   const collection = await Collection.findOne({ slug, isSystem: false }).lean();
   if (!collection) return null;
 
-  const filter = { collectionId: collection._id };
+  let filter = membershipQuery(collection._id);
 
   if (subCollectionId) {
     if (!isValidObjectId(subCollectionId)) return [];
@@ -373,7 +383,7 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
     if (normalizedSubcollectionName === 'boa') {
       // Legacy product filters are not authoritative. Some regular T-shirts still
       // carry a stale "Boa" filter, so BOA must use the assigned sub-collection.
-      filter.subCollectionId = subcollection._id;
+      filter = membershipQuery(collection._id, [subcollection._id]);
     } else if (normalizedSubcollectionName === 't-shirts') {
       // BOA is a type of T-shirt, so the broader T-Shirts view includes both
       // explicitly assigned T-shirts and explicitly assigned BOA products.
@@ -382,18 +392,20 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
         name: /^boa$/i,
       }).lean();
 
-      filter.subCollectionId = {
-        $in: [subcollection._id, boaSubcollection?._id].filter(Boolean),
-      };
+      filter = membershipQuery(collection._id, [subcollection._id, boaSubcollection?._id].filter(Boolean));
     } else {
-      filter.$or = [
-        { subCollectionId: subcollection._id },
-        { filters: subcollection.name },
-      ];
+      // Only legacy primary placements may use the old free-text filters.
+      // Additional placements always match the collection/subcollection pair.
+      filter = { $or: [
+        ...membershipQuery(collection._id, [subcollection._id]).$or,
+        { collectionId: collection._id, filters: subcollection.name },
+      ] };
     }
   }
 
   const products = await Product.find(filter)
+    .populate('collectionId', 'slug name')
+    .populate('subCollectionId', 'name slug')
     .sort({ name: 1 })
     .collation({ locale: 'en', strength: 2 })
     .lean();

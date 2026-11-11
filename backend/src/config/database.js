@@ -1,3 +1,6 @@
+import { ensureHolidayCatalog } from '../services/holidayCatalog.js';
+import { ensureClearanceCatalog } from '../services/clearanceCatalog.js';
+import { ensureSeasonalCatalog } from '../services/seasonalCatalog.js';
 import mongoose from 'mongoose';
 import { config, getMongoDatabaseName, maskMongoUri } from './index.js';
 import { Collection } from '../models/Collection.js';
@@ -586,5 +589,8 @@ export const connectDatabase = async () => {
   }
 
   await ensureUncategorizedCollection();
+  await ensureSeasonalCatalog();
+  await ensureClearanceCatalog();
+  await ensureHolidayCatalog();
   console.log(`ℹ️ MongoDB startup checks finished in ${Date.now() - startedAt}ms.`);
 };

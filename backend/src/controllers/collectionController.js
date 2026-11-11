@@ -1,3 +1,4 @@
+import { membershipQuery, referenceId } from '../utils/collectionMemberships.js';
 import { auditedRemoval, catalogTarget, removeUploadedMedia } from '../services/catalogAudit.js';
 import { Collection } from '../models/Collection.js';
 import { Product } from '../models/Product.js';
@@ -85,7 +86,13 @@ export const deleteCollection = async (req, res) => {
     });
   }
 
-  const products = await Product.find({ collectionId: collection._id }).select('name photos').lean();
+  const assignedProducts = await Product.find(membershipQuery(collection._id))
+    .select('name photos collectionId subCollectionId additionalCollections').lean();
+  const products = assignedProducts.filter((product) => (
+    referenceId(product.collectionId) === String(collection._id)
+    && !(product.additionalCollections || []).some((entry) => referenceId(entry.collectionId) !== String(collection._id))
+  ));
+  const retainedProducts = assignedProducts.filter((product) => !products.includes(product));
   const subcollections = await Subcollection.find({ collectionId: collection._id }).select('name').lean();
   const productIds = products.map((product) => product._id);
   const uploadedPhotos = products
@@ -96,8 +103,20 @@ export const deleteCollection = async (req, res) => {
     targets: [catalogTarget('collections', collection),
       ...products.map((product) => catalogTarget('products', product)),
       ...subcollections.map((item) => catalogTarget('subcollections', item))],
-    reason: 'Collection and its contents deleted',
+    reason: `Collection deleted; ${products.length} exclusive products deleted; ${retainedProducts.length} shared products retained`,
   }, async () => {
+    // Detach first so a shared product never loses its other placements or stock.
+    for (const product of retainedProducts) {
+      const remaining = (product.additionalCollections || [])
+        .filter((entry) => referenceId(entry.collectionId) !== String(collection._id));
+      const update = { additionalCollections: remaining };
+      if (referenceId(product.collectionId) === String(collection._id)) {
+        const promoted = remaining.shift();
+        update.collectionId = promoted.collectionId;
+        update.subCollectionId = promoted.subCollectionId || null;
+      }
+      await Product.updateOne({ _id: product._id }, { $set: update });
+    }
     await Product.deleteMany({ _id: { $in: productIds } });
     await Subcollection.deleteMany({ collectionId: collection._id });
     await collection.deleteOne();
@@ -116,5 +135,5 @@ export const deleteCollection = async (req, res) => {
       }
     })));
 
-  res.json({ success: true, deletedProducts: products.length });
+  res.json({ success: true, deletedProducts: products.length, retainedProducts: retainedProducts.length });
 };

@@ -138,6 +138,12 @@ export const deleteSubcollection = async (req, res) => {
     { $unset: { subCollectionId: '' } },
   );
 
+  await Product.updateMany(
+    { additionalCollections: { $elemMatch: { collectionId: collection._id, subCollectionId: subcollection._id } } },
+    { $set: { 'additionalCollections.$[placement].subCollectionId': null } },
+    { arrayFilters: [{ 'placement.collectionId': collection._id, 'placement.subCollectionId': subcollection._id }] },
+  );
+
   invalidateStorefrontCatalog('subcollection deleted');
   res.json({ success: true });
 };

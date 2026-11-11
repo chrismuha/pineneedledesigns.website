@@ -364,3 +364,42 @@ node --experimental-test-module-mocks --test tests/email-accessibility.test.mjs 
 python3 tests/email-accessibility.test.py
 python3 tests/media-backup.test.py
 ```
+
+### Clearance, Holiday, Seasonal and additional collection assignments
+
+Keep an item's **Primary collection** and **Filter/Sub-Collection** set to its
+product type (for example, Shirts → T-Shirts). In either Create Item or Edit Item,
+use **Additional collections → Add another collection** to add Seasonal → Winter
+or another collection/sub-collection. Add another row for each placement, including
+more than one season when appropriate. Remove a row to stop showing the item there.
+Saving updates one product: stock, sales, media, prices and purchase options stay
+shared across every placement. Item drafts retain these choices.
+
+The Seasonal collection starts with Spring, Summer, Fall and Winter filters.
+Initial setup assigns America She's Beautiful to Summer; Autumn Cowgirl, Boo-Jee
+Boa and Mischief Witch and Her Cat- Blinged Out to Fall; and SNOW DIVA T-shirt to
+Winter. Their existing product-type collections remain assigned. This runs once
+on the first backend start after deployment; later dashboard changes are retained.
+Other products and future seasonal assignments are chosen manually in the dashboard.
+
+Clearance is also available as a collection, including when it is empty. Add it
+through **Additional collections → Add another collection → Clearance**, leaving
+**Sub-collection** at **All / no sub-collection**. The item keeps its existing
+collection assignments. Clearance membership does not automatically change prices;
+choose clearance items and set their prices explicitly in the dashboard. Initial
+setup creates or reuses Clearance once, preserving any existing contents and later
+owner changes.
+
+Holiday has its own collection with Christmas, Easter, Halloween, Independence
+Day, New Year's Day, St. Patrick's Day, Thanksgiving and Valentine's Day filters.
+Use **Additional collections → Add another collection → Holiday**, then choose
+the holiday. Initial setup also lists Boo-Jee Boa and Mischief Witch and Her Cat-
+Blinged Out under Holiday → Halloween, keeping their Shirts and Seasonal → Fall
+placements. Winter designs such as Snow Diva are not automatically labeled
+Christmas. Add other holiday placements and manage holiday sub-collections in the
+dashboard. This setup runs once and preserves later owner changes.
+
+Deleting a sub-collection clears only that sub-collection assignment. Deleting a
+collection deletes its exclusive products, but retains shared products in their
+other collections. **Delete Item** removes the product from every collection;
+remove an additional placement in Edit Item to remove just one listing.

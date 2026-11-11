@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import DashboardStockStatus from './DashboardStockStatus.vue'
+import AdditionalCollectionEditor from './AdditionalCollectionEditor.vue'
 import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardConfirmDialog from './DashboardConfirmDialog.vue'
@@ -78,6 +79,7 @@ const editSnapshot = (product) => JSON.stringify({
   name: String(product?.name || ''),
   collectionId: String(product?.collectionId || ''),
   subCollectionId: String(product?.subCollectionId || ''),
+  additionalCollections: product?.additionalCollections || [],
   colors: (product?.colors || []).map((value) => String(value)),
   sizes: (product?.sizes || []).map((value) => String(value)),
   sweatshirtSizes: (product?.sweatshirtSizes || []).map((value) => String(value)),
@@ -251,7 +253,7 @@ const filteredProductsForCollection = (collection) => {
   }
 
   return collection.products.filter(
-    (product) => String(getSubCollectionId(product)) === String(filter),
+    (product) => (product.displayedSubcollections || []).some((sub) => String(sub._id) === String(filter)),
   )
 }
 
@@ -278,7 +280,7 @@ const getSubCollectionId = (product) => {
 }
 
 const productSubcollectionLabel = (product) => (
-  product.subCollectionId?.name || ''
+  (product.displayedSubcollections || []).map((sub) => sub.name).join(', ')
 )
 
 const productCountForSubcollection = (collectionId, subcollectionId) => {
@@ -288,14 +290,14 @@ const productCountForSubcollection = (collectionId, subcollectionId) => {
   if (!collection) return 0
 
   return collection.products.filter(
-    (product) => String(product.subCollectionId?._id || product.subCollectionId || '') === String(subcollectionId),
+    (product) => (product.displayedSubcollections || []).some((sub) => String(sub._id) === String(subcollectionId)),
   ).length
 }
 
 const productMissingSubcollection = (product, collection) => (
   !collection.isSystem
   && (collection.subcollections?.length || 0) > 0
-  && !getSubCollectionId(product)
+  && !(product.displayedSubcollections || []).length
 )
 
 const resetSubcollectionForm = () => {
@@ -461,6 +463,10 @@ const initializeEditModal = async (product) => {
     ...product,
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
+    additionalCollections: (product.additionalCollections || []).map((entry) => ({
+      collectionId: String(entry.collectionId?._id || entry.collectionId),
+      subCollectionId: String(entry.subCollectionId?._id || entry.subCollectionId || ''),
+    })),
     price: product.price ?? '',
     hasBlingOptions: Boolean(product.hasBlingOptions || product.blingPrice != null || product.noBlingPrice != null),
     blingPrice: product.blingPrice ?? '',
@@ -871,6 +877,7 @@ const saveProduct = async () => {
       name: editingProduct.value.name,
       collectionId: editingProduct.value.collectionId,
       subCollectionId: editingProduct.value.subCollectionId || '',
+      additionalCollections: editingProduct.value.additionalCollections || [],
       color: colors.join(', '),
       size: sizes.join(', '),
       sweatshirtSize: sortSizeOptions(editingProduct.value.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '),
@@ -1431,7 +1438,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="field">
-          <label>Collection</label>
+          <label>Primary collection</label>
           <select v-model="editingProduct.collectionId" @change="handleEditCollectionChange">
             <option
               v-for="collection in dropdownCollections"
@@ -1468,6 +1475,8 @@ onBeforeUnmount(() => {
           </select>
           <p v-if="editSubcollectionsError" class="field-error">{{ editSubcollectionsError }}</p>
         </div>
+
+        <AdditionalCollectionEditor v-model="editingProduct.additionalCollections" :collections="groupedCollections" :disabled="saving" />
 
         <div class="field">
           <label>Colors</label>
@@ -1839,7 +1848,7 @@ onBeforeUnmount(() => {
     <DashboardConfirmDialog
       :open="Boolean(pendingSubcollectionDelete)"
       title="Delete filter/sub-collection?"
-      :message="`Products in ${pendingSubcollectionDelete?.name || 'this filter/sub-collection'} will become unassigned.`"
+      :message="`Products in ${pendingSubcollectionDelete?.name || 'this filter/sub-collection'} will stay in the collection without that sub-collection. Other collection assignments are kept.`"
       confirm-label="Delete Filter/Sub-Collection"
       cancel-label="Keep Filter/Sub-Collection"
       :busy="saving"
@@ -1851,7 +1860,7 @@ onBeforeUnmount(() => {
       :open="Boolean(pendingProductDelete)"
       :step-label="`Confirmation ${productDeleteStep} of 2`"
       :title="productDeleteStep === 1 ? `Delete ${pendingProductDelete?.name || 'item'}?` : 'Permanently delete this item?'"
-      :message="productDeleteStep === 1 ? 'The item will be removed from the store.' : 'This action cannot be undone.'"
+      :message="productDeleteStep === 1 ? 'The item will be removed from every collection in the store. To remove only one placement, edit its collection assignments instead.' : 'This action cannot be undone.'"
       :confirm-label="productDeleteStep === 1 ? 'Continue' : 'Delete Item'"
       :cancel-label="productDeleteStep === 1 ? 'Keep Item' : 'Go Back'"
       :busy="deletingProduct"
@@ -1869,9 +1878,9 @@ onBeforeUnmount(() => {
           <p class="confirmation-step">Confirmation 1 of 2</p>
           <h2>Delete {{ collectionPendingDelete.name }}?</h2>
           <p>
-            This will permanently delete
-            <strong>{{ collectionPendingDelete.products?.length || 0 }} item{{ (collectionPendingDelete.products?.length || 0) === 1 ? '' : 's' }}</strong>
-            and all filters/sub-collections inside this collection.
+            This collection contains
+            <strong>{{ collectionPendingDelete.products?.length || 0 }} item{{ (collectionPendingDelete.products?.length || 0) === 1 ? '' : 's' }}</strong>. Deleting it removes the collection
+            and its sub-collections. Items also assigned to another collection are kept there; only items exclusive to this collection are deleted.
           </p>
           <p class="destructive-warning">This action cannot be undone.</p>
           <div class="confirmation-actions">
@@ -1888,7 +1897,7 @@ onBeforeUnmount(() => {
           <p class="confirmation-step">Final confirmation 2 of 2</p>
           <h2>Are you absolutely sure?</h2>
           <p>
-            Permanently delete <strong>{{ collectionPendingDelete.name }}</strong> and everything contained in it?
+            Permanently delete <strong>{{ collectionPendingDelete.name }}</strong> and its exclusive items? Shared items will remain in their other collections.
           </p>
           <div class="confirmation-actions">
             <button type="button" class="btn-outline" :disabled="saving" @click="cancelCollectionDeletion">

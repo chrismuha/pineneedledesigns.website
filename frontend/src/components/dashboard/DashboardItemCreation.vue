@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
 import DashboardStockStatus from './DashboardStockStatus.vue'
+import AdditionalCollectionEditor from './AdditionalCollectionEditor.vue'
 import DashboardSizeSelector from './DashboardSizeSelector.vue'
 import ComfortColorOptionEditor from './ComfortColorOptionEditor.vue'
 import DashboardPhotoCropper from './DashboardPhotoCropper.vue'
@@ -60,6 +61,7 @@ const {
 const form = reactive({
   name: '',
   collectionId: '',
+  additionalCollections: [],
   colors: [''],
   sizes: [''],
   sweatshirtSizes: [''],
@@ -256,7 +258,7 @@ const flushAutoSave = () => {
 const resumeDraft = async (draft) => {
   clearPhotos()
   clearVideos()
-  Object.assign(form, JSON.parse(JSON.stringify(draft.form)))
+  Object.assign(form, { additionalCollections: [] }, JSON.parse(JSON.stringify(draft.form)))
   photoFiles.value = (draft.photos || []).map((photo) => ({
     ...photo,
     previewUrl: URL.createObjectURL(photo.file),
@@ -381,6 +383,7 @@ const buildProductFormData = () => {
 
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
+  formData.append('additionalCollections', JSON.stringify(form.additionalCollections))
   formData.append('color', colors.join(', '))
   formData.append('size', sizes.join(', '))
   formData.append('sweatshirtSize', sortSizeOptions(form.sweatshirtSizes.map((size) => size.trim()).filter(Boolean)).join(', '))
@@ -581,7 +584,7 @@ watch(
           </div>
 
           <div class="field">
-            <label>Collection *</label>
+            <label>Primary collection *</label>
             <select v-model="form.collectionId" required @change="handleCollectionChange">
               <option value="" disabled>Select a collection</option>
               <option
@@ -619,6 +622,10 @@ watch(
             <p v-else class="hint">
               Manage filters/sub-collections from Items → Manage Collections → Filters/Sub-Collections.
             </p>
+          </div>
+
+          <div class="field field--full">
+            <AdditionalCollectionEditor v-model="form.additionalCollections" :collections="collections" :disabled="loading" />
           </div>
 
           <div class="field field--full">

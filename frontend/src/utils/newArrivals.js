@@ -27,13 +27,14 @@ export const isNewArrivalsEligible = (product) => {
     && !meta.some((item) => /^price:\s*sold(?:\s*out)?\b/i.test(String(item).trim()))
 }
 
-export const newArrivalsCandidates = (pages) => pages
+export const newArrivalsCandidates = (pages) => [...new Map(pages
   .filter((page) => !page.hidden)
   .flatMap((page) => page.products.map((product) => ({
     ...product,
     collectionTitle: page.title,
     path: `${page.path}#product-${product.id}`,
   })))
+  .map((product) => [newArrivalsProductId(product), product])).values()]
 
 export const selectNewArrivals = (pages, settings) => {
   const config = normalizeNewArrivalsSettings(settings)

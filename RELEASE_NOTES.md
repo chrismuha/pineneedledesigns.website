@@ -6,11 +6,14 @@
 
 - Bags and jewelry now have dedicated collection pages and menu headings: JEWELRY lists Necklaces, Bracelets, and Earrings; BAGS lists Myra, Adirondack Chic, and Upcycled Logos. Existing Purses and Chic Jewelry links open the corresponding category page, and empty jewelry collections are clearly marked Coming Soon.
 - Catalog and homepage shopping links now start with Purses & Bags, Jewelry, Jackets, and Pants. Pants leads to Jeans and Shorts, while existing collection products, dashboard organization, and subcollection filters remain intact.
+- Clearance is available as a dedicated shopping collection and an additional dashboard item assignment, preserving existing product collections and shared inventory. Clearance items and prices are chosen in the dashboard.
 - Dashboard New Arrivals controls offer Latest only, Latest + custom, and Custom only modes, with 1–10 total items, searchable product picks, custom ordering, a homepage preview, and a show/hide switch. New stores keep the ten-newest-items default; mixed selections avoid duplicate products and skip sold items, missing photos, and hidden collections.
 - Dashboard photo and video uploads now use readable product-based filenames, preserve existing canonical names, and reserve unused numbers to avoid overwriting retained media.
 - Dashboard sold status has a grayed-out checkbox, readable stock guidance, and an information dialog when clicked, explaining why items with positive quantity remain available.
+- Holiday shopping has its own collection with Christmas, Easter, Halloween, Independence Day, New Year’s Day, St. Patrick’s Day, Thanksgiving, and Valentine’s Day sub-collections. Explicit Halloween designs are also listed there while retaining their product and seasonal assignments; other holiday placements are managed in the dashboard.
 - Inventory status now follows quantity automatically: sales mark items sold only at zero, and returns or restocking make positive quantities available again. Dashboard stock status is read-only, and inventory changes immediately refresh the storefront catalog.
 - Local catalog and media backups can be refreshed by double-clicking Refresh Local Backup.command in the backup folder, with visible completion status and preserved historical files.
+- Seasonal shopping includes Spring, Summer, Fall, and Winter sub-collections. Dashboard item creation and editing support additional collection placements with shared stock, media, prices, and options; shared items survive collection deletion and appear only once in New Arrivals.
 - Snow Diva’s stock status now matches its six available items, restoring it to the homepage slider; its photo uses a readable filename with the previous URL preserved.
 - Website deployment builds production files on the server; generated website files are no longer tracked in Git, while catalog and media backups remain separate.
 
