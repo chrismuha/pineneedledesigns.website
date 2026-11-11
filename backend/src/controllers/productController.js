@@ -256,6 +256,7 @@ const validateProductPayload = (body, { requireAll = true } = {}) => {
   const name = String(body?.name || '').trim();
   const description = String(body?.description || '').trim();
   const collectionId = body?.collectionId;
+  if (body?.hidden !== undefined && ![true, false, 'true', 'false'].includes(body.hidden)) errors.push('Website visibility must be true or false.');
   if (requireAll && !name) errors.push('Item name is required.');
   if (requireAll && !description) errors.push('Description is required.');
   if (requireAll && !collectionId) errors.push('Collection is required.');
@@ -474,6 +475,7 @@ export const createProduct = async (req, res) => {
     collectionId: collection._id,
     subCollectionId: subcollectionResult.id,
     additionalCollections: additionalResult.assignments,
+    hidden: parseBooleanField(body.hidden),
     color: data.color,
     size: data.size,
     sweatshirtSize: data.sweatshirtSize,
@@ -543,6 +545,7 @@ export const updateProduct = async (req, res) => {
     return res.status(400).json({ error: 'Choose only one size type before saving this item.' });
   }
 
+  if (body.hidden !== undefined) product.hidden = parseBooleanField(body.hidden);
   if (data.name) product.name = data.name;
   if (data.description) product.description = data.description;
   if (req.body?.color !== undefined) product.color = data.color;

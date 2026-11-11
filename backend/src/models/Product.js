@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema({
     }, { _id: false })],
     default: [],
   },
+  hidden: { type: Boolean, default: false },
   color: { type: String, default: '', trim: true },
   size: { type: String, default: '', trim: true },
   sweatshirtSize: { type: String, default: '', trim: true },

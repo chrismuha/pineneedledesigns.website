@@ -16,7 +16,7 @@ const request = async (url, options = {}) => {
 };
 
 export const catalogApi = {
-  getCatalog: (options) => request('/api/storefront/catalog', options),
+  getCatalog: (options) => request('/api/storefront/catalog', { cache: 'no-store', ...options }),
   getCollection: (slug) => request(`/api/storefront/collections/${slug}`),
   getSubcollections: (slug) => request(`/api/storefront/collections/${slug}/subcollections`),
   getProducts: (slug, subCollectionId = null) => {

@@ -25,3 +25,10 @@ export const membershipQuery = (collectionId, subCollectionIds = null) => {
     } } },
   ] };
 };
+
+// Visibility is per placement: a hidden sub-collection does not hide the same
+// product's assignment to another visible sub-collection or collection.
+export const visibleProductMemberships = (product, subcollections) => productMemberships(product)
+  .filter((entry) => !subcollections.some((sub) => sub.hidden === true
+    && referenceId(sub.collectionId) === referenceId(entry.collectionId)
+    && referenceId(sub._id) === referenceId(entry.subCollectionId)));

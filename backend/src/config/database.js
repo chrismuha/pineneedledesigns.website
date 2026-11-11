@@ -1,3 +1,4 @@
+import { initializeWebsiteVisibility } from '../services/websiteVisibility.js';
 import { ensureHolidayCatalog } from '../services/holidayCatalog.js';
 import { ensureClearanceCatalog } from '../services/clearanceCatalog.js';
 import { ensureSeasonalCatalog } from '../services/seasonalCatalog.js';
@@ -592,5 +593,6 @@ export const connectDatabase = async () => {
   await ensureSeasonalCatalog();
   await ensureClearanceCatalog();
   await ensureHolidayCatalog();
+  await initializeWebsiteVisibility();
   console.log(`ℹ️ MongoDB startup checks finished in ${Date.now() - startedAt}ms.`);
 };

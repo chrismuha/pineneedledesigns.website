@@ -16,6 +16,7 @@ const subcollectionSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  hidden: { type: Boolean, default: false },
   sortOrder: {
     type: Number,
     default: 0,

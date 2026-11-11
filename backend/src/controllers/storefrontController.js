@@ -8,7 +8,7 @@ import {
 export const getCatalog = async (_req, res) => {
   const startedAt = Date.now();
   const catalog = await getStorefrontCatalog();
-  res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+  res.setHeader('Cache-Control', 'no-store');
   console.log(`[storefrontController] getCatalog in ${Date.now() - startedAt}ms`);
   res.json(catalog);
 };

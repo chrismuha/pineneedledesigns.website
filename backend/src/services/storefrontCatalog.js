@@ -1,4 +1,4 @@
-import { membershipQuery, productMemberships, referenceId } from '../utils/collectionMemberships.js';
+import { membershipQuery, referenceId, visibleProductMemberships } from '../utils/collectionMemberships.js';
 import { collectionCategoryOrder } from '../../../frontend/src/data/collectionCategoryOrder.js';
 import { StoreSettings } from '../models/StoreSettings.js';
 import { normalizeNewArrivalsSettings } from '../../../frontend/src/utils/newArrivals.js';
@@ -169,12 +169,12 @@ const mapProductToStorefront = (product, categoryFilters = [], allowBlingOptions
 
 const buildCollectionPage = (collection, subcollections, products) => {
   const allowBlingOptions = collection.slug === 'shirts';
-  const filters = subcollections.map((subcollection) => subcollection.name);
+  const filters = subcollections.filter((sub) => !sub.hidden).map((subcollection) => subcollection.name);
   const subcollectionNames = new Map(
-    subcollections.map((subcollection) => [String(subcollection._id), subcollection.name]),
+    subcollections.filter((sub) => !sub.hidden).map((subcollection) => [String(subcollection._id), subcollection.name]),
   );
   const storefrontProducts = products.map((product) => {
-    const categoryFilters = productMemberships(product)
+    const categoryFilters = visibleProductMemberships(product, subcollections)
       .filter((entry) => referenceId(entry.collectionId) === String(collection._id))
       .flatMap((entry) => {
         const name = subcollectionNames.get(referenceId(entry.subCollectionId));
@@ -272,10 +272,10 @@ const buildStorefrontCatalog = async () => {
     .sort({ name: 1 })
     .lean();
   const subcollections = await Subcollection.find()
-    .select('collectionId name slug sortOrder')
+    .select('collectionId name slug sortOrder hidden')
     .sort({ sortOrder: 1, name: 1 })
     .lean();
-  const products = await Product.find()
+  const products = await Product.find({ hidden: { $ne: true } })
     .select('name collectionId subCollectionId additionalCollections color size sweatshirtSize shoeSize beltSize sizePrices comfortColors description customProperties photos price hasBlingOptions blingPrice shippingCost outOfStock quantity legacyId meta videos videoPosters noBlingPrice noBlingDescription generalDescription maker bagTypes filters shoeTypes imageWrapper optionPlaceholders createdAt')
     .sort({ name: 1 })
     .collation({ locale: 'en', strength: 2 })
@@ -291,14 +291,14 @@ const buildStorefrontCatalog = async () => {
   const productsByCollectionId = products.reduce((groups, product) => {
     product.primaryCollectionSlug = collections.find((item) => String(item._id) === referenceId(product.collectionId))?.slug;
     product.primarySubcollectionName = subcollections.find((item) => String(item._id) === referenceId(product.subCollectionId))?.name;
-    for (const key of new Set(productMemberships(product).map((entry) => referenceId(entry.collectionId)))) {
+    for (const key of new Set(visibleProductMemberships(product, subcollections).map((entry) => referenceId(entry.collectionId)))) {
       if (!groups[key]) groups[key] = [];
       groups[key].push(product);
     }
     return groups;
   }, {});
 
-  const collectionPages = collections.map((collection) => buildCollectionPage(
+  const collectionPages = collections.filter((collection) => !collection.hidden).map((collection) => buildCollectionPage(
     collection,
     subcollectionsByCollectionId[String(collection._id)] || [],
     productsByCollectionId[String(collection._id)] || [],
@@ -346,13 +346,13 @@ export const getStorefrontCollectionBySlug = async (slug) => {
 
 export const getStorefrontSubcollectionsBySlug = async (slug) => {
   const collection = await Collection.findOne({ slug, isSystem: false }).lean();
-  if (!collection) return null;
+  if (!collection || collection.hidden) return null;
 
   const subcollections = await Subcollection.find({ collectionId: collection._id })
     .sort({ sortOrder: 1, name: 1 })
     .lean();
 
-  return subcollections.map((subcollection) => ({
+  return subcollections.filter((sub) => !sub.hidden).map((subcollection) => ({
     _id: subcollection._id,
     name: subcollection.name,
     slug: subcollection.slug,
@@ -362,9 +362,10 @@ export const getStorefrontSubcollectionsBySlug = async (slug) => {
 
 export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) => {
   const collection = await Collection.findOne({ slug, isSystem: false }).lean();
-  if (!collection) return null;
+  if (!collection || collection.hidden) return null;
 
   let filter = membershipQuery(collection._id);
+  let selectedSubcollection = null;
 
   if (subCollectionId) {
     if (!isValidObjectId(subCollectionId)) return [];
@@ -374,10 +375,11 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
       collectionId: collection._id,
     }).lean();
 
-    if (!subcollection) {
+    if (!subcollection || subcollection.hidden) {
       return [];
     }
 
+    selectedSubcollection = subcollection;
     const normalizedSubcollectionName = subcollection.name.trim().toLowerCase();
 
     if (normalizedSubcollectionName === 'boa') {
@@ -392,7 +394,7 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
         name: /^boa$/i,
       }).lean();
 
-      filter = membershipQuery(collection._id, [subcollection._id, boaSubcollection?._id].filter(Boolean));
+      filter = membershipQuery(collection._id, [subcollection._id, !boaSubcollection?.hidden && boaSubcollection?._id].filter(Boolean));
     } else {
       // Only legacy primary placements may use the old free-text filters.
       // Additional placements always match the collection/subcollection pair.
@@ -403,6 +405,8 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
     }
   }
 
+  const collectionSubcollections = await Subcollection.find({ collectionId: collection._id }).lean();
+  filter.hidden = { $ne: true };
   const products = await Product.find(filter)
     .populate('collectionId', 'slug name')
     .populate('subCollectionId', 'name slug')
@@ -413,5 +417,18 @@ export const getStorefrontProductsBySlug = async (slug, subCollectionId = null) 
   // Pass only the product. Array#map also supplies the item index as the second
   // argument, which mapProductToStorefront would otherwise treat as an iterable
   // list of category filters and throw while building the response.
-  return products.map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts', collection.slug));
+  const selectedName = selectedSubcollection?.name.trim().toLowerCase();
+  const allowedSubcollectionIds = selectedSubcollection ? new Set([
+    String(selectedSubcollection._id),
+    ...(selectedName === 't-shirts' ? collectionSubcollections
+      .filter((sub) => !sub.hidden && sub.name.trim().toLowerCase() === 'boa').map((sub) => String(sub._id)) : []),
+  ]) : null;
+  return products.filter((product) => visibleProductMemberships(product, collectionSubcollections)
+    .some((entry) => referenceId(entry.collectionId) === String(collection._id)
+      && (!allowedSubcollectionIds || allowedSubcollectionIds.has(referenceId(entry.subCollectionId))
+        || (!['boa', 't-shirts'].includes(selectedName)
+          && referenceId(entry.collectionId) === referenceId(product.collectionId)
+          && referenceId(entry.subCollectionId) === referenceId(product.subCollectionId)
+          && product.filters?.includes(selectedSubcollection.name)))))
+    .map((product) => mapProductToStorefront(product, [], collection.slug === 'shirts', collection.slug));
 };

@@ -403,3 +403,33 @@ Deleting a sub-collection clears only that sub-collection assignment. Deleting a
 collection deletes its exclusive products, but retains shared products in their
 other collections. **Delete Item** removes the product from every collection;
 remove an additional placement in Edit Item to remove just one listing.
+
+### Show on website
+
+Each item has a **Show item on website (all collections)** checkbox in Items and
+Edit Item; Create Item also offers **Show on website**. Uncheck it to hide the
+item from every storefront collection and New Arrivals while retaining its stock,
+media, assignments, and dashboard access. Check it again to restore visibility.
+
+Each collection has a **Show collection on website** checkbox in Items and a
+**Show on website** checkbox in Manage Collections. Unchecking hides that
+collection's page, navigation links, and listings. An item shared with another
+visible collection can still appear there. Hiding a collection does not change
+individual item settings; restoring it shows only items whose own checkbox is on.
+New Arrivals includes an item only when it has a visible collection placement.
+Visibility changes save immediately from Items or Manage Collections; visibility
+changes in Create Item or Edit Item save with the form. Hidden collections also
+return not found through direct storefront collection links and endpoints.
+
+Every existing item, collection and sub-collection is enabled once when these
+visibility controls are first deployed. All new items, collections and
+sub-collections default to shown. During **Create Item**, **Show on website**
+starts checked; uncheck it before uploading/saving to create a hidden item.
+Subsequent server starts preserve your choices and do not re-enable hidden content.
+Starting a fresh item resets its checkbox to checked; saved drafts keep their choice.
+
+Each sub-collection has its own **Show on website** checkbox under **Manage
+Collections → Filters/Sub-Collections**. Unchecking hides its filter and its item
+placements, including from the parent collection's **All** view and New Arrivals.
+An item with another enabled placement can still appear there. Re-enabling a
+sub-collection does not override the item or parent collection's own setting.

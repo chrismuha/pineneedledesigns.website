@@ -50,13 +50,19 @@ export const updateCollection = async (req, res) => {
       return res.status(400).json({ error: 'System collections cannot be renamed.' });
     }
 
-    const name = String(req.body?.name || '').trim();
-    if (!name) {
-      return res.status(400).json({ error: 'Collection name is required.' });
+    if (req.body?.hidden !== undefined && typeof req.body.hidden !== 'boolean') {
+      return res.status(400).json({ error: 'Website visibility must be true or false.' });
     }
-
-    collection.name = name;
-    collection.slug = await createUniqueSlug(Collection, name, collection._id);
+    if (req.body?.name === undefined && req.body?.hidden === undefined) {
+      return res.status(400).json({ error: 'Collection name or website visibility is required.' });
+    }
+    if (req.body?.name !== undefined) {
+      const name = String(req.body.name || '').trim();
+      if (!name) return res.status(400).json({ error: 'Collection name is required.' });
+      collection.name = name;
+      collection.slug = await createUniqueSlug(Collection, name, collection._id);
+    }
+    if (req.body?.hidden !== undefined) collection.hidden = req.body.hidden;
     await collection.save();
     invalidateStorefrontCatalog('collection updated');
 

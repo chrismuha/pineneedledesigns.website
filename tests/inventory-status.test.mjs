@@ -10,3 +10,16 @@ test('saving inventory derives sold status from quantity even when the client se
     assert.equal(product.outOfStock, expected);
   }
 });
+
+test('new items, collections and sub-collections default to shown on the website', async () => {
+  const { Collection } = await import('../backend/src/models/Collection.js');
+  const { Subcollection } = await import('../backend/src/models/Subcollection.js');
+  const base = { name: 'Default fixture', collectionId: '6a4ffc76f950512905f2313e', slug: 'default-fixture' };
+  for (const entry of [new Product({ ...base, description: 'Test', price: 1 }), new Collection(base), new Subcollection(base)]) {
+    assert.equal(entry.hidden, false);
+    await entry.validate();
+    entry.hidden = true;
+    await entry.validate();
+    assert.equal(entry.hidden, true);
+  }
+});

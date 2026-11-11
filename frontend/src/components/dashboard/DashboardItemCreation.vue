@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useCatalogStore } from '../../stores/catalog.js'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
@@ -14,6 +15,7 @@ import { sortSizeOptions, uniqueOptions } from '../../utils/sizeOptions.js'
 import { showDashboardToast } from '../../utils/dashboardToast.js'
 import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashboardActivity.js'
 
+const catalogStore = useCatalogStore()
 const router = useRouter()
 const route = useRoute()
 const collections = ref([])
@@ -60,6 +62,7 @@ const {
 
 const form = reactive({
   name: '',
+  hidden: false,
   collectionId: '',
   additionalCollections: [],
   colors: [''],
@@ -258,7 +261,7 @@ const flushAutoSave = () => {
 const resumeDraft = async (draft) => {
   clearPhotos()
   clearVideos()
-  Object.assign(form, { additionalCollections: [] }, JSON.parse(JSON.stringify(draft.form)))
+  Object.assign(form, { additionalCollections: [], hidden: false }, JSON.parse(JSON.stringify(draft.form)))
   photoFiles.value = (draft.photos || []).map((photo) => ({
     ...photo,
     previewUrl: URL.createObjectURL(photo.file),
@@ -341,6 +344,8 @@ const removeOption = (propertyIndex, optionIndex) => {
 }
 
 const resetForm = () => {
+  form.hidden = false
+  form.additionalCollections = []
   form.name = ''
   form.collectionId = ''
   form.colors = ['']
@@ -381,6 +386,7 @@ const buildProductFormData = () => {
     }))
     .filter((property) => property.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
 
+  formData.append('hidden', String(Boolean(form.hidden)))
   formData.append('name', form.name.trim())
   formData.append('collectionId', form.collectionId)
   formData.append('additionalCollections', JSON.stringify(form.additionalCollections))
@@ -489,6 +495,8 @@ const submitForm = async () => {
     await dashboardApi.createProduct(buildProductFormData(), {
       onProgress: (progress) => { uploadProgress.value = progress },
     })
+    catalogStore.initialized = false
+    await catalogStore.initialize()
     suppressAutoSave = true
     window.clearTimeout(autoSaveTimer)
     if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
@@ -578,6 +586,11 @@ watch(
         <div class="section-header"><h2>Basic Information</h2></div>
 
         <div class="form-grid">
+          <label class="field field--full">
+            <span><input class="website-visibility-checkbox" type="checkbox" :checked="!form.hidden" @change="form.hidden = !$event.target.checked"> Show on website</span>
+            <span class="hint">Uncheck to keep this item in the dashboard and hide it from every website collection and New Arrivals.</span>
+          </label>
+
           <div class="field">
             <label>Item Name *</label>
             <input v-model="form.name" type="text" placeholder="Item Title" required>
@@ -876,6 +889,7 @@ watch(
 <style src="../../styles/dashboard.css"></style>
 
 <style scoped>
+.website-visibility-checkbox { width: 20px; height: 20px; margin-right: 8px; vertical-align: middle; accent-color: var(--dashboard-primary-action-color); }
 .item-form {
   display: flex;
   flex-direction: column;

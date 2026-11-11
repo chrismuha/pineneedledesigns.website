@@ -93,17 +93,19 @@ export const updateSubcollection = async (req, res) => {
       return res.status(404).json({ error: 'Filter/sub-collection not found.' });
     }
 
-    const name = String(req.body?.name || '').trim();
-    if (!name) {
-      return res.status(400).json({ error: 'Filter/sub-collection name is required.' });
+    if (req.body?.hidden !== undefined && typeof req.body.hidden !== 'boolean') {
+      return res.status(400).json({ error: 'Website visibility must be true or false.' });
     }
-
-    subcollection.name = name;
-    subcollection.slug = await createUniqueSubcollectionSlug(
-      collection._id,
-      name,
-      subcollection._id,
-    );
+    if (req.body?.name === undefined && req.body?.hidden === undefined) {
+      return res.status(400).json({ error: 'Sub-collection name or website visibility is required.' });
+    }
+    if (req.body?.name !== undefined) {
+      const name = String(req.body.name || '').trim();
+      if (!name) return res.status(400).json({ error: 'Filter/sub-collection name is required.' });
+      subcollection.name = name;
+      subcollection.slug = await createUniqueSubcollectionSlug(collection._id, name, subcollection._id);
+    }
+    if (req.body?.hidden !== undefined) subcollection.hidden = req.body.hidden;
     await subcollection.save();
 
     invalidateStorefrontCatalog('subcollection updated');

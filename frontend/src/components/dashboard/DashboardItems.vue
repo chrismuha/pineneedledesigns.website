@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useCatalogStore } from '../../stores/catalog.js'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
 import ColorOptionEditor from './ColorOptionEditor.vue'
@@ -17,6 +18,44 @@ import { clearDashboardActivity, setDashboardActivity } from '../../utils/dashbo
 
 const route = useRoute()
 const router = useRouter()
+const catalogStore = useCatalogStore()
+const visibilitySaving = ref({})
+const saveWebsiteVisibility = async (kind, target, shown) => {
+  const key = `${kind}:${target._id}`
+  visibilitySaving.value[key] = true
+  try {
+    if (kind === 'collection') {
+      await dashboardApi.setCollectionVisibility(target._id, shown)
+      target.hidden = !shown
+    } else {
+      await dashboardApi.updateProduct(target._id, { hidden: !shown })
+      for (const collection of groupedCollections.value) {
+        for (const product of collection.products) {
+          if (String(product._id) === String(target._id)) product.hidden = !shown
+        }
+      }
+    }
+    catalogStore.initialized = false
+    await catalogStore.initialize()
+  } catch (err) { error.value = err.message }
+  finally { visibilitySaving.value[key] = false }
+}
+const saveSubcollectionVisibility = async (subcollection, shown) => {
+  const collectionId = managingSubcollectionsFor.value?._id
+  if (!collectionId) return
+  const key = `subcollection:${subcollection._id}`
+  visibilitySaving.value[key] = true
+  try {
+    await dashboardApi.setSubcollectionVisibility(collectionId, subcollection._id, shown)
+    subcollection.hidden = !shown
+    await loadItems()
+    await loadManagerSubcollections(collectionId)
+    await fetchCollectionSubcollections(collectionId)
+    catalogStore.initialized = false
+    await catalogStore.initialize()
+  } catch (err) { modalError.value = err.message }
+  finally { visibilitySaving.value[key] = false }
+}
 const groupedCollections = ref([])
 const loading = ref(true)
 const error = ref('')
@@ -77,6 +116,7 @@ const videoPosterFor = (product, index) =>
 
 const editSnapshot = (product) => JSON.stringify({
   name: String(product?.name || ''),
+  hidden: Boolean(product?.hidden),
   collectionId: String(product?.collectionId || ''),
   subCollectionId: String(product?.subCollectionId || ''),
   additionalCollections: product?.additionalCollections || [],
@@ -461,6 +501,7 @@ const initializeEditModal = async (product) => {
 
   editingProduct.value = {
     ...product,
+    hidden: Boolean(product.hidden),
     collectionId: getCollectionId(product),
     subCollectionId: getSubCollectionId(product),
     additionalCollections: (product.additionalCollections || []).map((entry) => ({
@@ -875,6 +916,7 @@ const saveProduct = async () => {
       .filter((property) => property.name && !['color', 'size', 'shirt size', 'sweatshirt size', 'shoe size', 'belt size', 'style', 'comfort colors'].includes(property.name.toLowerCase()))
     const payload = {
       name: editingProduct.value.name,
+      hidden: Boolean(editingProduct.value.hidden),
       collectionId: editingProduct.value.collectionId,
       subCollectionId: editingProduct.value.subCollectionId || '',
       additionalCollections: editingProduct.value.additionalCollections || [],
@@ -921,6 +963,8 @@ const saveProduct = async () => {
     await dashboardApi.updateProduct(editingProduct.value._id, requestPayload, {
       onProgress: (progress) => { editUploadProgress.value = progress },
     })
+    catalogStore.initialized = false
+    await catalogStore.initialize()
     suppressEditAutoSave = true
     window.clearTimeout(editAutoSaveTimer)
     await deleteItemDraft(editDraftId(editingProduct.value._id))
@@ -1150,6 +1194,12 @@ onBeforeUnmount(() => {
         class="collection-header"
       >
         <h2 class="collection-title">{{ collectionLabel(collection) }}</h2>
+        <label class="website-visibility">
+          <input type="checkbox" :checked="!collection.hidden" :disabled="visibilitySaving[`collection:${collection._id}`]"
+            @change="saveWebsiteVisibility('collection', collection, $event.target.checked)">
+          Show collection on website
+        </label>
+        <p class="hint">Hiding this collection hides its page and listings here. Shared items can still appear in other visible collections.</p>
 
         <p v-if="getSubcollectionsForCollection(collection).length" class="collection-subtitle">
           Filter items by sub-collection.
@@ -1306,6 +1356,14 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
+        <label class="website-visibility" @click.stop>
+          <input type="checkbox" :checked="!product.hidden" :disabled="visibilitySaving[`item:${product._id}`]"
+            @change="saveWebsiteVisibility('item', product, $event.target.checked)">
+          Show item on website (all collections)
+        </label>
+        <p v-if="product.hidden" class="hint">Hidden everywhere on the website. Still available in the dashboard.</p>
+        <p v-else-if="collection.hidden" class="hint">This collection is hidden. This item can appear in other visible collections.</p>
+
         <div class="actions">
           <button class="edit-btn" type="button" :disabled="Boolean(openingProductId)" @click.stop="openEditModal(product)">
             {{ openingProductId === String(product._id) ? 'Opening...' : 'Edit' }}
@@ -1344,6 +1402,11 @@ onBeforeUnmount(() => {
             class="collection-row"
           >
             <div class="collection-row-main">
+              <label class="website-visibility">
+                <input type="checkbox" :checked="!collection.hidden" :disabled="visibilitySaving[`collection:${collection._id}`]"
+                  @change="saveWebsiteVisibility('collection', collection, $event.target.checked)">
+                Show on website
+              </label>
               <RouterLink :to="`/collections/${collection.slug}`" class="collection-manager-link">{{ collection.name }}</RouterLink>
               <span v-if="collection.subcollections?.length" class="collection-meta">
                 {{ collection.subcollections.length }} filters/sub-collections
@@ -1431,6 +1494,11 @@ onBeforeUnmount(() => {
             <span aria-hidden="true">×</span>
           </button>
         </div>
+
+        <label class="website-visibility">
+          <input type="checkbox" :checked="!editingProduct.hidden" @change="editingProduct.hidden = !$event.target.checked">
+          Show item on website (all collections)
+        </label>
 
         <div class="field">
           <label>Item Name</label>
@@ -1781,7 +1849,7 @@ onBeforeUnmount(() => {
         </div>
 
         <p class="hint">
-          These appear as filter chips on the storefront collection page.
+          These appear as filter chips on the storefront collection page. Uncheck Show on website to hide a sub-collection and its item placements, including from the collection’s All view. Other visible placements stay available.
         </p>
 
         <p v-if="subcollectionsLoading" class="status-text">Loading filters/sub-collections...</p>
@@ -1836,6 +1904,11 @@ onBeforeUnmount(() => {
                 </button>
                 <button type="button" class="subcollection-chip-delete" :disabled="saving" :aria-label="`Delete ${subcollection.name}`" @click="requestSubcollectionDeletion(subcollection)">×</button>
               </div>
+              <label class="website-visibility">
+                <input type="checkbox" :checked="!subcollection.hidden" :disabled="visibilitySaving[`subcollection:${subcollection._id}`]"
+                  @change="saveSubcollectionVisibility(subcollection, $event.target.checked)">
+                Show on website
+              </label>
               <span class="subcollection-meta">
                 {{ productCountForSubcollection(managingSubcollectionsFor._id, subcollection._id) }} items
               </span>
@@ -1924,6 +1997,8 @@ onBeforeUnmount(() => {
 <style src="../../styles/dashboard.css"></style>
 
 <style scoped>
+.website-visibility { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 600; cursor: pointer; }
+.website-visibility input { width: 20px; height: 20px; flex: 0 0 20px; accent-color: var(--dashboard-primary-action-color); }
 .collection {
   margin-bottom: 20px;
   border: 1px solid var(--dashboard-items-collection-card-border);

@@ -164,6 +164,9 @@ export const dashboardApi = {
     method: 'PUT',
     body: JSON.stringify({ name }),
   }, 'Collection renamed successfully.'),
+  setCollectionVisibility: (id, shown) => request(`/api/collections/${id}`, {
+    method: 'PUT', body: JSON.stringify({ hidden: !shown }),
+  }, 'Collection visibility saved.'),
   deleteCollection: (id, confirmName) => request(`/api/collections/${id}`, {
     method: 'DELETE',
     body: JSON.stringify({ confirmDelete: true, confirmName }),
@@ -175,6 +178,9 @@ export const dashboardApi = {
   deleteProduct: (id) => request(`/api/products/${id}`, {
     method: 'DELETE',
   }, 'Item removed successfully.'),
+  setSubcollectionVisibility: (collectionId, subcollectionId, shown) => request(`/api/collections/${collectionId}/subcollections/${subcollectionId}`, {
+    method: 'PUT', body: JSON.stringify({ hidden: !shown }),
+  }, 'Sub-collection visibility saved.'),
   getSubcollections: (collectionId) => request(`/api/collections/${collectionId}/subcollections`),
   createSubcollection: (collectionId, name) => request(`/api/collections/${collectionId}/subcollections`, {
     method: 'POST',

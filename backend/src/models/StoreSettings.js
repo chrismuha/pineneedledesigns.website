@@ -11,6 +11,7 @@ const storeSettingsSchema = new mongoose.Schema({
     }, { _id: false }),
     default: () => ({}),
   },
+  websiteVisibilityInitialized: { type: Boolean, default: false },
   holidayAssignmentsInitialized: { type: Boolean, default: false },
   clearanceCollectionInitialized: { type: Boolean, default: false },
   seasonalAssignmentsInitialized: { type: Boolean, default: false },

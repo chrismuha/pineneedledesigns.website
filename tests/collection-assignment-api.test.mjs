@@ -74,3 +74,19 @@ test('creating an item accepts multipart placements and validates paired sub-col
   assert.equal(res.statusCode, 201); assert.equal(created.additionalCollections.length, 1);
   assert.equal(String(created.collectionId), id(1)); assert.equal(String(created.subCollectionId), id(11));
 });
+
+test('item visibility accepts JSON and multipart booleans, restores items and preserves stock and placements', async () => {
+  reset();
+  for (const hidden of [true, 'true', false, 'false']) {
+    const res = await update({ hidden });
+    assert.equal(res.statusCode, 200);
+    assert.equal(product.hidden, hidden === true || hidden === 'true');
+    assert.equal(product.quantity, 6);
+    assert.equal(product.additionalCollections.length, 1);
+  }
+  for (const hidden of [null, 'no', 0, {}, []]) {
+    const before = saved;
+    assert.equal((await update({ hidden })).statusCode, 400);
+    assert.equal(saved, before);
+  }
+});
