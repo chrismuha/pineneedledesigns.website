@@ -218,7 +218,7 @@
       "name": "Carmen",
       "noBlingDescription": "",
       "noBlingPrice": null,
-      "outOfStock": true,
+      "outOfStock": false,
       "photos": [
         "/uploads/carmen-picture-01.webp"
       ],
@@ -228,7 +228,7 @@
       "size": "",
       "sortOrder": 2,
       "subCollectionId": null,
-      "updatedAt": "2026-11-07T01:57:31.799Z",
+      "updatedAt": "2026-11-10T14:47:07.869Z",
       "videoPosters": [],
       "videos": [],
       "quantity": 88,
@@ -655,7 +655,7 @@
       "name": "Betsey Johnson Blush Satin Heels",
       "noBlingDescription": "",
       "noBlingPrice": null,
-      "outOfStock": true,
+      "outOfStock": false,
       "photos": [
         "/uploads/betsey-johnson-blush-satin-heels-picture-01.webp"
       ],
@@ -667,7 +667,7 @@
       "size": "",
       "sortOrder": 0,
       "subCollectionId": null,
-      "updatedAt": "2026-11-07T01:57:31.835Z",
+      "updatedAt": "2026-11-10T14:47:07.884Z",
       "videoPosters": [],
       "videos": [],
       "quantity": 88,
@@ -739,7 +739,7 @@
     {
       "_id": "6a4ffc85f950512905f23150",
       "legacyId": 14,
-      "__v": 0,
+      "__v": 1,
       "bagTypes": [],
       "collectionId": "6a4ffc82f950512905f2314c",
       "color": "",
@@ -770,29 +770,32 @@
         "/uploads/brandi-bracelet-picture-05.webp"
       ],
       "price": 29,
-      "shippingCost": 0,
+      "shippingCost": 5,
       "shoeTypes": [],
       "size": "",
       "sortOrder": 1,
       "subCollectionId": "6a4ffc83f950512905f2314e",
-      "updatedAt": "2026-11-07T01:57:31.846Z",
+      "updatedAt": "2026-11-10T15:57:45.090Z",
       "videoPosters": [
         "/uploads/brandi-bracelet-video-poster-01.webp"
       ],
       "videos": [
         "/uploads/brandi-bracelet-video-01.webm"
       ],
-      "quantity": 88,
+      "quantity": 1,
       "beltSize": "",
       "blingPrice": null,
       "hasBlingOptions": false,
       "sizePrices": {},
-      "sweatshirtSize": ""
+      "sweatshirtSize": "",
+      "comfortColors": [],
+      "generalDescription": "",
+      "shoeSize": ""
     },
     {
       "_id": "6a4ffc86f950512905f23151",
       "legacyId": 15,
-      "__v": 0,
+      "__v": 1,
       "bagTypes": [],
       "collectionId": "6a4ffc82f950512905f2314c",
       "color": "",
@@ -818,9 +821,11 @@
       "outOfStock": false,
       "photos": [
         "/uploads/adeline-bracelet-picture-01.webp",
-        "/uploads/adeline-bracelet-picture-02.webp",
-        "/uploads/adeline-bracelet-picture-03.webp",
-        "/uploads/adeline-bracelet-picture-04.webp"
+        "/uploads/adeline-bracelet-picture-05.webp",
+        "/uploads/adeline-bracelet-picture-06.webp",
+        "/uploads/adeline-bracelet-picture-07.webp",
+        "/uploads/adeline-bracelet-picture-08.webp",
+        "/uploads/adeline-bracelet-picture-09.webp"
       ],
       "price": 32,
       "shippingCost": 0,
@@ -828,7 +833,7 @@
       "size": "",
       "sortOrder": 2,
       "subCollectionId": "6a4ffc83f950512905f2314e",
-      "updatedAt": "2026-11-07T01:57:31.855Z",
+      "updatedAt": "2026-11-10T15:43:48.254Z",
       "videoPosters": [
         "/uploads/adeline-bracelet-video-poster-01.webp",
         "/uploads/adeline-bracelet-video-poster-02.webp"
@@ -837,12 +842,15 @@
         "/uploads/adeline-bracelet-video-01.webm",
         "/uploads/adeline-bracelet-video-02.webm"
       ],
-      "quantity": 88,
+      "quantity": 1,
       "beltSize": "",
       "blingPrice": null,
       "hasBlingOptions": false,
       "sizePrices": {},
-      "sweatshirtSize": ""
+      "sweatshirtSize": "",
+      "comfortColors": [],
+      "generalDescription": "",
+      "shoeSize": ""
     },
     {
       "_id": "6a4ffc89f950512905f23156",
@@ -1776,7 +1784,7 @@
       "price": 38,
       "shippingCost": 5,
       "freeShipping": true,
-      "outOfStock": true,
+      "outOfStock": false,
       "quantity": 30,
       "sortOrder": 0,
       "meta": [],
@@ -1793,7 +1801,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-07-10T13:45:08.550Z",
-      "updatedAt": "2026-11-07T01:57:31.945Z",
+      "updatedAt": "2026-11-10T14:47:07.894Z",
       "__v": 5,
       "beltSize": "",
       "comfortColors": [],
@@ -2437,7 +2445,7 @@
       "shippingCost": 0,
       "freeShipping": false,
       "outOfStock": true,
-      "quantity": 1,
+      "quantity": 0,
       "sortOrder": 1,
       "meta": [],
       "videos": [],
@@ -2451,7 +2459,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-08-04T00:41:40.443Z",
-      "updatedAt": "2026-11-07T17:23:41.322Z",
+      "updatedAt": "2026-11-10T14:47:07.901Z",
       "__v": 0,
       "sweatshirtSize": "2X, 3X, 4X, 22, 24, 26, 28"
     },
@@ -3016,14 +3024,14 @@
       "description": "Snow woman dressed to the 9\u2019s. Carrots and coal buttons are just not enough! A check and leopard prints swirl this Snow Diva. Order in Comfort Color Brick. So cute! She melts your heart, but not too much!!!",
       "customProperties": [],
       "photos": [
-        "/uploads/1794271407495-777375102.webp"
+        "/uploads/snow-diva-t-shirt-picture-01.webp"
       ],
       "price": 36,
       "hasBlingOptions": false,
       "blingPrice": null,
       "shippingCost": 0,
       "freeShipping": false,
-      "outOfStock": true,
+      "outOfStock": false,
       "quantity": 6,
       "sortOrder": 16,
       "meta": [],
@@ -3038,7 +3046,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-10T00:43:27.949Z",
-      "updatedAt": "2026-11-10T00:43:27.949Z",
+      "updatedAt": "2026-11-10T14:21:17.054Z",
       "__v": 0
     }
   ],
@@ -3055,17 +3063,17 @@
     },
     {
       "_id": "6a4ffc6af950512905f2312c",
-      "slug": "adirondack-bridal",
+      "slug": "artisan-supplies",
       "__v": 0,
       "cardImage": "/uploads/adirondack-bridal-collection-collection-cover.webp",
       "createdAt": "2026-07-09T19:54:18.423Z",
       "description": "Hand-cut denim, luxe trims, and mountain-ready detailing designed for the bold bride who loves heritage craft and unexpected glamour.",
       "hidden": false,
       "isSystem": false,
-      "name": "Adirondack Bridal Collection",
+      "name": "Artisan Supplies",
       "showWhenEmpty": false,
       "sortOrder": 0,
-      "updatedAt": "2026-11-07T01:57:32.098Z"
+      "updatedAt": "2026-11-10T15:45:19.654Z"
     },
     {
       "_id": "6a4ffc6bf950512905f2312d",
@@ -3578,11 +3586,54 @@
       "fallbackShippingCost": 5,
       "freeShippingEnabled": true,
       "freeShippingMinimum": 28,
-      "updatedAt": "2026-11-10T14:05:13.291Z",
+      "updatedAt": "2026-11-11T12:28:36.577Z",
       "toastTimeoutSeconds": 6
     }
   ],
-  "_auditEvents": [],
+  "_auditEvents": [
+    {
+      "_id": "6af33bb466f99ba6d61fa444",
+      "type": "media-removed",
+      "targets": [
+        {
+          "key": "media:/uploads/adeline-bracelet-picture-02.webp",
+          "name": "/uploads/adeline-bracelet-picture-02.webp"
+        }
+      ],
+      "reason": "Photo removed from product during edit",
+      "startedAt": "2026-11-10T15:43:48.276Z",
+      "status": "completed",
+      "completedAt": "2026-11-10T15:43:48.301Z"
+    },
+    {
+      "_id": "6af33bb466f99ba6d61fa445",
+      "type": "media-removed",
+      "targets": [
+        {
+          "key": "media:/uploads/adeline-bracelet-picture-03.webp",
+          "name": "/uploads/adeline-bracelet-picture-03.webp"
+        }
+      ],
+      "reason": "Photo removed from product during edit",
+      "startedAt": "2026-11-10T15:43:48.279Z",
+      "status": "completed",
+      "completedAt": "2026-11-10T15:43:48.299Z"
+    },
+    {
+      "_id": "6af33bb466f99ba6d61fa446",
+      "type": "media-removed",
+      "targets": [
+        {
+          "key": "media:/uploads/adeline-bracelet-picture-04.webp",
+          "name": "/uploads/adeline-bracelet-picture-04.webp"
+        }
+      ],
+      "reason": "Photo removed from product during edit",
+      "startedAt": "2026-11-10T15:43:48.280Z",
+      "status": "completed",
+      "completedAt": "2026-11-10T15:43:48.303Z"
+    }
+  ],
   "_mediaFiles": [
     "/uploads/1783672358990-600883762.jpeg",
     "/uploads/1783690731684-51129312.webp",
@@ -3642,9 +3693,11 @@
     "/uploads/1789949606594-515446718.webp",
     "/uploads/1794271407495-777375102.webp",
     "/uploads/adeline-bracelet-picture-01.webp",
-    "/uploads/adeline-bracelet-picture-02.webp",
-    "/uploads/adeline-bracelet-picture-03.webp",
-    "/uploads/adeline-bracelet-picture-04.webp",
+    "/uploads/adeline-bracelet-picture-05.webp",
+    "/uploads/adeline-bracelet-picture-06.webp",
+    "/uploads/adeline-bracelet-picture-07.webp",
+    "/uploads/adeline-bracelet-picture-08.webp",
+    "/uploads/adeline-bracelet-picture-09.webp",
     "/uploads/adeline-bracelet-video-01.webm",
     "/uploads/adeline-bracelet-video-02.webm",
     "/uploads/adeline-bracelet-video-poster-01.webp",
@@ -4004,6 +4057,7 @@
     "/uploads/smart-ass-and-pretty-donkey-blinged-out-picture-02.webp",
     "/uploads/smart-ass-and-pretty-donkey-blinged-out-picture-03.webp",
     "/uploads/smart-ass-and-pretty-donkey-blinged-out-picture-04.webp",
+    "/uploads/snow-diva-t-shirt-picture-01.webp",
     "/uploads/the-crowned-hare-vest-picture-01.webp",
     "/uploads/the-crowned-hare-vest-picture-02.webp",
     "/uploads/the-crowned-hare-vest-picture-03.webp",

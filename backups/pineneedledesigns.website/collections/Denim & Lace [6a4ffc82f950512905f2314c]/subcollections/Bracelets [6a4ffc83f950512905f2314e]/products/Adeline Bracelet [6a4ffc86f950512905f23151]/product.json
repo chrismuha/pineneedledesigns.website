@@ -1,7 +1,7 @@
 {
   "_id": "6a4ffc86f950512905f23151",
   "legacyId": 15,
-  "__v": 0,
+  "__v": 1,
   "bagTypes": [],
   "collectionId": "6a4ffc82f950512905f2314c",
   "color": "",
@@ -27,9 +27,11 @@
   "outOfStock": false,
   "photos": [
     "/uploads/adeline-bracelet-picture-01.webp",
-    "/uploads/adeline-bracelet-picture-02.webp",
-    "/uploads/adeline-bracelet-picture-03.webp",
-    "/uploads/adeline-bracelet-picture-04.webp"
+    "/uploads/adeline-bracelet-picture-05.webp",
+    "/uploads/adeline-bracelet-picture-06.webp",
+    "/uploads/adeline-bracelet-picture-07.webp",
+    "/uploads/adeline-bracelet-picture-08.webp",
+    "/uploads/adeline-bracelet-picture-09.webp"
   ],
   "price": 32,
   "shippingCost": 0,
@@ -37,7 +39,7 @@
   "size": "",
   "sortOrder": 2,
   "subCollectionId": "6a4ffc83f950512905f2314e",
-  "updatedAt": "2026-11-07T01:57:31.855Z",
+  "updatedAt": "2026-11-10T15:43:48.254Z",
   "videoPosters": [
     "/uploads/adeline-bracelet-video-poster-01.webp",
     "/uploads/adeline-bracelet-video-poster-02.webp"
@@ -46,10 +48,13 @@
     "/uploads/adeline-bracelet-video-01.webm",
     "/uploads/adeline-bracelet-video-02.webm"
   ],
-  "quantity": 88,
+  "quantity": 1,
   "beltSize": "",
   "blingPrice": null,
   "hasBlingOptions": false,
   "sizePrices": {},
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": ""
 }

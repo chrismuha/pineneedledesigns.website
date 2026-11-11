@@ -1,7 +1,7 @@
 {
   "_id": "6a4ffc85f950512905f23150",
   "legacyId": 14,
-  "__v": 0,
+  "__v": 1,
   "bagTypes": [],
   "collectionId": "6a4ffc82f950512905f2314c",
   "color": "",
@@ -32,22 +32,25 @@
     "/uploads/brandi-bracelet-picture-05.webp"
   ],
   "price": 29,
-  "shippingCost": 0,
+  "shippingCost": 5,
   "shoeTypes": [],
   "size": "",
   "sortOrder": 1,
   "subCollectionId": "6a4ffc83f950512905f2314e",
-  "updatedAt": "2026-11-07T01:57:31.846Z",
+  "updatedAt": "2026-11-10T15:57:45.090Z",
   "videoPosters": [
     "/uploads/brandi-bracelet-video-poster-01.webp"
   ],
   "videos": [
     "/uploads/brandi-bracelet-video-01.webm"
   ],
-  "quantity": 88,
+  "quantity": 1,
   "beltSize": "",
   "blingPrice": null,
   "hasBlingOptions": false,
   "sizePrices": {},
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "comfortColors": [],
+  "generalDescription": "",
+  "shoeSize": ""
 }

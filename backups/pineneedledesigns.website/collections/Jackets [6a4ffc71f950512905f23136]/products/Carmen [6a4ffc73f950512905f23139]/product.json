@@ -21,7 +21,7 @@
   "name": "Carmen",
   "noBlingDescription": "",
   "noBlingPrice": null,
-  "outOfStock": true,
+  "outOfStock": false,
   "photos": [
     "/uploads/carmen-picture-01.webp"
   ],
@@ -31,7 +31,7 @@
   "size": "",
   "sortOrder": 2,
   "subCollectionId": null,
-  "updatedAt": "2026-11-07T01:57:31.799Z",
+  "updatedAt": "2026-11-10T14:47:07.869Z",
   "videoPosters": [],
   "videos": [],
   "quantity": 88,

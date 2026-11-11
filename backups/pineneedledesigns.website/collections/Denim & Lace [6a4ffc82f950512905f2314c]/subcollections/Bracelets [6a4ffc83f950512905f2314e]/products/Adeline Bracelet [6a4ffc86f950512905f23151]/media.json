@@ -5,38 +5,48 @@
     "localFile": "media/01-adeline-bracelet-picture-01.webp"
   },
   {
-    "websiteUrl": "/uploads/adeline-bracelet-picture-02.webp",
+    "websiteUrl": "/uploads/adeline-bracelet-picture-05.webp",
     "available": true,
-    "localFile": "media/02-adeline-bracelet-picture-02.webp"
+    "localFile": "media/02-adeline-bracelet-picture-05.webp"
   },
   {
-    "websiteUrl": "/uploads/adeline-bracelet-picture-03.webp",
+    "websiteUrl": "/uploads/adeline-bracelet-picture-06.webp",
     "available": true,
-    "localFile": "media/03-adeline-bracelet-picture-03.webp"
+    "localFile": "media/03-adeline-bracelet-picture-06.webp"
   },
   {
-    "websiteUrl": "/uploads/adeline-bracelet-picture-04.webp",
+    "websiteUrl": "/uploads/adeline-bracelet-picture-07.webp",
     "available": true,
-    "localFile": "media/04-adeline-bracelet-picture-04.webp"
+    "localFile": "media/04-adeline-bracelet-picture-07.webp"
+  },
+  {
+    "websiteUrl": "/uploads/adeline-bracelet-picture-08.webp",
+    "available": true,
+    "localFile": "media/05-adeline-bracelet-picture-08.webp"
+  },
+  {
+    "websiteUrl": "/uploads/adeline-bracelet-picture-09.webp",
+    "available": true,
+    "localFile": "media/06-adeline-bracelet-picture-09.webp"
   },
   {
     "websiteUrl": "/uploads/adeline-bracelet-video-01.webm",
     "available": true,
-    "localFile": "media/05-adeline-bracelet-video-01.webm"
+    "localFile": "media/07-adeline-bracelet-video-01.webm"
   },
   {
     "websiteUrl": "/uploads/adeline-bracelet-video-02.webm",
     "available": true,
-    "localFile": "media/06-adeline-bracelet-video-02.webm"
+    "localFile": "media/08-adeline-bracelet-video-02.webm"
   },
   {
     "websiteUrl": "/uploads/adeline-bracelet-video-poster-01.webp",
     "available": true,
-    "localFile": "media/07-adeline-bracelet-video-poster-01.webp"
+    "localFile": "media/09-adeline-bracelet-video-poster-01.webp"
   },
   {
     "websiteUrl": "/uploads/adeline-bracelet-video-poster-02.webp",
     "available": true,
-    "localFile": "media/08-adeline-bracelet-video-poster-02.webp"
+    "localFile": "media/10-adeline-bracelet-video-poster-02.webp"
   }
 ]

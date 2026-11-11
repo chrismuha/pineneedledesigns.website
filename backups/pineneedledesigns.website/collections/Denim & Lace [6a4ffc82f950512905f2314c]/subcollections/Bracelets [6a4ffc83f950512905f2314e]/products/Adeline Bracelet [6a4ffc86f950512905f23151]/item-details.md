@@ -6,10 +6,10 @@ description: Adeline is a country chic bracelet. Denim, lace, pink chiffon, and 
 
 price: 32
 
-quantity: 88
+quantity: 1
 
 filters: ["Bracelets"]
 
 meta: ["Price: $32", "Size: 7-8\"", "Stretches to 8\"", "Free shipping"]
 
-Media available: 8 of 8
+Media available: 10 of 10

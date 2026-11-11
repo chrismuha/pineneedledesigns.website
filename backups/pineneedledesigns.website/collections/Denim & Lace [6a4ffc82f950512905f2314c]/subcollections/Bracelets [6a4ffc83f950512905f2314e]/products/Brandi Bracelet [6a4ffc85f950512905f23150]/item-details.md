@@ -6,7 +6,7 @@ description: Brandi is a bracelet with a denim band. She is trimmed in lace flow
 
 price: 29
 
-quantity: 88
+quantity: 1
 
 filters: ["Bracelets"]
 

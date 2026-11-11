@@ -20,7 +20,7 @@
   "shippingCost": 0,
   "freeShipping": false,
   "outOfStock": true,
-  "quantity": 1,
+  "quantity": 0,
   "sortOrder": 1,
   "meta": [],
   "videos": [],
@@ -34,7 +34,7 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-08-04T00:41:40.443Z",
-  "updatedAt": "2026-11-07T17:23:41.322Z",
+  "updatedAt": "2026-11-10T14:47:07.901Z",
   "__v": 0,
   "sweatshirtSize": "2X, 3X, 4X, 22, 24, 26, 28"
 }

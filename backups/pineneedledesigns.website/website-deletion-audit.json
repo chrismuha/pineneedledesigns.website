@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "_id": "6af33bb466f99ba6d61fa444",
+    "type": "media-removed",
+    "targets": [
+      {
+        "key": "media:/uploads/adeline-bracelet-picture-02.webp",
+        "name": "/uploads/adeline-bracelet-picture-02.webp"
+      }
+    ],
+    "reason": "Photo removed from product during edit",
+    "startedAt": "2026-11-10T15:43:48.276Z",
+    "status": "completed",
+    "completedAt": "2026-11-10T15:43:48.301Z"
+  },
+  {
+    "_id": "6af33bb466f99ba6d61fa445",
+    "type": "media-removed",
+    "targets": [
+      {
+        "key": "media:/uploads/adeline-bracelet-picture-03.webp",
+        "name": "/uploads/adeline-bracelet-picture-03.webp"
+      }
+    ],
+    "reason": "Photo removed from product during edit",
+    "startedAt": "2026-11-10T15:43:48.279Z",
+    "status": "completed",
+    "completedAt": "2026-11-10T15:43:48.299Z"
+  },
+  {
+    "_id": "6af33bb466f99ba6d61fa446",
+    "type": "media-removed",
+    "targets": [
+      {
+        "key": "media:/uploads/adeline-bracelet-picture-04.webp",
+        "name": "/uploads/adeline-bracelet-picture-04.webp"
+      }
+    ],
+    "reason": "Photo removed from product during edit",
+    "startedAt": "2026-11-10T15:43:48.280Z",
+    "status": "completed",
+    "completedAt": "2026-11-10T15:43:48.303Z"
+  }
+]

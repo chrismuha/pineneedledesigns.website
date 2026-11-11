@@ -6,7 +6,7 @@ description: I made this sweater for my neighbor in mind. 2 seasons to make. Thi
 
 price: 180
 
-quantity: 1
+quantity: 0
 
 sweatshirtSize: 2X, 3X, 4X, 22, 24, 26, 28
 

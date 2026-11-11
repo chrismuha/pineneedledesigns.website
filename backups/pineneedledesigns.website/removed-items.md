@@ -1,6 +1,6 @@
 # Removed and missing items
 
-Checked (UTC): 2026-11-10T14:14:43.326877+00:00
+Checked (UTC): 2026-11-11T13:28:38.816689+00:00
 
 Last seen / first detected missing bounds an observed removal; it is not an exact deletion time.
 Website deletion times are recorded only for audited application actions after deployment.
@@ -324,6 +324,39 @@ First detected missing (UTC): 2026-10-24T23:48:29.695433+00:00
 Website deletion started (UTC): Unknown
 Website deletion completed (UTC): Unknown
 Retained backup: None
+
+## /uploads/adeline-bracelet-picture-02.webp
+
+Category: Removed from website — backup retained
+Reason: Photo removed from product during edit
+Reason source: website-audit
+Last seen (UTC): 2026-11-10T14:14:43.326877+00:00
+First detected missing (UTC): 2026-11-11T13:28:38.816689+00:00
+Website deletion started (UTC): 2026-11-10T15:43:48.276Z
+Website deletion completed (UTC): 2026-11-10T15:43:48.301Z
+Retained backup: site/uploads/adeline-bracelet-picture-02.webp
+
+## /uploads/adeline-bracelet-picture-03.webp
+
+Category: Removed from website — backup retained
+Reason: Photo removed from product during edit
+Reason source: website-audit
+Last seen (UTC): 2026-11-10T14:14:43.326877+00:00
+First detected missing (UTC): 2026-11-11T13:28:38.816689+00:00
+Website deletion started (UTC): 2026-11-10T15:43:48.279Z
+Website deletion completed (UTC): 2026-11-10T15:43:48.299Z
+Retained backup: site/uploads/adeline-bracelet-picture-03.webp
+
+## /uploads/adeline-bracelet-picture-04.webp
+
+Category: Removed from website — backup retained
+Reason: Photo removed from product during edit
+Reason source: website-audit
+Last seen (UTC): 2026-11-10T14:14:43.326877+00:00
+First detected missing (UTC): 2026-11-11T13:28:38.816689+00:00
+Website deletion started (UTC): 2026-11-10T15:43:48.280Z
+Website deletion completed (UTC): 2026-11-10T15:43:48.303Z
+Retained backup: site/uploads/adeline-bracelet-picture-04.webp
 
 ## /uploads/legacy-6a42cc687962f91d73d7.webp
 
