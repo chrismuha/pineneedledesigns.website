@@ -28,7 +28,7 @@
   "imageWrapper": "",
   "optionPlaceholders": {},
   "createdAt": "2026-07-13T02:27:30.949Z",
-  "updatedAt": "2026-11-07T01:57:31.960Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "__v": 2,
   "shoeSize": "",
   "beltSize": "",
@@ -37,5 +37,6 @@
   "hasBlingOptions": true,
   "sizePrices": {},
   "sweatshirtSize": "",
-  "blingPrice": 38
+  "blingPrice": 38,
+  "hidden": false
 }

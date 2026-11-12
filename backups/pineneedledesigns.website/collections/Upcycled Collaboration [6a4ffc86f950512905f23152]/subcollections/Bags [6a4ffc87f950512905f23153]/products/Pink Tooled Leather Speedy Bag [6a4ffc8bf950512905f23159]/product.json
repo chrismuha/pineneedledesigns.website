@@ -35,7 +35,7 @@
   "size": "",
   "sortOrder": 3,
   "subCollectionId": "6a4ffc87f950512905f23153",
-  "updatedAt": "2026-11-07T01:57:31.873Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [],
   "videos": [],
   "quantity": 1,
@@ -46,5 +46,6 @@
   "comfortColors": [],
   "generalDescription": "",
   "shoeSize": "",
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "hidden": false
 }

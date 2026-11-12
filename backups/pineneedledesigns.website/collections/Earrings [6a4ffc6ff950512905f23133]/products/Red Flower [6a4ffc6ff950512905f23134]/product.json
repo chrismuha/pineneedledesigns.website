@@ -35,7 +35,7 @@
   "size": "",
   "sortOrder": 0,
   "subCollectionId": null,
-  "updatedAt": "2026-11-07T01:57:31.783Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [],
   "videos": [],
   "quantity": 88,
@@ -43,5 +43,6 @@
   "blingPrice": null,
   "hasBlingOptions": false,
   "sizePrices": {},
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "hidden": false
 }

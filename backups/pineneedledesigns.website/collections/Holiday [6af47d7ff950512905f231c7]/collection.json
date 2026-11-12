@@ -1,0 +1,14 @@
+{
+  "_id": "6af47d7ff950512905f231c7",
+  "slug": "holiday",
+  "__v": 0,
+  "cardImage": "",
+  "createdAt": "2026-11-11T14:36:47.120Z",
+  "description": "Find designs for your favorite holidays.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Holiday",
+  "showWhenEmpty": true,
+  "sortOrder": 0,
+  "updatedAt": "2026-11-11T14:47:44.631Z"
+}

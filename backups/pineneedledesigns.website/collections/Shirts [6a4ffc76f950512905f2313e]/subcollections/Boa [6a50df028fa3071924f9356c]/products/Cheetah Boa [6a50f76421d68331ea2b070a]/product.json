@@ -30,7 +30,7 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-07-10T13:45:08.550Z",
-  "updatedAt": "2026-11-10T14:47:07.894Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "__v": 5,
   "beltSize": "",
   "comfortColors": [],
@@ -39,5 +39,6 @@
   "shoeSize": "",
   "blingPrice": null,
   "sizePrices": {},
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "hidden": false
 }

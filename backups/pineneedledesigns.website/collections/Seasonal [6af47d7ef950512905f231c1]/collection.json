@@ -1,0 +1,14 @@
+{
+  "_id": "6af47d7ef950512905f231c1",
+  "slug": "seasonal",
+  "__v": 0,
+  "cardImage": "",
+  "createdAt": "2026-11-11T14:36:46.790Z",
+  "description": "Designs for Spring, Summer, Fall, and Winter.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Seasonal",
+  "showWhenEmpty": true,
+  "sortOrder": 0,
+  "updatedAt": "2026-11-11T14:47:44.631Z"
+}

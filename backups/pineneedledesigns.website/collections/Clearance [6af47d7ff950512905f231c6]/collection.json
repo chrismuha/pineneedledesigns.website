@@ -1,0 +1,14 @@
+{
+  "_id": "6af47d7ff950512905f231c6",
+  "slug": "clearance",
+  "__v": 0,
+  "cardImage": "",
+  "createdAt": "2026-11-11T14:36:47.101Z",
+  "description": "Shop our clearance designs.",
+  "hidden": false,
+  "isSystem": false,
+  "name": "Clearance",
+  "showWhenEmpty": true,
+  "sortOrder": 0,
+  "updatedAt": "2026-11-11T14:47:44.631Z"
+}

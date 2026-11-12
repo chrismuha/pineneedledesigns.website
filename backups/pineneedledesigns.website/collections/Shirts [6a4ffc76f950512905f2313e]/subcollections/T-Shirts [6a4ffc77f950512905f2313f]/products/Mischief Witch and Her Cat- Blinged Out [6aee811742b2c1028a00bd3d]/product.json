@@ -34,6 +34,17 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-11-07T01:38:32.313Z",
-  "updatedAt": "2026-11-07T01:57:32.089Z",
-  "__v": 0
+  "updatedAt": "2026-11-11T14:47:44.603Z",
+  "__v": 0,
+  "additionalCollections": [
+    {
+      "collectionId": "6af47d7ef950512905f231c1",
+      "subCollectionId": "6af47d7ef950512905f231c4"
+    },
+    {
+      "collectionId": "6af47d7ff950512905f231c7",
+      "subCollectionId": "6af47d7ff950512905f231ca"
+    }
+  ],
+  "hidden": false
 }

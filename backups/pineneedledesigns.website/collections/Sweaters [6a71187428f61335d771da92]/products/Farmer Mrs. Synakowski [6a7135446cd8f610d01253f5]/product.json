@@ -34,7 +34,8 @@
   "shoeTypes": [],
   "imageWrapper": "",
   "createdAt": "2026-08-04T00:41:40.443Z",
-  "updatedAt": "2026-11-10T14:47:07.901Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "__v": 0,
-  "sweatshirtSize": "2X, 3X, 4X, 22, 24, 26, 28"
+  "sweatshirtSize": "2X, 3X, 4X, 22, 24, 26, 28",
+  "hidden": false
 }

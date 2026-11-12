@@ -37,7 +37,7 @@
   "size": "",
   "sortOrder": 1,
   "subCollectionId": "6a4ffc83f950512905f2314e",
-  "updatedAt": "2026-11-10T15:57:45.090Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [
     "/uploads/brandi-bracelet-video-poster-01.webp"
   ],
@@ -52,5 +52,6 @@
   "sweatshirtSize": "",
   "comfortColors": [],
   "generalDescription": "",
-  "shoeSize": ""
+  "shoeSize": "",
+  "hidden": false
 }

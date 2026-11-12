@@ -41,7 +41,7 @@
   "size": "",
   "sortOrder": 0,
   "subCollectionId": "6a4ffc82f950512905f2314d",
-  "updatedAt": "2026-11-07T01:57:31.840Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [
     "/uploads/the-crowned-hare-vest-video-poster-01.webp"
   ],
@@ -54,5 +54,6 @@
   "hasBlingOptions": false,
   "sizePrices": {},
   "sweatshirtSize": "",
-  "shoeSize": ""
+  "shoeSize": "",
+  "hidden": false
 }

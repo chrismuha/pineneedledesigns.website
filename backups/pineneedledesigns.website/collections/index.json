@@ -134,6 +134,21 @@
       "id": "6a71187428f61335d771da92",
       "name": "Sweaters",
       "folder": "collections/Sweaters [6a71187428f61335d771da92]"
+    },
+    {
+      "id": "6af47d7ef950512905f231c1",
+      "name": "Seasonal",
+      "folder": "collections/Seasonal [6af47d7ef950512905f231c1]"
+    },
+    {
+      "id": "6af47d7ff950512905f231c6",
+      "name": "Clearance",
+      "folder": "collections/Clearance [6af47d7ff950512905f231c6]"
+    },
+    {
+      "id": "6af47d7ff950512905f231c7",
+      "name": "Holiday",
+      "folder": "collections/Holiday [6af47d7ff950512905f231c7]"
     }
   ],
   "products": [

@@ -37,7 +37,7 @@
   "size": "",
   "sortOrder": 0,
   "subCollectionId": null,
-  "updatedAt": "2026-11-10T14:47:07.884Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [],
   "videos": [],
   "quantity": 88,
@@ -46,5 +46,6 @@
   "hasBlingOptions": false,
   "sizePrices": {},
   "sweatshirtSize": "",
-  "shoeSize": "9.5"
+  "shoeSize": "9.5",
+  "hidden": false
 }

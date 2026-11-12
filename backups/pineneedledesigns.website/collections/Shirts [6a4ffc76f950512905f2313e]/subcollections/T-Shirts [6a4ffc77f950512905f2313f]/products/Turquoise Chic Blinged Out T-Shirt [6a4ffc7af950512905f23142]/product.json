@@ -39,7 +39,7 @@
   "size": "Small, Medium, Large, XL, 2X, 3X",
   "sortOrder": 1,
   "subCollectionId": "6a4ffc77f950512905f2313f",
-  "updatedAt": "2026-11-07T01:57:31.807Z",
+  "updatedAt": "2026-11-11T14:47:44.603Z",
   "videoPosters": [
     "/uploads/turquoise-chic-blinged-out-t-shirt-video-poster-01.webp"
   ],
@@ -54,5 +54,6 @@
   "comfortColors": [],
   "generalDescription": "",
   "shoeSize": "",
-  "sweatshirtSize": ""
+  "sweatshirtSize": "",
+  "hidden": false
 }
