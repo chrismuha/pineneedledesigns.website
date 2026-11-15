@@ -11,6 +11,12 @@ Dashboard updates and a clear history of what changed.
 - App update prompts now follow changes to the dashboard and its shared app code, instead of appearing after every website deployment.
 - Storefront changes, catalog content, backups, and deployment timestamps no longer create dashboard app updates.
 
+### Item drafts
+
+- Create Item saves the latest details and media before opening another dashboard page, and keeps the editor open with a warning if the draft cannot be saved.
+- Draft save status is visible while creating an item, and overlapping automatic saves keep one draft with the latest entered details.
+- Reloading or closing an unfinished item shows a browser warning when supported, helping protect unsaved work.
+
 ### Release notes
 
 - Dashboard Settings now includes a dated release timeline with alphabetized categories and change bullets, plus expandable history.

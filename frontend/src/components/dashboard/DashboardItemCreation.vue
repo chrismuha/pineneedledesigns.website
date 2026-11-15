@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import { useCatalogStore } from '../../stores/catalog.js'
 import { dashboardApi } from '../../api/dashboard.js'
 import { useSubcollections } from '../../composables/useSubcollections.js'
@@ -50,6 +50,10 @@ const creatingCollection = ref(false)
 const drafts = ref([])
 const activeDraftId = ref('')
 const savingDraft = ref(false)
+const leavingEditor = ref(false)
+const draftStatus = ref('Drafts save automatically on this device.')
+const draftSaveError = ref(false)
+let draftSaveQueue = Promise.resolve()
 let autoSaveTimer = 0
 let suppressAutoSave = false
 
@@ -209,40 +213,50 @@ const hasDraftChanges = () => (
   || videoFiles.value.length > 0
 )
 
-const persistDraft = async ({ notify = false } = {}) => {
-  if (suppressAutoSave || !hasDraftChanges()) return
-  if (notify) savingDraft.value = true
-  try {
-    const id = activeDraftId.value || globalThis.crypto?.randomUUID?.() || `draft-${Date.now()}-${Math.random().toString(36).slice(2)}`
-    const updatedAt = new Date().toISOString()
-    await saveItemDraft({
-      id,
-      kind: 'create',
-      updatedAt,
-      name: form.name.trim() || 'Untitled item',
-      form: JSON.parse(JSON.stringify(form)),
-      // IndexedDB can store File/Blob values, but it cannot clone Vue's reactive
-      // proxies. iOS reports that failure as "The object can not be cloned."
-      photos: photoFiles.value.map(({ file, sourceFile, cropState }) => ({
-        file: toRaw(file),
-        sourceFile: sourceFile ? toRaw(sourceFile) : undefined,
-        cropState: cropState ? JSON.parse(JSON.stringify(cropState)) : null,
-      })),
-      videos: videoFiles.value.map(({ file }) => ({ file: toRaw(file) })),
-    })
-    activeDraftId.value = id
-    if (notify) {
-      await refreshDrafts()
-      showDashboardToast('This item draft and its media are saved on this device.', {
-        type: 'success',
-        title: 'Draft saved',
-      })
-    }
-  } catch (err) {
-    if (notify) showDashboardToast(err.message || 'The app could not save this draft.', { title: 'Draft not saved' })
-  } finally {
-    if (notify) savingDraft.value = false
+const persistDraft = ({ notify = false } = {}) => {
+  if (suppressAutoSave || !hasDraftChanges()) return Promise.resolve(true)
+  // Reserve the ID and capture this revision before awaiting storage. Saves can
+  // overlap while typing or leaving; all revisions must use the same draft.
+  activeDraftId.value ||= globalThis.crypto?.randomUUID?.() || `draft-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  const draft = {
+    id: activeDraftId.value,
+    kind: 'create',
+    updatedAt: new Date().toISOString(),
+    name: form.name.trim() || 'Untitled item',
+    form: JSON.parse(JSON.stringify(form)),
+    // IndexedDB cannot clone Vue proxies, including crop state.
+    photos: photoFiles.value.map(({ file, sourceFile, cropState }) => ({
+      file: toRaw(file),
+      sourceFile: sourceFile ? toRaw(sourceFile) : undefined,
+      cropState: cropState ? JSON.parse(JSON.stringify(cropState)) : null,
+    })),
+    videos: videoFiles.value.map(({ file }) => ({ file: toRaw(file) })),
   }
+  savingDraft.value = true
+  draftStatus.value = 'Saving draft…'
+  const pendingSave = draftSaveQueue.then(async () => {
+    try {
+      await saveItemDraft(draft)
+      draftSaveError.value = false
+      draftStatus.value = 'Draft saved on this device. Resume it from Home → Drafts.'
+      if (notify) {
+        showDashboardToast('This item draft and its media are saved on this device.', {
+          type: 'success', title: 'Draft saved',
+        })
+      }
+      return true
+    } catch (err) {
+      draftSaveError.value = true
+      draftStatus.value = 'Draft could not be saved. Keep this page open and try Save Draft again.'
+      if (notify) showDashboardToast(err.message || draftStatus.value, { title: 'Draft not saved' })
+      return false
+    }
+  })
+  draftSaveQueue = pendingSave
+  void pendingSave.then(() => {
+    if (draftSaveQueue === pendingSave) savingDraft.value = false
+  })
+  return pendingSave
 }
 
 const saveDraft = () => persistDraft({ notify: true })
@@ -256,6 +270,32 @@ const scheduleAutoSave = () => {
 const flushAutoSave = () => {
   window.clearTimeout(autoSaveTimer)
   if (document.visibilityState === 'hidden' || hasDraftChanges()) void persistDraft()
+}
+
+onBeforeRouteLeave(async () => {
+  if (suppressAutoSave) return true
+  if (loading.value) {
+    showDashboardToast('Please wait for the item and media to finish saving.', { title: 'Item is saving' })
+    return false
+  }
+  window.clearTimeout(autoSaveTimer)
+  if (!hasDraftChanges()) return true
+  leavingEditor.value = true
+  const saved = await persistDraft()
+  leavingEditor.value = false
+  if (!saved) {
+    showDashboardToast('Your draft could not be saved. You are still in the editor; try Save Draft again before leaving.', {
+      title: 'Stay here to protect your item', type: 'warning',
+    })
+  }
+  return saved
+})
+
+const confirmPageLeave = (event) => {
+  if (suppressAutoSave || !hasDraftChanges()) return
+  flushAutoSave()
+  event.preventDefault()
+  event.returnValue = ''
 }
 
 const resumeDraft = async (draft) => {
@@ -499,6 +539,7 @@ const submitForm = async () => {
     await catalogStore.initialize()
     suppressAutoSave = true
     window.clearTimeout(autoSaveTimer)
+    await draftSaveQueue
     if (activeDraftId.value) await deleteItemDraft(activeDraftId.value)
 
     router.push('/dashboard/items')
@@ -510,6 +551,7 @@ const submitForm = async () => {
 }
 
 onMounted(async () => {
+  window.addEventListener('beforeunload', confirmPageLeave)
   window.addEventListener('pagehide', flushAutoSave)
   document.addEventListener('visibilitychange', flushAutoSave)
   pageLoading.value = true
@@ -534,6 +576,7 @@ watch(
 )
 
 onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', confirmPageLeave)
   window.removeEventListener('pagehide', flushAutoSave)
   document.removeEventListener('visibilitychange', flushAutoSave)
   flushAutoSave()
@@ -578,8 +621,8 @@ watch(
       v-else
       class="item-form"
       novalidate
-      :inert="loading"
-      :aria-busy="loading"
+      :inert="loading || leavingEditor"
+      :aria-busy="loading || leavingEditor"
       @submit.prevent="submitForm"
     >
       <section class="card">
@@ -839,6 +882,8 @@ watch(
 
         <DashboardStockStatus :quantity="form.quantity" />
       </section>
+
+      <p class="draft-status" :class="{ 'field-error': draftSaveError }" role="status" aria-live="polite">{{ draftStatus }}</p>
 
       <div class="actions">
         <div v-if="loading" class="media-progress" role="status" aria-live="polite">

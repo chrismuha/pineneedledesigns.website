@@ -19,7 +19,8 @@ const runDraftRequest = async (mode, operation) => {
     return await new Promise((resolve, reject) => {
       const transaction = database.transaction(STORE_NAME, mode)
       const request = operation(transaction.objectStore(STORE_NAME))
-      request.onsuccess = () => resolve(request.result)
+      // A successful request can still be rolled back if the transaction fails.
+      transaction.oncomplete = () => resolve(request.result)
       request.onerror = () => reject(request.error)
       transaction.onabort = () => reject(transaction.error)
     })

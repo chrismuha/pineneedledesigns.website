@@ -23,6 +23,12 @@
 - Snow Diva’s stock status now matches its six available items, restoring it to the homepage slider; its photo uses a readable filename with the previous URL preserved.
 - Website deployment builds production files on the server; generated website files are no longer tracked in Git, while catalog and media backups remain separate.
 
+### Item drafts
+
+- Create Item saves the latest details and media before opening another dashboard page, and keeps the editor open with a warning if the draft cannot be saved.
+- Draft save status is visible while creating an item, and overlapping automatic saves keep one draft with the latest entered details.
+- Reloading or closing an unfinished item shows a browser warning when supported, helping protect unsaved work.
+
 ### Release notes
 
 - Dashboard Settings now includes a dated release timeline with alphabetized categories and change bullets, plus expandable history.
