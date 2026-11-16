@@ -3,13 +3,13 @@
     {
       "_id": "6a4ffc6bf950512905f2312e",
       "legacyId": 1,
-      "__v": 1,
+      "__v": 2,
       "bagTypes": [],
       "collectionId": "6a4ffc6bf950512905f2312d",
       "color": "",
       "createdAt": "2026-07-09T19:54:19.715Z",
       "customProperties": [],
-      "description": "Great for us turquoise gals! Adirondack Chic.",
+      "description": "Great for us turquoise gals! Adirondack Chic. Beautiful turquoise white and black speedy bag. Tan hand tooled leather. Has a double leather hand strap and a long turquoise check leather strap so it can be worn over the shoulder. Very roomy inside. Just in time for Christmas! One of a kind and One in stock. Free shipping in November!",
       "filters": [],
       "freeShipping": true,
       "imageWrapper": "image-frame",
@@ -21,7 +21,7 @@
         "Size: Large (SOLD)",
         "Free shipping"
       ],
-      "name": "Turquoise and White Leather Speedy Bag",
+      "name": "Turquoise and White Leather Speedy Bag size small",
       "noBlingDescription": "",
       "noBlingPrice": null,
       "outOfStock": false,
@@ -36,7 +36,7 @@
       "size": "",
       "sortOrder": 0,
       "subCollectionId": null,
-      "updatedAt": "2026-11-11T14:47:44.603Z",
+      "updatedAt": "2026-11-16T00:11:26.522Z",
       "videoPosters": [],
       "videos": [],
       "quantity": 1,
@@ -48,7 +48,8 @@
       "generalDescription": "",
       "shoeSize": "",
       "sweatshirtSize": "",
-      "hidden": false
+      "hidden": true,
+      "additionalCollections": []
     },
     {
       "_id": "6a4ffc6ff950512905f23134",
@@ -3108,7 +3109,7 @@
       "collectionId": "6a4ffc76f950512905f2313e",
       "subCollectionId": "6a4ffc77f950512905f2313f",
       "color": "",
-      "size": "",
+      "size": "Small, Medium, XL, 2X, 3X",
       "sweatshirtSize": "",
       "shoeSize": "",
       "beltSize": "",
@@ -3116,7 +3117,7 @@
       "comfortColors": [
         "Brick"
       ],
-      "description": "Snow woman dressed to the 9\u2019s. Carrots and coal buttons are just not enough! A check and leopard prints swirl this Snow Diva. Order in Comfort Color Brick. So cute! She melts your heart, but not too much!!!",
+      "description": "Snow woman dressed to the 9\u2019s. Carrots and coal buttons are just not enough! A check and leopard prints swirl this Snow Diva. Order in Comfort Color Brick. So cute! She melts your heart, but not too much!!! Sizes S-3X. Unisex. They run bigger than women sizes",
       "customProperties": [],
       "photos": [
         "/uploads/snow-diva-t-shirt-picture-01.webp"
@@ -3124,7 +3125,7 @@
       "price": 36,
       "hasBlingOptions": false,
       "blingPrice": null,
-      "shippingCost": 0,
+      "shippingCost": 5,
       "freeShipping": false,
       "outOfStock": false,
       "quantity": 6,
@@ -3141,7 +3142,7 @@
       "shoeTypes": [],
       "imageWrapper": "",
       "createdAt": "2026-11-10T00:43:27.949Z",
-      "updatedAt": "2026-11-11T14:47:44.603Z",
+      "updatedAt": "2026-11-15T23:33:24.780Z",
       "__v": 0,
       "additionalCollections": [
         {
@@ -3150,6 +3151,55 @@
         }
       ],
       "hidden": false
+    },
+    {
+      "_id": "6afa3dc44184e5e1e9fa7dd5",
+      "name": "Painterly Christmas Trees Tshirt",
+      "collectionId": "6a4ffc76f950512905f2313e",
+      "subCollectionId": "6a4ffc77f950512905f2313f",
+      "additionalCollections": [
+        {
+          "collectionId": "6af47d7ef950512905f231c1",
+          "subCollectionId": null
+        }
+      ],
+      "hidden": false,
+      "color": "",
+      "size": "2X, 3X",
+      "sweatshirtSize": "",
+      "shoeSize": "",
+      "beltSize": "",
+      "sizePrices": {},
+      "comfortColors": [
+        "Grey"
+      ],
+      "description": "Painterly Christmas Trees Shirt. Unisex sizes S-3X. Runs bigger than women\u2019s sizes. Comfort Colors. Beautiful trees in a painted palette look. Great shirt for every artist. Black/white/gold; gold leopard print; and soft strokes of different colors; and a star on top of each tree.",
+      "customProperties": [],
+      "photos": [
+        "/uploads/painterly-christmas-trees-tshirt-picture-01.webp"
+      ],
+      "price": 36,
+      "hasBlingOptions": false,
+      "blingPrice": null,
+      "shippingCost": 5,
+      "freeShipping": false,
+      "outOfStock": false,
+      "quantity": 2,
+      "sortOrder": 17,
+      "meta": [],
+      "videos": [],
+      "videoPosters": [],
+      "noBlingPrice": null,
+      "noBlingDescription": "",
+      "generalDescription": "",
+      "maker": "",
+      "bagTypes": [],
+      "filters": [],
+      "shoeTypes": [],
+      "imageWrapper": "",
+      "createdAt": "2026-11-15T23:18:28.315Z",
+      "updatedAt": "2026-11-15T23:34:41.245Z",
+      "__v": 0
     }
   ],
   "collections": [
@@ -3358,7 +3408,7 @@
       "name": "Shirts",
       "showWhenEmpty": false,
       "sortOrder": 13,
-      "updatedAt": "2026-11-11T14:47:44.631Z"
+      "updatedAt": "2026-11-15T23:29:06.387Z"
     },
     {
       "_id": "6a4ffc7ff950512905f23148",
@@ -3540,7 +3590,7 @@
       "name": "Seasonal",
       "showWhenEmpty": true,
       "sortOrder": 0,
-      "updatedAt": "2026-11-11T14:47:44.631Z"
+      "updatedAt": "2026-11-15T23:28:47.071Z"
     },
     {
       "_id": "6af47d7ff950512905f231c6",
@@ -3878,7 +3928,7 @@
       "fallbackShippingCost": 5,
       "freeShippingEnabled": true,
       "freeShippingMinimum": 28,
-      "updatedAt": "2026-11-15T12:57:25.680Z",
+      "updatedAt": "2026-11-16T06:10:34.902Z",
       "toastTimeoutSeconds": 6,
       "seasonalAssignmentsInitialized": true,
       "clearanceCollectionInitialized": true,
@@ -4318,6 +4368,7 @@
     "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-picture-09.png",
     "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-01.mov",
     "/uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-02.mov",
+    "/uploads/painterly-christmas-trees-tshirt-picture-01.webp",
     "/uploads/peridot-hairon-and-canvas-bag-picture-01.webp",
     "/uploads/peridot-hairon-and-canvas-bag-picture-02.webp",
     "/uploads/peridot-hairon-and-canvas-bag-picture-03.webp",

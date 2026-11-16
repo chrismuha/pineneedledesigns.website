@@ -1,0 +1,49 @@
+{
+  "_id": "6afa3dc44184e5e1e9fa7dd5",
+  "name": "Painterly Christmas Trees Tshirt",
+  "collectionId": "6a4ffc76f950512905f2313e",
+  "subCollectionId": "6a4ffc77f950512905f2313f",
+  "additionalCollections": [
+    {
+      "collectionId": "6af47d7ef950512905f231c1",
+      "subCollectionId": null
+    }
+  ],
+  "hidden": false,
+  "color": "",
+  "size": "2X, 3X",
+  "sweatshirtSize": "",
+  "shoeSize": "",
+  "beltSize": "",
+  "sizePrices": {},
+  "comfortColors": [
+    "Grey"
+  ],
+  "description": "Painterly Christmas Trees Shirt. Unisex sizes S-3X. Runs bigger than women\u2019s sizes. Comfort Colors. Beautiful trees in a painted palette look. Great shirt for every artist. Black/white/gold; gold leopard print; and soft strokes of different colors; and a star on top of each tree.",
+  "customProperties": [],
+  "photos": [
+    "/uploads/painterly-christmas-trees-tshirt-picture-01.webp"
+  ],
+  "price": 36,
+  "hasBlingOptions": false,
+  "blingPrice": null,
+  "shippingCost": 5,
+  "freeShipping": false,
+  "outOfStock": false,
+  "quantity": 2,
+  "sortOrder": 17,
+  "meta": [],
+  "videos": [],
+  "videoPosters": [],
+  "noBlingPrice": null,
+  "noBlingDescription": "",
+  "generalDescription": "",
+  "maker": "",
+  "bagTypes": [],
+  "filters": [],
+  "shoeTypes": [],
+  "imageWrapper": "",
+  "createdAt": "2026-11-15T23:18:28.315Z",
+  "updatedAt": "2026-11-15T23:34:41.245Z",
+  "__v": 0
+}

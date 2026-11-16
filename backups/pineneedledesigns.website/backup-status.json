@@ -1,7 +1,7 @@
 {
-  "completedAt": "20261115T132313385894Z",
-  "filesBackedUp": 480,
-  "referencedFiles": 236,
+  "completedAt": "20261116T143803608838Z",
+  "filesBackedUp": 481,
+  "referencedFiles": 237,
   "missingFiles": [],
   "files": {
     "uploads/1783672358990-600883762.jpeg": {
@@ -1563,6 +1563,10 @@
     "uploads/originals/shirley-boho-bag/shirley-boho-bag-source-video-02.mov": {
       "bytes": 2238602,
       "sha256": "8bedbdb7e36ca0b12333536dac99c68c7d629a1395214b1a8132b8a8aac9c954"
+    },
+    "uploads/painterly-christmas-trees-tshirt-picture-01.webp": {
+      "bytes": 153938,
+      "sha256": "b3954592fbade8b7fb6daf96f51fe663b5e3f6534d15e3a6bedcda3888aee707"
     },
     "uploads/peridot-hairon-and-canvas-bag-picture-01.webp": {
       "bytes": 229784,

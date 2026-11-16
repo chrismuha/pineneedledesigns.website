@@ -154,8 +154,8 @@
   "products": [
     {
       "id": "6a4ffc6bf950512905f2312e",
-      "name": "Turquoise and White Leather Speedy Bag",
-      "folder": "collections/Adirondack Chic [6a4ffc6bf950512905f2312d]/products/Turquoise and White Leather Speedy Bag [6a4ffc6bf950512905f2312e]"
+      "name": "Turquoise and White Leather Speedy Bag size small",
+      "folder": "collections/Adirondack Chic [6a4ffc6bf950512905f2312d]/products/Turquoise and White Leather Speedy Bag size small [6a4ffc6bf950512905f2312e]"
     },
     {
       "id": "6a4ffc6ff950512905f23134",
@@ -471,6 +471,11 @@
       "id": "6af268af294a1051fc7e7be4",
       "name": "SNOW DIVA T-shirt",
       "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/SNOW DIVA T-shirt [6af268af294a1051fc7e7be4]"
+    },
+    {
+      "id": "6afa3dc44184e5e1e9fa7dd5",
+      "name": "Painterly Christmas Trees Tshirt",
+      "folder": "collections/Shirts [6a4ffc76f950512905f2313e]/subcollections/T-Shirts [6a4ffc77f950512905f2313f]/products/Painterly Christmas Trees Tshirt [6afa3dc44184e5e1e9fa7dd5]"
     }
   ]
 }
