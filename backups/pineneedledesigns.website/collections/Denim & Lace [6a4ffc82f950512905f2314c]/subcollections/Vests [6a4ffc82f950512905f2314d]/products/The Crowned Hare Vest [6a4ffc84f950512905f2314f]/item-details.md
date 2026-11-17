@@ -6,7 +6,9 @@ description: This bunny is picture perfect with her resting in the woods of the 
 
 price: 77
 
-quantity: 88
+quantity: 1
+
+size: M/L
 
 filters: ["Vests"]
 

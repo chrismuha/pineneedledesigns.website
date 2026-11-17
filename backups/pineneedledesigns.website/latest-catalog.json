@@ -54,13 +54,13 @@
     {
       "_id": "6a4ffc6ff950512905f23134",
       "legacyId": 2,
-      "__v": 0,
+      "__v": 1,
       "bagTypes": [],
       "collectionId": "6a4ffc6ff950512905f23133",
       "color": "",
       "createdAt": "2026-07-09T19:54:23.774Z",
       "customProperties": [],
-      "description": "Red flower earrings, 2.5\" long.",
+      "description": "Tribal or boho Upcycled denim earrings. The tiniest red flower button hand sewn on. A claw clip holds the fabric dangles , 2.5\" long. For pierced ears.",
       "filters": [],
       "freeShipping": true,
       "imageWrapper": "image-frame",
@@ -88,16 +88,20 @@
       "size": "",
       "sortOrder": 0,
       "subCollectionId": null,
-      "updatedAt": "2026-11-11T14:47:44.603Z",
+      "updatedAt": "2026-11-17T14:50:22.348Z",
       "videoPosters": [],
       "videos": [],
-      "quantity": 88,
+      "quantity": 1,
       "beltSize": "",
       "blingPrice": null,
       "hasBlingOptions": false,
       "sizePrices": {},
       "sweatshirtSize": "",
-      "hidden": false
+      "hidden": false,
+      "additionalCollections": [],
+      "comfortColors": [],
+      "generalDescription": "",
+      "shoeSize": ""
     },
     {
       "_id": "6a4ffc72f950512905f23137",
@@ -701,7 +705,7 @@
     {
       "_id": "6a4ffc84f950512905f2314f",
       "legacyId": 13,
-      "__v": 0,
+      "__v": 1,
       "bagTypes": [],
       "collectionId": "6a4ffc82f950512905f2314c",
       "color": "",
@@ -738,24 +742,27 @@
       "price": 77,
       "shippingCost": 0,
       "shoeTypes": [],
-      "size": "",
+      "size": "M/L",
       "sortOrder": 0,
       "subCollectionId": "6a4ffc82f950512905f2314d",
-      "updatedAt": "2026-11-11T14:47:44.603Z",
+      "updatedAt": "2026-11-17T03:15:35.920Z",
       "videoPosters": [
         "/uploads/the-crowned-hare-vest-video-poster-01.webp"
       ],
       "videos": [
         "/uploads/the-crowned-hare-vest-video-01.webm"
       ],
-      "quantity": 88,
+      "quantity": 1,
       "beltSize": "",
       "blingPrice": null,
       "hasBlingOptions": false,
       "sizePrices": {},
       "sweatshirtSize": "",
       "shoeSize": "",
-      "hidden": false
+      "hidden": false,
+      "additionalCollections": [],
+      "comfortColors": [],
+      "generalDescription": ""
     },
     {
       "_id": "6a4ffc85f950512905f23150",
@@ -3268,7 +3275,7 @@
       "name": "Bracelets",
       "showWhenEmpty": false,
       "sortOrder": 3,
-      "updatedAt": "2026-11-11T14:47:44.631Z"
+      "updatedAt": "2026-11-17T03:08:15.476Z"
     },
     {
       "_id": "6a4ffc6df950512905f23131",
@@ -3928,7 +3935,7 @@
       "fallbackShippingCost": 5,
       "freeShippingEnabled": true,
       "freeShippingMinimum": 28,
-      "updatedAt": "2026-11-16T06:10:34.902Z",
+      "updatedAt": "2026-11-17T14:43:57.246Z",
       "toastTimeoutSeconds": 6,
       "seasonalAssignmentsInitialized": true,
       "clearanceCollectionInitialized": true,

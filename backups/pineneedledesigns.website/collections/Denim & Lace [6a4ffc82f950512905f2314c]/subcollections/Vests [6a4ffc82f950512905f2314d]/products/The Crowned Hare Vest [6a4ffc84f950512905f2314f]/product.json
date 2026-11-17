@@ -1,7 +1,7 @@
 {
   "_id": "6a4ffc84f950512905f2314f",
   "legacyId": 13,
-  "__v": 0,
+  "__v": 1,
   "bagTypes": [],
   "collectionId": "6a4ffc82f950512905f2314c",
   "color": "",
@@ -38,22 +38,25 @@
   "price": 77,
   "shippingCost": 0,
   "shoeTypes": [],
-  "size": "",
+  "size": "M/L",
   "sortOrder": 0,
   "subCollectionId": "6a4ffc82f950512905f2314d",
-  "updatedAt": "2026-11-11T14:47:44.603Z",
+  "updatedAt": "2026-11-17T03:15:35.920Z",
   "videoPosters": [
     "/uploads/the-crowned-hare-vest-video-poster-01.webp"
   ],
   "videos": [
     "/uploads/the-crowned-hare-vest-video-01.webm"
   ],
-  "quantity": 88,
+  "quantity": 1,
   "beltSize": "",
   "blingPrice": null,
   "hasBlingOptions": false,
   "sizePrices": {},
   "sweatshirtSize": "",
   "shoeSize": "",
-  "hidden": false
+  "hidden": false,
+  "additionalCollections": [],
+  "comfortColors": [],
+  "generalDescription": ""
 }
