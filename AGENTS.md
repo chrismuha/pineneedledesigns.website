@@ -110,3 +110,9 @@ imports, recovery work, scripts, and new or modified upload flows.
   Classify individual files so mixed galleries can appear in both lists.
 - Keep custom placeholder descriptions focused on the business purpose, displayed
   message, retired references, current filenames, and checksums.
+
+## Git commit messages
+
+- Use this format for every Git commit you create in this workspace and its repositories. Write a short, specific subject in the imperative mood, followed by a blank line and a bulleted body. Keep any repository-required prefix or ticket ID in the subject.
+- Start each body line with `- ` and describe one concrete change or outcome. Include enough detail to understand what changed and add relevant verification when it helps. Keep the bullets short enough to scan quickly.
+- Follow the existing authorization rules for commits, pushes, history rewrites, and releases.
