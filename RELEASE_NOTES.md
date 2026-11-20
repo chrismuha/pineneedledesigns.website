@@ -34,6 +34,10 @@
 
 - Dashboard Settings now includes a dated release timeline with alphabetized categories and change bullets, plus expandable history.
 
+### Storefront
+
+- Corrected a spelling error in the page shown for invalid URLs.
+
 ## November 7, 2026
 
 - Item-gallery arrows now sit within 6px of the product-card edges, with responsive

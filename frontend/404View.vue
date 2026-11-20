@@ -24,7 +24,7 @@
 
             <div class="header1-p text-center">
                 <p><b>Why am I seeing this message?</b></p>
-                <p>You are trying to navigate to an inavlid URL. Please verify that the link you entered is correct and try again.</p>
+                <p>You are trying to navigate to an invalid URL. Please verify that the link you entered is correct and try again.</p>
             </div>
 
             <!-- <div class="text-center header3-h3">
